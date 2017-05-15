@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.SendOrderMapper">
+
+
+	<select id="querySendOrders" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select
+			a.`name` as cityname,-- 城市名称
+			ts.id as platformid,
+			ts.`name` as storename,-- 门店名称
+			tem.`name` as username,-- 国安侠名称
+			SUBSTR(tesr.role_name FROM (POSITION('_' IN tesr.role_name)+1) FOR LENGTH(tesr.role_name)) as deptname,-- 事业部
+			SUBSTR(tesr.role_name FROM 1 FOR (POSITION('_' IN tesr.role_name)-1)) AS channelname,-- 频道
+			COUNT(tor.id) datanum -- 分各频道总送单量
+			from  t_order  tor
+			JOIN t_order_flow tof on tof.order_id=tor.id
+			LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
+			LEFT JOIN t_ed_sys_role tesr on tesr.id=tep.department_id
+			LEFT JOIN t_employee tem on tem.id=tor.employee_id
+			LEFT JOIN t_store ts on ts.id=tor.store_id 
+			LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+			where 
+			tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			and tof.order_status='signed'
+			and ts.number IN (${storeids})
+			and ts.`name` LIKE IF('全部'=#{storename},'%%',#{storename})
+			and ts.`name` not like '%测试%'
+			and tep.`name` not like '%测试%'
+			and ts.white!='QA'
+			and tep.white!='QA'
+			and tep.business_model_id!='fakemodelforexpress0000000000001'
+			GROUP BY tem.id,tep.department_id,ts.id
+			ORDER by ts.`name`,tem.`name`
+		]]>
+	</select>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.StoreNumberMapper">
+
+    <select id="queryStoreNumbers"  resultType="java.lang.String">
+        <![CDATA[
+			select GROUP_CONCAT(replace(number,'0000000','')) 
+			from t_store 
+			where status = 0 and white != 'QA'
+		]]>
+    </select>
+
+</mapper>

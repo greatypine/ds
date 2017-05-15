@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TStoreTradeMapper">
+
+
+	<select id="queryTStoreTrades" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select 
+ 				city_name, platformid,store_name, order_amount, other_order_amount,
+ 				returned_amount, other_returned_amount, order_count,
+ 				other_order_count, returned_count, other_returned_count
+ 			from t_storetrade where year=#{year} and month=#{month}
+		]]>
+	</select>
+	
+	<insert id="addTStoreTrades" parameterType="java.util.Map">
+		<![CDATA[
+			INSERT INTO t_storetrade (
+				city_name, platformid,store_name, order_amount, other_order_amount,
+				returned_amount, other_returned_amount,	order_count,
+				other_order_count, returned_count, other_returned_count,
+				year, month, createtime
+			) VALUES(
+				#{city_name},#{platformid},#{store_name},#{order_amount},#{other_order_amount},
+				#{returned_amount},#{other_returned_amount},#{order_count},
+				#{other_order_count},#{returned_count},#{other_returned_count},
+				YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),NOW()
+			)
+		]]>
+	</insert>
+	
+</mapper>

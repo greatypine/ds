@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.HumanresourceMapper">
+
+
+    <select id="queryHumanresources" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select humanstatus,storename,storeid,employeeno,username,zw,
+			authorizedtype,professnallevel,remark,leavedate from ( 
+				SELECT
+				humanstatus as humanstatus,
+				store.name as storename,
+			    hr.store_id as storeid,
+				hr.employee_no as employeeno,
+			    hr.name as username,
+			    hr.zw as zw,
+			    hr.authorizedtype as authorizedtype,
+			    hr.professnallevel as professnallevel,
+			    IFNULL(hr.remark,'') as remark,
+			    IFNULL(hr.leavedate,'') as leavedate,
+			    date_format(hr.update_time,'%Y-%m-%d') as update_time
+			FROM
+				t_humanresources hr
+			LEFT JOIN t_store store ON hr.store_id = store.store_id ) hrstore
+		]]>
+        <where>
+            <if test="null != username and '' != username">
+                <![CDATA[                   
+                   username like concat('%',#{username},'%')
+                ]]>
+            </if>
+            <if test="null != employeeno and '' != employeeno">
+                <![CDATA[
+                   and employeeno = #{employeeno}
+               ]]>
+            </if>
+            <if test="null != update_time_start and null != update_time_end">
+                <![CDATA[                   
+                   and DATE_FORMAT(update_time,'%Y-%m-%d') between #{update_time_start} and #{update_time_end}
+                ]]>
+            </if>
+            <if test="null != storename and  '' != storename">
+                <![CDATA[                   
+                   and storename =#{storename}
+                ]]>
+            </if>
+            <if test="null != zw and '' != zw">
+                <![CDATA[                   
+                   and zw =#{zw}
+                ]]>
+            </if>
+        </where>
+        <![CDATA[
+          order by update_time desc
+        ]]>
+    </select>
+
+</mapper>

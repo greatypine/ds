@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.AuthMapper">
+
+    <select id="findByAppKey" parameterType="java.lang.String" resultType="AuthEntity">
+        <![CDATA[
+			SELECT * FROM t_sys_auth TH WHERE app_key = #{appKey}
+		]]>
+    </select>
+
+</mapper>

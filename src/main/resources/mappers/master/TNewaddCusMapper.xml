@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TNewaddCusMapper">
+
+
+	<select id="queryTNewaddCus" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select 
+				city_name,
+				platformid,
+				store_name,
+				pay_count,
+				new_count,
+				total_count,
+				pay_20_count,
+				new_20_count
+			from t_newaddcus where year =#{year} and month =#{month}
+		]]>
+	</select>
+	
+	
+	<insert id="addTNewaddCus" parameterType="java.util.Map">
+		<![CDATA[
+			INSERT INTO t_newaddcus (
+				city_name, platformid,store_name, pay_count, new_count,
+				total_count, pay_20_count, new_20_count,
+				year,month,createtime
+			) VALUES(
+				#{city_name},#{platformid},#{store_name},#{pay_count},#{new_count},
+				#{total_count},#{pay_20_count},#{new_20_count},
+				YEAR(date_sub(now(),interval 1 month)),
+				MONTH(date_sub(now(),interval 1 month)),
+				NOW()
+			)
+		]]>
+	</insert>
+</mapper>

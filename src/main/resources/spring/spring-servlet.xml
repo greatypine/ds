@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:tx="http://www.springframework.org/schema/tx"
+             xmlns:task="http://www.springframework.org/schema/task"
+             xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+  http://www.springframework.org/schema/task  http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<!-- 告知Spring启用注解驱动 -->
+    <annotation-driven/>
+    <!-- 支持事务注解 -->
+    <tx:annotation-driven/>
+    <!-- 开启定时任务 -->
+    <task:annotation-driven/>
+    
+    <!-- 第一步:  创建自定义日期转换规则 --> 
+    <annotation-driven conversion-service="conversionService"/>
+    <!-- 第二步： 创建convertion-Service ，并注入dateConvert-->
+    <beans:bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <beans:property name="converters">
+            <beans:set>
+                <beans:ref bean="dateConvert"/>
+            </beans:set>
+        </beans:property>
+    </beans:bean>
+    <!-- 第三步：注册处理器映射器/处理器适配器 ，添加conversion-service属性-->
+    <beans:bean id="dateConvert" class="com.guoanshequ.dc.das.utils.DateConvert"/>
+
+	<!-- 配置自动扫描的包 -->
+    <context:component-scan base-package="com.guoanshequ.dc.das"/>
+
+    <!-- 配置读取外部配置文件 -->
+    <context:property-placeholder location="classpath*:config/jdbc.properties" />
+
+	<!-- 用户权限拦截器 -->
+    <interceptors>
+        <interceptor>
+            <mapping path="/rest/**"/>
+            <beans:bean class="com.guoanshequ.dc.das.intercptor.AuthInterceptor" />
+        </interceptor>
+    </interceptors>
+
+	<!-- 引入配置多数据源-->
+    <beans:import resource="spring-datasource-master.xml"/>
+    <beans:import resource="spring-datasource-slave.xml"/>
+
+</beans:beans>

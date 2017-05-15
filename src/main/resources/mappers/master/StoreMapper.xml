@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.StoreMapper">
+
+
+    <select id="queryStores" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select 	store.store_id , 
+			store.name , 
+			store.city_name,	
+			IFNULL(store.platformid,'') as platformid,	
+			IFNULL(store.number,'') as number,
+			IFNULL(str_to_date(store.open_shop_time,'%Y-%m-%d'),'') as opentime,
+			IFNULL(county.name,'') AS county_name
+			from t_store store 
+			left join t_town town ON store.town_id = town.id
+			left join t_county county ON town.county_id = county.id
+		]]>
+        <where>
+            <if test="null != update_time_start and null != update_time_end">
+                <![CDATA[                   
+                    DATE_FORMAT(store.update_time,'%Y-%m-%d') between #{update_time_start} and #{update_time_end}
+                ]]>
+            </if>
+            <if test="null != storename">
+                <![CDATA[                   
+                    store.name = #{storename}
+                ]]>
+            </if>
+        </where>
+        <![CDATA[
+          order by store.update_time desc
+        ]]>
+    </select>
+    
+    <select id="queryStoreNumbers"  resultType="java.lang.String">
+        <![CDATA[
+			select GROUP_CONCAT(number) from t_store 
+		]]>
+    </select>
+
+</mapper>

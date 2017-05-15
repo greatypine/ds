@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.CustomerMapper">
+
+
+	<select id="queryFirst" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			SELECT T.emplyeeno,SUM(CASE WHEN (DATE_FORMAT(T.`firstdate`,'%Y-%m' ) =#{yearmonth}) THEN
+			1 ELSE 0 END ) AS datacount
+			FROM (
+					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.one_date AS firstdate
+					FROM t_customer tc
+					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					WHERE DATE_FORMAT(thc.one_date, '%Y-%m') =#{yearmonth}			
+				) T
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			GROUP BY T.emplyeeno
+			HAVING datacount > 0
+			ORDER BY T.emplyeeno
+		]]>
+	</select>	
+	
+	<select id="querySecond" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			SELECT
+				T.emplyeeno,SUM(CASE WHEN (DATE_FORMAT(T.`seconddate`,'%Y-%m' ) = #{yearmonth}) THEN
+						1 ELSE 0 END ) AS datacount
+			FROM (
+					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.six_date AS seconddate
+					FROM t_customer tc
+					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					WHERE	DATE_FORMAT(thc.six_date, '%Y-%m') = #{yearmonth} 			
+				) T
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			GROUP BY T.emplyeeno
+			HAVING datacount > 0
+			ORDER BY T.emplyeeno
+		]]>
+	</select>
+	
+	<select id="queryThird" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			SELECT
+				T.emplyeeno,SUM(CASE WHEN (DATE_FORMAT(T.`thirddate`,'%Y-%m' ) = #{yearmonth}) THEN
+						1 ELSE 0 END ) AS datacount
+			FROM (
+					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.third_grade_date AS thirddate
+					FROM t_customer tc
+					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					WHERE	DATE_FORMAT(thc.third_grade_date, '%Y-%m') = #{yearmonth} 			
+				) T
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			GROUP BY T.emplyeeno
+			HAVING datacount > 0
+			ORDER BY T.emplyeeno
+		]]>
+	</select>
+
+		<select id="queryFirstByStore" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			SELECT 
+				store_id,
+				storename,
+				sum(datacount) as datacount 
+				from (
+			SELECT 
+				t_store.store_id,
+				t_store.`name` as storename,
+			SUM(CASE WHEN (DATE_FORMAT(T.`firstdate`,'%Y-%m' ) =#{yearmonth}) THEN
+			    1 ELSE 0 END ) AS datacount
+			FROM (
+					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.one_date AS firstdate
+					FROM t_customer tc
+					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					WHERE DATE_FORMAT(thc.one_date, '%Y-%m') = #{yearmonth}			
+				) T
+			LEFT JOIN t_humanresources on t_humanresources.employee_no = T.emplyeeno
+			LEFT JOIN t_store on t_store.id = t_humanresources.store_id
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			AND t_store.name =#{storename}
+			GROUP BY T.emplyeeno
+			HAVING datacount>0 ) t1
+			GROUP BY store_id,storename
+		]]>
+	</select>	
+	
+	<select id="querySecondByStore" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			SELECT 
+				store_id,
+				storename,
+				sum(datacount) as datacount 
+				from (
+			SELECT
+				t_store.store_id,
+				t_store.`name` as storename,
+				T.emplyeeno,SUM(CASE WHEN (DATE_FORMAT(T.`seconddate`,'%Y-%m' ) = #{yearmonth}) THEN
+						1 ELSE 0 END ) AS datacount
+			FROM (
+					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.six_date AS seconddate
+					FROM t_customer tc
+					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					WHERE	DATE_FORMAT(thc.six_date, '%Y-%m') = #{yearmonth} 			
+				) T
+			LEFT JOIN t_humanresources on t_humanresources.employee_no = T.emplyeeno
+			LEFT JOIN t_store on t_store.id = t_humanresources.store_id
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			AND t_store.name =#{storename}
+			GROUP BY T.emplyeeno
+			HAVING datacount > 0 ) t2
+			GROUP BY store_id,storename
+
+		]]>
+	</select>
+	
+	<select id="queryThirdByStore" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			SELECT 
+				store_id,
+				storename,
+				sum(datacount) as datacount 
+			from (
+			SELECT
+				t_humanresources.store_id,
+				t_humanresources.storename,
+				SUM(CASE WHEN (DATE_FORMAT(T.`thirddate`,'%Y-%m' ) = #{yearmonth}) THEN
+						1 ELSE 0 END ) AS datacount
+			FROM (
+					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.third_grade_date AS thirddate
+					FROM t_customer tc
+					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					WHERE	DATE_FORMAT(thc.third_grade_date, '%Y-%m') = #{yearmonth} 			
+				) T
+			LEFT JOIN t_humanresources on t_humanresources.employee_no = T.emplyeeno
+			LEFT JOIN t_store on t_store.id = t_humanresources.store_id
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			AND t_store.name =#{storename}
+			GROUP BY t_humanresources.store_id
+			HAVING datacount>0 ) t3
+			GROUP BY store_id,storename
+		]]>
+	</select>
+	
+</mapper>

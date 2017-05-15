@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TSendOrderMapper">
+
+
+	<select id="queryTSendOrders" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select 
+				cityname,
+				IFNULL(platformid,'') as platformid,
+				storename,
+				IFNULL(username,'') as username,
+				deptname,
+				channelname,
+				datanum
+			from t_sendorders where year =#{year} and month =#{month}
+		]]>
+		 <if test="null != storename and '' != storename">
+              <![CDATA[                   
+                  and storename =#{storename}
+              ]]>
+         </if>
+	</select>
+	
+	<insert id="addTSendOrders" parameterType="java.util.Map">
+		<![CDATA[
+			insert into t_sendorders(cityname,platformid,storename,username,deptname,channelname,datanum,year,month,createtime) 
+			values(#{cityname},#{platformid},#{storename},#{username},#{deptname},#{channelname},#{datanum},
+			YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),NOW())
+		]]>
+	</insert>
+</mapper>

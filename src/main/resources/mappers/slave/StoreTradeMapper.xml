@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.StoreTradeMapper">
+
+
+	<select id="queryStoreTrades" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			SELECT 
+    a.`name` AS city_name, 
+    ts.id  AS platformid,
+    ts.`name` AS store_name, 
+	IFNULL(t1.totalprice,0.00) AS order_amount,
+	IFNULL(t2.qtotalprice,0.00) AS other_order_amount, 
+	IFNULL(t3.returned_amount,0.00) AS returned_amount,
+	IFNULL(t4.other_returned_amount,0.00) AS other_returned_amount, 
+	IFNULL(t1.ordercount,0) AS order_count, 
+	IFNULL(t2.qordercount,0) AS other_order_count, 
+	IFNULL(t3.returned_count,0) AS returned_count, 
+	IFNULL(t4.other_returned_count,0) AS other_returned_count 
+FROM t_store ts
+LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+LEFT JOIN
+	(
+		SELECT
+			tt.store_id,
+			SUM(IFNULL(tt.price,0.00)) AS totalprice,
+			COUNT(DISTINCT tt.group_id) AS ordercount
+		FROM 
+			(
+				SELECT
+					tor.store_id,
+					IFNULL(IF(tor.is_split='yes',toi.original_price,tor.trading_price),0.00) AS price,
+					tor.group_id AS group_id
+				FROM t_eshop te
+				JOIN t_order tor ON tor.eshop_id=te.id
+				JOIN t_order_flow tof ON tof.order_id=tor.id
+					AND tof.order_status='signed'
+					AND tof.create_time>=#{begindate}
+					AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+				JOIN t_order_item toi ON tor.id=toi.order_id
+                    AND toi.eshop_pro_name NOT LIKE '%国安欢洗卡%'
+				WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+				GROUP BY tor.group_id
+			) tt
+		GROUP BY tt.store_id
+	) t1 ON ts.id=t1.store_id
+LEFT JOIN
+	(
+		SELECT
+			tt.store_id,
+			SUM(IFNULL(tt.price,0.00)) AS qtotalprice,
+			COUNT(DISTINCT tt.group_id)  AS qordercount	
+		FROM
+			(
+				SELECT
+					tor.store_id,
+					IFNULL(IF(tor.is_split='yes',toi.original_price,tor.trading_price),0.00) AS price,
+					tor.group_id AS group_id
+				FROM t_eshop te
+				JOIN t_order tor ON tor.eshop_id=te.id
+				JOIN t_order_flow tof ON tof.order_id=tor.id
+					AND tof.order_status='signed'
+					AND tof.create_time>=#{begindate}
+					AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+				JOIN t_order_item toi ON tor.id=toi.order_id
+                    AND toi.eshop_pro_name NOT LIKE '%国安欢洗卡%'
+				WHERE te.department_id!='00000000000000000000000000000059'
+					AND te.name NOT LIKE '%测试%' AND te.white!='QA'
+				GROUP BY tor.group_id
+			) tt
+		GROUP BY tt.store_id
+	) t2 ON ts.id=t2.store_id
+LEFT JOIN
+	(
+		SELECT
+			t.store_id,
+			SUM(IFNULL(toref.price,0.00)) AS returned_amount,
+			COUNT(DISTINCT t.group_id)  AS returned_count
+		FROM t_order_refund toref
+		JOIN
+			(
+				SELECT tor.store_id, tor.group_id
+				FROM t_order_returned toret
+				JOIN t_eshop te ON te.id=toret.eshop_id
+					AND te.white!='QA' AND te.name NOT LIKE '%测试%'
+				JOIN t_order tor ON toret.order_id=tor.id
+				WHERE toret.returned_status='done'
+					AND toret.create_time>=#{begindate}
+					AND toret.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+				GROUP BY tor.group_id
+			) t ON toref.order_group_id=t.group_id
+		WHERE toref.refund_status='refunded'
+		GROUP BY t.store_id
+	) t3 ON ts.id=t3.store_id
+LEFT JOIN
+	(
+		SELECT
+			t.store_id,
+			SUM(IFNULL(toref.price,0.00)) AS other_returned_amount,
+			COUNT(DISTINCT t.group_id)  AS other_returned_count
+		FROM t_order_refund toref
+		JOIN
+			(
+				SELECT tor.store_id, tor.group_id
+				FROM t_order_returned toret
+				JOIN t_eshop te ON te.id=toret.eshop_id
+					AND te.department_id!='00000000000000000000000000000059'
+					AND te.white!='QA' AND te.name NOT LIKE '%测试%'
+				JOIN t_order tor ON toret.order_id=tor.id
+				WHERE toret.returned_status='done'
+					AND toret.create_time>=#{begindate}
+					AND toret.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+				GROUP BY tor.group_id
+			) t ON toref.order_group_id=t.group_id
+		WHERE toref.refund_status='refunded'
+		GROUP BY t.store_id
+	) t4 ON ts.id=t4.store_id
+WHERE ts.white!='QA' AND ts.`status`=0
+	AND ts.number IN (${storeids})
+	AND ts.`name` LIKE IF('全部'=#{storename},'%%',#{storename})
+		]]>
+	</select>
+</mapper>

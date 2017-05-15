@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.StoreKeeperMapper">
+
+
+    <select id="queryStoreKeepers" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select humanstatus,storename,storeid,employeeno,username,zw from (
+				SELECT 
+				humanstatus as humanstatus,
+				store.name as storename,
+				store.store_id as storeid,
+				keeper.employee_no as employeeno,
+				buser.name as username,
+				keeper.zw as zw,
+				date_format(keeper.update_time,'%Y-%m-%d %H:%i:%s') as update_time
+			FROM 
+				t_storekeeper keeper 
+			LEFT JOIN tb_bizbase_user buser on keeper.employee_no = buser.employeeid
+			LEFT JOIN t_store store on buser.id = store.skid ) keepstore
+			WHERE storeid is not null
+		]]>
+            <if test="null != username and '' != username">
+                <![CDATA[                   
+                  and username like concat('%',#{username},'%')
+                ]]>
+            </if>
+            <if test="null != employeeno and '' != employeeno">
+                <![CDATA[
+                   and employeeno = #{employeeno}
+               ]]>
+            </if>
+            <if test="null != storename and '' != storename">
+                <![CDATA[                   
+                   and storename = #{storename}
+                ]]>
+            </if>
+            <if test="null != update_time_start and null != update_time_end">
+                <![CDATA[                   
+                   and DATE_FORMAT(update_time,'%Y-%m-%d') between #{update_time_start} and #{update_time_end}
+                ]]>
+            </if>
+        <![CDATA[
+          order by update_time desc
+        ]]>
+    </select>
+
+</mapper>

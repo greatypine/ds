@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.FerryPushMapper">
+
+
+	<select id="queryFerryPushes" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select t_ferry_push.cityname, 
+			t_ferry_push.store_id, 
+			t_store.name as storename,
+			t_ferry_push.employee_no,
+			t_ferry_push.total_house
+			from t_ferry_push,t_store  
+			where state_type = 1
+			and t_ferry_push.total_singular is not null
+			and t_ferry_push.store_id = t_store.store_id
+			and t_ferry_push.str_month = #{yearmonth}
+		]]>
+           <if test="null != cityname and '' != cityname">
+               <![CDATA[                   
+                   and cityname =#{cityname}
+               ]]>
+           </if>
+           <if test="null != storename and '' != storename">
+               <![CDATA[                   
+                   and t_store.name =#{storename}
+               ]]>
+           </if>
+	</select>	
+</mapper>
