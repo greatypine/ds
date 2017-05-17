@@ -11,8 +11,8 @@
 				IFNULL(platformid,'') as platformid,
 				storename,
 				IFNULL(username,'') as username,
-				deptname,
-				channelname,
+				IFNULL(deptname,'') as deptname,
+				IFNULL(channelname,'') as channelname,
 				datanum
 			from t_sendorders where year =#{year} and month =#{month}
 		]]>

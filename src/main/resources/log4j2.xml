@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration monitorInterval="60" status="warn">
     <Properties>
-        <Property name="path">${web:rootDir}/logs</Property>
+        <Property name="path">/tomcat/logs</Property>
     </Properties>
     <Appenders>
         <Console name="Console-Appender" target="SYSTEM_OUT">
@@ -11,7 +11,7 @@
                 </pattern>
             </PatternLayout>
         </Console>
-        <File name="App-Appender" fileName="${path}/app_log.log" >
+        <File name="App-Appender" fileName="${path}/ds.log" >
             <PatternLayout>
                 <pattern>
                     [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n

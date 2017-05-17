@@ -5,7 +5,7 @@
 
     <select id="queryStoreKeepers" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-		select humanstatus,storename,storeid,employeeno,username,zw from (
+		SELECT humanstatus,storename,storeid,employeeno,username,zw,leavedate from (
 				SELECT 
 				humanstatus as humanstatus,
 				store.name as storename,
@@ -13,6 +13,7 @@
 				keeper.employee_no as employeeno,
 				buser.name as username,
 				keeper.zw as zw,
+				IFNULL(keeper.leavedate,'') as leavedate,
 				date_format(keeper.update_time,'%Y-%m-%d %H:%i:%s') as update_time
 			FROM 
 				t_storekeeper keeper 
