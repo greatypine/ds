@@ -27,16 +27,16 @@
         </File>
     </Appenders>
     <Loggers>
-        <Logger name="org.springframework" level="info" additivity="false">
+        <Logger name="org.springframework" level="debug" additivity="false">
             <AppenderRef ref="Spring-Appender"/>
             <AppenderRef ref="Console-Appender"/>
         </Logger>
         <logger name="org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor" level="INFO"/>
-        <Logger name="com.guoanshequ.dc.das" level="info" additivity="false">
+        <Logger name="com.guoanshequ.dc.das" level="debug" additivity="false">
             <AppenderRef ref="App-Appender"/>
             <AppenderRef ref="Console-Appender"/>
         </Logger>
-        <Root level="info">
+        <Root level="debug">
             <AppenderRef ref="Console-Appender"/>
         </Root>
     </Loggers>

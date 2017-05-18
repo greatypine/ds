@@ -26,7 +26,7 @@ public class AuthService {
 
 
     public EnumRespStatus verifyAuth(String requestInfo, String requestSign) {
-
+    	logger.info(requestInfo+"*******%%%%%%%%%%%%%");
         try {
             if (StringUtils.isBlank(requestInfo)) {
                 return EnumRespStatus.REQUEST_ERROR;

@@ -10,6 +10,21 @@
 
     <build>
         <finalName>ds</finalName>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/jdbc.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -32,6 +47,47 @@
             
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>product</id>
+            <properties>
+                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+                <jdbc.url>jdbc:mysql://10.20.0.4:4006/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</jdbc.url>
+                <jdbc.username>dataaq</jdbc.username>
+                <jdbc.password>fcnXoXFGgz@^*n9#</jdbc.password>
+                
+                <slave.jdbc.url>jdbc:mysql://10.20.0.4:4006/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
+                <slave.jdbc.username>DataCollection</slave.jdbc.username>
+                <slave.jdbc.password>ZXgasjZx2016_dateanPlant@WSX@7d</slave.jdbc.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+                <jdbc.url>jdbc:mysql://10.16.31.82:3306/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</jdbc.url>
+                <jdbc.username>root</jdbc.username>
+                <jdbc.password>~UrDz5cZmFdt</jdbc.password>
+                
+                <slave.jdbc.url>jdbc:mysql://10.16.31.82:3306/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
+                <slave.jdbc.username>root</slave.jdbc.username>
+                <slave.jdbc.password>~UrDz5cZmFdt</slave.jdbc.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+                <jdbc.url>jdbc:mysql://10.16.31.82:3306/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</jdbc.url>
+                <jdbc.username>root</jdbc.username>
+                <jdbc.password>UrDz5cZmFdt</jdbc.password>
+                
+                <slave.jdbc.url>jdbc:mysql://10.16.31.82:3306/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
+                <slave.jdbc.username>root</slave.jdbc.username>
+                <slave.jdbc.password>UrDz5cZmFdt</slave.jdbc.password>
+            </properties>
+        </profile>
+    </profiles>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
