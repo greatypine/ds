@@ -8,6 +8,9 @@ import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.filter.BodyReaderHttpServletRequestWrapper;
 import com.guoanshequ.dc.das.service.AuthService;
 import com.guoanshequ.dc.das.utils.RequestJsonUtils;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -19,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AuthInterceptor extends HandlerInterceptorAdapter {
 
+	 private static final Logger logger = LogManager.getLogger(AuthInterceptor.class);
     @Autowired
     private AuthService authService;
 
@@ -29,6 +33,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
         String requestBodyString = RequestJsonUtils.getRequestJsonString(requestWrapper);
         String requestSignString = request.getParameter("sign");
+
+        logger.info("requestBodyString:" + requestBodyString);
+        logger.info("requestSignString:" + requestSignString);
 
         EnumRespStatus verifyResult = authService.verifyAuth(requestBodyString, requestSignString);
         if (!EnumRespStatus.AUTH_OK.equals(verifyResult)) {

@@ -16,9 +16,9 @@
 				datanum
 			from t_sendorders where year =#{year} and month =#{month}
 		]]>
-		 <if test="null != storename and '' != storename">
+		 <if test="null != platformid and '' != platformid">
               <![CDATA[                   
-                  and storename =#{storename}
+                  and platformid =#{platformid}
               ]]>
          </if>
 	</select>

@@ -18,16 +18,17 @@
                 </pattern>
             </PatternLayout>
         </File>
-        <File name="Spring-Appender" fileName="${path}/spring_log.log" >
+        <!-- <File name="Spring-Appender" fileName="${path}/spring_log.log" >
             <PatternLayout>
                 <pattern>
                     [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
                 </pattern>
             </PatternLayout>
-        </File>
+        </File> -->
     </Appenders>
     <Loggers>
-        <Logger name="org.springframework" level="debug" additivity="false">
+    <logger name="org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor" level="INFO"/>
+        <!-- <Logger name="org.springframework" level="debug" additivity="false">
             <AppenderRef ref="Spring-Appender"/>
             <AppenderRef ref="Console-Appender"/>
         </Logger>
@@ -35,9 +36,10 @@
         <Logger name="com.guoanshequ.dc.das" level="debug" additivity="false">
             <AppenderRef ref="App-Appender"/>
             <AppenderRef ref="Console-Appender"/>
-        </Logger>
-        <Root level="debug">
+        </Logger> -->
+        <Root level="info">
             <AppenderRef ref="Console-Appender"/>
+            <AppenderRef ref="App-Appender"/>
         </Root>
     </Loggers>
 </Configuration>
