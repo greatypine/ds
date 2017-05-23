@@ -45,7 +45,6 @@ public class AuthService {
                 } else {
                     String verifySign = EncryptUtils.getMD5(requestInfo + auth.getApp_secret());
                     if (!requestSign.equals(verifySign)) {
-                    	logger.info(verifySign+"*******%%%%%%%%%%%%%");
                         return EnumRespStatus.AUTH_ERROR;
                     }
                 }

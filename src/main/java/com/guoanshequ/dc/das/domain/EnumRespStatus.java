@@ -13,10 +13,12 @@ public enum EnumRespStatus {
     DATA_NODATA("2000004", "系统查无此条件的数据"),
     DATA_WRNOCOND("2000010", "请求参数必须包含年月、门店名称信息"),
     DATA_CSNOCOND("2000020", "请求参数必须包含年月、档数信息"),
-    DATA_CSNOCOND1("2000020", "请求参数必须包含年月、门店名称、档数信息"),
+    DATA_CSNOCOND1("2000021", "请求参数必须包含年月、门店名称、档数信息"),
+    DATA_CSHUMANTYPE("2000022", "请求参数必须包含datatype信息"),
     DATA_STORENOCOND("2000030", "请求参数必须包含开始日期、结束日期"),
     DATA_RELANOCOND("2000040", "请求参数必须包含年月条件"),
     DATA_RELANOCOND1("2000041", "请求参数必须包含年月、门店名称条件"),
+    DATA_RELAHUMANTYPE("2000042", "请求参数必须包含datatype信息"),
     DATA_SENDNOCOND("2000050", "请求参数必须包含开始日期、结束日期、门店编号、门店名称"),
     DATA_TRADENOCOND("2000060", "请求参数必须包含开始日期、结束日期、门店编号、门店名称"),
     DATA_REBUYNOCOND("2000070", "请求参数必须包含年份、月份、门店编号、门店名称"),
@@ -25,7 +27,8 @@ public enum EnumRespStatus {
     DATA_TSENDNOCOND("2000100", "请求参数必须包含年份、月份"),
     DATA_TSENDMONTH("20000101", "当前时间只能获取上月数据"),
     DATA_TNEWADDNOCOND("2000120", "请求参数必须包含年份、月份"),
-    DATA_TREBUYNOCOND("20000130", "请求参数必须包含年份、月份"),
+    DATA_TREBUYNOCOND("2000130", "请求参数必须包含年份、月份"),
+    DATA_HUMANTYPE("2000140", "请求参数必须包含datatype信息"),
     REQUEST_ERROR("8000001", "请求错误"),
     SYSTEM_ERROR("9000001", "系统错误");
 

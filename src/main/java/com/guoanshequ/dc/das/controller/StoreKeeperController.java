@@ -38,10 +38,12 @@ public class StoreKeeperController {
 	    	String username = paraMap.get("username") != null ? paraMap.get("username").toString() : null;
 	        String employeeno = paraMap.get("employeeno") != null ? paraMap.get("employeeno").toString() : null;
 	        String storename = paraMap.get("storename") != null ? paraMap.get("storename").toString() : null;
+	        String zw = paraMap.get("zw") != null ? paraMap.get("zw").toString() : null;
 	        String update_time_start = paraMap.get("update_time_start") != null ? paraMap.get("update_time_start").toString() : null;
 	        String update_time_end = paraMap.get("update_time_end") != null ? paraMap.get("update_time_end").toString() : null;
 	        if(StringUtils.isBlank(username)&&StringUtils.isBlank(employeeno)&&StringUtils.isBlank(storename)
-	        		&&StringUtils.isBlank(update_time_start)&&StringUtils.isBlank(update_time_end)){
+	        		&&StringUtils.isBlank(update_time_start)&&StringUtils.isBlank(update_time_end)
+	        		&&StringUtils.isBlank(zw)){
 	        	return new RestResponse(EnumRespStatus.DATA_NOCOND);
 	        }else if(!StringUtils.isBlank(update_time_start)&&!StringUtils.isBlank(update_time_end)){
 	        	if(DateUtils.getIntervalDays(update_time_start, update_time_end)>30){

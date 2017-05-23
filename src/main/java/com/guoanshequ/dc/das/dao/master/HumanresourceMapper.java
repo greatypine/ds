@@ -13,5 +13,7 @@ import java.util.Map;
 public interface HumanresourceMapper {
 
 	List<Map<String, String>> queryHumanresources(Map<String, String> paraMap);
+	
+	List<Map<String, String>> queryPreHumanresources(Map<String, String> paraMap);
 
 }

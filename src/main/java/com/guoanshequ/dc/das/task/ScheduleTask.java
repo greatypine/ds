@@ -59,7 +59,7 @@ public class ScheduleTask {
      * 调度规则：每月1号0点5分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron = "0 5 0 14 * ?")
+    @Scheduled(cron = "0 01 18 23 * ?")
     public void sendOrdersTask() {
     	try {
     	logger.info("**********上门送单量任务调度开始**********");
@@ -93,7 +93,7 @@ public class ScheduleTask {
      * 门店交易额任务调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron = "0 5 0 14 * ?")
+    @Scheduled(cron = "0 01 18 23 * ?")
     public void storeTradesTask() {
     	try {
     	logger.info("**********门店交易额任务调度开始**********");
@@ -127,7 +127,7 @@ public class ScheduleTask {
      * 每月新增客户总量任务调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron = "0 5 0 14 * ?")
+    @Scheduled(cron = "0 01 18 23 * ?")
     public void newAddCusTask() {
     	try {
     	logger.info("**********每月新增客户总量调度开始**********");
@@ -162,7 +162,7 @@ public class ScheduleTask {
      * 复购客户任务调度
      * 参数：year   month   rebuyStoreName  storeids
      */
-    @Scheduled(cron = "0 5 0 14 * ?")
+    @Scheduled(cron = "0 01 18 23 * ?")
     public void rebuyCusTask() {
     	try {
     	logger.info("**********复购客户任务调度开始**********");

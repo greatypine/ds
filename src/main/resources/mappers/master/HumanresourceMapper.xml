@@ -55,4 +55,73 @@
         ]]>
     </select>
 
+	  <select id="queryPreHumanresources" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			SELECT humanstatus,storename,storeid,employeeno,username,zw,
+			authorizedtype,professnallevel,remark,leavedate 
+			FROM (
+			SELECT 
+			t_humanresources.humanstatus as humanstatus,
+			t_humanresources.employee_no as employeeno,
+			t_humanresources.name as username,
+			t_humanresources.authorizedtype as authorizedtype,
+			t_humanresources.professnallevel as professnallevel,
+			IFNULL(t_humanresources.remark,'') as remark,
+			IFNULL(t_humanresources.leavedate,'') as leavedate,
+			IFNULL(IF(ISNULL(humanchangea.prestorename),t_humanresources.storename,humanchangea.prestorename),'') as storename,
+			IFNULL(IF(ISNULL(humanchangea.prestore_id),t_humanresources.store_id,humanchangea.prestore_id),'') as storeid,
+			IFNULL(IF(ISNULL(humanchangea.prezw),t_humanresources.zw,humanchangea.prezw),'') as zw,
+			DATE_FORMAT(t_humanresources.update_time,'%Y-%m-%d') as update_time
+			FROM t_humanresources
+			LEFT JOIN (
+			SELECT t_humanresources_change.employee_no,store_id as prestore_id, storename as prestorename,zw as prezw 
+			FROM t_humanresources_change ,(
+			SELECT
+				min(id) as id,
+			  employee_no
+			FROM
+				t_humanresources_change
+			WHERE
+				DATE_FORMAT(changedate, '%Y-%m') = DATE_FORMAT(now(),'%Y-%m')  
+			GROUP BY employee_no ) humanchange
+			WHERE humanchange.id = t_humanresources_change.id) humanchangea 
+			ON t_humanresources.employee_no = humanchangea.employee_no
+			WHERE DATE_FORMAT(create_time, '%Y-%m') !=DATE_FORMAT(now(),'%Y-%m') ) humanchangeb
+		]]>
+        <where>
+            <if test="null != username and '' != username">
+                <![CDATA[                   
+                   username like concat('%',#{username},'%')
+                ]]>
+            </if>
+            <if test="null != employeeno and '' != employeeno">
+                <![CDATA[
+                   and employeeno = #{employeeno}
+               ]]>
+            </if>
+            <if test="null != update_time_start and null != update_time_end">
+                <![CDATA[                   
+                   and DATE_FORMAT(update_time,'%Y-%m-%d') between #{update_time_start} and #{update_time_end}
+                ]]>
+            </if>
+            <if test="null != storename and  '' != storename">
+                <![CDATA[                   
+                   and storename =#{storename}
+                ]]>
+            </if>
+            <if test="null != zw and '' != zw">
+                <![CDATA[                   
+                   and zw =#{zw}
+                ]]>
+            </if>
+            <if test="null != humanstatus and '' != humanstatus">
+                <![CDATA[                   
+                   and humanstatus =#{humanstatus}
+                ]]>
+            </if>
+        </where>
+        <![CDATA[
+          order by update_time desc
+        ]]>
+    </select>
 </mapper>

@@ -34,8 +34,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         String requestBodyString = RequestJsonUtils.getRequestJsonString(requestWrapper);
         String requestSignString = request.getParameter("sign");
 
-        logger.info("requestBodyString:" + requestBodyString);
-        logger.info("requestSignString:" + requestSignString);
 
         EnumRespStatus verifyResult = authService.verifyAuth(requestBodyString, requestSignString);
         if (!EnumRespStatus.AUTH_OK.equals(verifyResult)) {

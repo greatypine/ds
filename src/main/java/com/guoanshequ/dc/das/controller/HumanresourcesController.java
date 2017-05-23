@@ -39,18 +39,26 @@ public class HumanresourcesController {
 	        String employeeno = paraMap.get("employeeno") != null ? paraMap.get("employeeno").toString() : null;
 	        String storename = paraMap.get("storename") != null ? paraMap.get("storename").toString() : null;
 	        String zw = paraMap.get("zw") != null ? paraMap.get("zw").toString() : null;
+	        String datatype = paraMap.get("datatype") != null ? paraMap.get("datatype").toString() : null;
 	        String update_time_start = paraMap.get("update_time_start") != null ? paraMap.get("update_time_start").toString() : null;
 	        String update_time_end = paraMap.get("update_time_end") != null ? paraMap.get("update_time_end").toString() : null;
 	        if(StringUtils.isBlank(username)&&StringUtils.isBlank(employeeno)
 	        	&&StringUtils.isBlank(update_time_start)&&StringUtils.isBlank(update_time_end)
 	        	&&StringUtils.isBlank(storename)&&StringUtils.isBlank(zw)){
 	        	return new RestResponse(EnumRespStatus.DATA_NOCOND);
+	        }else if(StringUtils.isBlank(datatype)){
+	        	return new RestResponse(EnumRespStatus.DATA_HUMANTYPE);
 	        }else if(!StringUtils.isBlank(update_time_start)&&!StringUtils.isBlank(update_time_end)){
 	        	if(DateUtils.getIntervalDays(update_time_start, update_time_end)>30){
 	        		return new RestResponse(EnumRespStatus.DATA_LIMIT);
 	        	}
 	    	}
-			List<Map<String, String>> list = humanresourceService.queryHumanresources(paraMap);
+			List<Map<String, String>> list = null;
+			if("0".equals(datatype)){//实时人员数据
+				list = humanresourceService.queryHumanresources(paraMap);
+			}else if("1".equals(datatype)){//上月异动人员数据
+				list = humanresourceService.queryPreHumanresources(paraMap);
+			}
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
