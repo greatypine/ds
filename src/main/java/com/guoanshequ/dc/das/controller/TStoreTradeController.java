@@ -40,7 +40,7 @@ public class TStoreTradeController {
     		String year = paraMap.get("year") != null ? paraMap.get("year").toString() : null;
  	        String month = paraMap.get("month") != null ? paraMap.get("month").toString() : null;
  	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)){
- 	        	return new RestResponse(EnumRespStatus.DATA_TRADENOCOND);
+ 	        	return new RestResponse(EnumRespStatus.DATA_TTRADENOCOND);
  	        }
 //  	        Calendar cal = Calendar.getInstance();
 //  	        String preMonth = cal.get(Calendar.MONTH)+"";

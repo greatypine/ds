@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 @Service("AuthService")
-@Transactional("slave")
+@Transactional(value = "master",rollbackFor = Exception.class)
 public class AuthService {
 
     @Autowired

@@ -12,14 +12,14 @@
 				store_name,
 				rebuy_count,
 				rebuy_20_count
-			from t_rebuycus where year =#{year} and month =#{month}
+			from ds_rebuycus where year =#{year} and month =#{month}
 		]]>
 	</select>
 	
 	
 	<insert id="addTRebuyCus" parameterType="java.util.Map">
 		<![CDATA[
-			INSERT INTO t_rebuycus (
+			INSERT INTO ds_rebuycus (
 				city_name, platformid,store_name, rebuy_count, rebuy_20_count,
 				year,month,createtime
 			) VALUES(

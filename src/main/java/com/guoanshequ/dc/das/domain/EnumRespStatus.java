@@ -28,7 +28,8 @@ public enum EnumRespStatus {
     DATA_TSENDMONTH("20000101", "当前时间只能获取上月数据"),
     DATA_TNEWADDNOCOND("2000120", "请求参数必须包含年份、月份"),
     DATA_TREBUYNOCOND("2000130", "请求参数必须包含年份、月份"),
-    DATA_HUMANTYPE("2000140", "请求参数必须包含datatype信息"),
+    DATA_TTRADENOCOND("2000140", "请求参数必须包含年份、月份"),
+    DATA_HUMANTYPE("2000150", "请求参数必须包含datatype信息"),
     REQUEST_ERROR("8000001", "请求错误"),
     SYSTEM_ERROR("9000001", "系统错误");
 

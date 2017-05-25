@@ -28,8 +28,8 @@ import java.util.Map;
 * @date 2017年4月13日
 * @version 1.0
 * 说明:上门送单量任务调度、门店交易额任务调度、新增消费用户任务调度、复购用户任务调度
-* 每月1号0时5分开始调度 (cron ="0 5 0 1 * ?") ：上门送单量任务调度、门店交易额任务调度、复购用户任务调度
-* 每月2号0时5分开始调度 (cron ="0 5 0 2 * ?") ：新增消费用户任务调度
+* 每月1号0时30分开始调度 (cron ="0 30 0 1 * ?") ：上门送单量任务调度、门店交易额任务调度、复购用户任务调度
+* 每月1号0时30分开始调度 (cron ="0 30 0 1 * ?") ：新增消费用户任务调度
  */
 @Component
 public class ScheduleTask {
@@ -56,10 +56,10 @@ public class ScheduleTask {
     
     /**
      * 上门送单量任务调度
-     * 调度规则：每月1号0点5分开始调度
+     * 调度规则：每月1号0点30分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron = "0 01 18 23 * ?")
+    @Scheduled(cron ="0 30 0 1 * ?")
     public void sendOrdersTask() {
     	try {
     	logger.info("**********上门送单量任务调度开始**********");
@@ -93,7 +93,7 @@ public class ScheduleTask {
      * 门店交易额任务调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron = "0 01 18 23 * ?")
+    @Scheduled(cron ="0 30 0 1 * ?")
     public void storeTradesTask() {
     	try {
     	logger.info("**********门店交易额任务调度开始**********");
@@ -115,7 +115,7 @@ public class ScheduleTask {
 			for (Map<String, String> storeTradeMap : storeTradesList) {
 				tstoreTradeService.addTStoreTrades(storeTradeMap);
 			}
-		  }
+		}
 		logger.info("**********门店交易额任务调度结束**********");
 		logger.info("共调度数据记录行数："+storeTradesList.size());
 		} catch (Exception e) {
@@ -127,7 +127,7 @@ public class ScheduleTask {
      * 每月新增客户总量任务调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron = "0 01 18 23 * ?")
+    @Scheduled(cron ="0 30 0 1 * ?")
     public void newAddCusTask() {
     	try {
     	logger.info("**********每月新增客户总量调度开始**********");
@@ -162,7 +162,7 @@ public class ScheduleTask {
      * 复购客户任务调度
      * 参数：year   month   rebuyStoreName  storeids
      */
-    @Scheduled(cron = "0 01 18 23 * ?")
+    @Scheduled(cron ="0 30 0 1 * ?")
     public void rebuyCusTask() {
     	try {
     	logger.info("**********复购客户任务调度开始**********");

@@ -10,13 +10,13 @@
  				city_name, platformid,store_name, order_amount, other_order_amount,
  				returned_amount, other_returned_amount, order_count,
  				other_order_count, returned_count, other_returned_count
- 			from t_storetrade where year=#{year} and month=#{month}
+ 			from ds_storetrade where year=#{year} and month=#{month}
 		]]>
 	</select>
 	
 	<insert id="addTStoreTrades" parameterType="java.util.Map">
 		<![CDATA[
-			INSERT INTO t_storetrade (
+			INSERT INTO ds_storetrade (
 				city_name, platformid,store_name, order_amount, other_order_amount,
 				returned_amount, other_returned_amount,	order_count,
 				other_order_count, returned_count, other_returned_count,

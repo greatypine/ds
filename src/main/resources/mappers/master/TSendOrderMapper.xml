@@ -14,7 +14,7 @@
 				IFNULL(deptname,'') as deptname,
 				IFNULL(channelname,'') as channelname,
 				datanum
-			from t_sendorders where year =#{year} and month =#{month}
+			from ds_sendorders where year =#{year} and month =#{month}
 		]]>
 		 <if test="null != platformid and '' != platformid">
               <![CDATA[                   
@@ -25,7 +25,7 @@
 	
 	<insert id="addTSendOrders" parameterType="java.util.Map">
 		<![CDATA[
-			insert into t_sendorders(cityname,platformid,storename,username,deptname,channelname,datanum,year,month,createtime) 
+			insert into ds_sendorders(cityname,platformid,storename,username,deptname,channelname,datanum,year,month,createtime) 
 			values(#{cityname},#{platformid},#{storename},#{username},#{deptname},#{channelname},#{datanum},
 			YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),NOW())
 		]]>

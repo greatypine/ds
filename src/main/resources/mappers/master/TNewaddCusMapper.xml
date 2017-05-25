@@ -15,14 +15,14 @@
 				total_count,
 				pay_20_count,
 				new_20_count
-			from t_newaddcus where year =#{year} and month =#{month}
+			from ds_newaddcus where year =#{year} and month =#{month}
 		]]>
 	</select>
 	
 	
 	<insert id="addTNewaddCus" parameterType="java.util.Map">
 		<![CDATA[
-			INSERT INTO t_newaddcus (
+			INSERT INTO ds_newaddcus (
 				city_name, platformid,store_name, pay_count, new_count,
 				total_count, pay_20_count, new_20_count,
 				year,month,createtime
