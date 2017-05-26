@@ -18,7 +18,7 @@
 			FROM 
 				t_storekeeper keeper 
 			LEFT JOIN tb_bizbase_user buser on keeper.employee_no = buser.employeeid
-			LEFT JOIN t_store store on buser.id = store.skid ) keepstore
+			LEFT JOIN t_store store on buser.id = store.skid and store.name not like '%测试%') keepstore
 			WHERE storeid is not null
 		]]>
             <if test="null != username and '' != username">

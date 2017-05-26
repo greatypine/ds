@@ -15,19 +15,23 @@
 			from t_store store 
 			left join t_town town ON store.town_id = town.id
 			left join t_county county ON town.county_id = county.id
+			where store.name not like '%测试%'
 		]]>
-        <where>
-            <if test="null != update_time_start and null != update_time_end">
-                <![CDATA[                   
-                    DATE_FORMAT(store.update_time,'%Y-%m-%d') between #{update_time_start} and #{update_time_end}
-                ]]>
-            </if>
-            <if test="null != storename">
-                <![CDATA[                   
-                    store.name = #{storename}
-                ]]>
-            </if>
-        </where>
+         <if test="null != update_time_start and null != update_time_end">
+             <![CDATA[                   
+                and DATE_FORMAT(store.update_time,'%Y-%m-%d') between #{update_time_start} and #{update_time_end}
+             ]]>
+         </if>
+         <if test="null != storename">
+             <![CDATA[                   
+                and store.name = #{storename}
+             ]]>
+         </if>
+         <if test="null != cityname">
+             <![CDATA[                   
+                and store.city_name = #{cityname}
+             ]]>
+         </if>
         <![CDATA[
           order by store.update_time desc
         ]]>
