@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -43,12 +42,6 @@ public class TSendOrderController {
  	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)){
  	        	return new RestResponse(EnumRespStatus.DATA_TSENDNOCOND);
  	        }
-// 	       Calendar cal = Calendar.getInstance();
-// 	       String preMonth = cal.get(Calendar.MONTH)+"";
-// 	       if(!month.equals(preMonth)){
-// 	    	  return new RestResponse(EnumRespStatus.DATA_TSENDMONTH);
-// 	       }
- 	       
 			List<Map<String, String>> list = tsendOrderService.queryTSendOrders(paraMap);
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
@@ -60,5 +53,26 @@ public class TSendOrderController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
+    }
+    
+    @RequestMapping(value="rest/deleteTSendOrders")
+    public RestResponse deleteTSendOrders(@RequestBody Map<String,String> paraMap)throws Exception{
+    	try {
+			String year = paraMap.get("year")!=null ?paraMap.get("year").toString() :null;
+			String month = paraMap.get("month")!=null ?paraMap.get("month").toString():null;
+			if(StringUtils.isBlank(year)||StringUtils.isBlank(month)){
+				return new RestResponse(EnumRespStatus.DATA_TSENDNOCOND);
+			}
+			int resultnum = tsendOrderService.deleteByYearMonth(paraMap);
+			if(resultnum<=0){
+				return new RestResponse(EnumRespStatus.DATA_NODATA);
+			}else{
+				return new RestResponse(EnumRespStatus.DATA_OK,resultnum);
+			}
+		} catch (Exception e) {
+			logger.error(e.toString());
+			e.printStackTrace();
+			return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+		}
     }
 }

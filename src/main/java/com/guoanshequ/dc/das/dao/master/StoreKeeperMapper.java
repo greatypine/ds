@@ -12,4 +12,7 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 public interface StoreKeeperMapper {
 
 	List<Map<String, String>> queryStoreKeepers(Map<String, String> paraMap);
+	
+	List<Map<String, String>> queryPreStoreKeepers(Map<String, String> paraMap);
+	
 }

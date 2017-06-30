@@ -14,4 +14,6 @@ public interface TStoreTradeMapper{
 	List<Map<String, String>> queryTStoreTrades(Map<String, String> paraMap);
 	
 	void addTStoreTrades(Map<String, String> paraMap);
+	
+	int deleteByYearMonth(Map<String, String> paraMap);
 }

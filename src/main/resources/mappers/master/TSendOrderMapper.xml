@@ -30,4 +30,10 @@
 			YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),NOW())
 		]]>
 	</insert>
+	
+	<delete id="deleteByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_sendorders where year =#{year} and month =#{month}
+		]]>
+	</delete>
 </mapper>

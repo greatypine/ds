@@ -37,10 +37,9 @@ public class StoreTradeController {
     	try{
     		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
  	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
- 	        String storename = paraMap.get("storename") != null ? paraMap.get("storename").toString() : null; 
  	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
  	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)
- 	 	        	||StringUtils.isBlank(storename)||StringUtils.isBlank(storeids)){
+ 	 	        	||StringUtils.isBlank(storeids)){
  	        	return new RestResponse(EnumRespStatus.DATA_TRADENOCOND);
  	        }
 			List<Map<String, String>> list = storeTradeService.queryStoreTrades(paraMap);

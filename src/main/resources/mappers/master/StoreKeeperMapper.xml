@@ -50,5 +50,68 @@
           order by update_time desc
         ]]>
     </select>
-
+    
+    
+        <select id="queryPreStoreKeepers" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select humanstatus,storename,storeid,employeeno,username,zw,leavedate from (
+			select cc.humanstatus,cc.storename,cc.storeid,cc.employeeno,cc.zw,cc.leavedate,
+						keeper.`name` username,cc.update_time 
+			from (select bb.store_id as storeid,
+			       bb.storename as storename,
+						 IFNULL(bb.leavedate,'') as leavedate,
+						 date_format(bb.update_time,'%Y-%m-%d') as update_time,
+					   IF(ISNULL(aa.preemployee_no),bb.employee_no,aa.preemployee_no) as employeeno,
+						 IF(ISNULL(aa.prezw),bb.zw,aa.prezw) as zw,
+						 IF(ISNULL(aa.prehumanstatus),bb.humanstatus,aa.prehumanstatus)as humanstatus
+			from (
+						select t_store.store_id,t_store.`name` storename, t_storekeeper.employee_no,t_storekeeper.zw,
+									 t_storekeeper.citySelect,t_storekeeper.humanstatus,t_storekeeper.leavedate,t_storekeeper.update_time
+						from t_store ,t_storekeeper,tb_bizbase_user
+						where t_store.skid = tb_bizbase_user.id
+						and t_storekeeper.employee_no = tb_bizbase_user.employeeId
+						and t_store.name not like '%测试%' ) as bb 
+					LEFT JOIN (select t_storekeeper_change.store_ids prestoreids,t_storekeeper_change.employee_no preemployee_no, 
+										 t_storekeeper_change.zw prezw, t_storekeeper_change.citySelect precitySelect,
+										 t_storekeeper_change.humanstatus as prehumanstatus
+				  from t_storekeeper_change ,(select max(id) as id, employee_no from t_storekeeper_change 
+							where DATE_FORMAT(update_time, '%Y-%m') = DATE_FORMAT(now(),'%Y-%m') 
+							group by employee_no ) as keeperchange 
+					where t_storekeeper_change.id = keeperchange.id ) as aa
+					on concat(',',aa.prestoreids,',') like concat('%,',cast(bb.store_id as char),',%') 
+			 ) cc ,t_storekeeper keeper
+			where cc.employeeno = keeper.employee_no
+			and  DATE_FORMAT(keeper.create_time, '%Y-%m') !=DATE_FORMAT(now(),'%Y-%m') ) dd
+		]]>
+		<where>
+            <if test="null != username and '' != username">
+                <![CDATA[                   
+                  and username like concat('%',#{username},'%')
+                ]]>
+            </if>
+            <if test="null != employeeno and '' != employeeno">
+                <![CDATA[
+                   and employeeno = #{employeeno}
+               ]]>
+            </if>
+            <if test="null != storename and '' != storename">
+                <![CDATA[                   
+                   and storename = #{storename}
+                ]]>
+            </if>
+            <if test="null != update_time_start and null != update_time_end">
+                <![CDATA[                   
+                   and DATE_FORMAT(update_time,'%Y-%m-%d') between #{update_time_start} and #{update_time_end}
+                ]]>
+            </if>
+            <if test="null != zw and '' != zw">
+                <![CDATA[                   
+                   and zw =#{zw}
+                ]]>
+            </if>
+           </where>
+        <![CDATA[
+          order by update_time desc
+        ]]>
+    </select>
 </mapper>

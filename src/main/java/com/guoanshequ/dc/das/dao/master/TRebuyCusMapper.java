@@ -14,4 +14,6 @@ public interface TRebuyCusMapper{
 	List<Map<String, String>> queryTRebuyCus(Map<String, String> paraMap);
 	
 	void addTRebuyCus(Map<String, String> paraMap);
+	
+	int deleteByYearMonth(Map<String, String> paraMap);
 }

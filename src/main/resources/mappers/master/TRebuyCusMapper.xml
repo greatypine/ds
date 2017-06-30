@@ -31,4 +31,10 @@
 		]]>
 	</insert>
 	
+	<delete id="deleteByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_rebuycus where year =#{year} and month =#{month}
+		]]>
+	</delete>
+	
 </mapper>

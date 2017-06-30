@@ -3,6 +3,7 @@ package com.guoanshequ.dc.das.controller;
 import com.guoanshequ.dc.das.domain.EnumRespStatus;
 import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.service.HumanresourceService;
+import com.guoanshequ.dc.das.service.TopDataService;
 import com.guoanshequ.dc.das.utils.DateUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,24 +30,18 @@ public class HumanresourcesController {
 
     @Autowired
     HumanresourceService humanresourceService;
-
+    @Autowired
+    TopDataService topDataService;
+    
     private static final Logger logger = LogManager.getLogger(HumanresourceService.class);
     
     @RequestMapping(value = "rest/queryHumanresources", consumes="application/json")
     public RestResponse queryHumanresources(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
-	    	String username = paraMap.get("username") != null ? paraMap.get("username").toString() : null;
-	        String employeeno = paraMap.get("employeeno") != null ? paraMap.get("employeeno").toString() : null;
-	        String storename = paraMap.get("storename") != null ? paraMap.get("storename").toString() : null;
-	        String zw = paraMap.get("zw") != null ? paraMap.get("zw").toString() : null;
-	        String datatype = paraMap.get("datatype") != null ? paraMap.get("datatype").toString() : null;
 	        String update_time_start = paraMap.get("update_time_start") != null ? paraMap.get("update_time_start").toString() : null;
 	        String update_time_end = paraMap.get("update_time_end") != null ? paraMap.get("update_time_end").toString() : null;
-	        if(StringUtils.isBlank(username)&&StringUtils.isBlank(employeeno)
-	        	&&StringUtils.isBlank(update_time_start)&&StringUtils.isBlank(update_time_end)
-	        	&&StringUtils.isBlank(storename)&&StringUtils.isBlank(zw)){
-	        	return new RestResponse(EnumRespStatus.DATA_NOCOND);
-	        }else if(StringUtils.isBlank(datatype)){
+	        String datatype = paraMap.get("datatype") != null ? paraMap.get("datatype").toString() : null;
+	        if(StringUtils.isBlank(datatype)){
 	        	return new RestResponse(EnumRespStatus.DATA_HUMANTYPE);
 	        }else if(!StringUtils.isBlank(update_time_start)&&!StringUtils.isBlank(update_time_end)){
 	        	if(DateUtils.getIntervalDays(update_time_start, update_time_end)>30){
@@ -57,7 +52,8 @@ public class HumanresourcesController {
 			if("0".equals(datatype)){//实时人员数据
 				list = humanresourceService.queryHumanresources(paraMap);
 			}else if("1".equals(datatype)){//上月异动人员数据
-				list = humanresourceService.queryPreHumanresources(paraMap);
+//				list = humanresourceService.queryPreHumanresources(paraMap);
+				list = topDataService.queryHumanResourcesOnTop(paraMap);
 			}
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);

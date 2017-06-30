@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoanshequ.dc.das.dao.master.RelationMapper">
 
-
+	<!-- 与平台数据卡相对应sql，人员是实时人员 -->
 	<select id="queryRelations" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-        	SELECT employee_no,num FROM (
+        	SELECT employee_no as employeeno,num FROM (
 			SELECT  t.store_id,t.employee_no, SUM(t.curr_month_amount) AS num 
 			FROM (SELECT 	empamou.store_id,  empamou.employee_no, empamou.employee_name, empamou.data_amount AS curr_month_amount 
 			      FROM (  SELECT u.store_id, r.employee_name, r.employee_no, DATE_FORMAT(r.relation_date,'%Y-%m') AS mounth,
@@ -19,18 +19,18 @@
 			ORDER BY t.store_id,t.employee_no ) st_relation
 		]]>
 		 <where>
-            <if test="null != employee_no and null != employee_no">
+            <if test="null != employeeno and null != employeeno">
                <![CDATA[                   
-                   employee_no = #{employee_no}
+                   employee_no = #{employeeno}
                ]]>
             </if>
          </where>
 	</select>
 	
-	
+	<!-- 以门店为单位统计总数 -->
  	<select id="queryRelationsByStore" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-			SELECT t_store.store_id ,t_store.name as storename ,sum(num) as num FROM (
+			SELECT t_store.store_id as storeid,t_store.name as storename ,sum(num) as num FROM (
 			SELECT  t.store_id,t.employee_no, SUM(t.curr_month_amount) AS num  
 			FROM (SELECT 	empamou.store_id,  empamou.employee_no, empamou.employee_name, empamou.data_amount AS curr_month_amount 
 			      FROM (  SELECT u.store_id, r.employee_name, r.employee_no, DATE_FORMAT(r.relation_date,'%Y-%m') AS mounth,
@@ -43,8 +43,7 @@
 			GROUP BY  t.employee_no HAVING t.store_id is not NULL 
 			ORDER BY t.store_id,t.employee_no) aa ,t_store
 			WHERE aa.store_id = t_store.store_id
-			AND t_store.name=#{storename}
-			GROUP by store_id
+			GROUP by t_store.store_id
 		]]>
 	</select> 
 </mapper>

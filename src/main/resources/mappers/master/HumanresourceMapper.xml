@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoanshequ.dc.das.dao.master.HumanresourceMapper">
 
-
+	<!-- 获取系统实时人员数据 -->
     <select id="queryHumanresources" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 		select humanstatus,storename,storeid,employeeno,username,zw,
@@ -55,6 +55,7 @@
         ]]>
     </select>
 
+	<!-- 获取截止当前日期发生异动人员之前的所在门店职位信息-->
 	  <select id="queryPreHumanresources" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 			SELECT humanstatus,storename,storeid,employeeno,username,zw,
@@ -69,7 +70,7 @@
 			IFNULL(t_humanresources.remark,'') as remark,
 			IFNULL(t_humanresources.leavedate,'') as leavedate,
 			IFNULL(IF(ISNULL(humanchangea.prestorename),t_humanresources.storename,humanchangea.prestorename),'') as storename,
-			IFNULL(IF(ISNULL(humanchangea.prestore_id),t_humanresources.store_id,humanchangea.prestore_id),'') as storeid,
+			IFNULL(IF(ISNULL(humanchangea.prestore_id),t_humanresources.store_id,humanchangea.prestore_id),NULL) as storeid,
 			IFNULL(IF(ISNULL(humanchangea.prezw),t_humanresources.zw,humanchangea.prezw),'') as zw,
 			DATE_FORMAT(t_humanresources.update_time,'%Y-%m-%d') as update_time
 			FROM t_humanresources

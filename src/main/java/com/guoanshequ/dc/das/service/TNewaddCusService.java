@@ -33,4 +33,8 @@ public class TNewaddCusService {
     public void addTNewaddCus(Map<String, String> paraMap){
     	tnewaddCusDao.addTNewaddCus(paraMap);
     }
+    
+    public int deleteByYearMonth(Map<String, String> paraMap){
+    	return tnewaddCusDao.deleteByYearMonth(paraMap);
+    }
 }

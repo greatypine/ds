@@ -33,4 +33,8 @@ public class TSendOrderService {
     public void addTSendOrders(Map<String, String> paraMap){
     	 tsendOrderDao.addTSendOrders(paraMap);
     }
+    
+    public int deleteByYearMonth(Map<String, String> paraMap){
+    	return tsendOrderDao.deleteByYearMonth(paraMap);
+    }
 }

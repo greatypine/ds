@@ -11,7 +11,7 @@
 			FROM (
 					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.one_date AS firstdate
 					FROM t_customer tc
-					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					LEFT JOIN (select thc2.id,thc2.house_id,thc2.customer_id,thc2.one_pay,thc2.six_pay,thc2.one_date,thc2.six_date,thc2.third_grade_pay,thc2.third_grade_date from (select max(id) as id from t_house_customer GROUP BY customer_id) thc1 INNER JOIN t_house_customer thc2 on thc1.id=thc2.id) thc ON tc.id = thc.customer_id
 					WHERE DATE_FORMAT(thc.one_date, '%Y-%m') =#{yearmonth}			
 				) T
 			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
@@ -35,7 +35,7 @@
 			FROM (
 					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.six_date AS seconddate
 					FROM t_customer tc
-					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					LEFT JOIN (select thc2.id,thc2.house_id,thc2.customer_id,thc2.one_pay,thc2.six_pay,thc2.one_date,thc2.six_date,thc2.third_grade_pay,thc2.third_grade_date from (select max(id) as id from t_house_customer GROUP BY customer_id) thc1 INNER JOIN t_house_customer thc2 on thc1.id=thc2.id) thc ON tc.id = thc.customer_id
 					WHERE	DATE_FORMAT(thc.six_date, '%Y-%m') = #{yearmonth} 			
 				) T
 			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
@@ -59,7 +59,7 @@
 			FROM (
 					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.third_grade_date AS thirddate
 					FROM t_customer tc
-					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					LEFT JOIN (select thc2.id,thc2.house_id,thc2.customer_id,thc2.one_pay,thc2.six_pay,thc2.one_date,thc2.six_date,thc2.third_grade_pay,thc2.third_grade_date from (select max(id) as id from t_house_customer GROUP BY customer_id) thc1 INNER JOIN t_house_customer thc2 on thc1.id=thc2.id) thc ON tc.id = thc.customer_id
 					WHERE	DATE_FORMAT(thc.third_grade_date, '%Y-%m') = #{yearmonth} 			
 				) T
 			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
@@ -90,13 +90,12 @@
 			FROM (
 					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.one_date AS firstdate
 					FROM t_customer tc
-					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					LEFT JOIN (select thc2.id,thc2.house_id,thc2.customer_id,thc2.one_pay,thc2.six_pay,thc2.one_date,thc2.six_date,thc2.third_grade_pay,thc2.third_grade_date from (select max(id) as id from t_house_customer GROUP BY customer_id) thc1 INNER JOIN t_house_customer thc2 on thc1.id=thc2.id) thc ON tc.id = thc.customer_id
 					WHERE DATE_FORMAT(thc.one_date, '%Y-%m') = #{yearmonth}			
 				) T
-			LEFT JOIN t_humanresources on t_humanresources.employee_no = T.emplyeeno
-			LEFT JOIN t_store on t_store.id = t_humanresources.store_id
+			LEFT JOIN tb_bizbase_user on tb_bizbase_user.employeeId = T.emplyeeno
+			LEFT JOIN t_store on t_store.store_id = tb_bizbase_user.store_id
 			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
-			AND t_store.name =#{storename}
 			GROUP BY T.emplyeeno
 			HAVING datacount>0 ) t1
 			GROUP BY store_id,storename
@@ -118,13 +117,12 @@
 			FROM (
 					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.six_date AS seconddate
 					FROM t_customer tc
-					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					LEFT JOIN (select thc2.id,thc2.house_id,thc2.customer_id,thc2.one_pay,thc2.six_pay,thc2.one_date,thc2.six_date,thc2.third_grade_pay,thc2.third_grade_date from (select max(id) as id from t_house_customer GROUP BY customer_id) thc1 INNER JOIN t_house_customer thc2 on thc1.id=thc2.id) thc ON tc.id = thc.customer_id
 					WHERE	DATE_FORMAT(thc.six_date, '%Y-%m') = #{yearmonth} 			
 				) T
-			LEFT JOIN t_humanresources on t_humanresources.employee_no = T.emplyeeno
-			LEFT JOIN t_store on t_store.id = t_humanresources.store_id
+			LEFT JOIN tb_bizbase_user on tb_bizbase_user.employeeId = T.emplyeeno
+			LEFT JOIN t_store on t_store.store_id = tb_bizbase_user.store_id
 			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
-			AND t_store.name =#{storename}
 			GROUP BY T.emplyeeno
 			HAVING datacount > 0 ) t2
 			GROUP BY store_id,storename
@@ -140,21 +138,20 @@
 				sum(datacount) as datacount 
 			from (
 			SELECT
-				t_humanresources.store_id,
-				t_humanresources.storename,
-				SUM(CASE WHEN (DATE_FORMAT(T.`thirddate`,'%Y-%m' ) = #{yearmonth}) THEN
+				t_store.store_id,
+				t_store.`name` as storename,
+				T.emplyeeno,SUM(CASE WHEN (DATE_FORMAT(T.`thirddate`,'%Y-%m' ) = #{yearmonth}) THEN
 						1 ELSE 0 END ) AS datacount
 			FROM (
 					SELECT thc.id AS customerid, tc.employee_no AS emplyeeno, thc.third_grade_date AS thirddate
 					FROM t_customer tc
-					LEFT JOIN t_house_customer thc ON tc.id = thc.customer_id
+					LEFT JOIN (select thc2.id,thc2.house_id,thc2.customer_id,thc2.one_pay,thc2.six_pay,thc2.one_date,thc2.six_date,thc2.third_grade_pay,thc2.third_grade_date from (select max(id) as id from t_house_customer GROUP BY customer_id) thc1 INNER JOIN t_house_customer thc2 on thc1.id=thc2.id) thc ON tc.id = thc.customer_id
 					WHERE	DATE_FORMAT(thc.third_grade_date, '%Y-%m') = #{yearmonth} 			
 				) T
-			LEFT JOIN t_humanresources on t_humanresources.employee_no = T.emplyeeno
-			LEFT JOIN t_store on t_store.id = t_humanresources.store_id
+			LEFT JOIN tb_bizbase_user on tb_bizbase_user.employeeId = T.emplyeeno
+			LEFT JOIN t_store on t_store.store_id = tb_bizbase_user.store_id
 			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
-			AND t_store.name =#{storename}
-			GROUP BY t_humanresources.store_id
+			GROUP BY T.emplyeeno
 			HAVING datacount>0 ) t3
 			GROUP BY store_id,storename
 		]]>

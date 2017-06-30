@@ -108,7 +108,7 @@ public class ScheduleTask {
     	String storeIds = storeNumberService.queryStoreNumbers();
     	paraMap.put("begindate", begindate);
     	paraMap.put("enddate", enddate);
-    	paraMap.put("storename", "全部");
+    	//paraMap.put("storename", "全部");
     	paraMap.put("storeids", storeIds);
 		List<Map<String, String>> storeTradesList = storeTradeService.queryStoreTrades(paraMap);
 		if(!storeTradesList.isEmpty()){

@@ -5,6 +5,8 @@ import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.service.HumanresourceService;
 import com.guoanshequ.dc.das.service.RelationService;
 import com.guoanshequ.dc.das.service.StoreService;
+import com.guoanshequ.dc.das.service.TopDataService;
+import com.guoanshequ.dc.das.utils.DateUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,8 @@ public class RelationController {
     HumanresourceService humanresourceService;
     @Autowired
     StoreService storeService;
+    @Autowired
+    TopDataService topDataService;
     
     private static final Logger logger = LogManager.getLogger(RelationService.class);
     /**
@@ -49,7 +54,22 @@ public class RelationController {
 	        if(StringUtils.isBlank(yearmonth)){
 	        	return new RestResponse(EnumRespStatus.DATA_RELANOCOND);
 	        }
-			List<Map<String, String>> list = relationService.queryRelations(paraMap);
+	    	//得到上月的月初月末日期
+	    	Map<String, String> datemap = DateUtils.getFirstday_Lastday_Month(new Date());
+	    	//上月月初日期
+	    	String begindate = datemap.get("first");
+	    	//获取上月形式，年份月份：YYYY-MM
+	    	String preYearMonth = begindate.substring(0, 7);
+	        List<Map<String, String>> list = null;
+	    	if(yearmonth.compareTo(preYearMonth)>0){//请求月份大于绩效月份则取实时数据
+	    		list = relationService.queryRelations(paraMap);
+	    	}else{
+	    		list = topDataService.queryRelationnumOnTop(paraMap);
+	    		 if(null==list||list.isEmpty()){
+	    			 list = relationService.queryRelations(paraMap);
+	    		 }
+	    	}
+			
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
@@ -63,7 +83,7 @@ public class RelationController {
     }
     /**
      * 按门店统计拜访记录总数
-     */
+     
     @RequestMapping(value = "rest/queryRelationsByStore")
     public RestResponse queryRelationsByStore(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
@@ -115,6 +135,39 @@ public class RelationController {
 	        }else{
 	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
 	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    */
+    
+    @RequestMapping(value = "rest/queryRelationsByStore")
+    public RestResponse queryRelationsByStore(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+	        String yearmonth = paraMap.get("yearmonth") != null ? paraMap.get("yearmonth").toString() : null;
+	        if(StringUtils.isBlank(yearmonth)){
+	        	return new RestResponse(EnumRespStatus.DATA_RELANOCOND);
+	        }
+	    	//得到上月的月初月末日期
+	    	Map<String, String> datemap = DateUtils.getFirstday_Lastday_Month(new Date());
+	    	//上月月初日期
+	    	String begindate = datemap.get("first");
+	    	//获取上月形式，年份月份：YYYY-MM
+	    	String preYearMonth = begindate.substring(0, 7);
+	        List<Map<String, String>> list = null;
+	    	if(yearmonth.compareTo(preYearMonth)>0){//请求月份大于绩效月份则取实时数据
+	    		list = relationService.queryRelationsByStore(paraMap);
+	    	}else{
+	    		list = topDataService.queryStoreRelationnumOnTop(paraMap);
+	    	}
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        }
+    		
     	}catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();

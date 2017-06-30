@@ -33,4 +33,8 @@ public class TStoreTradeService {
     public void addTStoreTrades(Map<String, String> paraMap){
     	tstoreTradeDao.addTStoreTrades(paraMap);
     }
+    
+    public int deleteByYearMonth(Map<String, String> paraMap){
+    	return tstoreTradeDao.deleteByYearMonth(paraMap);
+    }
 }

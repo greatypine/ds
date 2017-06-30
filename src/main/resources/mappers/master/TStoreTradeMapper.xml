@@ -30,4 +30,9 @@
 		]]>
 	</insert>
 	
+	<delete id="deleteByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_storetrade where year =#{year} and month =#{month}
+		]]>
+	</delete>
 </mapper>

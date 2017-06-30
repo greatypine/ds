@@ -33,4 +33,8 @@ public class TRebuyCusService {
     public void addTRebuyCus(Map<String, String> paraMap){
     	trebuyCusDao.addTRebuyCus(paraMap);
     }
+    
+    public int deleteByYearMonth(Map<String, String> paraMap){
+    	return trebuyCusDao.deleteByYearMonth(paraMap);
+    }
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -42,11 +41,6 @@ public class TStoreTradeController {
  	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)){
  	        	return new RestResponse(EnumRespStatus.DATA_TTRADENOCOND);
  	        }
-//  	        Calendar cal = Calendar.getInstance();
-//  	        String preMonth = cal.get(Calendar.MONTH)+"";
-// 	        if(!month.equals(preMonth)){
-// 	    	   return new RestResponse(EnumRespStatus.DATA_TSENDMONTH);
-// 	        }
 			List<Map<String, String>> list = tstoreTradeService.queryTStoreTrades(paraMap);
 			
 	        if(null==list||list.isEmpty()){
@@ -59,5 +53,26 @@ public class TStoreTradeController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
+    }
+    
+    @RequestMapping(value ="rest/deleteTStoreTrades")
+    public RestResponse deleteTStoreTrades(@RequestBody Map<String,String> paraMap)throws Exception{
+    	try {
+			String year = paraMap.get("year")!=null ?paraMap.get("year").toString() :null;
+			String month = paraMap.get("month")!=null ?paraMap.get("month").toString():null;
+			if(StringUtils.isBlank(year)||StringUtils.isBlank(month)){
+				return new RestResponse(EnumRespStatus.DATA_TTRADENOCOND);
+			}
+			int resultnum = tstoreTradeService.deleteByYearMonth(paraMap);
+			if(resultnum<=0){
+				return new RestResponse(EnumRespStatus.DATA_NODATA);
+			}else{
+				return new RestResponse(EnumRespStatus.DATA_OK,resultnum);
+			}
+		} catch (Exception e) {
+			logger.error(e.toString());
+			e.printStackTrace();
+			return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+		}
     }
 }

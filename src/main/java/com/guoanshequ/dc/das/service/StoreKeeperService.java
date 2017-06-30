@@ -27,4 +27,7 @@ public class StoreKeeperService {
         return storeKeeperDao.queryStoreKeepers(paraMap);
     }
 
+    public List<Map<String, String>> queryPreStoreKeepers(Map<String, String> paraMap) throws Exception{
+        return storeKeeperDao.queryPreStoreKeepers(paraMap);
+    }
 }

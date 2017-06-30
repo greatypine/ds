@@ -7,17 +7,20 @@
 		resultType="java.util.Map">
         <![CDATA[
 			SELECT
-			  	workline.employee_no,
+				workmaster.store_id as storeid,
+			  	workline.employee_no as employeeno,
 			  	workline.score
 			FROM
 				t_work_record_total workmaster, t_work_record workline,t_store
 			WHERE workmaster.id = workline.workrecord_id
 				  and workmaster.store_id = t_store.store_id
 				  and workmaster.commit_status = 3
-				  and workmaster.work_month =#{work_month}
-				  and t_store.name =#{storename}
-			order by employee_no desc
+				  and workmaster.work_month =#{yearmonth}
 		]]>
+        <if test="null != storename and null != storename">
+           <![CDATA[                   
+              and t_store.name =#{storename}
+           ]]>
+        </if>
 	</select>
-
 </mapper>

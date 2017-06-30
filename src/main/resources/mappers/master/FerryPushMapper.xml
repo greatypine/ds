@@ -6,9 +6,9 @@
 	<select id="queryFerryPushes" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 			select t_ferry_push.cityname, 
-			t_ferry_push.store_id, 
+			t_ferry_push.store_id as storeid, 
 			t_store.name as storename,
-			t_ferry_push.employee_no,
+			t_ferry_push.employee_no as employeeno,
 			t_ferry_push.total_house
 			from t_ferry_push,t_store  
 			where state_type = 1
