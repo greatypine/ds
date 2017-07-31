@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +34,7 @@ public class TStoreTradeController {
 
     private static final Logger logger = LogManager.getLogger(TStoreTradeService.class);
     
-    @RequestMapping(value = "rest/queryTStoreTrades")
+    @RequestMapping(value = "rest/queryTStoreTrades",method = RequestMethod.POST)
     public RestResponse queryTStoreTrades(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		String year = paraMap.get("year") != null ? paraMap.get("year").toString() : null;
@@ -55,7 +56,7 @@ public class TStoreTradeController {
         }
     }
     
-    @RequestMapping(value ="rest/deleteTStoreTrades")
+    @RequestMapping(value ="rest/deleteTStoreTrades",method = RequestMethod.POST)
     public RestResponse deleteTStoreTrades(@RequestBody Map<String,String> paraMap)throws Exception{
     	try {
 			String year = paraMap.get("year")!=null ?paraMap.get("year").toString() :null;

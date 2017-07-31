@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,15 +33,14 @@ public class SendOrderController {
 
     private static final Logger logger = LogManager.getLogger(SendOrderService.class);
     
-    @RequestMapping(value = "rest/querySendOrders")
+    @RequestMapping(value = "rest/querySendOrders",method = RequestMethod.POST)
     public RestResponse querySendOrders(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
  	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
- 	        String storename = paraMap.get("storename") != null ? paraMap.get("storename").toString() : null;
+// 	        String storename = paraMap.get("storename") != null ? paraMap.get("storename").toString() : null;
  	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
- 	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)
- 	        	||StringUtils.isBlank(storename)||StringUtils.isBlank(storeids)){
+ 	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)){
  	        	return new RestResponse(EnumRespStatus.DATA_SENDNOCOND);
  	        }
 			List<Map<String, String>> list = sendOrderService.querySendOrders(paraMap);

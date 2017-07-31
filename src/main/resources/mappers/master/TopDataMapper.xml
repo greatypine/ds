@@ -10,8 +10,8 @@
 	<!-- 往生成业务表中新增人员 -->
     <insert id="addHumanresources" parameterType="java.util.Map">
 		<![CDATA[
-			insert into ds_topdata(employeeno,username,humanstatus,storeid,storename,zw,persontype,authorizedtype,professnallevel,remark,leavedate,year,month,yearmonth,createtime) 
-			values(#{employeeno},#{username},#{humanstatus},#{storeid},#{storename},#{zw},2,#{authorizedtype},#{professnallevel},#{remark},#{leavedate},
+			insert into ds_topdata(cityname,employeeno,username,humanstatus,storeid,storeno,storename,zw,persontype,authorizedtype,professnallevel,remark,leavedate,year,month,yearmonth,createtime) 
+			values(#{cityname},#{employeeno},#{username},#{humanstatus},#{storeid},#{storeno},#{storename},#{zw},2,#{authorizedtype},#{professnallevel},#{remark},#{leavedate},
 			YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m'),NOW())
 		]]>
 	</insert>
@@ -19,8 +19,8 @@
 	<!-- 往生成业务表中新增店长 -->
 	<insert id="addStoreKeepers" parameterType="java.util.Map">
 		<![CDATA[
-			insert into ds_topdata(employeeno,username,humanstatus,storeid,storename,zw,persontype,authorizedtype,professnallevel,remark,leavedate,year,month,yearmonth,createtime) 
-			values(#{employeeno},#{username},#{humanstatus},#{storeid},#{storename},#{zw},1,#{authorizedtype},#{professnallevel},#{remark},#{leavedate},
+			insert into ds_topdata(cityname,employeeno,username,humanstatus,storeid,storeno,storename,zw,persontype,authorizedtype,professnallevel,remark,leavedate,year,month,yearmonth,createtime) 
+			values(#{cityname},#{employeeno},#{username},#{humanstatus},#{storeid},#{storeno},#{storename},#{zw},1,#{authorizedtype},#{professnallevel},#{remark},#{leavedate},
 			YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m'),NOW())
 		]]>
 	</insert>
@@ -102,7 +102,7 @@
 	<!-- 查询上月普通员工数据,提供给pes接口数据调用  -->
 	<select id="queryHumanResourcesOnTop" parameterType="java.util.Map" resultType="java.util.Map">
 	 <![CDATA[
-		select humanstatus,storename,storeid,employeeno,username,zw,
+		select humanstatus,cityname,storename,storeno,storeid,employeeno,username,zw,
 			authorizedtype,professnallevel,remark,leavedate from ds_topdata
 			where year = YEAR(date_sub(now(),interval 1 month)) 
 			and month = MONTH(date_sub(now(),interval 1 month))
@@ -123,6 +123,11 @@
             and storename =#{storename}
          ]]>
      </if>
+     <if test="null != storeid and  '' != storeid">
+         <![CDATA[                   
+            and storeid =#{storeid}
+         ]]>
+     </if>     
      <if test="null != zw and '' != zw">
          <![CDATA[                   
             and zw =#{zw}
@@ -133,7 +138,7 @@
 	<!-- 查询上月店长数据,提供给pes接口数据调用 -->
 	<select id="queryStoreKeeperOnTop" parameterType="java.util.Map" resultType="java.util.Map">
 	 <![CDATA[
-		select humanstatus,storename,storeid,employeeno,username,zw,leavedate from ds_topdata
+		select humanstatus,cityname,storename,storeno,storeid,employeeno,username,zw,leavedate from ds_topdata
 			where year = YEAR(date_sub(now(),interval 1 month)) 
 			and month = MONTH(date_sub(now(),interval 1 month))
 			and persontype = 1
@@ -153,6 +158,11 @@
             and storename =#{storename}
          ]]>
      </if>
+     <if test="null != storeid and  '' != storeid">
+         <![CDATA[                   
+            and storeid =#{storeid}
+         ]]>
+     </if>      
      <if test="null != zw and '' != zw">
          <![CDATA[                   
             and zw =#{zw}
@@ -192,7 +202,7 @@
 	<select id="queryStoreCusgrade1OnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-		select storeid, storename, storecusgrade1 as datacount from ds_topdata
+		select storeid, storeno, storename, storecusgrade1 as datacount from ds_topdata
 			where yearmonth = #{yearmonth}
 			and storecusgrade1 is not null
 		]]>
@@ -201,13 +211,18 @@
               and storename =#{storename}
            ]]>
         </if>
+        <if test="null != storeid and null != storeid">
+           <![CDATA[                   
+              and storeid =#{storeid}
+           ]]>
+        </if>        
 	</select>
 	
 	<!-- 单体画像(按门店)二档数,提供给pes接口数据调用 -->
 	<select id="queryStoreCusgrade2OnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-		select storeid, storename, storecusgrade2 as datacount from ds_topdata
+		select storeid, storeno, storename, storecusgrade2 as datacount from ds_topdata
 			where yearmonth = #{yearmonth}
 			and storecusgrade2 is not null
 		]]>
@@ -216,13 +231,18 @@
               and storename =#{storename}
            ]]>
         </if>
+        <if test="null != storeid and null != storeid">
+           <![CDATA[                   
+              and storeid =#{storeid}
+           ]]>
+        </if>         
 	</select>	
 	
 	<!-- 单体画像(按门店)三档数,提供给pes接口数据调用 -->
 	<select id="queryStoreCusgrade3OnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-		select storeid, storename, storecusgrade3 from ds_topdata
+		select storeid, storeno, storename, storecusgrade3 from ds_topdata
 			where yearmonth = #{yearmonth}
 			and storecusgrade3 is not null
 		]]>
@@ -231,9 +251,14 @@
               and storename =#{storename}
            ]]>
         </if>
+        <if test="null != storeid and null != storeid">
+           <![CDATA[                   
+              and storeid =#{storeid}
+           ]]>
+        </if>         
 	</select>
 	
-	<!-- 单体画像(按门店)一档数,提供给ds手动调度更新数据值时使用,体现在topdataController类中 -->
+	<!-- 单体画像(按门店)一档数,提供给ds手动调度更新数据值时使用,体现在TaskByHandController类中,给ds_topdata中的storecusgrade提供值 -->
 	<select id="queryFirstByStoreOnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
@@ -249,7 +274,7 @@
         </if>
 	</select>
 	
-	<!-- 单体画像(按门店)二档数,提供给ds手动调度更新数据值时使用,体现在topdataController类中 -->
+	<!-- 单体画像(按门店)二档数,提供给ds手动调度更新数据值时使用,体现在TaskByHandController类中,给ds_topdata中的storecusgrade提供值 -->
 	<select id="querySecondByStoreOnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
@@ -265,7 +290,7 @@
         </if>
 	</select>
 	
-	<!-- 单体画像(按门店)三档数,提供给ds手动调度更新数据值时使用,体现在topdataController类中 -->
+	<!-- 单体画像(按门店)三档数,提供给ds手动调度更新数据值时使用,体现在TaskByHandController类中,给ds_topdata中的storecusgrade提供值 -->
 	<select id="queryThirdByStoreOnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
@@ -295,7 +320,7 @@
 	<select id="queryStoreRelationnumOnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-		select storeid,storename,storerelationnum as num from ds_topdata
+		select storeid,storeno,storename,storerelationnum as num from ds_topdata
 			where yearmonth = #{yearmonth}
 			and storerelationnum is not null
 		]]>
@@ -304,9 +329,14 @@
               and storename =#{storename}
            ]]>
         </if>
+        <if test="null != storeid and null != storeid">
+           <![CDATA[                   
+              and storeid =#{storeid}
+           ]]>
+        </if>
 	</select>
 	
-	<!-- 拜访记录(按门店),,提供给ds手动调度更新数据值时使用,体现在topdataController类中 -->
+	<!-- 拜访记录(按门店),,提供给ds手动调度更新数据值时使用,体现在TaskByHandController类中,给ds_topdata中的storerelationnum提供值 -->
 	<select id="queryRelationsByStoreOnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
@@ -326,7 +356,7 @@
 	<select id="queryWorkRecordsOnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-		select employeeno,score from ds_topdata
+		select storeid,employeeno,score from ds_topdata
 			where yearmonth = #{yearmonth}
 			and persontype = 2
 			and score is not null
@@ -337,7 +367,7 @@
 	<select id="queryFerryPushOnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-		select employeeno,ferrypushnum as total_house from ds_topdata
+		select storeid,employeeno,ferrypushnum as total_house from ds_topdata
 			where yearmonth = #{yearmonth}
 			and ferrypushnum is not null
 		]]>

@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +37,7 @@ public class WorkRecordController {
 
     private static final Logger logger = LogManager.getLogger(WorkRecordService.class);
     
-    @RequestMapping(value = "rest/queryWorkRecords")
+    @RequestMapping(value = "rest/queryWorkRecords",method = RequestMethod.POST)
     public RestResponse queryWorkRecords(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
 	    	String yearmonth = paraMap.get("yearmonth") != null ? paraMap.get("yearmonth").toString() : null;

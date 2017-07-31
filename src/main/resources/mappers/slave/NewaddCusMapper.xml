@@ -140,7 +140,6 @@ LEFT JOIN
 		)
 	) t ON t.store_id=ts.id
 WHERE ts.number IN (${storeids}) AND ts.`name` NOT LIKE '%测试%'
-	AND ts.`name` LIKE IF('全部'=#{storename},'%%',#{storename})
 	AND ts.`status`=0 AND ts.white != 'QA'
 GROUP BY ts.id
 

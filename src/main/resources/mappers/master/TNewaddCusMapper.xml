@@ -14,7 +14,8 @@
 				new_count,
 				total_count,
 				pay_20_count,
-				new_20_count
+				new_20_count,
+				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
 			from ds_newaddcus where year =#{year} and month =#{month}
 		]]>
 	</select>

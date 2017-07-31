@@ -77,14 +77,9 @@
 
 		<select id="queryFirstByStore" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-			SELECT 
-				store_id,
-				storename,
-				sum(datacount) as datacount 
-				from (
-			SELECT 
-				t_store.store_id,
-				t_store.`name` as storename,
+        	SELECT storeid,storename,storeno,datacount from (
+			SELECT  store_id as storeid, storename as storename, storeno,sum(datacount) as datacount  from (
+			SELECT  t_store.store_id, t_store.`name` as storename,t_store.storeno,
 			SUM(CASE WHEN (DATE_FORMAT(T.`firstdate`,'%Y-%m' ) =#{yearmonth}) THEN
 			    1 ELSE 0 END ) AS datacount
 			FROM (
@@ -98,20 +93,22 @@
 			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
 			GROUP BY T.emplyeeno
 			HAVING datacount>0 ) t1
-			GROUP BY store_id,storename
+			GROUP BY store_id,storename ) customertmp1
 		]]>
+		<where>
+		   <if test="null != storeid and null != storeid">
+               <![CDATA[                   
+                   storeid = #{storeid}
+               ]]>
+           </if>
+        </where>		
 	</select>	
 	
 	<select id="querySecondByStore" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-			SELECT 
-				store_id,
-				storename,
-				sum(datacount) as datacount 
-				from (
-			SELECT
-				t_store.store_id,
-				t_store.`name` as storename,
+        	SELECT storeid,storename,storeno,datacount from (
+			SELECT store_id as storeid, storename as storename, storeno,sum(datacount) as datacount from (
+			SELECT t_store.store_id, t_store.`name` as storename, t_store.storeno,
 				T.emplyeeno,SUM(CASE WHEN (DATE_FORMAT(T.`seconddate`,'%Y-%m' ) = #{yearmonth}) THEN
 						1 ELSE 0 END ) AS datacount
 			FROM (
@@ -125,21 +122,23 @@
 			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
 			GROUP BY T.emplyeeno
 			HAVING datacount > 0 ) t2
-			GROUP BY store_id,storename
+			GROUP BY store_id,storename ) customertmp2
 
 		]]>
+		<where>
+		   <if test="null != storeid and null != storeid">
+               <![CDATA[                   
+                   storeid = #{storeid}
+               ]]>
+           </if>
+        </where>		
 	</select>
 	
 	<select id="queryThirdByStore" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-			SELECT 
-				store_id,
-				storename,
-				sum(datacount) as datacount 
-			from (
-			SELECT
-				t_store.store_id,
-				t_store.`name` as storename,
+        	SELECT storeid,storename,storeno,datacount from (
+			SELECT store_id as storeid, storename as storename, storeno, sum(datacount) as datacount from (
+			SELECT t_store.store_id, t_store.`name` as storename,t_store.storeno,
 				T.emplyeeno,SUM(CASE WHEN (DATE_FORMAT(T.`thirddate`,'%Y-%m' ) = #{yearmonth}) THEN
 						1 ELSE 0 END ) AS datacount
 			FROM (
@@ -153,8 +152,15 @@
 			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
 			GROUP BY T.emplyeeno
 			HAVING datacount>0 ) t3
-			GROUP BY store_id,storename
+			GROUP BY store_id,storename ) customertmp3
 		]]>
+		<where>
+		   <if test="null != storeid and null != storeid">
+               <![CDATA[                   
+                   and storeid = #{storeid}
+               ]]>
+           </if>
+        </where>		
 	</select>
 	
 </mapper>

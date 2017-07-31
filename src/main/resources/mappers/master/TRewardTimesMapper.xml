@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TRewardTimesMapper">
+
+
+	<select id="queryTRewardTimes" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select 
+ 				cityname, platformid,storename, employeename, cusid,ordersn, dashang
+ 			from ds_rewardtimes where year=#{year} and month=#{month}
+		]]>
+	</select>
+	
+	<insert id="addTRewardTimes" parameterType="java.util.Map">
+		<![CDATA[
+			INSERT INTO ds_rewardtimes (
+				cityname, platformid,storename, employeename, cusid,ordersn, dashang, 
+				year, month, createtime
+			) VALUES(
+				#{cityname},#{platformid},#{storename},#{employeename},#{cusid},#{ordersn},#{dashang},
+				YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),NOW()
+			)
+		]]>
+	</insert>
+	
+	<delete id="deleteByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_rewardtimes where year =#{year} and month =#{month}
+		]]>
+	</delete>
+</mapper>

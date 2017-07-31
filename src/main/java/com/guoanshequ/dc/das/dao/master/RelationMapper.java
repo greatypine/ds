@@ -11,11 +11,16 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 @DataSource("master")
 public interface RelationMapper{
 	/**
-	 * 按国安侠统计拜访记录总数
+	 * pes系统：按国安侠统计拜访记录总数，实时数据
 	 */
 	List<Map<String, String>> queryRelations(Map<String, String> paraMap);
 	/**
-	 * 按门店统计拜访记录总数
+	 * pes系统：按门店统计拜访记录总数，实时数据
 	 */
 	List<Map<String, String>> queryRelationsByStore(Map<String, String> paraMap);
+	/**
+	 * 社区动态系统：按日期门店统计拜访记录总数，实时数据
+	 */
+	List<Map<String, String>> queryRelationsStoreByDay(Map<String, String> paraMap);
+	
 }

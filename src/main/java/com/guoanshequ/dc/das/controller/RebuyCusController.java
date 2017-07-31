@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,15 +34,14 @@ public class RebuyCusController {
 
     private static final Logger logger = LogManager.getLogger(RebuyCusService.class);
     
-    @RequestMapping(value = "rest/queryRebuyCus")
+    @RequestMapping(value = "rest/queryRebuyCus",method = RequestMethod.POST)
     public RestResponse queryRebuyCus(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		String year = paraMap.get("year") != null ? paraMap.get("year").toString() : null;
  	        String month = paraMap.get("month") != null ? paraMap.get("month").toString() : null;
- 	        String storename = paraMap.get("rebuyStoreName") != null ? paraMap.get("rebuyStoreName").toString() : null;
+// 	        String storename = paraMap.get("rebuyStoreName") != null ? paraMap.get("rebuyStoreName").toString() : null;
  	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
- 	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)
- 	        	||StringUtils.isBlank(storename)||StringUtils.isBlank(storeids)){
+ 	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)||StringUtils.isBlank(storeids)){
  	        	return new RestResponse(EnumRespStatus.DATA_REBUYNOCOND);
  	        }
 			List<Map<String, String>> list = rebuyCusService.queryRebuyCus(paraMap);

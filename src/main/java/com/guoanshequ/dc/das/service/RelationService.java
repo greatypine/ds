@@ -33,4 +33,9 @@ public class RelationService {
         
     	return relationDao.queryRelationsByStore(paraMap);
     }
+    
+    public List<Map<String, String>> queryRelationsStoreByDay(Map<String, String> paraMap) throws Exception{
+        
+    	return relationDao.queryRelationsStoreByDay(paraMap);
+    }
 }

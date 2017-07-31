@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,7 @@ public class TRebuyCusController {
 
     private static final Logger logger = LogManager.getLogger(TRebuyCusService.class);
     
-    @RequestMapping(value = "rest/queryTRebuyCus")
+    @RequestMapping(value = "rest/queryTRebuyCus",method = RequestMethod.POST)
     public RestResponse queryTRebuyCus(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		String year = paraMap.get("year") != null ? paraMap.get("year").toString() : null;
@@ -55,7 +56,7 @@ public class TRebuyCusController {
         }
     }
     
-    @RequestMapping(value = "rest/deleteTRebuyCus")
+    @RequestMapping(value = "rest/deleteTRebuyCus",method = RequestMethod.POST)
     public RestResponse deleteTRebuyCus(@RequestBody Map<String,String> paraMap)throws Exception{
     	try {
 			String year = paraMap.get("year")!=null ?paraMap.get("year").toString() :null;

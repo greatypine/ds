@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.ScoreRecordMapper">
+
+
+	<select id="queryScoreRecords" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			SELECT
+				t_score_record_total.store_id as storeid,
+			    t_score_record.employee_no as employeeno,
+				mixedType_repeatBuyCostomer as laxin,
+				score,
+				turnover,
+				storeroom
+			FROM
+				t_score_record_total,
+				t_score_record,
+			    t_store
+			WHERE	t_score_record_total.id = t_score_record.scorerecord_id
+			AND t_score_record_total.store_id = t_store.store_id 
+			AND t_score_record_total.work_month = #{yearmonth}
+		]]>
+        <if test="null != storename and null != storename">
+           <![CDATA[                   
+              and t_store.name =#{storename}
+           ]]>
+        </if>
+		<if test="null != storeid and null != storeid">
+           <![CDATA[                   
+              and t_store.store_id =#{storeid}
+           ]]>
+		</if>
+	</select>
+</mapper>

@@ -1,6 +1,8 @@
 package com.guoanshequ.dc.das.dao.slave;
 
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.guoanshequ.dc.das.datasource.DataSource;
@@ -9,5 +11,7 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 @DataSource("slave")
 public interface StoreNumberMapper {
 
-	String queryStoreNumbers();
+	List<String> queryStoreNumbers();
+	
+	List<String> queryStoreNoes();
 }

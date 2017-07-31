@@ -26,5 +26,10 @@
                    and t_store.name =#{storename}
                ]]>
            </if>
+           <if test="null != storeid and '' != storeid">
+               <![CDATA[                   
+                   and t_store.store_id =#{storeid}
+               ]]>
+           </if>           
 	</select>	
 </mapper>

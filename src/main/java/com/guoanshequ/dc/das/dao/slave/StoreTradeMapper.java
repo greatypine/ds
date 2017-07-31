@@ -12,4 +12,8 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 public interface StoreTradeMapper{
 	
 	List<Map<String, String>> queryStoreTrades(Map<String, String> paraMap);
+	
+	List<Map<String, String>> queryStoreTradesOrderByGMV(Map<String, String> paraMap);
+	
+	List<Map<String, String>> queryStoreTradesOrderByOrderNum(Map<String, String> paraMap);
 }

@@ -4,9 +4,17 @@
 
     <select id="queryStoreNumbers"  resultType="java.lang.String">
         <![CDATA[
-			select GROUP_CONCAT(replace(number,'0000000','')) 
+			select number 
 			from t_store 
-			where status = 0 and white != 'QA'
+			where status = 0 and white != 'QA' and name not like '%测试%'
+		]]>
+    </select>
+    
+    <select id="queryStoreNoes"  resultType="java.lang.String">
+        <![CDATA[
+			select concat('\'',code,'\'') as storeno 
+			from t_store 
+			where status = 0 and white != 'QA' and name not like '%测试%'
 		]]>
     </select>
 

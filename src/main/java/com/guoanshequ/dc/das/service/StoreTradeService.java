@@ -29,4 +29,15 @@ public class StoreTradeService {
         
     	return storeTradeDao.queryStoreTrades(paraMap);
     }
+    
+    public List<Map<String, String>> queryStoreTradesOrderByGMV(Map<String, String> paraMap) throws Exception{
+    	
+    	return storeTradeDao.queryStoreTradesOrderByGMV(paraMap);
+    }
+    
+    public List<Map<String, String>> queryStoreTradesOrderByOrderNum(Map<String, String> paraMap) throws Exception{
+    	
+    	return storeTradeDao.queryStoreTradesOrderByOrderNum(paraMap);
+    }
+    
 }

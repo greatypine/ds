@@ -10,6 +10,8 @@ public class Auth {
     private String app_key;
 
     private String app_secret;
+    
+    private Long expiretime;
 
     public int getId() {
         return id;
@@ -34,4 +36,12 @@ public class Auth {
     public void setApp_secret(String app_secret) {
         this.app_secret = app_secret;
     }
+
+	public Long getExpiretime() {
+		return expiretime;
+	}
+
+	public void setExpiretime(Long expiretime) {
+		this.expiretime = expiretime;
+	}
 }

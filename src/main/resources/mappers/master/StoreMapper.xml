@@ -6,6 +6,8 @@
     <select id="queryStores" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 			select 	store.store_id , 
+			store.storeno,
+			store.storetype,
 			store.name , 
 			store.city_name,	
 			IFNULL(store.platformid,'') as platformid,	
@@ -15,7 +17,7 @@
 			from t_store store 
 			left join t_town town ON store.town_id = town.id
 			left join t_county county ON town.county_id = county.id
-			where store.name not like '%测试%'
+			where store.name not like '%测试%' and storetype <> 'W'
 		]]>
          <if test="null != update_time_start and null != update_time_end">
              <![CDATA[                   
@@ -25,6 +27,11 @@
          <if test="null != storename">
              <![CDATA[                   
                 and store.name = #{storename}
+             ]]>
+         </if>
+         <if test="null != storeid">
+             <![CDATA[                   
+                and store.store_id = #{storeid}
              ]]>
          </if>
          <if test="null != cityname">

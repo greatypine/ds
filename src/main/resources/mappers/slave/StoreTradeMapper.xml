@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoanshequ.dc.das.dao.slave.StoreTradeMapper">
 
-
+	<!-- 按日期查询，供pes每月任务调度、社区动态每日具体内容查询 -->
 	<select id="queryStoreTrades" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
@@ -34,13 +34,13 @@
 								tor.group_id AS group_id
 							FROM t_eshop te
 							JOIN t_order tor ON tor.eshop_id=te.id
-			         JOIN t_order_group  tog ON  tog.id=tor.group_id
+			         		JOIN t_order_group  tog ON  tog.id=tor.group_id
+			         		JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.`status` =0 and (trp.pay_platform !='prepay' OR tor.business_model_id != '4662527ec28f4a84abfceefa61557d0c'))
 							JOIN t_order_flow tof ON tof.order_id=tor.id
 								AND tof.order_status='signed'
 								AND tof.create_time>=#{begindate}
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.id != '51d40d3bfeb5cc28d6699f25347b437f'
-							-- GROUP BY tor.group_id
+							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
 						) tt
 					GROUP BY tt.store_id
 				) t1 ON ts.id=t1.store_id
@@ -58,14 +58,14 @@
 								tor.group_id AS group_id
 							FROM t_eshop te
 							JOIN t_order tor ON tor.eshop_id=te.id
-			        JOIN t_order_group  tog ON  tog.id=tor.group_id
+			        		JOIN t_order_group  tog ON  tog.id=tor.group_id
+			        		JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.`status` =0 and (trp.pay_platform !='prepay' OR tor.business_model_id != '4662527ec28f4a84abfceefa61557d0c'))
 							JOIN t_order_flow tof ON tof.order_id=tor.id
 								AND tof.order_status='signed'
 								AND tof.create_time>=#{begindate}
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 							WHERE te.department_id!='00000000000000000000000000000059'
-								AND te.name NOT LIKE '%测试%' AND te.white!='QA' AND te.id != '51d40d3bfeb5cc28d6699f25347b437f'
-							-- GROUP BY tor.group_id
+								AND te.name NOT LIKE '%测试%' AND te.white!='QA' 
 						) tt
 					GROUP BY tt.store_id
 				) t2 ON ts.id=t2.store_id
@@ -119,4 +119,166 @@
 				AND ts.`name` NOT LIKE '%测试%'
 		]]>
 	</select>
+	
+	<!-- 按日期查询，供社区动态门店交易额Top10每日查询 ，系统预留未使用此方法-->
+	<select id="queryStoreTradesByTop" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			SELECT 
+			    a.`name` as city_name,
+			    ts.`name` AS store_name,
+			    ts.id  AS platformid,
+				IFNULL(t1.totalprice,0.00) AS order_amount,
+				IFNULL(t2.qtotalprice,0.00) AS other_order_amount,
+				IFNULL(t1.ordercount,0) AS order_count,
+				IFNULL(t2.qordercount,0) AS other_order_count
+			FROM t_store ts
+			LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+			LEFT JOIN
+				(
+					SELECT
+						tt.store_id,
+						SUM(IFNULL(tt.price,0.00)) AS totalprice,
+						COUNT(tt.group_id) AS ordercount
+					FROM 
+						(
+							SELECT
+								tor.store_id,
+								IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)  AS price,
+								tor.group_id AS group_id
+							FROM t_eshop te
+							JOIN t_order tor ON tor.eshop_id=te.id
+			         		JOIN t_order_group  tog ON  tog.id=tor.group_id
+			         		JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.`status` =0 and (trp.pay_platform !='prepay' OR tor.business_model_id != '4662527ec28f4a84abfceefa61557d0c'))
+							JOIN t_order_flow tof ON tof.order_id=tor.id
+								AND tof.order_status='signed'
+								AND tof.create_time>=#{begindate}
+								AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+						) tt
+					GROUP BY tt.store_id
+				) t1 ON ts.id=t1.store_id
+			LEFT JOIN
+				(
+					SELECT
+						tt.store_id,
+						SUM(IFNULL(tt.price,0.00)) AS qtotalprice,
+						COUNT(tt.group_id)  AS qordercount	
+					FROM
+						(
+							SELECT
+								tor.store_id,
+								IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)  AS price,
+								tor.group_id AS group_id
+							FROM t_eshop te
+							JOIN t_order tor ON tor.eshop_id=te.id
+			        		JOIN t_order_group  tog ON  tog.id=tor.group_id
+			        		JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.`status` =0 and (trp.pay_platform !='prepay' OR tor.business_model_id != '4662527ec28f4a84abfceefa61557d0c'))
+							JOIN t_order_flow tof ON tof.order_id=tor.id
+								AND tof.order_status='signed'
+								AND tof.create_time>=#{begindate}
+								AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+							WHERE te.department_id!='00000000000000000000000000000059'
+								AND te.name NOT LIKE '%测试%' AND te.white!='QA' 
+						) tt
+					GROUP BY tt.store_id
+				) t2 ON ts.id=t2.store_id
+			WHERE ts.white!='QA' AND ts.`status`=0
+			AND ts.number IN (${storeids})
+			AND ts.`name` NOT LIKE '%测试%'
+			ORDER BY ${ordercond} desc
+			LIMIT ${limitcond}
+		]]>
+	</select>
+	
+	
+	<!-- 按日期查询，供社区动态门店交易额GMVTop10每日查询 -->
+	<select id="queryStoreTradesOrderByGMV" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			SELECT 
+			    a.`name` as city_name,
+			    ts.`name` AS store_name,
+			    ts.id  AS platformid,
+				IFNULL(t1.totalprice,0.00) AS order_amount,
+				IFNULL(t1.ordercount,0) AS order_count
+			FROM t_store ts
+			LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+			LEFT JOIN
+				(
+					SELECT
+						tt.store_id,
+						SUM(IFNULL(tt.price,0.00)) AS totalprice,
+						COUNT(tt.group_id) AS ordercount
+					FROM 
+						(
+							SELECT
+								tor.store_id,
+								IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)  AS price,
+								tor.group_id AS group_id
+							FROM t_eshop te
+							JOIN t_order tor ON tor.eshop_id=te.id
+			         		JOIN t_order_group  tog ON  tog.id=tor.group_id
+			         		JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.`status` =0 and (trp.pay_platform !='prepay' OR tor.business_model_id != '4662527ec28f4a84abfceefa61557d0c'))
+							JOIN t_order_flow tof ON tof.order_id=tor.id
+								AND tof.order_status='signed'
+								AND tof.create_time>=#{begindate}
+								AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+						) tt
+					GROUP BY tt.store_id
+				) t1 ON ts.id=t1.store_id
+			WHERE ts.white!='QA' AND ts.`status`=0
+			AND ts.number IN (${storeids})
+			AND ts.`name` NOT LIKE '%测试%'
+			ORDER BY order_amount desc
+			LIMIT ${limitcond}
+		]]>
+	</select>
+	
+	<!-- 按日期查询，供社区动态门店交易额订单数量Top10每日查询 -->
+	<select id="queryStoreTradesOrderByOrderNum" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			SELECT 
+			    a.`name` as city_name,
+			    ts.`name` AS store_name,
+			    ts.id  AS platformid,
+				IFNULL(t1.totalprice,0.00) AS order_amount,
+				IFNULL(t1.ordercount,0) AS order_count
+			FROM t_store ts
+			LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+			LEFT JOIN
+				(
+					SELECT
+						tt.store_id,
+						SUM(IFNULL(tt.price,0.00)) AS totalprice,
+						COUNT(tt.group_id) AS ordercount
+					FROM 
+						(
+							SELECT
+								tor.store_id,
+								IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)  AS price,
+								tor.group_id AS group_id
+							FROM t_eshop te
+							JOIN t_order tor ON tor.eshop_id=te.id
+			        		JOIN t_order_group  tog ON  tog.id=tor.group_id
+			        		JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.`status` =0 and (trp.pay_platform !='prepay' OR tor.business_model_id != '4662527ec28f4a84abfceefa61557d0c'))
+							JOIN t_order_flow tof ON tof.order_id=tor.id
+								AND tof.order_status='signed'
+								AND tof.create_time>=#{begindate}
+								AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+						) tt
+					GROUP BY tt.store_id
+				) t1 ON ts.id=t1.store_id
+			WHERE ts.white!='QA' AND ts.`status`=0
+			AND ts.number IN (${storeids})
+			AND ts.`name` NOT LIKE '%测试%'
+			ORDER BY order_count desc
+			LIMIT ${limitcond}
+		]]>
+	</select>
+	
+	
 </mapper>

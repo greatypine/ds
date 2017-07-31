@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,7 +36,7 @@ public class StoreKeeperController {
 
     private static final Logger logger = LogManager.getLogger(StoreKeeperService.class);
     
-    @RequestMapping(value = "rest/queryStoreKeepers")
+    @RequestMapping(value = "rest/queryStoreKeepers",method = RequestMethod.POST)
     public RestResponse queryStoreKeepers(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
 	        String update_time_start = paraMap.get("update_time_start") != null ? paraMap.get("update_time_start").toString() : null;

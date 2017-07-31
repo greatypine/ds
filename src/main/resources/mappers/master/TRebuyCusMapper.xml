@@ -11,7 +11,8 @@
 				platformid,
 				store_name,
 				rebuy_count,
-				rebuy_20_count
+				rebuy_20_count,
+				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
 			from ds_rebuycus where year =#{year} and month =#{month}
 		]]>
 	</select>

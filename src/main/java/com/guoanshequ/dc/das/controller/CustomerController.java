@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,7 +48,7 @@ public class CustomerController {
     /**
      * 按国安侠统计拜访记录总量
      */
-    @RequestMapping(value = "rest/queryCustomers")
+    @RequestMapping(value = "rest/queryCustomers",method = RequestMethod.POST)
     public RestResponse queryCustomers(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
 	    	String yearmonth = paraMap.get("yearmonth") != null ? paraMap.get("yearmonth").toString() : null;
@@ -186,7 +187,7 @@ public class CustomerController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }*/
-    @RequestMapping(value = "rest/queryCustomersByStore")
+    @RequestMapping(value = "rest/queryCustomersByStore",method = RequestMethod.POST)
     public RestResponse queryCustomersByStore(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
 	    	String yearmonth = paraMap.get("yearmonth") != null ? paraMap.get("yearmonth").toString() : null;
@@ -203,11 +204,11 @@ public class CustomerController {
 	        List<Map<String, String>> list = null;
 	        if(yearmonth.compareTo(preYearMonth)>0){//请求月份大于绩效月份则取实时数据
 		        if("1".equals(grade)){
-		        	list = customerService.queryFirst(paraMap);
+		        	list = customerService.queryFirstByStore(paraMap);
 		        }else if("2".equals(grade)){
-		        	list = customerService.querySecond(paraMap);
+		        	list = customerService.querySecondByStore(paraMap);
 		        }else if("3".equals(grade)){
-		        	list = customerService.queryThird(paraMap);
+		        	list = customerService.queryThirdByStore(paraMap);
 		        }
 	        }else{//请求月份小于等于绩效月份则取非实时表数据
 		        if("1".equals(grade)){

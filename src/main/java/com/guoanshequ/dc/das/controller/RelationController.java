@@ -14,12 +14,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,9 +44,9 @@ public class RelationController {
     
     private static final Logger logger = LogManager.getLogger(RelationService.class);
     /**
-     * 按国安侠统计拜访记录总数
+     * pes绩效系统按国安侠统计拜访记录总数，实时数据
      */
-    @RequestMapping(value = "rest/queryRelations")
+    @RequestMapping(value = "rest/queryRelations",method = RequestMethod.POST)
     public RestResponse queryRelations(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
 	        String yearmonth = paraMap.get("yearmonth") != null ? paraMap.get("yearmonth").toString() : null;
@@ -142,8 +141,10 @@ public class RelationController {
         }
     }
     */
-    
-    @RequestMapping(value = "rest/queryRelationsByStore")
+    /**
+     * pes绩效系统拜访记录（按门店），实时数据
+     */
+    @RequestMapping(value = "rest/queryRelationsByStore",method = RequestMethod.POST)
     public RestResponse queryRelationsByStore(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
 	        String yearmonth = paraMap.get("yearmonth") != null ? paraMap.get("yearmonth").toString() : null;
@@ -162,6 +163,34 @@ public class RelationController {
 	    	}else{
 	    		list = topDataService.queryStoreRelationnumOnTop(paraMap);
 	    	}
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        }
+    		
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 社区动态系统每日动态门店拜访记录前N名，实时数据
+     */
+    @RequestMapping(value = "rest/queryRelationsStoreByDay",method = RequestMethod.POST)
+    public RestResponse queryRelationsStoreByDay(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
+ 	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
+ 	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
+ 	       String limitcond =  paraMap.get("limitcond") != null ? paraMap.get("limitcond").toString() : null;
+ 	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)||
+ 	            StringUtils.isBlank(limitcond)){
+ 	        		return new RestResponse(EnumRespStatus.DATA_RELANOCOND2);
+ 	        }
+	        List<Map<String, String>> list = relationService.queryRelationsStoreByDay(paraMap);
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{

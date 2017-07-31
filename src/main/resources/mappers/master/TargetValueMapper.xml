@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TargetValueMapper">
+
+	<select id="queryTargetValues" resultType="java.util.Map">
+		<![CDATA[
+			select addcustarget,storetradetarget,rebuycustarget,customertarget,relationtarget,yearmonth
+			from ds_targetvalue 
+			where yearmonth =#{yearmonth} and storename =#{storename} and zw = #{zw} 
+		]]>
+	</select>
+	
+	<select id="queryStoretradeTarget" resultType="java.util.Map">
+		<![CDATA[
+			select 
+				t_store.store_id,
+				t_store.`name`,
+				ds_assessment_targetvalue.dz_storetrade_target,
+				ds_storetrade.order_amount
+				from 
+			ds_assessment_targetvalue,t_store,ds_storetrade
+			where ds_assessment_targetvalue.storename = t_store.`name`
+			and t_store.platformid = ds_storetrade.platformid
+			and ds_assessment_targetvalue.assesstime ='2017-06'
+			and year = 2017 and month = 6 ;
+		
+			select addcustarget,storetradetarget,rebuycustarget,customertarget,relationtarget,yearmonth
+			from ds_targetvalue 
+			where yearmonth =#{yearmonth} and storename =#{storename} and zw = #{zw} 
+		]]>
+	</select>
+
+	<insert id="addTargetValues" parameterType="java.util.Map">
+        <![CDATA[
+  			  INSERT INTO ds_assessment_targetvalue
+  			    (assesstime,storename,cityname,cityrole,dz_addcus_target,dz_storetrade_target,dz_rebuycus_target,
+	  			  dz_customer_target,dz_relation_target,gax_addcus_target,gax_storetrade_target,gax_rebuycus_target,gax_customer_target,
+	  			  gax_relation_target,zg_storetrade_target)
+  			  VALUES 
+  			    (#{createTime},#{storeName},#{cityName},#{city_role},#{customerQuantity_targetValue},#{turnover_TargetValue},#{mixedType_repeatBuyCostomer_targetValue},
+  			    #{mixType_CustomerPortrait_targetValue},#{mixType_VisitRecord_targetValue},#{guoanxia_customerQuantity_targetValue},#{guoanxia_turnover_TargetValue},
+  			    #{guoanxia_mixedType_repeatBuyCostomer_targetValue},#{guoanxia_mixType_CustomerPortrait_targetValue},#{guoanxia_mixType_VisitRecord_targetValue},
+  			    #{integrated_management_turnover_TargetValue})
+		]]>
+	</insert>
+
+</mapper>

@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +34,7 @@ public class TopDataController {
 
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
-    @RequestMapping(value = "rest/deleteTopData")
+    @RequestMapping(value = "rest/deleteTopData",method = RequestMethod.POST)
     public RestResponse topDataTaskByHand(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		String year = paraMap.get("year")!=null ?paraMap.get("year").toString() :null;

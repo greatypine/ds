@@ -13,7 +13,8 @@
 				IFNULL(username,'') as username,
 				IFNULL(deptname,'') as deptname,
 				IFNULL(channelname,'') as channelname,
-				datanum
+				datanum,
+				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
 			from ds_sendorders where year =#{year} and month =#{month}
 		]]>
 		 <if test="null != platformid and '' != platformid">

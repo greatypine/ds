@@ -9,7 +9,8 @@
 			select 
  				city_name, platformid,store_name, order_amount, other_order_amount,
  				returned_amount, other_returned_amount, order_count,
- 				other_order_count, returned_count, other_returned_count
+ 				other_order_count, returned_count, other_returned_count,
+ 				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
  			from ds_storetrade where year=#{year} and month=#{month}
 		]]>
 	</select>

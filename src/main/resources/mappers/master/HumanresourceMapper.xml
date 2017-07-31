@@ -5,11 +5,13 @@
 	<!-- 获取系统实时人员数据 -->
     <select id="queryHumanresources" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-		select humanstatus,storename,storeid,employeeno,username,zw,
+		select humanstatus,cityname,storeno,storename,storeid,employeeno,username,zw,
 			authorizedtype,professnallevel,remark,leavedate from ( 
 				SELECT
 				humanstatus as humanstatus,
+				hr.citySelect as cityname,
 				store.name as storename,
+				store.storeno as storeno,
 			    hr.store_id as storeid,
 				hr.employee_no as employeeno,
 			    hr.name as username,
@@ -44,6 +46,11 @@
                    and storename =#{storename}
                 ]]>
             </if>
+            <if test="null != storeid and  '' != storeid">
+                <![CDATA[                   
+                   and storeid =#{storeid}
+                ]]>
+            </if>
             <if test="null != zw and '' != zw">
                 <![CDATA[                   
                    and zw =#{zw}
@@ -51,18 +58,20 @@
             </if>
         </where>
         <![CDATA[
-          order by update_time desc
+          order by hrstore.update_time desc
         ]]>
     </select>
 
 	<!-- 获取截止当前日期发生异动人员之前的所在门店职位信息-->
 	  <select id="queryPreHumanresources" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-			SELECT humanstatus,storename,storeid,employeeno,username,zw,
-			authorizedtype,professnallevel,remark,leavedate 
+		SELECT humanchangeb.humanstatus,humanchangeb.cityname,humanchangeb.storename,t_store.storeno,humanchangeb.storeid,
+					humanchangeb.employeeno,humanchangeb.username,humanchangeb.zw,humanchangeb.authorizedtype,
+					humanchangeb.professnallevel,humanchangeb.remark,humanchangeb.leavedate
 			FROM (
 			SELECT 
 			t_humanresources.humanstatus as humanstatus,
+			t_humanresources.citySelect as cityname,
 			t_humanresources.employee_no as employeeno,
 			t_humanresources.name as username,
 			t_humanresources.authorizedtype as authorizedtype,
@@ -87,12 +96,13 @@
 			GROUP BY employee_no ) humanchange
 			WHERE humanchange.id = t_humanresources_change.id) humanchangea 
 			ON t_humanresources.employee_no = humanchangea.employee_no
-			WHERE DATE_FORMAT(create_time, '%Y-%m') !=DATE_FORMAT(now(),'%Y-%m') ) humanchangeb
+			WHERE DATE_FORMAT(create_time, '%Y-%m') !=DATE_FORMAT(now(),'%Y-%m') ) humanchangeb ,t_store
+      		WHERE humanchangeb.storeid = t_store.store_id
+
 		]]>
-        <where>
             <if test="null != username and '' != username">
                 <![CDATA[                   
-                   username like concat('%',#{username},'%')
+                   and username like concat('%',#{username},'%')
                 ]]>
             </if>
             <if test="null != employeeno and '' != employeeno">
@@ -110,6 +120,11 @@
                    and storename =#{storename}
                 ]]>
             </if>
+            <if test="null != storeid and  '' != storeid">
+                <![CDATA[                   
+                   and storeid =#{storeid}
+                ]]>
+            </if>
             <if test="null != zw and '' != zw">
                 <![CDATA[                   
                    and zw =#{zw}
@@ -120,9 +135,8 @@
                    and humanstatus =#{humanstatus}
                 ]]>
             </if>
-        </where>
         <![CDATA[
-          order by update_time desc
+          order by humanchangeb.update_time desc
         ]]>
     </select>
 </mapper>

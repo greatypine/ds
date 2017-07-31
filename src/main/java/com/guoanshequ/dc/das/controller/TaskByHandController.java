@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,7 @@ import java.util.Map;
 * @version 1.0
 * 说明: 手动调度topDataScheduleTask与ScheduleTask；
 * 1、人员、店长、拜访记录、单体画像、绩效分数的调度；
-* 2、平台上新增用户、复购用户、上门送单量、门店交易额4的调度；
+* 2、平台上新增用户、复购用户、上门送单量、门店交易额、国安侠好评次数的调度；
 */ 
 @RestController
 @ResponseBody
@@ -38,7 +39,7 @@ public class TaskByHandController {
     /**
      * top数据接口手动全调度
      */
-    @RequestMapping(value = "rest/topDataTaskRun")
+    @RequestMapping(value = "rest/topDataTaskRun",method = RequestMethod.POST)
     public RestResponse topDataTaskByHand(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		topDataScheduleTask.addHumanTask();
@@ -46,8 +47,8 @@ public class TaskByHandController {
     		topDataScheduleTask.customerByStoreTask();
     		topDataScheduleTask.relationTask();
     		topDataScheduleTask.relationByStoreTask();
-    		topDataScheduleTask.workRecordTask();
-    		topDataScheduleTask.ferryPushTask();
+    		//topDataScheduleTask.workRecordTask();
+    		//topDataScheduleTask.ferryPushTask();
     		return new RestResponse(EnumRespStatus.TASK_TOPDATA);
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -59,7 +60,7 @@ public class TaskByHandController {
     /**
      * top数据接口手动调度：人员店长信息
      */
-    @RequestMapping(value = "rest/addHumanTaskRun")
+    @RequestMapping(value = "rest/addHumanTaskRun",method = RequestMethod.POST)
     public RestResponse addHumanTaskByHand(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		topDataScheduleTask.addHumanTask();
@@ -74,7 +75,7 @@ public class TaskByHandController {
     /**
      * top数据接口手动调度：客户画像
      */
-    @RequestMapping(value = "rest/customerTaskRun")
+    @RequestMapping(value = "rest/customerTaskRun",method = RequestMethod.POST)
     public RestResponse customerTaskByHand(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		topDataScheduleTask.customerTask();
@@ -89,7 +90,7 @@ public class TaskByHandController {
     /**
      * top数据接口手动调度：客户画像按门店
      */
-    @RequestMapping(value = "rest/customerByStoreTaskRun")
+    @RequestMapping(value = "rest/customerByStoreTaskRun",method = RequestMethod.POST)
     public RestResponse customerByStoreTaskByHand(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		topDataScheduleTask.customerByStoreTask();
@@ -104,7 +105,7 @@ public class TaskByHandController {
     /**
      * top数据接口手动调度：拜访记录数据
      */
-    @RequestMapping(value = "rest/relationTaskRun")
+    @RequestMapping(value = "rest/relationTaskRun",method = RequestMethod.POST)
     public RestResponse relationTaskByHand(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		topDataScheduleTask.relationTask();
@@ -120,7 +121,7 @@ public class TaskByHandController {
      * top数据接口手动调度：拜访记录按门店数据
      */
     
-    @RequestMapping(value = "rest/relationByStoreTaskRun")
+    @RequestMapping(value = "rest/relationByStoreTaskRun",method = RequestMethod.POST)
     public RestResponse relationByStoreTaskByHand(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		topDataScheduleTask.relationByStoreTask();
@@ -135,7 +136,7 @@ public class TaskByHandController {
     /**
      * top数据接口手动调度：员工绩效打分
      */
-    @RequestMapping(value = "rest/workRecordTaskRun")
+    @RequestMapping(value = "rest/workRecordTaskRun",method = RequestMethod.POST)
     public RestResponse workRecordTaskByHand(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		topDataScheduleTask.workRecordTask();
@@ -150,7 +151,7 @@ public class TaskByHandController {
     /**
      * top数据接口手动调度：摆渡车
      */
-    @RequestMapping(value = "rest/ferryPushTaskRun")
+    @RequestMapping(value = "rest/ferryPushTaskRun",method = RequestMethod.POST)
     public RestResponse ferryPushTaskByHand(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		topDataScheduleTask.ferryPushTask();
@@ -162,16 +163,19 @@ public class TaskByHandController {
         }
     }
     
+    
+    
     /**
      * 平台数据接口手动全调度
      */
-    @RequestMapping(value = "rest/platformDataTaskRun")
+    @RequestMapping(value = "rest/platformDataTaskRun",method = RequestMethod.POST)
     public RestResponse platformDataTaskByHand(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		platformScheduleTask.storeTradesTask();
     		platformScheduleTask.sendOrdersTask();
     		platformScheduleTask.rebuyCusTask();
     		platformScheduleTask.newAddCusTask();
+    		platformScheduleTask.rewardTimesTask();
     		return new RestResponse(EnumRespStatus.TASK_PLATFORMDATA);
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -183,7 +187,7 @@ public class TaskByHandController {
     /**
      * 平台数据接口手动调度：新增用户
      */
-    @RequestMapping(value = "rest/newAddCusTaskRun")
+    @RequestMapping(value = "rest/newAddCusTaskRun",method = RequestMethod.POST)
     public RestResponse newAddCusTaskRun(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		platformScheduleTask.newAddCusTask();
@@ -198,7 +202,7 @@ public class TaskByHandController {
     /**
      * 平台数据接口手动调度：复购用户
      */
-    @RequestMapping(value = "rest/rebuyCusTaskRun")
+    @RequestMapping(value = "rest/rebuyCusTaskRun",method = RequestMethod.POST)
     public RestResponse rebuyCusTaskRun(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		platformScheduleTask.rebuyCusTask();
@@ -213,7 +217,7 @@ public class TaskByHandController {
     /**
      * 平台数据接口手动调度：门店交易额
      */
-    @RequestMapping(value = "rest/storeTradesTaskRun")
+    @RequestMapping(value = "rest/storeTradesTaskRun",method = RequestMethod.POST)
     public RestResponse storeTradesTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		platformScheduleTask.storeTradesTask();
@@ -228,11 +232,26 @@ public class TaskByHandController {
     /**
      * 平台数据接口手动调度：上门送单量
      */
-    @RequestMapping(value = "rest/sendOrdersTaskRun")
+    @RequestMapping(value = "rest/sendOrdersTaskRun",method = RequestMethod.POST)
     public RestResponse sendOrdersTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		platformScheduleTask.sendOrdersTask();
     		return new RestResponse(EnumRespStatus.TASK_SENDORDERSOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 平台数据接口手动调度：国安侠好评次数
+     */
+    @RequestMapping(value = "rest/rewardTimesTaskRun",method = RequestMethod.POST)
+    public RestResponse rewardTimesTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		platformScheduleTask.rewardTimesTask();
+    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
     	}catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();

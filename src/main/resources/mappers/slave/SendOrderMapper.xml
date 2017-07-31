@@ -25,7 +25,6 @@
 			tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			and tof.order_status='signed'
 			and ts.number IN (${storeids})
-			and ts.`name` LIKE IF('全部'=#{storename},'%%',#{storename})
 			and ts.`name` not like '%测试%'
 			and tep.`name` not like '%测试%'
 			and ts.white!='QA'

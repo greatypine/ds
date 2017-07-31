@@ -8,11 +8,13 @@ import org.springframework.stereotype.Component;
 
 import com.guoanshequ.dc.das.service.NewaddCusService;
 import com.guoanshequ.dc.das.service.RebuyCusService;
+import com.guoanshequ.dc.das.service.RewardTimesService;
 import com.guoanshequ.dc.das.service.SendOrderService;
 import com.guoanshequ.dc.das.service.StoreNumberService;
 import com.guoanshequ.dc.das.service.StoreTradeService;
 import com.guoanshequ.dc.das.service.TNewaddCusService;
 import com.guoanshequ.dc.das.service.TRebuyCusService;
+import com.guoanshequ.dc.das.service.TRewardTimesService;
 import com.guoanshequ.dc.das.service.TSendOrderService;
 import com.guoanshequ.dc.das.service.TStoreTradeService;
 import com.guoanshequ.dc.das.utils.DateUtils;
@@ -27,9 +29,9 @@ import java.util.Map;
 * @author CaoPs
 * @date 2017年4月13日
 * @version 1.0
-* 说明:上门送单量任务调度、门店交易额任务调度、新增消费用户任务调度、复购用户任务调度
+* 说明:上门送单量任务调度、门店交易额任务调度、新增消费用户任务调度、复购用户任务调度、国安侠好评次数任务调度
 * 每月1号0时30分开始调度 (cron ="0 30 0 1 * ?") ：上门送单量任务调度、门店交易额任务调度、复购用户任务调度
-* 每月1号0时30分开始调度 (cron ="0 30 0 1 * ?") ：新增消费用户任务调度
+* 每月1号0时30分开始调度 (cron ="0 30 0 1 * ?") ：新增消费用户任务调度、国安侠好评次数任务调度
  */
 @Component
 public class ScheduleTask {
@@ -51,6 +53,12 @@ public class ScheduleTask {
 	RebuyCusService rebuyCusService;
     @Autowired
     TRebuyCusService trebuyCusService;
+    @Autowired
+    RewardTimesService rewardTimesService;
+    @Autowired
+    TRewardTimesService tRewardTimesService;
+    
+    
     
     private static final Logger logger = LogManager.getLogger(ScheduleTask.class);
     
@@ -74,7 +82,7 @@ public class ScheduleTask {
     	String storeIds = storeNumberService.queryStoreNumbers();
     	paraMap.put("begindate", begindate);
     	paraMap.put("enddate", enddate);
-    	paraMap.put("storename", "全部");
+//    	paraMap.put("storename", "全部");
     	paraMap.put("storeids", storeIds);
 		List<Map<String, String>> sendOrderList = sendOrderService.querySendOrders(paraMap);
 		if(!sendOrderList.isEmpty()){
@@ -108,7 +116,7 @@ public class ScheduleTask {
     	String storeIds = storeNumberService.queryStoreNumbers();
     	paraMap.put("begindate", begindate);
     	paraMap.put("enddate", enddate);
-    	//paraMap.put("storename", "全部");
+//    	paraMap.put("storename", "全部");
     	paraMap.put("storeids", storeIds);
 		List<Map<String, String>> storeTradesList = storeTradeService.queryStoreTrades(paraMap);
 		if(!storeTradesList.isEmpty()){
@@ -142,7 +150,7 @@ public class ScheduleTask {
     	String storeIds = storeNumberService.queryStoreNumbers();
     	paraMap.put("begindate", begindate);
     	paraMap.put("enddate", enddate);
-    	paraMap.put("storename", "全部");
+//    	paraMap.put("storename", "全部");
     	paraMap.put("storeids", storeIds);
 		List<Map<String, String>> newaddCusList = newaddCusService.queryNewaddCus(paraMap);
 		if(!newaddCusList.isEmpty()){
@@ -179,7 +187,7 @@ public class ScheduleTask {
     	String storeIds = storeNumberService.queryStoreNumbers();
     	paraMap.put("year", year);
     	paraMap.put("month", month);
-    	paraMap.put("rebuyStoreName", "全部");
+//    	paraMap.put("rebuyStoreName", "全部");
     	paraMap.put("storeids", storeIds);
 		List<Map<String, String>> rebuyCusList = rebuyCusService.queryRebuyCus(paraMap);
 		if(!rebuyCusList.isEmpty()){
@@ -189,6 +197,39 @@ public class ScheduleTask {
 		}
 		logger.info("**********复购客户任务调度结束**********");
 		logger.info("共调度数据记录行数："+rebuyCusList.size());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+    
+    /**
+     * 国安侠好评次数任务调度
+     * 参数：begindate  enddate  storeids
+     */
+    @Scheduled(cron ="0 30 0 1 * ?")
+    public void rewardTimesTask() {
+    	try {
+    	logger.info("**********国安侠好评次数调度开始**********");
+    	//得到上月的月初月末日期
+    	Map<String, String> datemap = DateUtils.getFirstday_Lastday_Month(new Date());
+    	//上月月初日期
+    	String begindate = datemap.get("first");
+    	//上月月末日期
+    	String enddate = datemap.get("last");
+    	//给后台接口构建参数
+    	Map<String, String> paraMap=new HashMap<String, String>();
+    	String storeIds = storeNumberService.queryStoreNumbers();
+    	paraMap.put("begindate", begindate);
+    	paraMap.put("enddate", enddate);
+    	paraMap.put("storeids", storeIds);
+		List<Map<String, String>> rewardTimesList = rewardTimesService.queryRewardTimes(paraMap);
+		if(!rewardTimesList.isEmpty()){
+			for (Map<String, String> rewardTimesMap : rewardTimesList) {
+				tRewardTimesService.addTRewardTimes(rewardTimesMap);
+			}
+		}
+		logger.info("**********国安侠好评次数调度结束**********");
+		logger.info("共调度数据记录行数："+rewardTimesList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

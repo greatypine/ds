@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -291,7 +290,7 @@ public class TopDataScheduleTask {
      * 员工绩效打分任务调度
      * 调度规则：每月2号1点10分开始调度
      */
-    @Scheduled(cron ="0 10 01 2 * ?")
+    //@Scheduled(cron ="0 10 01 2 * ?")
     public void workRecordTask(){
     	try{
    		//得到上月的月初月末日期
@@ -328,7 +327,7 @@ public class TopDataScheduleTask {
      * 摆渡车任务调度
      * 调度规则：每月2号1点40分开始调度
      */
-    @Scheduled(cron ="0 40 01 2 * ?")
+    //@Scheduled(cron ="0 40 01 2 * ?")
     public void ferryPushTask(){
     	try {
   		//得到上月的月初月末日期

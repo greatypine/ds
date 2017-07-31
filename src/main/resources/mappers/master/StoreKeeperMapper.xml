@@ -5,10 +5,12 @@
 
     <select id="queryStoreKeepers" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-		SELECT humanstatus,storename,storeid,employeeno,username,zw,leavedate from (
+		SELECT humanstatus,cityname,storename,storeno,storeid,employeeno,username,zw,leavedate from (
 				SELECT 
 				humanstatus as humanstatus,
+				keeper.citySelect as cityname,
 				store.name as storename,
+				store.storeno as storeno,
 				store.store_id as storeid,
 				keeper.employee_no as employeeno,
 				buser.name as username,
@@ -36,6 +38,11 @@
                    and storename = #{storename}
                 ]]>
             </if>
+            <if test="null != storeid and '' != storeid">
+                <![CDATA[                   
+                   and storeid = #{storeid}
+                ]]>
+            </if>
             <if test="null != update_time_start and null != update_time_end">
                 <![CDATA[                   
                    and DATE_FORMAT(update_time,'%Y-%m-%d') between #{update_time_start} and #{update_time_end}
@@ -51,12 +58,13 @@
         ]]>
     </select>
     
-    
-        <select id="queryPreStoreKeepers" parameterType="java.util.Map" resultType="java.util.Map">
+    	<!-- 获取截止当前日期发生异动人员之前的所在门店职位信息-->
+      <select id="queryPreStoreKeepers" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-			select humanstatus,storename,storeid,employeeno,username,zw,leavedate from (
+			select dd.humanstatus,dd.cityname,dd.storename,dd.storeid,dd.employeeno,dd.username,
+						 dd.zw, dd.leavedate,t_store.storeno from (
 			select cc.humanstatus,cc.storename,cc.storeid,cc.employeeno,cc.zw,cc.leavedate,
-						keeper.`name` username,cc.update_time 
+						keeper.citySelect as cityname,keeper.`name` username,cc.update_time 
 			from (select bb.store_id as storeid,
 			       bb.storename as storename,
 						 IFNULL(bb.leavedate,'') as leavedate,
@@ -81,9 +89,9 @@
 					on concat(',',aa.prestoreids,',') like concat('%,',cast(bb.store_id as char),',%') 
 			 ) cc ,t_storekeeper keeper
 			where cc.employeeno = keeper.employee_no
-			and  DATE_FORMAT(keeper.create_time, '%Y-%m') !=DATE_FORMAT(now(),'%Y-%m') ) dd
+			and  DATE_FORMAT(keeper.create_time, '%Y-%m') !=DATE_FORMAT(now(),'%Y-%m') ) dd,t_store
+			where dd.storeid = t_store.store_id
 		]]>
-		<where>
             <if test="null != username and '' != username">
                 <![CDATA[                   
                   and username like concat('%',#{username},'%')
@@ -99,6 +107,11 @@
                    and storename = #{storename}
                 ]]>
             </if>
+            <if test="null != storeid and '' != storeid">
+                <![CDATA[                   
+                   and storeid = #{storeid}
+                ]]>
+            </if>
             <if test="null != update_time_start and null != update_time_end">
                 <![CDATA[                   
                    and DATE_FORMAT(update_time,'%Y-%m-%d') between #{update_time_start} and #{update_time_end}
@@ -109,7 +122,6 @@
                    and zw =#{zw}
                 ]]>
             </if>
-           </where>
         <![CDATA[
           order by update_time desc
         ]]>
