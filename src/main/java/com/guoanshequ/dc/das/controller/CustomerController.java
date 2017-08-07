@@ -230,4 +230,78 @@ public class CustomerController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    
+    /**
+     * 
+     * TODO 按月查询门店用户画像 
+     * 2017年8月4日
+     * @author gaobaolei
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/getCustomerAmountByStoreOfMonth",method = RequestMethod.POST)
+    public RestResponse getCustomerAmountByStoreOfMonth(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		//String queryDate = paraMap.get("queryDate") != null ? paraMap.get("queryDate").toString() : null;
+	        String grade = paraMap.get("grade") != null ? paraMap.get("grade").toString() :null;
+	        String storeId = paraMap.get("storeId") != null ? paraMap.get("storeId").toString() :null;
+	        if(StringUtils.isBlank(grade)||StringUtils.isBlank(storeId)){
+	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND);
+	        }
+	        
+	        Map<String, Object> param = new HashMap<String,Object>();
+	        param.put("grade",grade);
+	        param.put("storeId",storeId);
+	    	Integer  total = customerService.getCustomerAmountByStoreOfMonth(param);
+	        if(null==total){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,total);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    
+    /**
+     * 
+     * TODO 按日查询门店用户画像 
+     * 2017年8月4日
+     * @author gaobaolei
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/getCustomerAmountByStoreOfDaily",method = RequestMethod.POST)
+    public RestResponse getCustomerAmountByStoreOfDaily(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		//String queryDate = paraMap.get("queryDate") != null ? paraMap.get("queryDate").toString() : null;
+	        String grade = paraMap.get("grade") != null ? paraMap.get("grade").toString() :null;
+	        String storeId = paraMap.get("storeId") != null ? paraMap.get("storeId").toString() :null;
+	        if(StringUtils.isBlank(grade)||StringUtils.isBlank(storeId)){
+	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND);
+	        }
+	        
+	        Map<String, Object> param = new HashMap<String,Object>();
+	        param.put("grade",grade);
+	        param.put("storeId",storeId);
+	    	Integer  total = customerService.getCustomerAmountByStoreOfMonth(param);
+	        if(null==total){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,total);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    
 }

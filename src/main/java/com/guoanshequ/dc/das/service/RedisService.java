@@ -22,4 +22,8 @@ public class RedisService {
     public void setValue(final String key, final String val, long expire) {
         template.opsForValue().set(key, val, expire, TimeUnit.SECONDS);
     }
+    
+    public boolean hasKey(final String key){
+    	return template.hasKey(key);
+    }
 }

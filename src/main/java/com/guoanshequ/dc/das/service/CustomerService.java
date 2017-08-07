@@ -64,4 +64,29 @@ public class CustomerService {
     public List<Map<String, String>> queryThirdByStore(Map<String, String> paraMap) throws Exception{
         return customerDao.queryThirdByStore(paraMap);
     }
+    
+    /**
+     * 
+     * TODO  按月查询门店用户画像 
+     * 2017年8月4日
+     * @author gaobaolei
+     * @param param
+     * @return
+     */
+    public Integer getCustomerAmountByStoreOfMonth(Map<String, Object> param){
+    	return customerDao.getCustomerAmountByStoreOfMonth(param);
+    }
+    
+    /**
+     * 
+     * TODO  按日查询门店用户画像 
+     * 2017年8月4日
+     * @author gaobaolei
+     * @param param
+     * @return
+     */
+    public Integer getCustomerAmountByStoreOfDaily(Map<String, Object> param){
+    	return customerDao.getCustomerAmountByStoreOfMonth(param);
+    }
+    
 }

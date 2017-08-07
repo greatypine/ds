@@ -18,7 +18,7 @@ import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.model.Auth;
 import com.guoanshequ.dc.das.service.AuthService;
 import com.guoanshequ.dc.das.service.RedisService;
-import com.guoanshequ.dc.das.utils.PwdGeneratorUtils;
+import com.guoanshequ.dc.das.utils.EncryptUtils;
 
 @RestController
 @ResponseBody
@@ -34,14 +34,17 @@ public class TokenController {
 	@RequestMapping(value = "rest/getTokenString",method = RequestMethod.POST)
 	public RestResponse getTokenString(@RequestBody Map<String, String> paraMap) throws Exception {
 		try {
-			String tokenStr = PwdGeneratorUtils.generateRandomPwd(16);
+			String timeStr = String.valueOf(System.currentTimeMillis());
+			String tokenStr =EncryptUtils.getMD5(timeStr);
 			Map<String, String> tokenMap = new HashMap<String, String>();
 			String appKey = paraMap.get("app_key") != null ? paraMap.get("app_key").toString() : null;
 			if(!StringUtils.isBlank(appKey)){
 				Auth appkeyAuth = authService.findByAppKey(appKey);
 				Long expireTime = appkeyAuth.getExpiretime();
 				tokenMap.put("token", tokenStr);
-				redisService.setValue(appKey, tokenStr, expireTime);
+				tokenMap.put("expireTime", String.valueOf(expireTime));
+				redisService.setValue(tokenStr, appKey, expireTime);
+				
 			}
 			return new RestResponse(EnumRespStatus.DATA_OK, tokenMap);
 		} catch (Exception e) {

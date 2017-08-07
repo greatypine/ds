@@ -34,7 +34,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
         String requestBodyString = RequestJsonUtils.getRequestJsonString(requestWrapper);
         String requestSignString = request.getParameter("sign");
-        String xx = request.getParameter("app_key");
         String requestURI = request.getRequestURI();
 
         logger.debug("requestBodyString:"+requestBodyString);

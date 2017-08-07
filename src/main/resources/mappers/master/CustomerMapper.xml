@@ -163,4 +163,252 @@
         </where>		
 	</select>
 	
+	 <select id="getCustomerAmountByStoreOfMonth" parameterType="java.util.Map"  resultType="java.lang.Integer" >
+       
+		SELECT
+				IFNULL(SUM(
+					CASE
+					WHEN (T.面积 IS NOT NULL AND T.面积 != '')
+					AND (T.朝向 IS NOT NULL AND T.朝向 != '')
+					AND (T.户型 IS NOT NULL	AND T.户型 != '')
+					AND ((T.户型图 IS NOT NULL AND T.户型图 != '')	OR T.`房屋类型` = 0)
+					AND (T.姓名 IS NOT NULL	AND T.姓名 != '')
+					AND (T.性别 IS NOT NULL)
+					AND (T.电话 IS NOT NULL AND T.电话 != '')
+					AND (T.年龄 IS NOT NULL)
+					<if test="grade=='seconde'">
+					
+						AND (T.照片 IS NOT NULL	AND T.照片 != '')
+						AND (T.民族 IS NOT NULL	AND T.民族 != '')
+						AND (T.住房性质 IS NOT NULL	AND T.住房性质 != '')
+						AND (T.职业 IS NOT NULL	AND T.职业 != '')
+						AND (T.客户收入 IS NOT NULL AND T.客户收入 != '')
+						AND (T.加班 IS NOT NULL	AND T.加班 != '')
+						AND (T.家庭人口数 IS NOT NULL)
+						AND (T.学龄前人数 IS NOT NULL)
+						AND (T.未成年人数 IS NOT NULL)
+						AND (T.宠物类型 IS NOT NULL	AND T.宠物类型 != '')
+					</if>
+					 THEN
+						1
+					ELSE
+						0
+					END
+				),0) AS amount
+		FROM
+			(
+				SELECT
+					thc.id AS 客户户型id,
+					tc.id AS 客户id,
+					th.house_type AS 房屋类型,
+					th.building_unit_no AS 单元号,
+					th.commercial_floor_number AS 楼层,
+					th.building_house_no AS 房间号,
+					hs.house_area AS 面积,
+					hs.house_toward AS 朝向,
+					hs.house_style AS 户型,
+					hs.house_pic AS 户型图,
+					tc.`name` AS 姓名,
+					tc.sex AS 性别,
+					tc.age AS 年龄,
+					tc.mobilephone AS 电话,
+					tc.customer_pic AS 照片,
+					tc.nationality AS 民族,
+					tc.house_property 住房性质,
+					tc.job AS 职业,
+					tc.income AS 客户收入,
+					tc.work_overtime AS 加班,
+					tc.family_num AS 家庭人口数,
+					tc.preschool_num AS 学龄前人数,
+					tc.minor_num AS 未成年人数,
+					tc.pet_type AS 宠物类型,
+					u.employeeId AS 员工编码,
+					u.`name` AS 员工姓名,
+					u.store_id AS 门店id,
+					s.`name` AS 门店名称,
+					thc.one_pay AS 第一等级支付,
+					thc.six_pay AS 第二等级支付,
+					thc.third_grade_pay AS 第三等级支付
+				FROM
+					t_customer tc
+				LEFT JOIN (
+					SELECT
+						thc2.id,
+						thc2.house_id,
+						thc2.customer_id,
+						thc2.one_pay,
+						thc2.six_pay,
+						thc2.one_date,
+						thc2.six_date,
+						thc2.third_grade_pay,
+						thc2.third_grade_date
+					FROM
+						(
+							SELECT	max(id) AS id	FROM t_house_customer GROUP BY customer_id
+						) thc1
+					    INNER JOIN t_house_customer thc2 ON thc1.id = thc2.id
+					) thc ON tc.id = thc.customer_id
+					LEFT JOIN t_house th ON th.id = thc.house_id
+					LEFT JOIN t_building tb ON tb.id = th.building_id
+					LEFT JOIN t_tiny_village ttv ON ttv.id = th.tinyvillage_id
+					LEFT JOIN t_house_style hs ON hs.house_id = th.id
+					LEFT JOIN tb_bizbase_user u ON u.employeeId = tc.employee_no
+					LEFT JOIN t_store s ON s.store_id = u.store_id
+					WHERE
+						(
+							DATE_FORMAT(thc.six_date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
+							OR thc.six_date IS NULL
+						)
+					AND DATE_FORMAT(tc.update_time, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
+					AND u.disabledFlag = 1
+					AND (
+						u.pk_usergroup = '3224'
+						OR u.employeeId IN (
+							SELECT
+								employee_no
+							FROM
+								t_humanresources
+							WHERE
+								zw = '副店长'
+							AND remark = '国安侠'
+							AND store_id = 34
+						)
+					)
+					AND s.`store_id` = '34'
+				) T
+			WHERE
+				T.员工编码 != ''
+				AND T.员工编码 IS NOT NULL
+				AND T.员工姓名 NOT LIKE '%测试%'
+				GROUP BY
+					T.`门店名称`
+				ORDER BY
+				T.门店id
+		
+    </select>
+
+    <select id="getCustomerAmountByStoreOfDaily" parameterType="java.util.Map"  resultType="java.lang.Integer" >
+       
+			SELECT
+				IFNULL(SUM(
+					CASE
+					WHEN ( T.面积 IS NOT NULL AND T.面积 != '')
+					AND (T.朝向 IS NOT NULL AND T.朝向 != '')
+					AND (T.户型 IS NOT NULL	AND T.户型 != '')
+					AND ((T.户型图 IS NOT NULL AND T.户型图 != '')	OR T.`房屋类型` = 0)
+					AND (	T.姓名 IS NOT NULL	AND T.姓名 != '')
+					AND (T.性别 IS NOT NULL)
+					AND (T.电话 IS NOT NULL AND T.电话 != '')
+					AND (T.年龄 IS NOT NULL)
+					<if test="grade=='seconde'">
+					AND (T.照片 IS NOT NULL	AND T.照片 != '')
+					AND (	T.民族 IS NOT NULL	AND T.民族 != '')
+					AND (T.住房性质 IS NOT NULL	AND T.住房性质 != '')
+					AND (T.职业 IS NOT NULL	AND T.职业 != '')
+					AND (	T.客户收入 IS NOT NULL AND T.客户收入 != '')
+					AND (T.加班 IS NOT NULL	AND T.加班 != '')
+					AND (T.家庭人口数 IS NOT NULL)
+					AND (T.学龄前人数 IS NOT NULL)
+					AND (T.未成年人数 IS NOT NULL)
+					AND (T.宠物类型 IS NOT NULL	AND T.宠物类型 != '')
+					</if>
+					 THEN
+						1
+					ELSE
+						0
+					END
+				),0) AS amount
+		FROM
+			(
+				SELECT
+					thc.id AS 客户户型id,
+					tc.id AS 客户id,
+					th.house_type AS 房屋类型,
+					th.building_unit_no AS 单元号,
+					th.commercial_floor_number AS 楼层,
+					th.building_house_no AS 房间号,
+					hs.house_area AS 面积,
+					hs.house_toward AS 朝向,
+					hs.house_style AS 户型,
+					hs.house_pic AS 户型图,
+					tc.`name` AS 姓名,
+					tc.sex AS 性别,
+					tc.age AS 年龄,
+					tc.mobilephone AS 电话,
+					tc.customer_pic AS 照片,
+					tc.nationality AS 民族,
+					tc.house_property 住房性质,
+					tc.job AS 职业,
+					tc.income AS 客户收入,
+					tc.work_overtime AS 加班,
+					tc.family_num AS 家庭人口数,
+					tc.preschool_num AS 学龄前人数,
+					tc.minor_num AS 未成年人数,
+					tc.pet_type AS 宠物类型,
+					u.employeeId AS 员工编码,
+					u.`name` AS 员工姓名,
+					u.store_id AS 门店id,
+					s.`name` AS 门店名称,
+					thc.one_pay AS 第一等级支付,
+					thc.six_pay AS 第二等级支付,
+					thc.third_grade_pay AS 第三等级支付
+				FROM
+					t_customer tc
+				LEFT JOIN (
+					SELECT
+						thc2.id,
+						thc2.house_id,
+						thc2.customer_id,
+						thc2.one_pay,
+						thc2.six_pay,
+						thc2.one_date,
+						thc2.six_date,
+						thc2.third_grade_pay,
+						thc2.third_grade_date
+					FROM
+						(
+							SELECT	max(id) AS id	FROM t_house_customer GROUP BY customer_id
+						) thc1
+					    INNER JOIN t_house_customer thc2 ON thc1.id = thc2.id
+					) thc ON tc.id = thc.customer_id
+					LEFT JOIN t_house th ON th.id = thc.house_id
+					LEFT JOIN t_building tb ON tb.id = th.building_id
+					LEFT JOIN t_tiny_village ttv ON ttv.id = th.tinyvillage_id
+					LEFT JOIN t_house_style hs ON hs.house_id = th.id
+					LEFT JOIN tb_bizbase_user u ON u.employeeId = tc.employee_no
+					LEFT JOIN t_store s ON s.store_id = u.store_id
+					WHERE
+						(
+							DATE_FORMAT(thc.six_date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
+							OR thc.six_date IS NULL
+						)
+					AND DATE_FORMAT(tc.update_time, '%Y-%m-%d') = DATE_FORMAT(CURDATE(), '%Y-%m-%d')
+					AND u.disabledFlag = 1
+					AND (
+						u.pk_usergroup = '3224'
+						OR u.employeeId IN (
+							SELECT
+								employee_no
+							FROM
+								t_humanresources
+							WHERE
+								zw = '副店长'
+							AND remark = '国安侠'
+							AND store_id = 34
+						)
+					)
+					AND s.`store_id` = '34'
+				) T
+			WHERE
+				T.员工编码 != ''
+				AND T.员工编码 IS NOT NULL
+				AND T.员工姓名 NOT LIKE '%测试%'
+				GROUP BY
+					T.`门店名称`
+				ORDER BY
+				T.门店id
+		
+    </select>
+	
+	
 </mapper>

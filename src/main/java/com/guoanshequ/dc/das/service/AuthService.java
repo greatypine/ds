@@ -74,22 +74,19 @@ public class AuthService {
             // convert request json string to map object
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> requestMap = objectMapper.readValue(requestInfo, new TypeReference<Map<String,Object>>(){});
-            String appKey = requestMap.get("app_key") != null ? requestMap.get("app_key").toString() : null;
+//            String appKey = requestMap.get("app_key") != null ? requestMap.get("app_key").toString() : null;
             //非请求token接口，必须验证token才能通过
             if(!"/ds/rest/getTokenString".equals(requestURI)){
-            	String requestToken = requestMap.get("token") != null ? requestMap.get("token").toString() : null;
-            	String redisToken = redisService.getValue(appKey) !=null ? redisService.getValue(appKey).toString() :null;
-            	logger.debug("********requestToken is :"+requestToken+"**************");
-            	logger.debug("********redisToken is :"+redisToken+"**************");
+            	String requestToken = (String) requestMap.get("token");
+            	Boolean tokenFlag = redisService.hasKey(requestToken);
+            	logger.debug("********requestToken is :"+requestToken+" ** exists ?**"+tokenFlag+"+************");
             	if(StringUtils.isBlank(requestToken)){
             		return EnumRespStatus.REQUEST_TOKENNULL;
             	}
-            	if(StringUtils.isBlank(redisToken)){
+            	if(!tokenFlag){
             		return EnumRespStatus.REQUEST_TIMEOUT;
             	}
-            	if(!requestToken.equals(redisToken)){
-            		return EnumRespStatus.REQUEST_TOKENERR;
-            	}
+                logger.info("********TOKEN验证成功**************");
             }
             
         } catch (Exception e) {
@@ -97,7 +94,6 @@ public class AuthService {
             e.printStackTrace();
             return EnumRespStatus.SYSTEM_ERROR;
         }
-        logger.info("********TOKEN验证成功**************");
         return EnumRespStatus.TOKEN_OK;
     }
     
