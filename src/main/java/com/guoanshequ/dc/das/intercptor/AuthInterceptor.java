@@ -50,19 +50,20 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             jsonGenerator.writeObject(restResponse);
             jsonGenerator.close();
             return false;
-        }else{
-            EnumRespStatus verifyTokenResult = authService.verifyToken(requestBodyString, requestURI);
-        	if(!EnumRespStatus.TOKEN_OK.equals(verifyTokenResult)){
-	            RestResponse restResponse = new RestResponse(verifyTokenResult);
-	            response.setContentType("application/json");
-	            ObjectMapper objectMapper = new ObjectMapper();
-	            JsonGenerator jsonGenerator = objectMapper.getFactory().createGenerator(response.getOutputStream(), JsonEncoding.UTF8);
-	            jsonGenerator.writeObject(restResponse);
-	            jsonGenerator.close();
-	            logger.info("**********TOKEN验证失败**************");
-	            return false;
-            }
         }
+//        else{
+//            EnumRespStatus verifyTokenResult = authService.verifyToken(requestBodyString, requestURI);
+//        	if(!EnumRespStatus.TOKEN_OK.equals(verifyTokenResult)){
+//	            RestResponse restResponse = new RestResponse(verifyTokenResult);
+//	            response.setContentType("application/json");
+//	            ObjectMapper objectMapper = new ObjectMapper();
+//	            JsonGenerator jsonGenerator = objectMapper.getFactory().createGenerator(response.getOutputStream(), JsonEncoding.UTF8);
+//	            jsonGenerator.writeObject(restResponse);
+//	            jsonGenerator.close();
+//	            logger.info("**********TOKEN验证失败**************");
+//	            return false;
+//            }
+//        }
         return true;
     }
 }

@@ -57,8 +57,8 @@ public enum EnumRespStatus {
     TASK_REWARDTIMESOK("8000025", "国安侠好评次数手动调度成功"),
     SYSTEM_ERROR("9000001", "系统错误"),
     REQUEST_ERROR("9000002", "请求错误"),
-    REQUEST_TIMEOUT("9000003", "token已过期请重新请求"),
-    REQUEST_TOKENERR("9000004", "token不匹配请求建立失败"),
+    REQUEST_TIMEOUT("9000003", "已过期的请求"),
+    REQUEST_REPEATED("9000004", "无效的重复请求"),
     REQUEST_TOKENNULL("9000005", "请求中需要token参数");
 
     private String code;

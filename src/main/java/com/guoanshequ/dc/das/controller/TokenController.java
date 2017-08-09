@@ -20,8 +20,8 @@ import com.guoanshequ.dc.das.service.AuthService;
 import com.guoanshequ.dc.das.service.RedisService;
 import com.guoanshequ.dc.das.utils.EncryptUtils;
 
-@RestController
-@ResponseBody
+//@RestController
+//@ResponseBody
 public class TokenController {
 	
 	@Autowired

@@ -39,19 +39,39 @@ public class AuthService {
 
             Map<String, Object> requestMap = objectMapper.readValue(requestInfo, new TypeReference<Map<String,Object>>(){});
             String appKey = requestMap.get("app_key") != null ? requestMap.get("app_key").toString() : null;
-            
-            if (StringUtils.isBlank(appKey) || StringUtils.isBlank(requestSign)) {
+            String reqTime = requestMap.get("stamp") != null ? requestMap.get("stamp").toString() : null;
+            String reqNonce = requestMap.get("nonce") != null ? requestMap.get("nonce").toString() : null;
+
+            if (StringUtils.isBlank(appKey) || StringUtils.isBlank(requestSign) || StringUtils.isBlank(reqTime) || StringUtils.isBlank(reqNonce)) {
                 return EnumRespStatus.REQUEST_ERROR;
             } else {
+                // 验证接入应用合法性
                 Auth auth = authDao.findByAppKey(appKey);
                 if (auth == null) {
                     return EnumRespStatus.AUTH_ERROR;
+                }
+                // 验证签名
+                String verifySign = EncryptUtils.getMD5(requestInfo + auth.getApp_secret());
+                if (!requestSign.equals(verifySign)) {
+                    logger.debug("**************verifySign:" + verifySign + "**************");
+                    return EnumRespStatus.AUTH_ERROR;
+                }
+
+                // 验证时间戳
+                Long requestTime = Long.parseLong(reqTime);
+                Long expireTime = findByAppKey(appKey).getExpiretime();
+                if ((System.currentTimeMillis() - requestTime) > expireTime) {
+                    logger.info(EnumRespStatus.REQUEST_TIMEOUT.getMessage());
+                    return EnumRespStatus.REQUEST_TIMEOUT;
+                }
+
+                // 验证nonce是否已经存在
+                Boolean isExist = redisService.hasKey(reqNonce);
+                if (isExist) {
+                    logger.info(EnumRespStatus.REQUEST_REPEATED.getMessage());
+                    return EnumRespStatus.REQUEST_REPEATED;
                 } else {
-                    String verifySign = EncryptUtils.getMD5(requestInfo + auth.getApp_secret());
-                    if (!requestSign.equals(verifySign)) {
-                    	logger.debug("**************verifySign:"+verifySign+"**************");
-                        return EnumRespStatus.AUTH_ERROR;
-                    }
+                    redisService.setValue(reqNonce, appKey, expireTime);
                 }
             }
             
@@ -60,6 +80,7 @@ public class AuthService {
             e.printStackTrace();
             return EnumRespStatus.SYSTEM_ERROR;
         }
+        logger.info(EnumRespStatus.AUTH_OK.getMessage());
         return EnumRespStatus.AUTH_OK;
     }
     
