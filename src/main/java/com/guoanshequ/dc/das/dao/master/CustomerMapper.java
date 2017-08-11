@@ -23,27 +23,7 @@ public interface CustomerMapper {
 	
 	List<Map<String, String>> queryThirdByStore(Map<String, String> paraMap);
 	
+	List<Map<String, String>> queryCustomerSecondStoreByDate(Map<String, String> param);
 	
-	
-	/**
-	 * 
-	 * TODO 按月查询门店用户画像 
-	 * 2017年8月4日
-	 * @author gaobaolei
-	 * @param storeId
-	 * @param query_date
-	 * @return
-	 */
-	public Integer getCustomerAmountByStoreOfMonth(Map<String, Object> param); 
-	
-	/**
-	 * 
-	 * TODO 按天查询门店用户画像 
-	 * 2017年8月4日
-	 * @author gaobaolei
-	 * @param storeId
-	 * @param query_date
-	 * @return
-	 */
-	public Integer getCustomerAmountByStoreOfDaily(Map<String, Object> param);
+	List<Map<String, String>> queryCustomerSecondStoreSumByDate(Map<String, String> param);
 }

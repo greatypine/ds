@@ -21,6 +21,10 @@ public interface RelationMapper{
 	/**
 	 * 社区动态系统：按日期门店统计拜访记录总数，实时数据
 	 */
-	List<Map<String, String>> queryRelationsStoreByDay(Map<String, String> paraMap);
+	List<Map<String, String>> queryRelationsStoreByDate(Map<String, String> paraMap);
+	/**
+	 * 社区动态系统：按日期统计总数，实时数据
+	 */
+	List<Map<String, Object>> queryRelationsStoreSumByDate(Map<String, String> paraMap);
 	
 }

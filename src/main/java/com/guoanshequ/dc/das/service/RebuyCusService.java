@@ -29,4 +29,8 @@ public class RebuyCusService {
         
     	return rebuyCusDao.queryRebuyCus(paraMap);
     }
+    public List<Map<String, Object>> queryRebuyCusSumByDate(Map<String, String> paraMap) throws Exception{
+    	
+    	return rebuyCusDao.queryRebuyCusSumByDate(paraMap);
+    }
 }

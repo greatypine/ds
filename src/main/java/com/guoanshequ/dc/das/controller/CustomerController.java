@@ -93,100 +93,6 @@ public class CustomerController {
         }
     }
     
-    /**
-     * 按门店统计拜访记录总量
-     
-    @RequestMapping(value = "rest/queryCustomersByStore")
-    public RestResponse queryCustomersByStore(@RequestBody Map<String, String> paraMap) throws Exception {
-    	try{
-	    	String yearmonth = paraMap.get("yearmonth") != null ? paraMap.get("yearmonth").toString() : null;
-	        String grade = paraMap.get("grade") != null ? paraMap.get("grade").toString() :null; 
-	        String storename = paraMap.get("storename") != null ? paraMap.get("storename").toString() :null; 
-	        String datatype = paraMap.get("datatype") != null ? paraMap.get("datatype").toString() : null;
-	        if(StringUtils.isBlank(yearmonth)||StringUtils.isBlank(grade)||StringUtils.isBlank(storename)){
-	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND1);
-	        }
-	        if(StringUtils.isBlank(datatype)){
-	        	return new RestResponse(EnumRespStatus.DATA_CSHUMANTYPE);
-	        }
-	        List<Map<String, String>> personList = null;
-			if("0".equals(datatype)){//实时人员数据
-				personList = humanresourceService.queryHumanresources(paraMap);
-			}else if("1".equals(datatype)){//上月异动人员数据
-				personList = humanresourceService.queryPreHumanresources(paraMap);
-			}
-			Integer num =0;
-	        Integer store_id=1;
-	        List<Map<String, String>> storeList = storeService.queryStores(paraMap);
-	        if(!storeList.isEmpty()){
-	        	for(int k=0;k<storeList.size();k++){
-	        		Object storeObj = storeList.get(k).get("store_id");
-	        		store_id = Integer.parseInt(storeObj.toString());
-	        	}
-	        }
-	        List<Map<Object, Object>> customerlist = new ArrayList<Map<Object, Object>>();
-	        Map<Object, Object> customerMap =new HashMap<Object, Object>(); 
-	        if("1".equals(grade)){
-	        	//Storelist = customerService.queryFirstByStore(paraMap);
-		        if(!personList.isEmpty()){
-			        for(int i=0;i<personList.size();i++){
-			        	String employee_no = personList.get(i).get("employeeno");
-			        	paraMap.put("employee_no", employee_no);
-			        	List<Map<String, String>> relationlist = customerService.queryFirst(paraMap);
-			        	if(!relationlist.isEmpty()){
-			        		for(int j=0;j<relationlist.size();j++){
-			        			Object obj = relationlist.get(j).get("datacount");
-			        			num = num + Integer.parseInt(obj.toString());
-			        		}
-			        	}
-			        }
-		        }
-	        }else if("2".equals(grade)){
-	        	//Storelist = customerService.querySecondByStore(paraMap);
-		        if(!personList.isEmpty()){
-			        for(int i=0;i<personList.size();i++){
-			        	String employee_no = personList.get(i).get("employeeno");
-			        	paraMap.put("employee_no", employee_no);
-			        	List<Map<String, String>> relationlist = customerService.querySecond(paraMap);
-			        	if(!relationlist.isEmpty()){
-			        		for(int j=0;j<relationlist.size();j++){
-			        			Object obj = relationlist.get(j).get("datacount");
-			        			num = num + Integer.parseInt(obj.toString());
-			        		}
-			        	}
-			        }
-		        }
-	        }else if("3".equals(grade)){
-	        	//Storelist = customerService.queryThirdByStore(paraMap);
-		        if(!personList.isEmpty()){
-			        for(int i=0;i<personList.size();i++){
-			        	String employee_no = personList.get(i).get("employeeno");
-			        	paraMap.put("employee_no", employee_no);
-			        	List<Map<String, String>> relationlist = customerService.queryThird(paraMap);
-			        	if(!relationlist.isEmpty()){
-			        		for(int j=0;j<relationlist.size();j++){
-			        			Object obj = relationlist.get(j).get("datacount");
-			        			num = num + Integer.parseInt(obj.toString());
-			        		}
-			        	}
-			        }
-		        }
-	        }
-	        customerMap.put("store_id", store_id);
-	        customerMap.put("storename", storename);
-	        customerMap.put("datacount", num);
-	        customerlist.add(customerMap);
-	        if(null==customerlist||customerlist.isEmpty()){
-	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
-	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,customerlist);
-	        }
-    	}catch (Exception e) {
-            logger.error(e.toString());
-            e.printStackTrace();
-            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
-        }
-    }*/
     @RequestMapping(value = "rest/queryCustomersByStore",method = RequestMethod.POST)
     public RestResponse queryCustomersByStore(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
@@ -233,32 +139,22 @@ public class CustomerController {
     
     
     /**
-     * 
-     * TODO 按月查询门店用户画像 
-     * 2017年8月4日
-     * @author gaobaolei
-     * @param paraMap
-     * @return
-     * @throws Exception
+     * 社区动态：客户画像二档表格明细，按日期实时查询
      */
-    @RequestMapping(value = "rest/getCustomerAmountByStoreOfMonth",method = RequestMethod.POST)
-    public RestResponse getCustomerAmountByStoreOfMonth(@RequestBody Map<String, String> paraMap) throws Exception {
+    @RequestMapping(value = "rest/queryCustomerSecondStoreByDate",method = RequestMethod.POST)
+    public RestResponse queryCustomerSecondStoreByDate(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
-    		//String queryDate = paraMap.get("queryDate") != null ? paraMap.get("queryDate").toString() : null;
-	        String grade = paraMap.get("grade") != null ? paraMap.get("grade").toString() :null;
-	        String storeId = paraMap.get("storeId") != null ? paraMap.get("storeId").toString() :null;
-	        if(StringUtils.isBlank(grade)||StringUtils.isBlank(storeId)){
-	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND);
+       		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
+ 	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
+ 	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
+	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)){
+	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND3);
 	        }
-	        
-	        Map<String, Object> param = new HashMap<String,Object>();
-	        param.put("grade",grade);
-	        param.put("storeId",storeId);
-	    	Integer  total = customerService.getCustomerAmountByStoreOfMonth(param);
-	        if(null==total){
+	    	List<Map<String, String>> list = customerService.queryCustomerSecondStoreByDate(paraMap);
+	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,total);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -269,32 +165,22 @@ public class CustomerController {
     
     
     /**
-     * 
-     * TODO 按日查询门店用户画像 
-     * 2017年8月4日
-     * @author gaobaolei
-     * @param paraMap
-     * @return
-     * @throws Exception
+     * 社区动态：页面圆圈总数
      */
-    @RequestMapping(value = "rest/getCustomerAmountByStoreOfDaily",method = RequestMethod.POST)
-    public RestResponse getCustomerAmountByStoreOfDaily(@RequestBody Map<String, String> paraMap) throws Exception {
+    @RequestMapping(value = "rest/queryCustomerSecondStoreSumByDate",method = RequestMethod.POST)
+    public RestResponse queryCustomerSecondStoreSumByDate(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
-    		//String queryDate = paraMap.get("queryDate") != null ? paraMap.get("queryDate").toString() : null;
-	        String grade = paraMap.get("grade") != null ? paraMap.get("grade").toString() :null;
-	        String storeId = paraMap.get("storeId") != null ? paraMap.get("storeId").toString() :null;
-	        if(StringUtils.isBlank(grade)||StringUtils.isBlank(storeId)){
-	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND);
+       		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
+ 	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
+ 	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
+	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)){
+	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND3);
 	        }
-	        
-	        Map<String, Object> param = new HashMap<String,Object>();
-	        param.put("grade",grade);
-	        param.put("storeId",storeId);
-	    	Integer  total = customerService.getCustomerAmountByStoreOfMonth(param);
-	        if(null==total){
+	    	List<Map<String, String>> list = customerService.queryCustomerSecondStoreSumByDate(paraMap);
+	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,total);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -302,6 +188,4 @@ public class CustomerController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
-    
-    
 }

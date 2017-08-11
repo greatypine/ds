@@ -67,26 +67,25 @@ public class CustomerService {
     
     /**
      * 
-     * TODO  按月查询门店用户画像 
+     * TODO  按日查询门店用户画像 
      * 2017年8月4日
      * @author gaobaolei
-     * @param param
+     * @param paraMap
      * @return
      */
-    public Integer getCustomerAmountByStoreOfMonth(Map<String, Object> param){
-    	return customerDao.getCustomerAmountByStoreOfMonth(param);
+    public List<Map<String, String>> queryCustomerSecondStoreByDate(Map<String, String> paraMap){
+    	return customerDao.queryCustomerSecondStoreByDate(paraMap);
     }
-    
     /**
      * 
      * TODO  按日查询门店用户画像 
      * 2017年8月4日
      * @author gaobaolei
-     * @param param
+     * @param paraMap
      * @return
      */
-    public Integer getCustomerAmountByStoreOfDaily(Map<String, Object> param){
-    	return customerDao.getCustomerAmountByStoreOfMonth(param);
+    public List<Map<String, String>> queryCustomerSecondStoreSumByDate(Map<String, String> paraMap){
+    	return customerDao.queryCustomerSecondStoreSumByDate(paraMap);
     }
     
 }

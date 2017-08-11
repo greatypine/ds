@@ -12,4 +12,6 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 public interface RebuyCusMapper{
 	
 	List<Map<String, String>> queryRebuyCus(Map<String, String> paraMap);
+	
+	List<Map<String, Object>> queryRebuyCusSumByDate(Map<String, String> paraMap);
 }

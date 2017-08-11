@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoanshequ.dc.das.dao.slave.SendOrderSumMapper">
 
-
+	<!-- 社区动态：获取实时表格明细 -->
 	<select id="querySendOrderSum" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
@@ -76,5 +76,88 @@
 	GROUP BY t.eid
 	ORDER by  t.stname,t.ename 
 		]]>
+	<if test="null != limitcond and '' != limitcond">
+         <![CDATA[                   
+            LIMIT ${limitcond}
+         ]]>
+	</if>
 	</select>
+	
+	
+<!-- 社区动态：按日期获取总数 -->
+	<select id="querySendOrderSumByDate" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+SELECT COUNT(*) AS totalcount FROM ( 
+	SELECT
+		t.cityname as cityname,
+		t.storeid as platformid,
+		t.stname as storename,
+		IFNULL(t.ename,'') as employeename,
+		IFNULL(t.eid,'') as employeeid,
+		IFNULL(SUM(IF(t._type=1,t._count,0)),0) AS dashang,
+		IFNULL(SUM(IF(t._type=2,t._count,0)),0) AS good  
+	FROM     	
+	(
+			(SELECT  
+					a.`name` as cityname,
+					ts.`name` AS stname,
+					ts.id AS storeid,
+					tem.`name` AS ename,
+					tem.id AS eid,
+					COUNT(tor.id) AS _count,
+					1 AS _type
+					from  
+					t_order  tor
+					JOIN t_order_flow tof on tof.order_id=tor.id
+					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
+					LEFT JOIN t_employee tem on tem.id=tor.employee_id
+					LEFT JOIN t_store ts on ts.id=tor.store_id 
+					LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+					where 
+					tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					and tof.order_status='signed'
+					AND EXISTS (select 1 from t_store where id=tor.store_id  and number IN (${storeids}))
+					AND ts.`name` not like '%测试%'
+					AND tep.`name` not like '%测试%'
+					AND ts.white!='QA'
+					AND tep.white!='QA'
+					AND tep.business_model_id!='fakemodelforexpress0000000000001'
+					GROUP BY tem.id
+					ORDER by ts.`name`,tem.`name`
+					)
+			UNION
+					(select  
+					a.`name` as cityname,
+					ts.`name` AS stname,
+					ts.id as storeid,
+					tem.`name` AS ename,
+					tem.id AS eid,
+					COUNT(tor.id) AS _count,
+					2 AS _type
+					from  
+					t_order  tor
+					JOIN t_order_flow tof on tof.order_id=tor.id
+					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
+					LEFT JOIN t_employee tem on tem.id=tor.employee_id
+					LEFT JOIN t_store ts on ts.id=tor.store_id 
+					LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+					where 
+					tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					AND tof.order_status='signed'
+					AND EXISTS (select 1 from t_store where id=tor.store_id  and number IN (${storeids}))
+					AND tep.department_id!='00000000000000000000000000000059'
+					AND ts.`name` not like '%测试%'
+					AND tep.`name` not like '%测试%'
+					AND ts.white!='QA'
+					AND tep.white!='QA'
+					AND tep.business_model_id!='fakemodelforexpress0000000000001'
+					GROUP BY tem.id
+					ORDER by ts.`name`,tem.`name`
+					)
+	) t
+	GROUP BY t.eid ) sendordersumline
+		]]>
+	</select>
+	
 </mapper>

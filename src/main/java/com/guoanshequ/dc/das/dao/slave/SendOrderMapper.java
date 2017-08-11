@@ -12,4 +12,6 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 public interface SendOrderMapper{
 	
 	List<Map<String, String>> querySendOrders(Map<String, String> paraMap);
+	
+	List<Map<String, Object>> querySendOrdersSumByDate(Map<String, String> paraMap);
 }

@@ -27,4 +27,9 @@ public class StoreTradeChannelService {
         
     	return storeTradeChannelDao.queryStoreTradeChannels(paraMap);
     }
+    
+    public List<Map<String, Object>> queryStoreTradeChannelsSumByDate(Map<String, String> paraMap) throws Exception{
+    	
+    	return storeTradeChannelDao.queryStoreTradeChannelsSumByDate(paraMap);
+    }
 }

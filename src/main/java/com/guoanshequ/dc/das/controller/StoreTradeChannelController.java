@@ -44,11 +44,17 @@ public class StoreTradeChannelController {
  	        	return new RestResponse(EnumRespStatus.DATA_TRADENOCOND);
  	        }
 			List<Map<String, String>> list = storeTradeChannelService.queryStoreTradeChannels(paraMap);
-			
+			List<Map<String, Object>> sumlist = storeTradeChannelService.queryStoreTradeChannelsSumByDate(paraMap);
+			int totalcount = 1;
+			if(!sumlist.isEmpty()){
+				for (Map<String, Object> map : sumlist) {
+					totalcount =  ((Long)map.get("totalcount")).intValue();
+				}
+			}
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,totalcount,list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());

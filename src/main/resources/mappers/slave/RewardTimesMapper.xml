@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoanshequ.dc.das.dao.slave.RewardTimesMapper">
 
-
+	<!-- 任务调度数据到本地表中供社区动态系统上月月度使用，实时明细列表 -->
 	<select id="queryRewardTimes" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
@@ -44,12 +44,71 @@ FROM
                 	LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
 					where  tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 					and  tof.order_status='signed'  and tep.name not like '%测试%' and ts.name not like '%测试%'
-					AND ts.number IN (${storeids})
+					and EXISTS (select 1 from t_store where id=tor.store_id  and number IN (${storeids}))
 					GROUP BY  tor.group_id) _tor on _tor.group_id=trp.order_group_id
 			where trp.type='employee' and trp.price!=0 and trp.pay_status='payed'
 			GROUP BY  _tor.employeeId,_tor.orderSn,_tor.storeId              
 		) t
 	GROUP BY t.storeId, t.employeeId, t.orderSn
 		]]>
+	<if test="null != limitcond and '' != limitcond">
+         <![CDATA[                   
+            LIMIT ${limitcond}
+         ]]>
+	</if>
 	</select>
+	
+<!-- 社区动态：页面圆圈显示总数、当天显示总数 -->
+	<select id="queryRewardTimesSumByDate" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+	 SELECT IFNULL(SUM(dashang),0) AS dashangsum,count(*) AS totalcount FROM (
+	  SELECT
+	  t.city_name as cityname,
+	  t.storeId as platformid,
+	  t.storeName as storename,
+	  t.employeeName as employeename,
+	  t.cusId as cusid,
+	  t.orderSn as ordersn,
+	  IFNULL(SUM(IF(t._type=1,t._count,0)),0) AS dashang
+FROM
+	(	select
+	     	_tor.city_name,
+			_tor.storeId,
+			_tor.storeName,
+			_tor.employeeId,
+			_tor.employeeName,
+			_tor.cusId,
+			_tor.orderSn,
+			COUNT(trp.id) AS _count,
+			1 AS _type
+		from t_order_receipts trp
+		JOIN (select 	
+						ts.id storeId,
+						ts.name storeName,
+	             		a.`name` AS city_name,
+						tem.id employeeId,
+						tem.`name` employeeName,
+						tcs.id cusId,
+						tor.order_sn orderSn,
+						tor.group_id
+					from  t_order  tor
+					JOIN  t_order_flow tof on tof.order_id=tor.id
+					LEFT JOIN t_employee tem on tem.id=tor.employee_id
+					LEFT JOIN t_customer tcs on tcs.id=tor.customer_id
+					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
+					LEFT JOIN t_store ts on ts.id=tor.store_id
+                	LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+					where  tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					and  tof.order_status='signed'  and tep.name not like '%测试%' and ts.name not like '%测试%'
+					and EXISTS (select 1 from t_store where id=tor.store_id  and number IN (${storeids}))
+					GROUP BY  tor.group_id) _tor on _tor.group_id=trp.order_group_id
+			where trp.type='employee' and trp.price!=0 and trp.pay_status='payed'
+			GROUP BY  _tor.employeeId,_tor.orderSn,_tor.storeId              
+		) t
+		GROUP BY t.storeId, t.employeeId, t.orderSn
+	) rewardline
+		]]>
+	</select>
+	
 </mapper>

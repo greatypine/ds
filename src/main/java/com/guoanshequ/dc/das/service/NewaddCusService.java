@@ -29,4 +29,9 @@ public class NewaddCusService {
         
     	return newaddCusDao.queryNewaddCus(paraMap);
     }
+    
+    public List<Map<String, Object>> queryNewaddCusSumByDate(Map<String, String> paraMap)throws Exception{
+        
+    	return newaddCusDao.queryNewaddCusSumByDate(paraMap);
+    }
 }

@@ -12,4 +12,6 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 public interface RewardTimesMapper{
 	
 	List<Map<String, String>> queryRewardTimes(Map<String, String> paraMap);
+	
+	List<Map<String, Object>> queryRewardTimesSumByDate(Map<String, String> paraMap);
 }

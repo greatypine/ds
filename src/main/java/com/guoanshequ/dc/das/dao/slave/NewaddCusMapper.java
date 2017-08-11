@@ -12,4 +12,6 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 public interface NewaddCusMapper{
 	
 	List<Map<String, String>> queryNewaddCus(Map<String, String> paraMap);
+	
+	List<Map<String, Object>> queryNewaddCusSumByDate(Map<String, String> paraMap);
 }

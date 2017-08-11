@@ -47,17 +47,48 @@ public class StoreTradeController {
  	        	return new RestResponse(EnumRespStatus.DATA_TRADENOCOND);
  	        }
 			List<Map<String, String>> list = storeTradeService.queryStoreTrades(paraMap);
-			
+			List<Map<String, Object>> sumlist = storeTradeService.queryStoreTradesSumByDate(paraMap);
+			int totalcount = 1;
+			if(!sumlist.isEmpty()){
+				for (Map<String, Object> map : sumlist) {
+					totalcount =  ((Long)map.get("totalcount")).intValue();
+				}
+			}
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,totalcount,list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
+    }
+    /**
+     * 社区动态：页面圆圈总数、每日总数
+     */
+    @RequestMapping(value = "rest/queryStoreTradesSumByDate",method = RequestMethod.POST)
+    public RestResponse queryStoreTradesSumByDate(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
+    		String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
+    		String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
+    		if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)){
+    			return new RestResponse(EnumRespStatus.DATA_TRADENOCOND);
+    		}
+    		List<Map<String, Object>> list = storeTradeService.queryStoreTradesSumByDate(paraMap);
+    		
+    		if(null==list||list.isEmpty()){
+    			return new RestResponse(EnumRespStatus.DATA_NODATA);
+    		}else{
+    			return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+    		}
+    	}catch (Exception e) {
+    		logger.error(e.toString());
+    		e.printStackTrace();
+    		return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+    	}
     }
     
     /**
@@ -69,17 +100,15 @@ public class StoreTradeController {
     		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
  	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
  	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
- 	        String limitcond =  paraMap.get("limitcond") != null ? paraMap.get("limitcond").toString() : null;
- 	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)||
- 	 	       StringUtils.isBlank(limitcond)){
- 	        	return new RestResponse(EnumRespStatus.DATA_TRADENOCOND1);
+ 	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)){
+ 	        	return new RestResponse(EnumRespStatus.DATA_TRADENOCOND);
  	        }
 			List<Map<String, String>> list = storeTradeService.queryStoreTradesOrderByGMV(paraMap);
 			
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -97,17 +126,15 @@ public class StoreTradeController {
     		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
  	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
  	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
- 	        String limitcond =  paraMap.get("limitcond") != null ? paraMap.get("limitcond").toString() : null;
- 	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)||
- 	 	       StringUtils.isBlank(limitcond)){
- 	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND2);
+ 	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)){
+ 	        	return new RestResponse(EnumRespStatus.DATA_TRADENOCOND);
  	        }
 			List<Map<String, String>> list = storeTradeService.queryStoreTradesOrderByOrderNum(paraMap);
 			
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());

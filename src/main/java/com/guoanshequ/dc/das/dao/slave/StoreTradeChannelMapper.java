@@ -12,4 +12,6 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 public interface StoreTradeChannelMapper{
 	
 	List<Map<String, String>> queryStoreTradeChannels(Map<String, String> paraMap);
+	
+	List<Map<String, Object>> queryStoreTradeChannelsSumByDate(Map<String, String> paraMap);
 }

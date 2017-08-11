@@ -72,7 +72,7 @@ public class RelationController {
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -80,67 +80,6 @@ public class RelationController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
-    /**
-     * 按门店统计拜访记录总数
-     
-    @RequestMapping(value = "rest/queryRelationsByStore")
-    public RestResponse queryRelationsByStore(@RequestBody Map<String, String> paraMap) throws Exception {
-    	try{
-	        String yearmonth = paraMap.get("yearmonth") != null ? paraMap.get("yearmonth").toString() : null;
-	        String storename = paraMap.get("storename") != null ? paraMap.get("storename").toString() : null;
-	        String datatype = paraMap.get("datatype") != null ? paraMap.get("datatype").toString() : null;
-	        if(StringUtils.isBlank(yearmonth)||StringUtils.isBlank(storename)){
-	        	return new RestResponse(EnumRespStatus.DATA_RELANOCOND1);
-	        }
-	        if(StringUtils.isBlank(datatype)){
-	        	return new RestResponse(EnumRespStatus.DATA_RELAHUMANTYPE);
-	        }
-	        List<Map<String, String>> personList = null;
-			if("0".equals(datatype)){//实时人员数据
-				personList = humanresourceService.queryHumanresources(paraMap);
-			}else if("1".equals(datatype)){//上月异动人员数据
-				personList = humanresourceService.queryPreHumanresources(paraMap);
-			}
-	        Map<Object, Object> relationMap =new HashMap<Object, Object>(); 
-	        Integer num =0;
-	        Integer store_id=1;
-	        List<Map<String, String>> storeList = storeService.queryStores(paraMap);
-	        if(!storeList.isEmpty()){
-	        	for(int k=0;k<storeList.size();k++){
-	        		Object storeObj = storeList.get(k).get("store_id");
-	        		store_id = Integer.parseInt(storeObj.toString());
-	        	}
-	        }
-	        if(!personList.isEmpty()){
-		        for(int i=0;i<personList.size();i++){
-		        	String employee_no = personList.get(i).get("employeeno");
-		        	paraMap.put("employee_no", employee_no);
-		        	List<Map<String, String>> relationlist = relationService.queryRelations(paraMap);
-		        	if(!relationlist.isEmpty()){
-		        		for(int j=0;j<relationlist.size();j++){
-		        			Object obj = relationlist.get(j).get("num");
-		        			num = num + Integer.parseInt(obj.toString());
-		        		}
-		        	}
-		        }
-	        }
-	        relationMap.put("store_id", store_id);
-	        relationMap.put("storename", storename);
-	        relationMap.put("num", num);
-	        List<Map<Object, Object>> list = new ArrayList<Map<Object, Object>>();
-	        list.add(relationMap);
-	        if(null==list||list.isEmpty()){
-	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
-	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
-	        }
-    	}catch (Exception e) {
-            logger.error(e.toString());
-            e.printStackTrace();
-            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
-        }
-    }
-    */
     /**
      * pes绩效系统拜访记录（按门店），实时数据
      */
@@ -177,10 +116,10 @@ public class RelationController {
     }
     
     /**
-     * 社区动态系统每日动态门店拜访记录前N名，实时数据
+     * 社区动态系统每日动态门店拜访记录前N名，实时数据表格明细
      */
-    @RequestMapping(value = "rest/queryRelationsStoreByDay",method = RequestMethod.POST)
-    public RestResponse queryRelationsStoreByDay(@RequestBody Map<String, String> paraMap) throws Exception {
+    @RequestMapping(value = "rest/queryRelationsStoreByDate",method = RequestMethod.POST)
+    public RestResponse queryRelationsStoreByDate(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
  	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
@@ -190,13 +129,45 @@ public class RelationController {
  	            StringUtils.isBlank(limitcond)){
  	        		return new RestResponse(EnumRespStatus.DATA_RELANOCOND2);
  	        }
-	        List<Map<String, String>> list = relationService.queryRelationsStoreByDay(paraMap);
+	        List<Map<String, String>> list = relationService.queryRelationsStoreByDate(paraMap);
+			List<Map<String, Object>> sumlist = relationService.queryRelationsStoreSumByDate(paraMap);
+			int totalcount = 1;
+			if(!sumlist.isEmpty()){
+				for (Map<String, Object> map : sumlist) {
+					totalcount =  ((Long)map.get("totalcount")).intValue();
+				}
+			}
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,totalcount,list);
 	        }
     		
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 社区动态：拜访记录总数
+     */
+    @RequestMapping(value = "rest/queryRelationsStoreSumByDate",method = RequestMethod.POST)
+    public RestResponse queryRelationsStoreSumByDate(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
+ 	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
+ 	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
+ 	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)){
+ 	        		return new RestResponse(EnumRespStatus.DATA_RELANOCOND2);
+ 	        }
+	        List<Map<String, Object>> list = relationService.queryRelationsStoreSumByDate(paraMap);
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        }
     	}catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();

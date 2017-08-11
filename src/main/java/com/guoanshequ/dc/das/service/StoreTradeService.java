@@ -30,6 +30,11 @@ public class StoreTradeService {
     	return storeTradeDao.queryStoreTrades(paraMap);
     }
     
+    public List<Map<String, Object>> queryStoreTradesSumByDate(Map<String, String> paraMap) throws Exception{
+    	
+    	return storeTradeDao.queryStoreTradesSumByDate(paraMap);
+    }
+    
     public List<Map<String, String>> queryStoreTradesOrderByGMV(Map<String, String> paraMap) throws Exception{
     	
     	return storeTradeDao.queryStoreTradesOrderByGMV(paraMap);

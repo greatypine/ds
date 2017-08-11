@@ -27,4 +27,9 @@ public class RewardTimesService {
         
     	return rewardTimesDao.queryRewardTimes(paraMap);
     }
+    
+    public List<Map<String, Object>> queryRewardTimesSumByDate(Map<String, String> paraMap) throws Exception{
+    	
+    	return rewardTimesDao.queryRewardTimesSumByDate(paraMap);
+    }
 }

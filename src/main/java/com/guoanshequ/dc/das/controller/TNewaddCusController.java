@@ -47,7 +47,7 @@ public class TNewaddCusController {
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());

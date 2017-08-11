@@ -101,5 +101,76 @@ GROUP BY ts.id
 ORDER BY t.rebuy_count DESC
 
 		]]>
+	<if test="null != limitcond and '' != limitcond">
+          <![CDATA[                   
+             LIMIT ${limitcond}
+          ]]>
+	</if>
 	</select>
+	
+	
+<select id="queryRebuyCusSumByDate" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+	SELECT IFNULL(SUM(rebuy_20_count),0) as rebuysum,count(*) AS totalcount from (
+	SELECT
+    CONCAT(#{year},'-',#{month}) AS disdate,
+    a.`name` AS city_name,
+    ts.id AS platformid,
+    ts.`name` AS store_name,
+	IFNULL(SUM(t.rebuy_20_count),0) AS rebuy_20_count 
+FROM t_store ts
+LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+LEFT JOIN
+	(
+			SELECT f.store_id AS store_id, 0 AS rebuy_count,
+				COUNT(DISTINCT f.customer_id) AS rebuy_20_count
+			FROM
+				(
+					SELECT t.customer_id, t.store_id
+					FROM
+						(
+							SELECT tor.customer_id, tor.store_id, tor.trading_price
+							FROM t_eshop te
+							JOIN t_order tor ON te.id=tor.eshop_id
+                                AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
+							JOIN t_order_flow tof ON tor.id=tof.order_id
+								AND tof.order_status='signed'
+								AND tof.create_time>=DATE(CONCAT(#{year},#{month},'01'))
+								AND tof.create_time<DATE_ADD(DATE(CONCAT(#{year},#{month},'01')),INTERVAL 1 MONTH)
+							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+							GROUP BY tor.group_id
+						) t GROUP BY t.customer_id, t.store_id HAVING SUM(t.trading_price)>=20
+				) f
+			JOIN
+				(
+
+					SELECT t.customer_id, t.store_id
+					FROM
+						(
+							SELECT tor.customer_id, tor.store_id, tor.trading_price
+							FROM t_eshop te
+							JOIN t_order tor ON te.id=tor.eshop_id
+                                AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
+							JOIN t_order_flow tof ON tof.order_id=tor.id
+								AND tof.order_status='signed'
+								AND tof.create_time>=DATE_SUB(DATE(CONCAT(#{year},#{month},'01')),INTERVAL 1 MONTH)
+								AND tof.create_time<DATE(CONCAT(#{year},#{month},'01'))
+							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+							GROUP BY tor.group_id
+						) t GROUP BY t.customer_id, t.store_id HAVING SUM(t.trading_price)>=20
+				) f1 ON f.customer_id = f1.customer_id
+				AND f.store_id=f1.store_id
+			GROUP BY f.store_id
+	) t ON t.store_id=ts.id
+WHERE
+	ts.number IN (${storeids})
+	AND ts.`name` NOT LIKE '%测试%'
+	AND ts.`status` = 0
+	AND ts.white != 'QA' 
+	GROUP BY ts.id ) rebuyline
+
+		]]>
+	</select>
+	
 </mapper>

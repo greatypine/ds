@@ -45,10 +45,39 @@ public class NewaddCusController {
  	        	return new RestResponse(EnumRespStatus.DATA_NEWADDNOCOND);
  	        }
 			List<Map<String, String>> list = newaddCusService.queryNewaddCus(paraMap);
+			List<Map<String, Object>> sumlist = newaddCusService.queryNewaddCusSumByDate(paraMap);
+			int totalcount = 1;
+			if(!sumlist.isEmpty()){
+				for (Map<String, Object> map : sumlist) {
+					totalcount =  ((Long)map.get("totalcount")).intValue();
+				}
+			}
+			if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,totalcount,list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    @RequestMapping(value = "rest/queryNewaddCusSumByDate",method = RequestMethod.POST)
+    public RestResponse queryNewaddCusSumByDate(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
+ 	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
+ 	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
+ 	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)){
+ 	        	return new RestResponse(EnumRespStatus.DATA_NEWADDNOCOND);
+ 	        }
+			List<Map<String, Object>> list = newaddCusService.queryNewaddCusSumByDate(paraMap);
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());

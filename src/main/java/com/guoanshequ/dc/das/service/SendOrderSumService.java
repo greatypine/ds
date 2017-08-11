@@ -28,4 +28,9 @@ public class SendOrderSumService {
         
     	return sendOrderSumDao.querySendOrderSum(paraMap);
     }
+    
+    public List<Map<String, Object>> querySendOrderSumByDate(Map<String, String> paraMap) throws Exception{
+    	
+    	return sendOrderSumDao.querySendOrderSumByDate(paraMap);
+    }
 }

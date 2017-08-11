@@ -8,6 +8,7 @@ import com.guoanshequ.dc.das.domain.EnumRespStatus;
 public class RestResponse {
     private String  status;
     private String message;
+    private Object datacount;
     private Object data;
 
     public RestResponse(String status, String message, Object data) {
@@ -26,12 +27,18 @@ public class RestResponse {
         this.message = respStatus.getMessage();
     }
 
+    public RestResponse(EnumRespStatus respStatus, Object datacount,Object data) {
+        this.status = respStatus.getCode();
+        this.message = respStatus.getMessage();
+        this.datacount = datacount;
+        this.data = data;
+    }
+
     public RestResponse(EnumRespStatus respStatus, Object data) {
         this.status = respStatus.getCode();
         this.message = respStatus.getMessage();
         this.data = data;
     }
-
 
     public String getStatus() {
         return status;
@@ -56,4 +63,13 @@ public class RestResponse {
     public void setData(Object data) {
         this.data = data;
     }
+
+	public Object getDatacount() {
+		return datacount;
+	}
+
+	public void setDatacount(Object datacount) {
+		this.datacount = datacount;
+	}
+
 }
