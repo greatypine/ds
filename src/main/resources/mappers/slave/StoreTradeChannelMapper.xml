@@ -8,6 +8,7 @@
         <![CDATA[
 		SELECT
 		a.`name` as city_name,
+		ts.code as storeno,
 		ts.`name` AS store_name, 
 		IFNULL(tor.dep_name,'') AS dep_name, 
 		IFNULL(tor.channel_name,'') AS channel_name,

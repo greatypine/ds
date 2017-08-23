@@ -84,40 +84,6 @@ public class AuthService {
         return EnumRespStatus.AUTH_OK;
     }
     
-    /**
-     * 根据token验证接口访问时效是否符合规则
-     */
-    public EnumRespStatus verifyToken(String requestInfo, String requestURI) {
-        try {
-            if (StringUtils.isBlank(requestInfo)) {
-                return EnumRespStatus.REQUEST_ERROR;
-            }
-            // convert request json string to map object
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> requestMap = objectMapper.readValue(requestInfo, new TypeReference<Map<String,Object>>(){});
-//            String appKey = requestMap.get("app_key") != null ? requestMap.get("app_key").toString() : null;
-            //非请求token接口，必须验证token才能通过
-            if(!"/ds/rest/getTokenString".equals(requestURI)){
-            	String requestToken = (String) requestMap.get("token");
-            	Boolean tokenFlag = redisService.hasKey(requestToken);
-            	logger.debug("********requestToken is :"+requestToken+" ** exists ?**"+tokenFlag+"+************");
-            	if(StringUtils.isBlank(requestToken)){
-            		return EnumRespStatus.REQUEST_TOKENNULL;
-            	}
-            	if(!tokenFlag){
-            		return EnumRespStatus.REQUEST_TIMEOUT;
-            	}
-                logger.info("********TOKEN验证成功**************");
-            }
-            
-        } catch (Exception e) {
-            logger.error(e.toString());
-            e.printStackTrace();
-            return EnumRespStatus.SYSTEM_ERROR;
-        }
-        return EnumRespStatus.TOKEN_OK;
-    }
-    
     //通过appkey获得对应的访问用户信息
     public Auth findByAppKey(String appKey){
     	return authDao.findByAppKey(appKey);

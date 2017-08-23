@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -177,6 +175,31 @@ public class CustomerController {
 	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND3);
 	        }
 	    	List<Map<String, String>> list = customerService.queryCustomerSecondStoreSumByDate(paraMap);
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 社区动态：页面圆圈总数，单一国安侠总数
+     */
+    @RequestMapping(value = "rest/queryCustomerSecondEmployeeSumByDate",method = RequestMethod.POST)
+    public RestResponse queryCustomerSecondEmployeeSumByDate(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+       		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
+ 	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
+ 	        String employeeno =  paraMap.get("employeeno") != null ? paraMap.get("employeeno").toString() : null;
+	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(employeeno)){
+	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND4);
+	        }
+	    	List<Map<String, String>> list = customerService.queryCustomerSecondEmployeeSumByDate(paraMap);
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{

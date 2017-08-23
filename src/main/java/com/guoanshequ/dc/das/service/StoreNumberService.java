@@ -3,6 +3,7 @@ package com.guoanshequ.dc.das.service;
 import com.guoanshequ.dc.das.dao.slave.StoreNumberMapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,9 @@ public class StoreNumberService {
     	List<String> storeNoesList = storeNumberDao.queryStoreNoes();
     	String storeNoesStr = String.join(",", storeNoesList);
     	return storeNoesStr;
+    }
+    
+    public Integer queryStoreSum(Map<String, String> paraMap){
+    	return storeNumberDao.queryStoreSum(paraMap);
     }
 }

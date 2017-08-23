@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.OfficeInfoMapper">
+
+
+	<select id="queryOfficeInfoSumByDate" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			SELECT
+				ifnull(count(toi.office_id), 0) AS amount
+			FROM
+				(
+					SELECT
+						aa.id
+					FROM
+						t_city aa,
+						(
+							SELECT
+								tdc.id,
+								tdc.cityname
+							FROM
+								t_general a
+							INNER JOIN t_general_city_reference b ON a.employee_no = #{employeeno}
+							AND a.id = b.gmid
+							AND b.ctid = 2
+							INNER JOIN t_dist_citycode tdc ON b.ctid = tdc.id
+						) AS bb
+					WHERE
+						aa.`name` LIKE CONCAT('%', bb.cityname, '%')
+				) AS cc
+			INNER JOIN t_county tc ON cc.id = tc.city_id
+			INNER JOIN t_town tt ON tc.id = tt.county_id
+			INNER JOIN t_office_info toi ON tt.id = toi.town_id
+			AND toi.create_time>=DATE(#{begindate})
+			AND toi.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY))
+		]]>
+	</select>	
+</mapper>

@@ -10,6 +10,7 @@
     CONCAT(#{year},'-',#{month}) AS disdate,
     a.`name` AS city_name,
     ts.id AS platformid,
+    IFNULL(ts.code,'') as storeno,
     ts.`name` AS store_name,
 	IFNULL(SUM(t.rebuy_count),0) AS rebuy_count, -- 复购客户
 	IFNULL(SUM(t.rebuy_20_count),0) AS rebuy_20_count -- 复购客户消费>=20

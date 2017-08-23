@@ -55,6 +55,32 @@
        </where>	
 	</select> 
 	
+<!-- 社区动态：按日期，以国安侠为单位查询 -->
+	<select id="queryRelationsEmployeeByDate" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+        	SELECT employee_no as employeeno,num FROM (
+			SELECT  t.store_id,t.employee_no, SUM(t.curr_month_amount) AS num 
+			FROM (SELECT 	empamou.store_id,  empamou.employee_no, empamou.employee_name, empamou.data_amount AS curr_month_amount 
+			      FROM (  SELECT u.store_id, r.employee_name, r.employee_no, DATE_FORMAT(r.relation_date,'%Y-%m') AS mounth,
+			              COUNT(distinct c.id) AS data_amount 
+			            FROM t_relation r     
+			            LEFT JOIN tb_bizbase_user u  ON u.employeeId = r.employee_no 
+			            LEFT JOIN t_customer c  ON c.id=r.customer_id 
+			            WHERE r.status = 0 
+			            AND r.relation_date>=#{begindate} 
+			            AND r.relation_date<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			            GROUP BY r.employee_no) empamou ) t 
+			GROUP BY  t.employee_no HAVING t.store_id is not NULL 
+			ORDER BY t.store_id,t.employee_no ) st_relation
+		]]>
+		 <where>
+            <if test="null != employeeno and null != employeeno">
+               <![CDATA[                   
+                   employee_no = #{employeeno}
+               ]]>
+            </if>
+         </where>
+	</select>
 	
 	<!-- 社区动态：以日期为单位进行查询，每日动态，实时数据表格明细 -->
  	<select id="queryRelationsStoreByDate" parameterType="java.util.Map" resultType="java.util.Map">

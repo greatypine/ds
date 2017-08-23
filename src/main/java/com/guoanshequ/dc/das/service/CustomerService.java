@@ -88,4 +88,8 @@ public class CustomerService {
     	return customerDao.queryCustomerSecondStoreSumByDate(paraMap);
     }
     
+    public List<Map<String, String>> queryCustomerSecondEmployeeSumByDate(Map<String, String> param){
+    	return customerDao.queryCustomerSecondEmployeeSumByDate(param);
+    }
+    
 }

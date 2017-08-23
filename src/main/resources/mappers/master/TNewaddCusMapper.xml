@@ -9,6 +9,7 @@
 			select 
 				city_name,
 				platformid,
+				IFNULL(storeno,'') AS storeno,
 				store_name,
 				pay_count,
 				new_count,
@@ -24,11 +25,11 @@
 	<insert id="addTNewaddCus" parameterType="java.util.Map">
 		<![CDATA[
 			INSERT INTO ds_newaddcus (
-				city_name, platformid,store_name, pay_count, new_count,
+				city_name, platformid,storeno,store_name, pay_count, new_count,
 				total_count, pay_20_count, new_20_count,
 				year,month,createtime
 			) VALUES(
-				#{city_name},#{platformid},#{store_name},#{pay_count},#{new_count},
+				#{city_name},#{platformid},#{storeno},#{store_name},#{pay_count},#{new_count},
 				#{total_count},#{pay_20_count},#{new_20_count},
 				YEAR(date_sub(now(),interval 1 month)),
 				MONTH(date_sub(now(),interval 1 month)),

@@ -26,4 +26,6 @@ public interface CustomerMapper {
 	List<Map<String, String>> queryCustomerSecondStoreByDate(Map<String, String> param);
 	
 	List<Map<String, String>> queryCustomerSecondStoreSumByDate(Map<String, String> param);
+	
+	List<Map<String, String>> queryCustomerSecondEmployeeSumByDate(Map<String, String> param);
 }

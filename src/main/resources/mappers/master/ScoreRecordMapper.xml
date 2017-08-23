@@ -8,6 +8,7 @@
         <![CDATA[
 			SELECT
 				t_score_record_total.store_id as storeid,
+				ifnull(t_store.storeno,'') as  storeno,
 			    t_score_record.employee_no as employeeno,
 				mixedType_repeatBuyCostomer as laxin,
 				score,

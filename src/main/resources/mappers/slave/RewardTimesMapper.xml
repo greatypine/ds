@@ -9,6 +9,7 @@
 SELECT
 	  t.city_name as cityname,
 	  t.storeId as platformid,
+	  IFNULL(t.storeno,'') as storeno,
 	  t.storeName as storename,
 	  t.employeeName as employeename,
 	  t.cusId as cusid,
@@ -19,6 +20,7 @@ FROM
 	     	_tor.city_name,
 			_tor.storeId,
 			_tor.storeName,
+			_tor.storeno,
 			_tor.employeeId,
 			_tor.employeeName,
 			_tor.cusId,
@@ -29,6 +31,7 @@ FROM
 		JOIN (select 	
 						ts.id storeId,
 						ts.name storeName,
+						ts.code as storeno,
 	             		a.`name` AS city_name,
 						tem.id employeeId,
 						tem.`name` employeeName,

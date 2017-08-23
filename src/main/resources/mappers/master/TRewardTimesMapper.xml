@@ -7,7 +7,7 @@
 		resultType="java.util.Map">
         <![CDATA[
 			select 
- 				cityname, platformid,storename, employeename, cusid,ordersn, dashang
+ 				cityname, platformid,IFNULL(storeno,'') AS storeno,storename, employeename, cusid,ordersn, dashang
  			from ds_rewardtimes where year=#{year} and month=#{month}
 		]]>
 	</select>
@@ -15,10 +15,10 @@
 	<insert id="addTRewardTimes" parameterType="java.util.Map">
 		<![CDATA[
 			INSERT INTO ds_rewardtimes (
-				cityname, platformid,storename, employeename, cusid,ordersn, dashang, 
+				cityname, platformid,storeno,storename, employeename, cusid,ordersn, dashang, 
 				year, month, createtime
 			) VALUES(
-				#{cityname},#{platformid},#{storename},#{employeename},#{cusid},#{ordersn},#{dashang},
+				#{cityname},#{platformid},#{storeno},#{storename},#{employeename},#{cusid},#{ordersn},#{dashang},
 				YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),NOW()
 			)
 		]]>

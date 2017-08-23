@@ -10,6 +10,8 @@ SELECT
     a.`name` as city_name,
     ts.`name` AS store_name,
     ts.id  AS platformid,
+    ts.code AS storeno,
+    (IFNULL(t0.totalprice,0.00) + IFNULL(t2.qtotalprice,0.00) - IFNULL(t4.other_returned_amount,0.00)) AS pesgmv,
     (IFNULL(t0.totalprice,0.00) + IFNULL(t1.totalprice,0.00)) AS order_amount,
     (IFNULL(t0.totalprice,0.00) + IFNULL(t2.qtotalprice,0.00)) AS other_order_amount,
     IFNULL(t3.returned_amount,0.00) AS returned_amount,
@@ -279,6 +281,7 @@ AND ts.number IN (${storeids})
         <![CDATA[
 			SELECT 
 			    a.`name` as city_name,
+			    ts.code AS storeno,
 			    ts.`name` AS store_name,
 			    ts.id  AS platformid,
 			    (IFNULL(t0.totalprice,0.00) + IFNULL(t1.totalprice,0.00)) AS order_amount,
@@ -375,6 +378,7 @@ AND ts.number IN (${storeids})
         <![CDATA[
 			SELECT 
 			    a.`name` as city_name,
+			    ts.code AS storeno,
 			    ts.`name` AS store_name,
 			    ts.id  AS platformid,
 			    (IFNULL(t0.totalprice,0.00) + IFNULL(t1.totalprice,0.00)) AS order_amount,

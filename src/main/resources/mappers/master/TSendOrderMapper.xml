@@ -9,8 +9,10 @@
 			select 
 				cityname,
 				IFNULL(platformid,'') as platformid,
-				storename,
+				IFNULL(storeno,'') as storeno,
+				IFNULL(storename,'') as storename,
 				IFNULL(username,'') as username,
+				deptchannelid,
 				IFNULL(deptname,'') as deptname,
 				IFNULL(channelname,'') as channelname,
 				datanum,
@@ -26,9 +28,14 @@
 	
 	<insert id="addTSendOrders" parameterType="java.util.Map">
 		<![CDATA[
-			insert into ds_sendorders(cityname,platformid,storename,username,deptname,channelname,datanum,year,month,createtime) 
-			values(#{cityname},#{platformid},#{storename},#{username},#{deptname},#{channelname},#{datanum},
-			YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),NOW())
+			insert into ds_sendorders(
+				cityname,platformid,storeno,storename,username,deptchannelid,deptname,channelname,datanum,
+				year,month,createtime) 
+			values(
+				#{cityname},#{platformid},#{storeno},#{storename},#{username},
+				#{deptchannelid},#{deptname},#{channelname},#{datanum},
+				YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),NOW()
+			)
 		]]>
 	</insert>
 	

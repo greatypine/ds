@@ -34,12 +34,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
         String requestBodyString = RequestJsonUtils.getRequestJsonString(requestWrapper);
         String requestSignString = request.getParameter("sign");
-        String requestURI = request.getRequestURI();
 
         logger.debug("requestBodyString:"+requestBodyString);
         logger.debug("requestSignString:"+requestSignString);
-        
-
         
         EnumRespStatus verifyResult = authService.verifyAuth(requestBodyString, requestSignString);
         if (!EnumRespStatus.AUTH_OK.equals(verifyResult)) {
@@ -51,19 +48,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             jsonGenerator.close();
             return false;
         }
-//        else{
-//            EnumRespStatus verifyTokenResult = authService.verifyToken(requestBodyString, requestURI);
-//        	if(!EnumRespStatus.TOKEN_OK.equals(verifyTokenResult)){
-//	            RestResponse restResponse = new RestResponse(verifyTokenResult);
-//	            response.setContentType("application/json");
-//	            ObjectMapper objectMapper = new ObjectMapper();
-//	            JsonGenerator jsonGenerator = objectMapper.getFactory().createGenerator(response.getOutputStream(), JsonEncoding.UTF8);
-//	            jsonGenerator.writeObject(restResponse);
-//	            jsonGenerator.close();
-//	            logger.info("**********TOKEN验证失败**************");
-//	            return false;
-//            }
-//        }
         return true;
     }
 }

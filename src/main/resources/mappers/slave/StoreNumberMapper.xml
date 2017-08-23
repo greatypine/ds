@@ -17,5 +17,14 @@
 			where status = 0 and white != 'QA' and name not like '%测试%'
 		]]>
     </select>
+    
+    <select id="queryStoreSum"  parameterType="java.util.Map" resultType="java.lang.Integer">
+        <![CDATA[
+			select count(*) 
+			from t_store
+			where status = 0 and white != 'QA' and name not like '%测试%'
+			and number IN (${storeids})
+		]]>
+    </select>
 
 </mapper>

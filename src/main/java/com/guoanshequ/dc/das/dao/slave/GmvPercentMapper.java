@@ -1,6 +1,5 @@
 package com.guoanshequ.dc.das.dao.slave;
 
-
 import java.util.List;
 import java.util.Map;
 
@@ -10,11 +9,8 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 
 @Repository
 @DataSource("slave")
-public interface StoreNumberMapper {
-
-	List<String> queryStoreNumbers();
+public interface GmvPercentMapper{
 	
-	List<String> queryStoreNoes();
+	 List<Map<String, String>> queryGmvPercentByDate(Map<String, String> paraMap);
 	
-	Integer queryStoreSum(Map<String, String> paraMap);
 }

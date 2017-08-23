@@ -83,4 +83,27 @@ public class SendOrderSumController {
     		return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
     	}
     }
+    
+    
+    @RequestMapping(value = "rest/querySendOrderEmployeeSumByDate",method = RequestMethod.POST)
+    public RestResponse querySendOrderEmployeeSumByDate(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
+ 	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
+ 	        String employeeno =  paraMap.get("employeeno") != null ? paraMap.get("employeeno").toString() : null;
+ 	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(employeeno)){
+ 	        	return new RestResponse(EnumRespStatus.DATA_SENDNOCOND1);
+ 	        }
+			List<Map<String, String>> list = sendOrderSumService.querySendOrderEmployeeSumByDate(paraMap);
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 }

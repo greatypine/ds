@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.GmvPercentMapper">
+
+<select id="queryGmvPercentByDate" parameterType="java.util.Map" resultType="java.util.Map">
+<![CDATA[
+SELECT 
+	totalgmv.city_name,
+	totalgmv.storeno,
+	totalgmv.store_name,
+	totalgmv.other_order_amount as totalamount,
+	jwsgmv.order_amount as jwsamount,
+	yanglaogmv.order_amount_yanglao as yanglaoamount,
+	weichaogmv.order_amount_microMarket as weichaoamount,
+	IFNULL(round((jwsgmv.order_amount+yanglaogmv.order_amount_yanglao+weichaogmv.order_amount_microMarket)/totalgmv.other_order_amount,2),0) as specvalue
+FROM (
+			SELECT 
+					a.`name` as city_name,
+					ts.code AS storeno,
+					ts.number AS number,
+					ts.`name` AS store_name,
+					ts.id  AS platformid,
+					(IFNULL(t0.totalprice,0.00) + IFNULL(t1.totalprice,0.00)) AS other_order_amount,
+					(IFNULL(t0.ordercount,0) + IFNULL(t1.ordercount,0)) AS other_order_count
+			FROM t_store ts
+			LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+			LEFT JOIN
+			    (
+			        SELECT
+			            tt.store_id,
+			            SUM(IFNULL(tt.price,0.00)) AS totalprice,
+			            COUNT(tt.group_id) AS ordercount
+			        FROM 
+			            (
+			                SELECT
+			                    tor.store_id,
+			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+			                    tor.group_id AS group_id
+			                FROM t_eshop te
+			                JOIN t_order tor ON (
+			                    tor.eshop_id=te.id and (
+			                        tor.eshop_id ='23465aaa7b2fe4edd4f79c2395110fc4' OR 
+			                        tor.eshop_id ='d1d2edaa716017fb04a3302b63f1a468' OR 
+			                        tor.eshop_id ='b87b2479f871070ee42add29b922a504' OR 
+			                        tor.eshop_id ='dcd9672984adcbef2b5876f1189b6b4f' OR 
+			                        tor.eshop_id ='00000000000000000000000000000127' OR 
+			                        tor.eshop_id ='0d0c3a35b2438f0025e15bba7dd12407' OR 
+			                        tor.eshop_id ='b9f47c74c0f11e5c4334c862822ede7b'
+			                        )
+			                    )
+			                JOIN t_order_group  tog ON  tog.id=tor.group_id
+			                JOIN t_order_receipts trp ON (
+			                    trp.eshop_id = te.id and 
+			                    trp.order_group_id = tor.group_id  and 
+			                    trp.`status` =0 and 
+			                    trp.type='order' and 
+			                    trp.pay_status= 'payed' and 
+			                    trp.pay_platform !='prepay'
+			                    )
+			                JOIN t_order_flow tof ON (tof.order_id=tor.id
+			                    AND tof.order_status='signed'
+			                    AND tof.create_time>=#{begindate}
+			                    AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+			                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+			            ) tt
+			        GROUP BY tt.store_id
+			    ) t0 ON ts.id=t0.store_id
+			LEFT JOIN
+			    (
+			        SELECT
+			            tt.store_id,
+			            SUM(IFNULL(tt.price,0.00)) AS totalprice,
+			            COUNT(tt.group_id) AS ordercount
+			        FROM 
+			            (
+			                SELECT
+			                    tor.store_id,
+			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+			                    tor.group_id AS group_id
+			                FROM t_eshop te
+			                JOIN t_order tor ON (
+			                    tor.eshop_id=te.id and
+			                    tor.eshop_id !='23465aaa7b2fe4edd4f79c2395110fc4' and 
+			                    tor.eshop_id !='d1d2edaa716017fb04a3302b63f1a468' and 
+			                    tor.eshop_id !='b87b2479f871070ee42add29b922a504' and 
+			                    tor.eshop_id !='dcd9672984adcbef2b5876f1189b6b4f' and 
+			                    tor.eshop_id !='00000000000000000000000000000127' and 
+			                    tor.eshop_id !='0d0c3a35b2438f0025e15bba7dd12407' and 
+			                    tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b')
+			                JOIN t_order_group  tog ON  tog.id=tor.group_id
+			                JOIN t_order_flow tof ON (tof.order_id=tor.id
+			                    AND tof.order_status='signed'
+			                    AND tof.create_time>=#{begindate}
+			                    AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+			                WHERE te.department_id!='00000000000000000000000000000059'
+			                AND te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+			            ) tt
+			        GROUP BY tt.store_id
+			    ) t1 ON ts.id=t1.store_id
+			WHERE ts.white!='QA' AND ts.`status`=0
+			AND ts.`name` NOT LIKE '%测试%' 
+)  totalgmv 
+LEFT JOIN 
+(
+		SELECT 
+				a.`name` as city_name,
+				ts.`name` AS store_name,
+				ts.id  AS platformid,
+				IFNULL(t0.totalprice,0.00) + IFNULL(t1.totalprice,0.00) AS order_amount
+		FROM t_store ts
+		LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+		LEFT JOIN
+    (
+        SELECT
+            tt.store_id,
+            SUM(IFNULL(tt.price,0.00)) AS totalprice,
+            COUNT(tt.group_id) AS ordercount
+        FROM 
+            (
+                SELECT
+                    tor.store_id,
+                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+                    tor.group_id AS group_id
+                FROM t_eshop te
+                JOIN t_order tor ON (
+                    tor.eshop_id=te.id and (
+                        tor.eshop_id ='23465aaa7b2fe4edd4f79c2395110fc4' OR 
+                        tor.eshop_id ='d1d2edaa716017fb04a3302b63f1a468' OR 
+                        tor.eshop_id ='b87b2479f871070ee42add29b922a504' OR 
+                        tor.eshop_id ='dcd9672984adcbef2b5876f1189b6b4f' OR 
+                        tor.eshop_id ='00000000000000000000000000000127' OR 
+                        tor.eshop_id ='0d0c3a35b2438f0025e15bba7dd12407' OR 
+                        tor.eshop_id ='b9f47c74c0f11e5c4334c862822ede7b'
+                        )
+                    )
+                JOIN t_order_group  tog ON  tog.id=tor.group_id
+                JOIN t_order_receipts trp ON (
+                    trp.eshop_id = te.id and 
+                    trp.order_group_id = tor.group_id  and 
+                    trp.`status` =0 and 
+                    trp.type='order' and 
+                    trp.pay_status= 'payed' and 
+                    trp.pay_platform !='prepay'
+                    )
+                JOIN t_order_flow tof ON (tof.order_id=tor.id
+                    AND tof.order_status='signed'
+                    AND tof.create_time>=#{begindate}
+                    AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+            ) tt
+        GROUP BY tt.store_id
+    ) t0 ON ts.id=t0.store_id
+		LEFT JOIN
+    (
+        SELECT
+            tt.store_id,
+            SUM(IFNULL(tt.price,0.00)) AS totalprice,
+            COUNT(tt.group_id) AS ordercount
+        FROM 
+            (
+                SELECT
+                    tor.store_id,
+                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+                    tor.group_id AS group_id
+                FROM t_eshop te
+                JOIN t_ed_sys_role tesr ON (
+                    tesr.id=te.department_id and
+                    tesr.role_name LIKE '%\_%' and
+                    tesr.role_name like '%物业%'
+                    )
+                JOIN t_order tor ON (
+                    tor.eshop_id=te.id and
+                    tor.eshop_id !='23465aaa7b2fe4edd4f79c2395110fc4' and 
+                    tor.eshop_id !='d1d2edaa716017fb04a3302b63f1a468' and 
+                    tor.eshop_id !='b87b2479f871070ee42add29b922a504' and 
+                    tor.eshop_id !='dcd9672984adcbef2b5876f1189b6b4f' and 
+                    tor.eshop_id !='00000000000000000000000000000127' and 
+                    tor.eshop_id !='0d0c3a35b2438f0025e15bba7dd12407' and 
+                    tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b')
+                JOIN t_order_group  tog ON  tog.id=tor.group_id
+                JOIN t_order_flow tof ON (tof.order_id=tor.id
+                    AND tof.order_status='signed'
+                    AND tof.create_time>=#{begindate}
+                    AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+            ) tt
+        GROUP BY tt.store_id
+    ) t1 ON ts.id=t1.store_id
+	WHERE ts.white!='QA' AND ts.`status`=0 AND ts.`name` NOT LIKE '%测试%'
+) jwsgmv on totalgmv.platformid = jwsgmv.platformid
+LEFT JOIN 
+(
+		SELECT 
+				a.`name` as city_name,
+				ts.`name` AS store_name,
+				ts.id  AS platformid,
+				IFNULL(t0.totalprice,0.00) AS order_amount_yanglao,
+				IFNULL(t0.ordercount,0) AS order_count_yanglao
+		FROM t_store ts
+		LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+		LEFT JOIN
+			(
+				SELECT
+						tt.store_id,
+						SUM(IFNULL(tt.price,0.00)) AS totalprice,
+						COUNT(tt.group_id) AS ordercount
+				FROM 
+					(
+						SELECT
+								tor.store_id,
+								IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+								tor.group_id AS group_id
+						FROM t_eshop te
+						JOIN t_order tor ON (
+							tor.eshop_id=te.id and tor.eshop_id in ('19dcf55d310940f65e66555edd48d626','13961ccce7e96294e0b5816d4fee41fd','8c8fdf9e00bd70600d8fd90434654c4e','6980a7d8b1be39235050569fe5b561bb','0136303275525f04e8c339093d731b23','18d4a4597d110cac5992bee3e646095c','f60d7c0c8194eba003b5920bafff442f','fb7df50d5a50fa992d2a1f00210956ae','dff2cecf9e524dad2b49cf50fdbd64f9','52637844276a8d4f4afa83a4994e87d7','ec1fede797822a0c1fd3ae6aa67bdc31','b2be2142a490a1996f97d73f9a89eb58','00000000000000000000000000005189','ffe3a805b16b2e6af7b823e7ec6f3df2','749e6fde266141ae137d33d0ccfa8f07','997394643203d7b16f713f68636b2e91','5690a14cda1a884dcb0b486ffb5e24bf','acbc934020dc6fae56c84a98c5d8369a','f4292bdfe27fd74f7ebe04c0a0ec43f5','93d3aaac1155b799c27bfb1ff8e2ee43','241f86e2e54b86af9b7bde7d7cb2533e','12f4cb9a30a5bced7e0a84545d208b9b','b2a5c8eed01bd4fbf3fe3d8774afe328','dfd27ff5e784ae480fedfb44cd08fbd2','fc986db6c75357b792f8005e5dac9cca','2d1d983cfb8b4d29371d300eb15db43d','025905695687d21029b06a1a7c6aadc1','af4f9e65acbf3941120707607eb6b490','9c41b5ecf9bbaefaade4347745cecbfe','1e7a77b133209b0027966eba5d11464b','8cf7c19bf605943e48bfbbcdb04a25c0','0f3be9b79cc707b55143ae46148032a2','4d0bda8876d590b6e33d79d2fac7627d','4444ee65fc47ba6d2fec725b9e5cc26f','05682b20db4b3b5f2735182397a68da4','6df217468cf80e874eeebb92de7b11af','b5d2efb2b03f24a9740c06068ca219b4','b27d02d4f8bbf9fc0726b59e19895a26','2b360ad2ed545ace540c1acd7b5c05ec','db13e8922a41c3f03411a3fed77c2268','e923b87c540c565bc05bb697c1d829c1','7dcf06ab6e387045fbec9c5c48dd5536','9b3b0cfc839c6f1dca48cb73b976314e','11de10f8587b89d1516b451137d9e462','e6aca8e8859d34360181a7f8590126aa','38d84b68c04781fa64f1cd8c46020324','ab021d60e42edcee7c33559a9c1deecb','487efca864f29cb66144ec1c77be10e0','7600809c57f57d49ac110b9cf856fa6a','bccba4cb9821585304661c74d077fd78','012360efde0c0573ac1279a257e43459','94e8b31a81ed39a10497739b1dd308c0','4c2e135ac3e27006f9cb494910eea703','ee275684577a319b72ab225161aa834e','1f4b431222306fce35291e4dd331c6ec','1f0a4c805c6d375a9a9351302f130ee3','d3cab5f3816d7e43dcbdd8bfea13b8f0','729985a9b2eab22ee3bb53632383f607','6e8a97b520c942611e5a512649d1d9af','d4af8bf4b6f4d93cf613ea6a5e30cdde','d62821b6cabf868b80c5e7f0498ed07c','00000000000000000000000000004967','00000000000000000000000000002609','00000000000000000000000000002403','00000000000000000000000000002375','00000000000000000000000000001031','00000000000000000000000000000951','00000000000000000000000000000766','00000000000000000000000000000137','00000000000000000000000000000304','00000000000000000000000000000306','00000000000000000000000000000319','00000000000000000000000000000321','00000000000000000000000000000349','00000000000000000000000000000408','00000000000000000000000000000201','00000000000000000000000000000305','00000000000000000000000000000307','00000000000000000000000000000320','00000000000000000000000000000322')
+						)
+						JOIN t_order_group  tog ON  tog.id=tor.group_id
+						JOIN t_order_flow tof ON (tof.order_id=tor.id
+								AND tof.order_status='signed'
+								AND tof.create_time>=#{begindate}
+								AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+						WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+					) tt
+				GROUP BY tt.store_id
+			) t0 ON ts.id=t0.store_id
+	WHERE ts.white!='QA' AND ts.`status`=0 AND ts.`name` NOT LIKE '%测试%'
+) yanglaogmv on totalgmv.platformid = yanglaogmv.platformid 
+LEFT JOIN
+(
+		SELECT 
+				a.`name` as city_name,
+				ts.`name` AS store_name,
+				ts.id  AS platformid,
+				IFNULL(t1.totalprice,0.00) AS order_amount_microMarket,
+				IFNULL(t1.ordercount,0) AS order_count_microMarket
+		FROM t_store ts
+		LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
+		LEFT JOIN
+				(
+						SELECT
+								tt.store_id,
+								SUM(IFNULL(tt.price,0.00)) AS totalprice,
+								COUNT(tt.group_id) AS ordercount
+						FROM 
+								(
+									SELECT
+											tor.store_id,
+											IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)  AS price,
+											tor.group_id AS group_id
+									FROM t_eshop te
+									JOIN t_order tor ON (tor.eshop_id=te.id and tor.eshop_id in ('01a2f90ccae422713220978e6e622c0a','4fb4e2f74f51727c941736ae748ad472','66a347c09f014a225124873f7f75797f','9c948c909518fb686a5aae2aec950f8a','9ee0f63450a332aa1a5b6bd4051215c1','b777cb21ead57bb2a62d8807b7caaa11','d97ffcce743ce15e827fecf06a575302','d9d8248c225266322b8e21f8ae451add','ffdf708e5e89c6e0e42a99cf8adf9cbb'))
+									JOIN t_order_group  tog ON  tog.id=tor.group_id
+									JOIN t_order_flow tof ON (tof.order_id=tor.id          
+										AND tof.order_status='signed'
+										AND tof.create_time>=#{begindate}
+										AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+									WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+								) tt
+						GROUP BY tt.store_id
+				) t1 ON ts.id=t1.store_id
+		WHERE ts.white!='QA' AND ts.`status`=0 AND ts.`name` NOT LIKE '%测试%'
+) weichaogmv
+ON totalgmv.platformid = weichaogmv.platformid
+WHERE totalgmv.storeno is not null and totalgmv.storeno !='' 
+AND totalgmv.number IN (${storeids})
+ORDER BY totalgmv.city_name,totalgmv.number
+	]]>
+	<if test="null != limitcond and '' != limitcond">
+       <![CDATA[                   
+          LIMIT ${limitcond}
+       ]]>
+	</if>
+  </select>
+</mapper>

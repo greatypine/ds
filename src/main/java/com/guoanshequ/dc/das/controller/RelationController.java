@@ -127,7 +127,7 @@ public class RelationController {
  	       String limitcond =  paraMap.get("limitcond") != null ? paraMap.get("limitcond").toString() : null;
  	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(storeids)||
  	            StringUtils.isBlank(limitcond)){
- 	        		return new RestResponse(EnumRespStatus.DATA_RELANOCOND2);
+ 	        		return new RestResponse(EnumRespStatus.DATA_RELANOCOND3);
  	        }
 	        List<Map<String, String>> list = relationService.queryRelationsStoreByDate(paraMap);
 			List<Map<String, Object>> sumlist = relationService.queryRelationsStoreSumByDate(paraMap);
@@ -149,6 +149,31 @@ public class RelationController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    @RequestMapping(value = "rest/queryRelationsEmployeeByDate",method = RequestMethod.POST)
+    public RestResponse queryRelationsEmployeeByDate(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+       		String startdate = paraMap.get("begindate") != null ? paraMap.get("begindate").toString() : null;
+ 	        String enddate = paraMap.get("enddate") != null ? paraMap.get("enddate").toString() : null;
+ 	        String employeeno =  paraMap.get("employeeno") != null ? paraMap.get("employeeno").toString() : null;
+	        if(StringUtils.isBlank(startdate)||StringUtils.isBlank(enddate)||StringUtils.isBlank(employeeno)){
+	        	return new RestResponse(EnumRespStatus.DATA_CSNOCOND4);
+	        }
+	        List<Map<String, String>> list = relationService.queryRelationsEmployeeByDate(paraMap);
+			
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    
     
     /**
      * 社区动态：拜访记录总数

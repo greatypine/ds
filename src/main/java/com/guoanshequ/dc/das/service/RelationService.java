@@ -43,4 +43,9 @@ public class RelationService {
     	
     	return relationDao.queryRelationsStoreSumByDate(paraMap);
     }
+    
+    public List<Map<String, String>> queryRelationsEmployeeByDate(Map<String, String> paraMap) throws Exception{
+    	
+    	return relationDao.queryRelationsEmployeeByDate(paraMap);
+    }
 }
