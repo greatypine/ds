@@ -12,7 +12,7 @@ SELECT
 	jwsgmv.order_amount as jwsamount,
 	yanglaogmv.order_amount_yanglao as yanglaoamount,
 	weichaogmv.order_amount_microMarket as weichaoamount,
-	IFNULL(round((jwsgmv.order_amount+yanglaogmv.order_amount_yanglao+weichaogmv.order_amount_microMarket)/totalgmv.other_order_amount,2),0) as specvalue
+	IFNULL(round(((jwsgmv.order_amount+yanglaogmv.order_amount_yanglao+weichaogmv.order_amount_microMarket)/totalgmv.other_order_amount)*100,2),0) as specvalue
 FROM (
 			SELECT 
 					a.`name` as city_name,

@@ -13,6 +13,11 @@
  				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
  			from ds_storetrade where year=#{year} and month=#{month}
 		]]>
+	   <if test="null != storeids and null != storeids">
+            <![CDATA[                   
+               and storeno IN (${storeids})
+            ]]>
+        </if>
 	</select>
 	
 	<insert id="addTStoreTrades" parameterType="java.util.Map">

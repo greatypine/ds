@@ -24,6 +24,11 @@
                   and platformid =#{platformid}
               ]]>
          </if>
+		   <if test="null != storeids and null != storeids">
+               <![CDATA[                   
+                  and storeno IN (${storeids})
+               ]]>
+           </if>
 	</select>
 	
 	<insert id="addTSendOrders" parameterType="java.util.Map">

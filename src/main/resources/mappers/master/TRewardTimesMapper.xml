@@ -10,6 +10,11 @@
  				cityname, platformid,IFNULL(storeno,'') AS storeno,storename, employeename, cusid,ordersn, dashang
  			from ds_rewardtimes where year=#{year} and month=#{month}
 		]]>
+		   <if test="null != storeids and null != storeids">
+               <![CDATA[                   
+                  and storeno IN (${storeids})
+               ]]>
+           </if>
 	</select>
 	
 	<insert id="addTRewardTimes" parameterType="java.util.Map">

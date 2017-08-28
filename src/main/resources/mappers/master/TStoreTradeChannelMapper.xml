@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TStoreTradeChannelMapper">
+
+
+	<select id="queryTStoreTradeChannel" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select 
+ 				city_name, 
+ 				IFNULL(storeno,'') AS storeno,
+ 				store_name, 
+ 				dep_name,
+ 				channel_name, 
+ 				order_amount,
+ 				order_count
+ 			from ds_storetrade_channel where year=#{year} and month=#{month}
+		]]>
+	   <if test="null != storeids and null != storeids">
+            <![CDATA[                   
+               and storeno IN (${storeids})
+            ]]>
+        </if>
+	</select>
+</mapper>

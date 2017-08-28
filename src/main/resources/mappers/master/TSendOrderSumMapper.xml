@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TSendOrderSumMapper">
+
+
+	<select id="queryTSendOrderSum" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select 
+				cityname,
+				IFNULL(platformid,'') as platformid,
+				IFNULL(storeno,'') as storeno,
+				IFNULL(storename,'') as storename,
+				IFNULL(employeename,'') as employeename,
+				employeeid,
+				dashang,
+				good
+			from ds_sendordersum where year =#{year} and month =#{month}
+		]]>
+		 <if test="null != platformid and '' != platformid">
+              <![CDATA[                   
+                  and platformid =#{platformid}
+              ]]>
+         </if>
+		   <if test="null != storeids and null != storeids">
+               <![CDATA[                   
+                  and storeno IN (${storeids})
+               ]]>
+           </if>
+	</select>
+	
+</mapper>
