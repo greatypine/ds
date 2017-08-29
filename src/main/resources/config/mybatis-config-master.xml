@@ -5,5 +5,6 @@
         <typeAlias alias="HumanresourcesEntity" type="com.guoanshequ.dc.das.model.Humanresources"/>
         <typeAlias alias="AuthEntity" type="com.guoanshequ.dc.das.model.Auth"/>
         <typeAlias alias="PersonEntity" type="com.guoanshequ.dc.das.model.Person"/>
+        <typeAlias alias="DFOrderRealTimeEntity" type="com.guoanshequ.dc.das.model.DFOrderRealtime"/>
     </typeAliases>
 </configuration>

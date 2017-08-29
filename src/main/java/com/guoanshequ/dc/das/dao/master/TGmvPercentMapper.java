@@ -13,4 +13,7 @@ public interface TGmvPercentMapper{
 	
 	List<Map<String, String>> queryTGmvPercent(Map<String, String> paraMap);
 	
+	void addTGmvPercent(Map<String, String> paraMap);
+	
+	int deleteByYearMonth(Map<String, String> paraMap);
 }

@@ -13,4 +13,8 @@ public interface TStoreTradeChannelMapper{
 	
 	List<Map<String, String>> queryTStoreTradeChannel(Map<String, String> paraMap);
 	
+	void addTStoreTradeChannel(Map<String, String> paraMap);
+	
+	int deleteByYearMonth(Map<String, String> paraMap);
+	
 }

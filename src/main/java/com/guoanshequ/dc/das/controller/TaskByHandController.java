@@ -258,4 +258,49 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    /**
+     * 平台数据接口手动调度：上门送单量按国安侠个人总数
+     */
+    @RequestMapping(value = "rest/sendOrderSumTaskRun",method = RequestMethod.POST)
+    public RestResponse sendOrderSumTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		platformScheduleTask.sendOrderSumTask();
+    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 平台数据接口手动调度：门店交易额（按频道）
+     */
+    @RequestMapping(value = "rest/storeTradeChannelTaskRun",method = RequestMethod.POST)
+    public RestResponse storeTradeChannelTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		platformScheduleTask.storeTradeChannelTask();
+    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 平台数据接口手动调度：gmv占比
+     */
+    @RequestMapping(value = "rest/gmvPercentTaskRun",method = RequestMethod.POST)
+    public RestResponse gmvPercentTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		platformScheduleTask.gmvPercentTask();
+    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 }

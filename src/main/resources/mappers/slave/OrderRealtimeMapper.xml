@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.OrderRealtimeMapper">
+
+	<!-- 从gemini中按小时抽取order表数据， 写入到daqWeb的实时表中,-->
+	<select id="queryOrdersRealtimeByHours" parameterType="java.util.Map" resultType="com.guoanshequ.dc.das.model.DFOrderRealtime">
+        <![CDATA[
+		select torline.id as order_id,
+		torline.order_sn as order_sn,
+		torline.group_id as group_id,
+		torline.order_type as order_type,
+		torline.business_model_id as business_model_id,
+		torline.customer_id as customer_id,
+		torline.order_address_id as order_address_id,
+		torline.store_id as store_id,
+		torline.eshop_id as eshop_id,
+		torline.order_status as order_status,
+		torline.order_source as order_source,
+		torline.invoice_status as invoice_status,
+		torline.buyer_remark as buyer_remark,
+		torline.seller_remark as seller_remark,
+		torline.employee_remark as employee_remark,
+		torline.abnormal_type as abnormal_type,
+		torline.abnormal_remark as abnormal_remark,
+		torline.delivery_type as delivery_type,
+		torline.trading_price as trading_price,
+		torline.payable_price as payable_price,
+		torline.score as score,
+		torline.is_split as is_split,
+		torline.employee_id as employee_id,
+		torline.employee_phone as employee_phone,
+		torline.employee_name as employee_name,
+		torline.appointment_start_time as appointment_start_time,
+		torline.appointment_end_time as appointment_end_time,
+		torline.eshop_combo_pro_id as eshop_combo_pro_id,
+		torline.expiry_date as expiry_date,
+		torline.combo_price as combo_price,
+		torline.total_quantity as total_quantity,
+		torline.groupon_instance_id as groupon_instance_id,
+		torline.status as status,
+		torline.version as version,
+		torline.create_user as create_user,
+		torline.create_time as create_time,
+		torline.update_user as update_user,
+		torline.update_time as update_time,
+		torline.create_user_id as create_user_id,
+		torline.update_user_id as update_user_id,
+		torline.order_sn_reserve as order_sn_reserve,
+		torline.eshop_name as eshop_name,
+		torline.eshop_white as eshop_white,
+		torline.department_id as department_id,
+		torline.store_name as store_name,
+		torline.storeno as storeno,
+		torline.store_status as store_status,
+		torline.store_white as store_white,
+		torline.store_number as store_number,
+		torline.city_code as city_code,
+		torline.city_name as city_name,
+		torline.order_quantity as order_quantity,
+		torline.signed_time as signed_time,
+		torline.signed_status as signed_status,
+		torline.receipts_status as receipts_status,
+		torline.receipts_type as receipts_type,
+		torline.receipts_paystatus as receipts_paystatus,
+		torline.receipts_payplatform as receipts_payplatform from (
+		select t0.*,
+		tof.create_time as signed_time,
+		tof.order_status as signed_status,
+		trp.`status` as receipts_status,
+		trp.type as receipts_type,
+		trp.pay_status as receipts_paystatus,
+		trp.pay_platform as receipts_payplatform from (
+		select 
+		tor.*,
+		te.name as eshop_name,
+		te.white as eshop_white,
+		te.department_id,
+		ts.`name` as store_name,
+		ts.`code` as storeno,
+		ts.status as store_status,
+		ts.white as store_white ,
+		ts.number as store_number,
+		ts.city_code as city_code,
+		tsar.`name` as city_name,
+		tog.order_quantity
+		from t_order tor
+		left join t_employee tem on tor.employee_id = tem.id
+		left join t_customer tc on tor.customer_id = tc.id
+		left join t_eshop te on tor.eshop_id = te.id and te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+		left join t_store ts on tor.store_id = ts.id and ts.`name` NOT like '%测试%' and ts.`status`=0 and ts.white!='QA'
+		left join t_sys_area tsar on tsar.code = ts.city_code and tsar.level = 2 
+		left join t_ed_sys_role tesr on tesr.id=te.department_id
+		left join t_order_group tog on  tog.id = tor.group_id
+		where (date_format(tor.create_time,'%Y-%m-%d %H:%i:%s')>= #{begintime} 
+		and date_format(tor.create_time,'%Y-%m-%d %H:%i:%s')< #{endtime})
+		or (date_format(tor.update_time,'%Y-%m-%d %H:%i:%s')>= #{begintime}
+		and date_format(tor.update_time,'%Y-%m-%d %H:%i:%s')< #{endtime})
+		) t0
+		left join tt_order_flow tof on t0.id = tof.order_id and tof.order_status ='signed'
+		left join t_order_receipts trp on t0.group_id = trp.order_group_id and trp.type ='order' and trp.`status` =0 and trp.pay_status= 'payed'
+		group by t0.id ) torline
+		where torline.signed_status is null or (date_format(torline.signed_time,'%Y-%m-%d %H:%i:%s')>= #{begintime} 
+		and date_format(torline.signed_time,'%Y-%m-%d %H:%i:%s')<#{endtime}) order by torline.signed_time
+	  ]]>
+	</select>
+
+</mapper>

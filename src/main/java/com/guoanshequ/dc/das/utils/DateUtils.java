@@ -112,4 +112,49 @@ public class DateUtils {
         return map;
     }
     
+    /** 
+     * 
+     * @return 返回当前日期前一小时的开始时间和结束时间
+     * 如：2017-08-28 09:00:00 >= time < 2017-08-28 10:00:00
+     */ 
+    public static Map<String, String> getPreHoursTime() {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:00:00");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) - 1); 
+        String pre_hour_begin = df.format(calendar.getTime());
+        String pre_hour_end = df.format(new Date());
+        
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("preHourbegin", pre_hour_begin);
+        map.put("preHourend", pre_hour_end);
+        System.out.println(map);
+        return map;
+    }
+    
+    /** 
+     * @param date 当前日期 
+     * @return 返回当前日期的前一天
+     */ 
+    public static String getPreDate(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        String preDate = df.format(calendar.getTime());
+        return preDate;
+    }
+    
+    /** 
+     * @param date 当前日期 
+     * @return 返回当前日期的所在月份的1号
+     */ 
+    public static String getPreDateFirstOfMonth(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        String preDateFirst = df.format(calendar.getTime());
+        preDateFirst += "-01";
+        return preDateFirst;
+    }
 }

@@ -36,8 +36,8 @@
 			) VALUES(
 				#{city_name},#{platformid},#{storeno},#{store_name},#{pay_count},#{new_count},
 				#{total_count},#{pay_20_count},#{new_20_count},
-				YEAR(date_sub(now(),interval 1 month)),
-				MONTH(date_sub(now(),interval 1 month)),
+				YEAR(date_sub(now(),interval 1 day)),
+				MONTH(date_sub(now(),interval 1 day)),
 				NOW()
 			)
 		]]>

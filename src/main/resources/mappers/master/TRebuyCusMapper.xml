@@ -31,8 +31,8 @@
 				year,month,createtime
 			) VALUES(
 				#{city_name},#{platformid},#{storeno},#{store_name},#{rebuy_count},#{rebuy_20_count},
-				YEAR(date_sub(now(),interval 1 month)),
-				MONTH(date_sub(now(),interval 1 month)),
+				YEAR(date_sub(now(),interval 1 day)),
+				MONTH(date_sub(now(),interval 1 day)),
 				NOW()
 			)
 		]]>

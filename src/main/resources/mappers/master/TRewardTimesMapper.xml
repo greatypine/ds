@@ -24,7 +24,7 @@
 				year, month, createtime
 			) VALUES(
 				#{cityname},#{platformid},#{storeno},#{storename},#{employeename},#{cusid},#{ordersn},#{dashang},
-				YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),NOW()
+				YEAR(date_sub(now(),interval 1 day)),MONTH(date_sub(now(),interval 1 day)),NOW()
 			)
 		]]>
 	</insert>

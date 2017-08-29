@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.guoanshequ.dc.das.dao.master.TStoreTradeChannelMapper;
-import com.guoanshequ.dc.das.dao.master.TStoreTradeMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -29,5 +28,13 @@ public class TStoreTradeChannelService {
     public List<Map<String, String>> queryTStoreTradeChannel(Map<String, String> paraMap) throws Exception{
         
     	return tstoreTradeChannelDao.queryTStoreTradeChannel(paraMap);
+    }
+    
+    public void addTStoreTradeChannel(Map<String, String> paraMap){
+    	tstoreTradeChannelDao.addTStoreTradeChannel(paraMap);
+    }
+    
+    public int deleteByYearMonth(Map<String, String> paraMap){
+    	return tstoreTradeChannelDao.deleteByYearMonth(paraMap);
     }
 }

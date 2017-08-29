@@ -31,4 +31,12 @@ public class TGmvPercentService {
         
     	return tgmvPercentDao.queryTGmvPercent(paraMap);
     }
+    
+    public void addTGmvPercent(Map<String, String> paraMap){
+    	tgmvPercentDao.addTGmvPercent(paraMap);
+    }
+    
+    public int deleteByYearMonth(Map<String, String> paraMap){
+    	return tgmvPercentDao.deleteByYearMonth(paraMap);
+    }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DfOrderDailyMapper">
+
+	<insert id="addDfOrderDaily" parameterType="java.lang.String">
+		<![CDATA[
+			insert into df_order_daily
+	              (
+		              order_id,order_sn,group_id,order_type,business_model_id,customer_id,order_address_id,store_id,
+		              eshop_id,order_status,order_source,invoice_status,buyer_remark,seller_remark,employee_remark,
+		              abnormal_type,abnormal_remark,delivery_type,trading_price,payable_price,score,is_split,employee_id,
+		              employee_phone,employee_name,appointment_start_time,appointment_end_time,eshop_combo_pro_id,
+		              expiry_date,combo_price,total_quantity,groupon_instance_id,status,version,create_user,create_time,
+		              update_user,update_time,create_user_id,update_user_id,order_sn_reserve,eshop_name,eshop_white,
+		              department_id,store_name,storeno,store_status,store_white,store_number,city_code,city_name,
+		              order_quantity,signed_time,signed_status,receipts_status,receipts_type,receipts_paystatus,
+		              receipts_payplatform
+	              )
+	              select order_id,order_sn,group_id,order_type,business_model_id,customer_id,order_address_id,store_id,
+		              eshop_id,order_status,order_source,invoice_status,buyer_remark,seller_remark,employee_remark,
+		              abnormal_type,abnormal_remark,delivery_type,trading_price,payable_price,score,is_split,employee_id,
+		              employee_phone,employee_name,appointment_start_time,appointment_end_time,eshop_combo_pro_id,
+		              expiry_date,combo_price,total_quantity,groupon_instance_id,status,version,create_user,create_time,
+		              update_user,update_time,create_user_id,update_user_id,order_sn_reserve,eshop_name,eshop_white,
+		              department_id,store_name,storeno,store_status,store_white,store_number,city_code,city_name,
+		              order_quantity,signed_time,signed_status,receipts_status,receipts_type,receipts_paystatus,
+		              receipts_payplatform 
+	              from df_order_realtime where date(signed_time) = #{begindate} and signed_status = 'signed';
+        ]]>
+	</insert>
+
+</mapper>

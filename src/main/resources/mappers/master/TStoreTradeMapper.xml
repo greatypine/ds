@@ -31,7 +31,7 @@
 				#{city_name},#{platformid},#{storeno},#{store_name},#{pesgmv},#{order_amount},#{other_order_amount},
 				#{returned_amount},#{other_returned_amount},#{order_count},
 				#{other_order_count},#{returned_count},#{other_returned_count},
-				YEAR(date_sub(now(),interval 1 month)),MONTH(date_sub(now(),interval 1 month)),NOW()
+				YEAR(date_sub(now(),interval 1 day)),MONTH(date_sub(now(),interval 1 day)),NOW()
 			)
 		]]>
 	</insert>

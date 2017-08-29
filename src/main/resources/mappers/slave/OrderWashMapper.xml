@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.OrderWashMapper">
+
+	<select id="insertDfOrderHistory" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			INSERT INTO df_order_history (
+				order_id,
+				order_sn,
+				group_id,
+				order_type,
+				business_model_id,
+				customer_id,
+				order_address_id,
+				store_id,
+				eshop_id,
+				order_source,
+				invoice_status,
+				abnormal_type,
+				delivery_type,
+				trading_price,
+				payable_price,
+				is_split,
+				employee_id,
+				employee_phone,
+				employee_name,
+				eshop_combo_pro_id,
+				expiry_date,
+				combo_price,
+				total_quantity,
+				order_flow_id,
+				user_type,
+				order_status,
+				create_time
+			) SELECT
+				dforeal.id AS order_id,
+				dforeal.order_sn,
+				dforeal.group_id,
+				dforeal.order_type,
+				dforeal.business_model_id,
+				dforeal.customer_id,
+				dforeal.order_address_id,
+				dforeal.store_id,
+				dforeal.eshop_id,
+				dforeal.order_source,
+				dforeal.invoice_status,
+				dforeal.abnormal_type,
+				dforeal.delivery_type,
+				dforeal.trading_price,
+				dforeal.payable_price,
+				dforeal.is_split,
+				dforeal.employee_id,
+				dforeal.employee_phone,
+				dforeal.employee_name,
+				dforeal.eshop_combo_pro_id,
+				dforeal.expiry_date,
+				dforeal.combo_price,
+				dforeal.total_quantity,
+				dforeal.id AS order_flow_id,
+				dforeal.user_type,
+				dforeal.order_status,
+				dforeal.create_time
+			FROM
+				df_order_realtime dforeal
+			WHERE
+				dforeal.order_status = 'signed'
+			AND DATE_FORMAT(dforeal.create_time,'%Y-%m') = DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 1 MONTH),'%Y-%m');
+		]]>
+	</select>
+
+	<select id="insertDfOrderRealtime" parameterType="java.util.Map" >
+        <![CDATA[
+			INSERT INTO df_order_realtime (
+				order_id,
+				order_sn,
+				group_id,
+				order_type,
+				business_model_id,
+				customer_id,
+				order_address_id,
+				store_id,
+				eshop_id,
+				order_source,
+				invoice_status,
+				abnormal_type,
+				delivery_type,
+				trading_price,
+				payable_price,
+				is_split,
+				employee_id,
+				employee_phone,
+				employee_name,
+				eshop_combo_pro_id,
+				expiry_date,
+				combo_price,
+				total_quantity,
+				order_flow_id,
+				user_type,
+				order_status,
+				create_time
+			) SELECT
+				tor.id AS order_id,
+				tor.order_sn,
+				tor.group_id,
+				tor.order_type,
+				tor.business_model_id,
+				tor.customer_id,
+				tor.order_address_id,
+				tor.store_id,
+				tor.eshop_id,
+				tor.order_source,
+				tor.invoice_status,
+				tor.abnormal_type,
+				tor.delivery_type,
+				tor.trading_price,
+				tor.payable_price,
+				tor.is_split,
+				tor.employee_id,
+				tor.employee_phone,
+				tor.employee_name,
+				tor.eshop_combo_pro_id,
+				tor.expiry_date,
+				tor.combo_price,
+				tor.total_quantity,
+				tof.id AS order_flow_id,
+				tof.user_type,
+				tof.order_status,
+				tof.create_time
+			FROM
+				t_order tor,
+				t_order_flow tof
+			WHERE
+				tor.id = tof.order_id
+			AND DATE(tof.create_time) = DATE_SUB(CURDATE(),INTERVAL 1 DAY);
+		]]>
+	</select>
+</mapper>

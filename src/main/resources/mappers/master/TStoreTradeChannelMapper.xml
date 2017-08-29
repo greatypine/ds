@@ -22,4 +22,23 @@
             ]]>
         </if>
 	</select>
+	
+	<insert id="addTStoreTradeChannel" parameterType="java.util.Map">
+		<![CDATA[
+			insert into ds_storetrade_channel(
+				city_name,storeno,store_name,dep_name,channel_name,order_amount,order_count,
+				year,month,createtime) 
+			values(
+				#{city_name},#{storeno},#{store_name},#{dep_name},#{channel_name},
+				#{order_amount},#{order_count},
+				YEAR(date_sub(now(),interval 1 day)),MONTH(date_sub(now(),interval 1 day)),NOW()
+			)
+		]]>
+	</insert>
+	
+	<delete id="deleteByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_storetrade_channel where year =#{year} and month =#{month}
+		]]>
+	</delete>
 </mapper>

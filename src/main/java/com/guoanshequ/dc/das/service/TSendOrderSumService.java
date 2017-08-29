@@ -30,4 +30,12 @@ public class TSendOrderSumService {
         
     	return tsendOrderSumDao.queryTSendOrderSum(paraMap);
     }
+    
+    public void addTSendOrderSum(Map<String, String> paraMap){
+    	tsendOrderSumDao.addTSendOrderSum(paraMap);
+    }
+    
+    public int deleteByYearMonth(Map<String, String> paraMap){
+    	return tsendOrderSumDao.deleteByYearMonth(paraMap);
+    }
 }
