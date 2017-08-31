@@ -28,5 +28,17 @@
 	              from df_order_realtime where date(signed_time) = #{begindate} and signed_status = 'signed';
         ]]>
 	</insert>
+	
+	<select id="queryOrdersDaily" resultType = "DFOrderRealTimeEntity">
+		<![CDATA[
+	       select * from df_order_daily;
+	  	]]>
+	</select>
+	
+	<delete id="deleteOrderDaily">
+		<![CDATA[
+			delete from df_order_daily;
+        ]]>
+	</delete>
 
 </mapper>

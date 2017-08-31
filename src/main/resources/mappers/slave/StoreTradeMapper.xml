@@ -24,13 +24,13 @@ FROM t_store ts
 LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
 LEFT JOIN
     (
-        SELECT
+        SELECT  
             tt.store_id,
             SUM(IFNULL(tt.price,0.00)) AS totalprice,
             COUNT(tt.group_id) AS ordercount
         FROM 
             (
-                SELECT
+                SELECT DISTINCT
                     tor.store_id,
                     IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
                     tor.group_id AS group_id
@@ -65,13 +65,13 @@ LEFT JOIN
     ) t0 ON ts.id=t0.store_id
 LEFT JOIN
     (
-        SELECT
+        SELECT 
             tt.store_id,
             SUM(IFNULL(tt.price,0.00)) AS totalprice,
             COUNT(tt.group_id) AS ordercount
         FROM 
             (
-                SELECT
+                SELECT DISTINCT
                     tor.store_id,
                     IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
                     tor.group_id AS group_id
@@ -96,13 +96,13 @@ LEFT JOIN
     ) t1 ON ts.id=t1.store_id
 LEFT JOIN
     (
-        SELECT
+        SELECT 
             tt.store_id,
             SUM(IFNULL(tt.price,0.00)) AS qtotalprice,
             COUNT(tt.group_id)  AS qordercount  
         FROM
             (
-                SELECT
+                SELECT DISTINCT
                     tor.store_id,
                     IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
                     tor.group_id AS group_id
@@ -198,13 +198,13 @@ AND ts.number IN (${storeids})
 			LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
 			LEFT JOIN
 			    (
-			        SELECT
+			        SELECT 
 			            tt.store_id,
 			            SUM(IFNULL(tt.price,0.00)) AS totalprice,
 			            COUNT(tt.group_id) AS ordercount
 			        FROM 
 			            (
-			                SELECT
+			                SELECT DISTINCT
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -239,13 +239,13 @@ AND ts.number IN (${storeids})
 			    ) t0 ON ts.id=t0.store_id
 			LEFT JOIN
 			    (
-			        SELECT
+			        SELECT 
 			            tt.store_id,
 			            SUM(IFNULL(tt.price,0.00)) AS totalprice,
 			            COUNT(tt.group_id) AS ordercount
 			        FROM 
 			            (
-			                SELECT
+			                SELECT DISTINCT
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -290,13 +290,13 @@ AND ts.number IN (${storeids})
 			LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
 			LEFT JOIN
 			    (
-			        SELECT
+			        SELECT 
 			            tt.store_id,
 			            SUM(IFNULL(tt.price,0.00)) AS totalprice,
 			            COUNT(tt.group_id) AS ordercount
 			        FROM 
 			            (
-			                SELECT
+			                SELECT DISTINCT
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -337,7 +337,7 @@ AND ts.number IN (${storeids})
 			            COUNT(tt.group_id) AS ordercount
 			        FROM 
 			            (
-			                SELECT
+			                SELECT DISTINCT
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -387,13 +387,13 @@ AND ts.number IN (${storeids})
 			LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
 			LEFT JOIN
 			    (
-			        SELECT
+			        SELECT 
 			            tt.store_id,
 			            SUM(IFNULL(tt.price,0.00)) AS totalprice,
 			            COUNT(tt.group_id) AS ordercount
 			        FROM 
 			            (
-			                SELECT
+			                SELECT DISTINCT
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -434,7 +434,7 @@ AND ts.number IN (${storeids})
 			            COUNT(tt.group_id) AS ordercount
 			        FROM 
 			            (
-			                SELECT
+			                SELECT DISTINCT
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id

@@ -26,7 +26,7 @@
 		    COUNT(tt.group_id) AS ordercount
 		    FROM 
 		    (
-		        SELECT
+		        SELECT DISTINCT
 		        tor.store_id,
 		        tesr.id AS channel_id, 
 		        tesr.role_name AS role_name,
@@ -67,7 +67,7 @@
 		            )
 		        WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
 		        UNION ALL
-		        SELECT
+		        SELECT DISTINCT
 		        tor.store_id,
 		        tesr.id AS channel_id,
 		        tesr.role_name AS role_name,
@@ -136,7 +136,7 @@
 				    COUNT(tt.group_id) AS ordercount
 				    FROM 
 				    (
-				        SELECT
+				        SELECT DISTINCT
 				        tor.store_id,
 				        tesr.id AS channel_id, 
 				        tesr.role_name AS role_name,
@@ -177,7 +177,7 @@
 				            )
 				        WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
 				        UNION ALL
-				        SELECT
+				        SELECT DISTINCT
 				        tor.store_id,
 				        tesr.id AS channel_id,
 				        tesr.role_name AS role_name,

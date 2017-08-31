@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.CustomerAmountMapper">
+
+	<select id="queryCustomerAmount" resultType="java.util.Map">
+	<![CDATA[
+		select a.name as city_name, 
+			t0.customer_id as customer_id,
+			ts.id as store_id,
+			sum(t0.trading_price) as total_price,
+			DATE_FORMAT(t0.create_time,'%Y-%m') as yearandmonth, 
+			group_concat(distinct t0.order_id) as order_id
+			from  t_store ts 
+			left join t_sys_area a on ts.city_code = a.code and  a.level = '2'
+			left join(
+				select tor.customer_id as customer_id,
+				tor.trading_price as trading_price,
+				tof.create_time as create_time,
+				tor.store_id as store_id,
+				tor.id as order_id 
+				from  t_eshop te
+				join t_order tor on te.id = tor.eshop_id and te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+				join t_order_flow tof on tor.id = tof.order_id 
+				where tof.order_status = 'signed')  t0 on t0.store_id = ts.id
+			where 
+			ts.name not like '%测试%' AND ts.white!='QA' and ts.status = '0'
+			group by t0.customer_id,DATE_FORMAT(t0.create_time,'%Y-%m'),t0.store_id;
+			]]>
+	</select>
+
+</mapper>

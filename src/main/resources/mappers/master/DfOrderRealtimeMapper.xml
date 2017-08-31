@@ -10,6 +10,7 @@
 	</select>
 	<!-- 将从gemini查询到的数据结果写入到daqWeb表中 -->
 	<insert id="addDfOrderRealtimeByOrderId" parameterType="java.util.List" >
+	<![CDATA[
         insert into df_order_realtime
               (order_id,order_sn,group_id,order_type,business_model_id,customer_id,order_address_id,store_id,
               eshop_id,order_status,order_source,invoice_status,buyer_remark,seller_remark,employee_remark,
@@ -30,5 +31,7 @@
 				#{order_sn_reserve},#{eshop_name},#{eshop_white},#{department_id},#{store_name},#{storeno},#{store_status},#{store_white},#{store_number},
 				#{city_code},#{city_name},#{order_quantity},#{signed_time},#{signed_status},#{receipts_status},#{receipts_type},#{receipts_paystatus},#{receipts_payplatform}
 	          )
+	           ]]>
 	</insert>
+	
 </mapper>

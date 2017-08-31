@@ -157,4 +157,17 @@ public class DateUtils {
         preDateFirst += "-01";
         return preDateFirst;
     }
+    
+    /** 
+     * @param date 当前日期 
+     * @return 返回当前日期的年月
+     */ 
+    public static String getPreYearAndMonth(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        String preDateFirst = df.format(calendar.getTime());
+        return preDateFirst;
+    }
 }
