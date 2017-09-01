@@ -32,7 +32,7 @@ FROM (
 			            COUNT(tt.group_id) AS ordercount
 			        FROM 
 			            (
-			                SELECT DISTINCT
+			                SELECT DISTINCT tor.id,
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -73,7 +73,7 @@ FROM (
 			            COUNT(tt.group_id) AS ordercount
 			        FROM 
 			            (
-			                SELECT DISTINCT
+			                SELECT DISTINCT tor.id,
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -117,7 +117,7 @@ LEFT JOIN
             COUNT(tt.group_id) AS ordercount
         FROM 
             (
-                SELECT DISTINCT
+                SELECT DISTINCT tor.id,
                     tor.store_id,
                     IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
                     tor.group_id AS group_id
@@ -158,7 +158,7 @@ LEFT JOIN
             COUNT(tt.group_id) AS ordercount
         FROM 
             (
-                SELECT DISTINCT
+                SELECT DISTINCT tor.id,
                     tor.store_id,
                     IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
                     tor.group_id AS group_id
@@ -206,7 +206,7 @@ LEFT JOIN
 						COUNT(tt.group_id) AS ordercount
 				FROM 
 					(
-						SELECT DISTINCT
+						SELECT DISTINCT tor.id,
 								tor.store_id,
 								IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 								tor.group_id AS group_id
@@ -243,7 +243,7 @@ LEFT JOIN
 								COUNT(tt.group_id) AS ordercount
 						FROM 
 								(
-									SELECT DISTINCT
+									SELECT DISTINCT	tor.id,
 											tor.store_id,
 											IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)  AS price,
 											tor.group_id AS group_id

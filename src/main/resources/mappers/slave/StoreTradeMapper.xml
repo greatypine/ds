@@ -31,6 +31,7 @@ LEFT JOIN
         FROM 
             (
                 SELECT DISTINCT
+                	tor.id,
                     tor.store_id,
                     IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
                     tor.group_id AS group_id
@@ -72,6 +73,7 @@ LEFT JOIN
         FROM 
             (
                 SELECT DISTINCT
+                	tor.id,
                     tor.store_id,
                     IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
                     tor.group_id AS group_id
@@ -103,6 +105,7 @@ LEFT JOIN
         FROM
             (
                 SELECT DISTINCT
+                	tor.id,
                     tor.store_id,
                     IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
                     tor.group_id AS group_id
@@ -205,6 +208,7 @@ AND ts.number IN (${storeids})
 			        FROM 
 			            (
 			                SELECT DISTINCT
+			                	tor.id,
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -246,6 +250,7 @@ AND ts.number IN (${storeids})
 			        FROM 
 			            (
 			                SELECT DISTINCT
+			                	tor.id,
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -297,6 +302,7 @@ AND ts.number IN (${storeids})
 			        FROM 
 			            (
 			                SELECT DISTINCT
+			                	tor.id,
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -338,6 +344,7 @@ AND ts.number IN (${storeids})
 			        FROM 
 			            (
 			                SELECT DISTINCT
+			                	tor.id,
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -394,6 +401,7 @@ AND ts.number IN (${storeids})
 			        FROM 
 			            (
 			                SELECT DISTINCT
+			                	tor.id,
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
@@ -435,6 +443,7 @@ AND ts.number IN (${storeids})
 			        FROM 
 			            (
 			                SELECT DISTINCT
+			                	tor.id,
 			                    tor.store_id,
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id

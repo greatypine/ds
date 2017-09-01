@@ -28,7 +28,7 @@ FROM
 			COUNT(trp.id) AS _count,
 			1 AS _type
 		from t_order_receipts trp
-		JOIN (select 	
+		JOIN (select DISTINCT tor.id,
 						ts.id storeId,
 						ts.name storeName,
 						ts.code as storeno,

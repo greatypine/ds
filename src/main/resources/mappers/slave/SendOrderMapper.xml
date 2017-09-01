@@ -6,7 +6,7 @@
 	<select id="querySendOrders" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-			select
+			select 
 			a.`name` as cityname,-- 城市名称
 			ts.id as platformid,
 			IFNULL(ts.code,'') as storeno,
@@ -15,7 +15,7 @@
 			tesr.id as deptchannelid,
 			IFNULL(SUBSTR(tesr.role_name FROM (POSITION('_' IN tesr.role_name)+1) FOR LENGTH(tesr.role_name)),'') as deptname,-- 事业部
 			IFNULL(SUBSTR(tesr.role_name FROM 1 FOR (POSITION('_' IN tesr.role_name)-1)),'') AS channelname,-- 频道
-			IFNULL(COUNT(tor.id),0) AS datanum -- 分各频道总送单量
+			IFNULL(COUNT(DISTINCT tor.id),0) AS datanum -- 分各频道总送单量
 			from  t_order  tor
 			JOIN t_order_flow tof on tof.order_id=tor.id
 			LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
@@ -47,14 +47,14 @@
 		resultType="java.util.Map">
         <![CDATA[
         SELECT IFNULL(SUM(datanum),0) AS sendordersum,COUNT(*) AS totalcount FROM (
-			select
+			select 
 			a.`name` as cityname,-- 城市名称
 			ts.id as platformid,
 			ts.`name` as storename,-- 门店名称
 			tem.`name` as username,-- 国安侠名称
 			SUBSTR(tesr.role_name FROM (POSITION('_' IN tesr.role_name)+1) FOR LENGTH(tesr.role_name)) as deptname,-- 事业部
 			SUBSTR(tesr.role_name FROM 1 FOR (POSITION('_' IN tesr.role_name)-1)) AS channelname,-- 频道
-			COUNT(tor.id) datanum -- 分各频道总送单量
+			COUNT(DISTINCT tor.id) datanum -- 分各频道总送单量
 			from  t_order  tor
 			JOIN t_order_flow tof on tof.order_id=tor.id
 			LEFT JOIN t_eshop tep on tep.id=tor.eshop_id

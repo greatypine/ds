@@ -23,7 +23,7 @@ LEFT JOIN
 				COUNT(DISTINCT f.customer_id) AS rebuy_count, 0 AS rebuy_20_count
 			FROM
 				(
-					SELECT tor.customer_id, tor.store_id
+					SELECT DISTINCT tor.id,tor.customer_id, tor.store_id
 					FROM t_eshop te
 					JOIN t_order tor ON te.id=tor.eshop_id
                         AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
@@ -36,7 +36,7 @@ LEFT JOIN
 				) f
 			JOIN
 				(
-					SELECT tor.customer_id, tor.store_id
+					SELECT DISTINCT tor.id,tor.customer_id, tor.store_id
 					FROM t_eshop te
 					JOIN t_order tor ON te.id=tor.eshop_id
                         AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
@@ -59,7 +59,7 @@ LEFT JOIN
 					SELECT t.customer_id, t.store_id
 					FROM
 						(
-							SELECT tor.customer_id, tor.store_id, tor.trading_price
+							SELECT DISTINCT tor.id,tor.customer_id, tor.store_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
                                 AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
@@ -77,7 +77,7 @@ LEFT JOIN
 					SELECT t.customer_id, t.store_id
 					FROM
 						(
-							SELECT tor.customer_id, tor.store_id, tor.trading_price
+							SELECT DISTINCT tor.id,tor.customer_id, tor.store_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
                                 AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
@@ -131,7 +131,7 @@ LEFT JOIN
 					SELECT t.customer_id, t.store_id
 					FROM
 						(
-							SELECT tor.customer_id, tor.store_id, tor.trading_price
+							SELECT DISTINCT tor.id,tor.customer_id, tor.store_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
                                 AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
@@ -149,7 +149,7 @@ LEFT JOIN
 					SELECT t.customer_id, t.store_id
 					FROM
 						(
-							SELECT tor.customer_id, tor.store_id, tor.trading_price
+							SELECT DISTINCT tor.id,tor.customer_id, tor.store_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
                                 AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))

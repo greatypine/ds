@@ -24,7 +24,7 @@
 					ts.`code` as storeno,
 					tem.`name` AS ename,
 					tem.id AS eid,
-					COUNT(tor.id) AS _count,
+					COUNT(DISTINCT tor.id) AS _count,
 					1 AS _type
 					from  
 					t_order  tor
@@ -53,7 +53,7 @@
 					ts.`code` as storeno,
 					tem.`name` AS ename,
 					tem.id AS eid,
-					COUNT(tor.id) AS _count,
+					COUNT(DISTINCT tor.id) AS _count,
 					2 AS _type
 					from  
 					t_order  tor
