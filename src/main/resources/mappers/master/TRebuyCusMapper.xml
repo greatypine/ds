@@ -13,24 +13,30 @@
 				store_name,
 				rebuy_count,
 				rebuy_20_count,
+				rebuy_10_count,
 				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
 			from ds_rebuycus where year =#{year} and month =#{month}
 		]]>
-	   <if test="null != storeids and null != storeids">
-              <![CDATA[                   
-                 and storeno IN (${storeids})
-              ]]>
-         </if>
+		<if test="null != storeids and null != storeids">
+			<![CDATA[                   
+			   and storeno IN (${storeids})
+			]]>
+		</if>
+	    <if test="null != limitcond and '' != limitcond">
+	       <![CDATA[                   
+	          LIMIT ${limitcond}
+	       ]]>
+		</if>         
 	</select>
 	
 	
 	<insert id="addTRebuyCus" parameterType="java.util.Map">
 		<![CDATA[
 			INSERT INTO ds_rebuycus (
-				city_name, platformid,storeno,store_name, rebuy_count, rebuy_20_count,
+				city_name, platformid,storeno,store_name, rebuy_count, rebuy_20_count,rebuy_10_count,
 				year,month,createtime
 			) VALUES(
-				#{city_name},#{platformid},#{storeno},#{store_name},#{rebuy_count},#{rebuy_20_count},
+				#{city_name},#{platformid},#{storeno},#{store_name},#{rebuy_count},#{rebuy_20_count},#{rebuy_10_count},
 				YEAR(date_sub(now(),interval 1 day)),
 				MONTH(date_sub(now(),interval 1 day)),
 				NOW()
@@ -44,4 +50,20 @@
 		]]>
 	</delete>
 	
+	<select id="queryTRebuyCusSumByMonth" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+        select ifnull(sum(rebuy_20_count),0) as rebuysum,count(*) as totalcount from (
+			select 
+				city_name,
+				platformid,
+				IFNULL(storeno,'') AS storeno,
+				store_name,
+				rebuy_count,
+				rebuy_20_count,
+				rebuy_10_count,
+				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
+			from ds_rebuycus where year =#{year} and month =#{month} and storeno IN (${storeids})) rebuycusSumline
+		]]>
+	</select>	
 </mapper>

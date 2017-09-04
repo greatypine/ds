@@ -51,6 +51,9 @@ public class DFOrderRealtime {
 	private String eshop_name;
 	private String eshop_white;
 	private String department_id;
+	private String deptname;
+	private String channelname;
+	
 	
 	private String store_name;
 	private String storeno;
@@ -549,6 +552,22 @@ public class DFOrderRealtime {
 
 	public void setSigned_status(String signed_status) {
 		this.signed_status = signed_status;
+	}
+
+	public String getDeptname() {
+		return deptname;
+	}
+
+	public void setDeptname(String deptname) {
+		this.deptname = deptname;
+	}
+
+	public String getChannelname() {
+		return channelname;
+	}
+
+	public void setChannelname(String channelname) {
+		this.channelname = channelname;
 	}
 	
 }

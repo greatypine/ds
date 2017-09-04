@@ -16,6 +16,8 @@
 				total_count,
 				pay_20_count,
 				new_20_count,
+				new_10_count,
+				pay_10_count,
 				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
 			from ds_newaddcus where year =#{year} and month =#{month}
 		]]>
@@ -24,6 +26,11 @@
                 and storeno IN (${storeids})
              ]]>
         </if>
+	    <if test="null != limitcond and '' != limitcond">
+	       <![CDATA[                   
+	          LIMIT ${limitcond}
+	       ]]>
+		</if>
 	</select>
 	
 	
@@ -31,11 +38,11 @@
 		<![CDATA[
 			INSERT INTO ds_newaddcus (
 				city_name, platformid,storeno,store_name, pay_count, new_count,
-				total_count, pay_20_count, new_20_count,
+				total_count, pay_20_count, new_20_count,new_10_count,pay_10_count,
 				year,month,createtime
 			) VALUES(
 				#{city_name},#{platformid},#{storeno},#{store_name},#{pay_count},#{new_count},
-				#{total_count},#{pay_20_count},#{new_20_count},
+				#{total_count},#{pay_20_count},#{new_20_count},#{new_10_count},#{pay_10_count},
 				YEAR(date_sub(now(),interval 1 day)),
 				MONTH(date_sub(now(),interval 1 day)),
 				NOW()
@@ -48,4 +55,26 @@
 			delete from ds_newaddcus where year =#{year} and month =#{month}
 		]]>
 	</delete>
+	
+	<select id="queryTNewaddCusSumByMonth" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+		select ifnull(sum(new_20_count),0) as newaddsum,count(*) as totalcount from (	
+			select 
+				city_name,
+				platformid,
+				IFNULL(storeno,'') AS storeno,
+				store_name,
+				pay_count,
+				new_count,
+				total_count,
+				pay_20_count,
+				new_20_count,
+				new_10_count,
+				pay_10_count,
+				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
+			from ds_newaddcus where year =#{year} and month =#{month} and storeno IN (${storeids})) newaddsumline
+		]]>
+	</select>	
+	
 </mapper>

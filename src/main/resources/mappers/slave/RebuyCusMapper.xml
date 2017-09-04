@@ -13,17 +13,18 @@
     IFNULL(ts.code,'') as storeno,
     ts.`name` AS store_name,
 	IFNULL(SUM(t.rebuy_count),0) AS rebuy_count, -- 复购客户
-	IFNULL(SUM(t.rebuy_20_count),0) AS rebuy_20_count -- 复购客户消费>=20
+	IFNULL(SUM(t.rebuy_20_count),0) AS rebuy_20_count, -- 复购客户消费>=20
+	IFNULL(SUM(t.rebuy_10_count),0) AS rebuy_10_count -- 复购客户消费>=10
 FROM t_store ts
 LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
 LEFT JOIN
 	(
 		(
 			SELECT f.store_id AS store_id,
-				COUNT(DISTINCT f.customer_id) AS rebuy_count, 0 AS rebuy_20_count
+				COUNT(DISTINCT f.customer_id) AS rebuy_count, 0 AS rebuy_20_count,0 as rebuy_10_count
 			FROM
 				(
-					SELECT DISTINCT tor.id,tor.customer_id, tor.store_id
+					SELECT tor.customer_id, tor.store_id
 					FROM t_eshop te
 					JOIN t_order tor ON te.id=tor.eshop_id
                         AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
@@ -36,7 +37,7 @@ LEFT JOIN
 				) f
 			JOIN
 				(
-					SELECT DISTINCT tor.id,tor.customer_id, tor.store_id
+					SELECT tor.customer_id, tor.store_id
 					FROM t_eshop te
 					JOIN t_order tor ON te.id=tor.eshop_id
                         AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
@@ -53,13 +54,13 @@ LEFT JOIN
 		UNION ALL
 		(
 			SELECT f.store_id AS store_id, 0 AS rebuy_count,
-				COUNT(DISTINCT f.customer_id) AS rebuy_20_count
+				COUNT(DISTINCT f.customer_id) AS rebuy_20_count,0 as rebuy_10_count
 			FROM
 				(
 					SELECT t.customer_id, t.store_id
 					FROM
 						(
-							SELECT DISTINCT tor.id,tor.customer_id, tor.store_id, tor.trading_price
+							SELECT tor.customer_id, tor.store_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
                                 AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
@@ -77,7 +78,7 @@ LEFT JOIN
 					SELECT t.customer_id, t.store_id
 					FROM
 						(
-							SELECT DISTINCT tor.id,tor.customer_id, tor.store_id, tor.trading_price
+							SELECT tor.customer_id, tor.store_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
                                 AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
@@ -88,6 +89,48 @@ LEFT JOIN
 							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
 							GROUP BY tor.group_id
 						) t GROUP BY t.customer_id, t.store_id HAVING SUM(t.trading_price)>=20
+				) f1 ON f.customer_id = f1.customer_id
+				AND f.store_id=f1.store_id
+			GROUP BY f.store_id
+		)
+		UNION ALL
+		(
+			SELECT f.store_id AS store_id, 0 AS rebuy_count,0 as rebuy_20_count,
+				COUNT(DISTINCT f.customer_id) AS rebuy_10_count
+			FROM
+				(
+					SELECT t.customer_id, t.store_id
+					FROM
+						(
+							SELECT tor.customer_id, tor.store_id, tor.trading_price
+							FROM t_eshop te
+							JOIN t_order tor ON te.id=tor.eshop_id
+                                AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
+							JOIN t_order_flow tof ON tor.id=tof.order_id
+								AND tof.order_status='signed'
+								AND tof.create_time>=DATE(CONCAT(#{year},#{month},'01'))
+								AND tof.create_time<DATE_ADD(DATE(CONCAT(#{year},#{month},'01')),INTERVAL 1 MONTH)
+							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+							GROUP BY tor.group_id
+						) t GROUP BY t.customer_id, t.store_id HAVING SUM(t.trading_price)>=10
+				) f
+			JOIN
+				(
+
+					SELECT t.customer_id, t.store_id
+					FROM
+						(
+							SELECT tor.customer_id, tor.store_id, tor.trading_price
+							FROM t_eshop te
+							JOIN t_order tor ON te.id=tor.eshop_id
+                                AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
+							JOIN t_order_flow tof ON tof.order_id=tor.id
+								AND tof.order_status='signed'
+								AND tof.create_time>=DATE_SUB(DATE(CONCAT(#{year},#{month},'01')),INTERVAL 1 MONTH)
+								AND tof.create_time<DATE(CONCAT(#{year},#{month},'01'))
+							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+							GROUP BY tor.group_id
+						) t GROUP BY t.customer_id, t.store_id HAVING SUM(t.trading_price)>=10
 				) f1 ON f.customer_id = f1.customer_id
 				AND f.store_id=f1.store_id
 			GROUP BY f.store_id
@@ -131,7 +174,7 @@ LEFT JOIN
 					SELECT t.customer_id, t.store_id
 					FROM
 						(
-							SELECT DISTINCT tor.id,tor.customer_id, tor.store_id, tor.trading_price
+							SELECT tor.customer_id, tor.store_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
                                 AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))
@@ -149,7 +192,7 @@ LEFT JOIN
 					SELECT t.customer_id, t.store_id
 					FROM
 						(
-							SELECT DISTINCT tor.id,tor.customer_id, tor.store_id, tor.trading_price
+							SELECT tor.customer_id, tor.store_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
                                 AND tor.store_id IN (SELECT ts.id FROM t_store ts WHERE ts.number IN (${storeids}))

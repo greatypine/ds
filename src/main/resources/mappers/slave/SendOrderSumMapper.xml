@@ -108,7 +108,7 @@ SELECT COUNT(*) AS totalcount FROM (
 					ts.id AS storeid,
 					tem.`name` AS ename,
 					tem.id AS eid,
-					COUNT(tor.id) AS _count,
+					COUNT(DISTINCT tor.id) AS _count,
 					1 AS _type
 					from  
 					t_order  tor
@@ -136,7 +136,7 @@ SELECT COUNT(*) AS totalcount FROM (
 					ts.id as storeid,
 					tem.`name` AS ename,
 					tem.id AS eid,
-					COUNT(tor.id) AS _count,
+					COUNT(DISTINCT tor.id) AS _count,
 					2 AS _type
 					from  
 					t_order  tor
@@ -180,7 +180,7 @@ SELECT COUNT(*) AS totalcount FROM (
 					ts.`code` as storeno,
 					tem.`name` AS ename,
 					tem.id AS eid,
-					COUNT(tor.id) AS _count,
+					COUNT(DISTINCT tor.id) AS _count,
 					1 AS _type
 					from  
 					t_order  tor
@@ -208,7 +208,7 @@ SELECT COUNT(*) AS totalcount FROM (
 					ts.`code` as storeno,
 					tem.`name` AS ename,
 					tem.id AS eid,
-					COUNT(tor.id) AS _count,
+					COUNT(DISTINCT tor.id) AS _count,
 					2 AS _type
 					from  
 					t_order  tor

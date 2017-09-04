@@ -15,14 +15,17 @@ IFNULL(SUM(t.pay_count),0) AS pay_count,
 IFNULL(SUM(t.new_count),0) AS new_count, 
 IFNULL(SUM(t.total_count),0) AS total_count, 
 IFNULL(SUM(t.pay_20_count),0) AS pay_20_count, 
-IFNULL(SUM(t.new_20_count),0) AS new_20_count 
+IFNULL(SUM(t.new_20_count),0) AS new_20_count,
+IFNULL(SUM(t.new_10_count),0) AS new_10_count,
+IFNULL(SUM(t.pay_10_count),0) AS pay_10_count
 FROM t_store ts
 LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
 LEFT JOIN
     (
 		(
-			SELECT DISTINCT tor.id, tor.store_id, COUNT(DISTINCT tor.customer_id) AS pay_count,
-				0 AS new_count, 0 AS new_20_count, 0 AS total_count, 0 AS pay_20_count
+			SELECT tor.store_id, COUNT(DISTINCT tor.customer_id) AS pay_count,
+				0 AS new_count, 0 AS new_20_count, 0 AS total_count, 0 AS pay_20_count,
+				0 AS new_10_count,0 AS pay_10_count
 			FROM t_eshop te
 			JOIN t_order tor ON te.id=tor.eshop_id
 				AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
@@ -35,9 +38,10 @@ LEFT JOIN
 		)
 		UNION ALL
 		(
-			SELECT DISTINCT tor.id,tor.store_id, 0 AS pay_count,
+			SELECT tor.store_id, 0 AS pay_count,
 				COUNT(DISTINCT tor.customer_id) AS new_count,
-				0 AS new_20_count, 0 AS total_count, 0 AS pay_20_count
+				0 AS new_20_count, 0 AS total_count, 0 AS pay_20_count,
+				0 AS new_10_count,0 AS pay_10_count
 			FROM t_eshop te
 			JOIN t_order tor ON te.id=tor.eshop_id
 				AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
@@ -47,7 +51,7 @@ LEFT JOIN
 				AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
 			LEFT JOIN
 				(
-					SELECT DISTINCT tor_in.id,tor_in.store_id, tor_in.customer_id
+					SELECT tor_in.store_id, tor_in.customer_id
 					FROM t_eshop te_in
 					JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
 						AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
@@ -64,15 +68,16 @@ LEFT JOIN
 		)
 		UNION ALL
 		(
-			SELECT t.id,t.store_id, 0 AS pay_count, 0 AS new_count,
+			SELECT t.store_id, 0 AS pay_count, 0 AS new_count,
 				COUNT(DISTINCT t.customer_id) AS new_20_count,
-				0 AS total_count, 0 AS pay_20_count
+				0 AS total_count, 0 AS pay_20_count,
+				0 AS new_10_count,0 AS pay_10_count
 			FROM
 				(
-					SELECT t_in.id,t_in.store_id, t_in.customer_id
+					SELECT t_in.store_id, t_in.customer_id
 					FROM
 						(
-							SELECT DISTINCT tor.id,tor.group_id, tor.store_id, tor.customer_id, tor.trading_price
+							SELECT tor.group_id, tor.store_id, tor.customer_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
 								AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
@@ -82,7 +87,7 @@ LEFT JOIN
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
 							LEFT JOIN
 								(
-									SELECT DISTINCT tor_in.id,tor_in.store_id, tor_in.customer_id
+									SELECT tor_in.store_id, tor_in.customer_id
 									FROM t_eshop te_in
 									JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
 										AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
@@ -103,8 +108,9 @@ LEFT JOIN
 		)
 		UNION ALL
 		(
-			SELECT DISTINCT tor.id,tor.store_id, 0 AS pay_count, 0 AS new_count, 0 AS new_20_count,
-				COUNT(DISTINCT tor.customer_id) AS total_count, 0 AS pay_20_count
+			SELECT tor.store_id, 0 AS pay_count, 0 AS new_count, 0 AS new_20_count,
+				COUNT(DISTINCT tor.customer_id) AS total_count, 0 AS pay_20_count,
+				0 AS new_10_count,0 AS pay_10_count
 			FROM t_eshop te
 			JOIN t_order tor ON te.id=tor.eshop_id
 				AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
@@ -116,14 +122,15 @@ LEFT JOIN
 		)
 		UNION ALL
 		(
-			SELECT t.id,t.store_id, 0 AS pay_count, 0 AS new_count, 0 AS new_20_count,
-				0 AS total_count, COUNT(DISTINCT t.customer_id) AS pay_20_count
+			SELECT t.store_id, 0 AS pay_count, 0 AS new_count, 0 AS new_20_count,
+				0 AS total_count, COUNT(DISTINCT t.customer_id) AS pay_20_count,
+				0 AS new_10_count,0 AS pay_10_count
 			FROM
 				(
-					SELECT tor.id,tor.store_id, tor.customer_id
+					SELECT tor.store_id, tor.customer_id
 					FROM
 						(
-							SELECT DISTINCT tor_in.id,tor_in.customer_id, tor_in.store_id, tor_in.trading_price
+							SELECT tor_in.customer_id, tor_in.store_id, tor_in.trading_price
 							FROM t_eshop te
 							JOIN t_order tor_in ON te.id=tor_in.eshop_id
 								AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
@@ -136,6 +143,72 @@ LEFT JOIN
 						) tor
 					GROUP BY tor.store_id, tor.customer_id
 					HAVING SUM(tor.trading_price)>20
+				) t
+			GROUP BY t.store_id
+		)
+			UNION ALL
+		(
+			SELECT t.store_id, 0 AS pay_count, 0 AS new_count,
+				0 AS new_20_count, 
+				0 AS total_count, 0 AS pay_20_count,
+				COUNT(DISTINCT t.customer_id) AS new_10_count,0 AS pay_10_count
+			FROM
+				(
+					SELECT t_in.store_id, t_in.customer_id
+					FROM
+						(
+							SELECT tor.group_id, tor.store_id, tor.customer_id, tor.trading_price
+							FROM t_eshop te
+							JOIN t_order tor ON te.id=tor.eshop_id
+								AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
+							JOIN t_order_flow tof ON tor.id=tof.order_id
+								AND tof.order_status='signed'
+								AND tof.create_time>=DATE(#{begindate})
+								AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
+							LEFT JOIN
+								(
+									SELECT tor_in.store_id, tor_in.customer_id
+									FROM t_eshop te_in
+									JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
+										AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
+									JOIN t_order_flow tof_in ON tor_in.id=tof_in.order_id
+										AND tof_in.order_status='signed'
+										AND tof_in.create_time<DATE(#{begindate})
+									WHERE te_in.`name` NOT LIKE '%测试%' AND te_in.white!='QA'
+									GROUP BY tor_in.store_id, tor_in.customer_id
+								) t ON tor.store_id=t.store_id
+								AND tor.customer_id=t.customer_id
+							WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+								AND t.store_id IS NULL
+							GROUP BY tor.group_id
+						) t_in
+					GROUP BY t_in.store_id, t_in.customer_id HAVING SUM(t_in.trading_price)>=10.0
+				) t
+			GROUP BY t.store_id
+		)
+				UNION ALL
+		(
+			SELECT t.store_id, 0 AS pay_count, 0 AS new_count, 0 AS new_20_count,
+				0 AS total_count, 0 AS pay_20_count,
+				0 AS new_10_count,COUNT(DISTINCT t.customer_id) AS pay_10_count
+			FROM
+				(
+					SELECT tor.store_id, tor.customer_id
+					FROM
+						(
+							SELECT tor_in.customer_id, tor_in.store_id, tor_in.trading_price
+							FROM t_eshop te
+							JOIN t_order tor_in ON te.id=tor_in.eshop_id
+								AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
+							JOIN t_order_flow tof ON tor_in.id=tof.order_id
+								AND tof.order_status='signed'
+								AND tof.create_time>=DATE(#{begindate})
+								AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
+							WHERE te.`name` NOT LIKE '%测试%' OR te.white!='QA'
+							GROUP BY tor_in.group_id
+						) tor
+					GROUP BY tor.store_id, tor.customer_id
+					HAVING SUM(tor.trading_price)>10
 				) t
 			GROUP BY t.store_id
 		)
@@ -166,15 +239,15 @@ LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
 LEFT JOIN
     (
 		(
-			SELECT t.id,t.store_id, 0 AS pay_count, 0 AS new_count,
+			SELECT t.store_id, 0 AS pay_count, 0 AS new_count,
 				COUNT(DISTINCT t.customer_id) AS new_20_count,
 				0 AS total_count, 0 AS pay_20_count
 			FROM
 				(
-					SELECT t_in.id,t_in.store_id, t_in.customer_id
+					SELECT t_in.store_id, t_in.customer_id
 					FROM
 						(
-							SELECT DISTINCT tor.id,tor.group_id, tor.store_id, tor.customer_id, tor.trading_price
+							SELECT tor.group_id, tor.store_id, tor.customer_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
 								AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
@@ -184,7 +257,7 @@ LEFT JOIN
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
 							LEFT JOIN
 								(
-									SELECT DISTINCT tor_in.id,tor_in.store_id, tor_in.customer_id
+									SELECT tor_in.store_id, tor_in.customer_id
 									FROM t_eshop te_in
 									JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
 										AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))

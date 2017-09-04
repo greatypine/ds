@@ -49,6 +49,8 @@
 		torline.eshop_name as eshop_name,
 		torline.eshop_white as eshop_white,
 		torline.department_id as department_id,
+		torline.deptname as deptname,
+		torline.channelname as channelname,
 		torline.store_name as store_name,
 		torline.storeno as storeno,
 		torline.store_status as store_status,
@@ -82,13 +84,15 @@
 		ts.number as store_number,
 		ts.city_code as city_code,
 		tsar.`name` as city_name,
+		SUBSTR(tesr.role_name FROM (POSITION('_' IN tesr.role_name)+1) FOR LENGTH(tesr.role_name)) as deptname,
+		SUBSTR(tesr.role_name FROM 1 FOR (POSITION('_' IN tesr.role_name)-1)) as channelname,
 		tog.order_quantity
 		from t_order tor
-		left join t_employee tem on tor.employee_id = tem.id
+		join t_employee tem on tor.employee_id = tem.id
 		left join t_customer tc on tor.customer_id = tc.id
-		left join t_eshop te on tor.eshop_id = te.id and te.`name` NOT LIKE '%测试%' AND te.white!='QA'
-		left join t_store ts on tor.store_id = ts.id and ts.`name` NOT like '%测试%' and ts.`status`=0 and ts.white!='QA'
-		left join t_sys_area tsar on tsar.code = ts.city_code and tsar.level = 2 
+		left join t_eshop te on tor.eshop_id = te.id 
+		join t_store ts on tor.store_id = ts.id 
+		join t_sys_area tsar on tsar.code = ts.city_code and tsar.level = 2 
 		left join t_ed_sys_role tesr on tesr.id=te.department_id
 		left join t_order_group tog on  tog.id = tor.group_id
 		where (date_format(tor.create_time,'%Y-%m-%d %H:%i:%s')>= #{begintime} 
@@ -101,6 +105,8 @@
 		group by t0.id ) torline
 		where torline.signed_status is null or (date_format(torline.signed_time,'%Y-%m-%d %H:%i:%s')>= #{begintime} 
 		and date_format(torline.signed_time,'%Y-%m-%d %H:%i:%s')<#{endtime}) order by torline.signed_time
+	  	and torline.eshop_name NOT LIKE '%测试%' AND torline.eshop_white!='QA'
+		and torline.store_name NOT like '%测试%' and torline.store_status=0 and torline.store_white!='QA'
 	  ]]>
 	</select>
 
