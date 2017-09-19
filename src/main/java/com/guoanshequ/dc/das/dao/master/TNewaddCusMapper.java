@@ -16,4 +16,6 @@ public interface TNewaddCusMapper{
 	void addTNewaddCus(Map<String, String> paraMap);
 	
 	int deleteByYearMonth(Map<String, String> paraMap);
+	
+	List<Map<String, Object>> queryTNewaddCusSumByMonth(Map<String, String> paraMap);
 }

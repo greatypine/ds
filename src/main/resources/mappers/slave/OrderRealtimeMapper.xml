@@ -12,6 +12,14 @@
 		torline.business_model_id as business_model_id,
 		torline.customer_id as customer_id,
 		torline.order_address_id as order_address_id,
+		torline.addr_adname as addr_adname,
+		torline.addr_placename as addr_placename, 
+		torline.addr_latitude as addr_latitude,
+		torline.addr_longitude as addr_longitude,
+		torline.addr_address as addr_address,
+		torline.addr_name as addr_name,
+		torline.addr_mobilephone as addr_mobilephone,
+		torline.tc_mobilephone as tc_mobilephone,
 		torline.store_id as store_id,
 		torline.eshop_id as eshop_id,
 		torline.order_status as order_status,
@@ -20,6 +28,7 @@
 		torline.buyer_remark as buyer_remark,
 		torline.seller_remark as seller_remark,
 		torline.employee_remark as employee_remark,
+		torline.store_remark as store_remark,
 		torline.abnormal_type as abnormal_type,
 		torline.abnormal_remark as abnormal_remark,
 		torline.delivery_type as delivery_type,
@@ -46,6 +55,7 @@
 		torline.create_user_id as create_user_id,
 		torline.update_user_id as update_user_id,
 		torline.order_sn_reserve as order_sn_reserve,
+		torline.normal_store_id as normal_store_id,
 		torline.eshop_name as eshop_name,
 		torline.eshop_white as eshop_white,
 		torline.department_id as department_id,
@@ -65,18 +75,12 @@
 		torline.receipts_type as receipts_type,
 		torline.receipts_paystatus as receipts_paystatus,
 		torline.receipts_payplatform as receipts_payplatform from (
-		select t0.*,
-		tof.create_time as signed_time,
-		tof.order_status as signed_status,
-		trp.`status` as receipts_status,
-		trp.type as receipts_type,
-		trp.pay_status as receipts_paystatus,
-		trp.pay_platform as receipts_payplatform from (
 		select 
 		tor.*,
 		te.name as eshop_name,
 		te.white as eshop_white,
-		te.department_id,
+		te.department_id as department_id,
+		tc.mobilephone as tc_mobilephone,
 		ts.`name` as store_name,
 		ts.`code` as storeno,
 		ts.status as store_status,
@@ -86,27 +90,41 @@
 		tsar.`name` as city_name,
 		SUBSTR(tesr.role_name FROM (POSITION('_' IN tesr.role_name)+1) FOR LENGTH(tesr.role_name)) as deptname,
 		SUBSTR(tesr.role_name FROM 1 FOR (POSITION('_' IN tesr.role_name)-1)) as channelname,
-		tog.order_quantity
+		tog.order_quantity,
+		toaddr.ad_name as addr_adname,
+		toaddr.placename as addr_placename,
+		toaddr.latitude as addr_latitude,
+		toaddr.longitude as addr_longitude,
+		toaddr.address as addr_address,
+		toaddr.name as addr_name,
+		toaddr.mobilephone as addr_mobilephone,
+		tof.create_time as signed_time,
+		tof.order_status as signed_status,
+		trp.`status` as receipts_status,
+		trp.type as receipts_type,
+		trp.pay_status as receipts_paystatus,
+		trp.pay_platform as receipts_payplatform
 		from t_order tor
-		join t_employee tem on tor.employee_id = tem.id
+		left join t_order_flow tof on (tor.id = tof.order_id and tof.order_status ='signed')
+		left join t_employee tem on tor.employee_id = tem.id
 		left join t_customer tc on tor.customer_id = tc.id
 		left join t_eshop te on tor.eshop_id = te.id 
-		join t_store ts on tor.store_id = ts.id 
-		join t_sys_area tsar on tsar.code = ts.city_code and tsar.level = 2 
+		left join t_store ts on tor.store_id = ts.id 
+		left join t_sys_area tsar on (tsar.code = ts.city_code and tsar.level = 2) 
 		left join t_ed_sys_role tesr on tesr.id=te.department_id
 		left join t_order_group tog on  tog.id = tor.group_id
-		where (date_format(tor.create_time,'%Y-%m-%d %H:%i:%s')>= #{begintime} 
+		left join t_order_address toaddr on tor.order_address_id = toaddr.id
+		left join t_order_receipts trp on (tor.group_id = trp.order_group_id and trp.type ='order' and trp.`status` =0 and trp.pay_status= 'payed')
+		where ((date_format(tor.create_time,'%Y-%m-%d %H:%i:%s')>= #{begintime} 
 		and date_format(tor.create_time,'%Y-%m-%d %H:%i:%s')< #{endtime})
 		or (date_format(tor.update_time,'%Y-%m-%d %H:%i:%s')>= #{begintime}
-		and date_format(tor.update_time,'%Y-%m-%d %H:%i:%s')< #{endtime})
-		) t0
-		left join tt_order_flow tof on t0.id = tof.order_id and tof.order_status ='signed'
-		left join t_order_receipts trp on t0.group_id = trp.order_group_id and trp.type ='order' and trp.`status` =0 and trp.pay_status= 'payed'
-		group by t0.id ) torline
-		where torline.signed_status is null or (date_format(torline.signed_time,'%Y-%m-%d %H:%i:%s')>= #{begintime} 
-		and date_format(torline.signed_time,'%Y-%m-%d %H:%i:%s')<#{endtime}) order by torline.signed_time
-	  	and torline.eshop_name NOT LIKE '%测试%' AND torline.eshop_white!='QA'
-		and torline.store_name NOT like '%测试%' and torline.store_status=0 and torline.store_white!='QA'
+		and date_format(tor.update_time,'%Y-%m-%d %H:%i:%s')< #{endtime}))
+		and te.name NOT LIKE '%测试%' and te.white!='QA'
+		and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
+		) torline
+		where torline.signed_status is null or (date_format(torline.signed_time,'%Y-%m-%d %H:%i:%s')>= #{begintime}
+		and date_format(torline.signed_time,'%Y-%m-%d %H:%i:%s')<#{endtime})
+		group by torline.id 
 	  ]]>
 	</select>
 

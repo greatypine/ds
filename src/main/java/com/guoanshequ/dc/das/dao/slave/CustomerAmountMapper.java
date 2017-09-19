@@ -6,12 +6,17 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.guoanshequ.dc.das.datasource.DataSource;
-import com.guoanshequ.dc.das.model.DfCustomerAmount;
+import com.guoanshequ.dc.das.model.DfCustomerMonth;
+import com.guoanshequ.dc.das.model.DfValidCustomer;
 
 @Repository
 @DataSource("slave")
 public interface CustomerAmountMapper {
 	
-	List<Map<String, String>> queryCustomerAmount();
+	public List<DfValidCustomer> queryValidCustomer();
+	
+	public List<Map<String,String>> queryCustomerStore();
+	
+	public List<DfCustomerMonth> queryCustomerMonth();
 
 }

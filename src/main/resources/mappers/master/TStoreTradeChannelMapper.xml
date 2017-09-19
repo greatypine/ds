@@ -21,6 +21,11 @@
                and storeno IN (${storeids})
             ]]>
         </if>
+	    <if test="null != limitcond and '' != limitcond">
+	       <![CDATA[                   
+	          LIMIT ${limitcond}
+	       ]]>
+		</if>        
 	</select>
 	
 	<insert id="addTStoreTradeChannel" parameterType="java.util.Map">
@@ -41,4 +46,20 @@
 			delete from ds_storetrade_channel where year =#{year} and month =#{month}
 		]]>
 	</delete>
+	
+	<select id="queryTStoreTradeChannelSumByMonth" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+        select count(*) as totalcount from ( 
+			select 
+ 				city_name, 
+ 				IFNULL(storeno,'') AS storeno,
+ 				store_name, 
+ 				dep_name,
+ 				channel_name, 
+ 				order_amount,
+ 				order_count
+ 			from ds_storetrade_channel where year=#{year} and month=#{month} and storeno IN (${storeids})) tradeChanline
+		]]>
+	</select>	
 </mapper>

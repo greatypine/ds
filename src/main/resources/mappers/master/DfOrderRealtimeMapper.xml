@@ -2,36 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoanshequ.dc.das.dao.master.DfOrderRealtimeMapper">
 
-	<!--  -->
-	<select id="deleteDfOrdersRealtimeByOrderId" parameterType="java.util.Map" resultType="java.util.Map">
-      <![CDATA[
-	       delete from df_order_realtime where order_id = #{order_id}
-	  ]]>
-	</select>
 	<!-- 将从gemini查询到的数据结果写入到daqWeb表中 -->
 	<insert id="addDfOrderRealtimeByOrderId" parameterType="java.util.List" >
 	<![CDATA[
         insert into df_order_realtime
-              (order_id,order_sn,group_id,order_type,business_model_id,customer_id,order_address_id,store_id,
-              eshop_id,order_status,order_source,invoice_status,buyer_remark,seller_remark,employee_remark,
+              (order_id,order_sn,group_id,order_type,business_model_id,customer_id,order_address_id,
+              addr_adname,addr_placename,addr_latitude,addr_longitude,addr_address,addr_name,addr_mobilephone,tc_mobilephone,
+              store_id,eshop_id,order_status,order_source,invoice_status,buyer_remark,seller_remark,employee_remark,store_remark,
               abnormal_type,abnormal_remark,delivery_type,trading_price,payable_price,score,is_split,employee_id,
               employee_phone,employee_name,appointment_start_time,appointment_end_time,eshop_combo_pro_id,
               expiry_date,combo_price,total_quantity,groupon_instance_id,status,version,create_user,create_time,
-              update_user,update_time,create_user_id,update_user_id,order_sn_reserve,eshop_name,eshop_white,
-              department_id,store_name,storeno,store_status,store_white,store_number,city_code,city_name,
+              update_user,update_time,create_user_id,update_user_id,order_sn_reserve,normal_store_id,eshop_name,eshop_white,
+              department_id,deptname,channelname,store_name,storeno,store_status,store_white,store_number,city_code,city_name,
               order_quantity,signed_time,signed_status,receipts_status,receipts_type,receipts_paystatus,
               receipts_payplatform)
         values
 	          (
-				#{order_id},#{order_sn},#{group_id},#{order_type},#{business_model_id},#{customer_id},#{order_address_id},#{store_id},
-				#{eshop_id},#{order_status},#{order_source},#{invoice_status},#{buyer_remark},#{seller_remark},#{employee_remark},#{abnormal_type},
-				#{abnormal_remark},#{delivery_type},#{trading_price},#{payable_price},#{score},#{is_split},#{employee_id},#{employee_phone},
+				#{order_id},#{order_sn},#{group_id},#{order_type},#{business_model_id},#{customer_id},#{order_address_id},
+				#{addr_adname},#{addr_placename},#{addr_latitude},#{addr_longitude},#{addr_address},#{addr_name},#{addr_mobilephone},#{tc_mobilephone},
+				#{store_id},#{eshop_id},#{order_status},#{order_source},#{invoice_status},#{buyer_remark},#{seller_remark},#{employee_remark},#{store_remark},
+				#{abnormal_type},#{abnormal_remark},#{delivery_type},#{trading_price},#{payable_price},#{score},#{is_split},#{employee_id},#{employee_phone},
 				#{employee_name},#{appointment_start_time},#{appointment_end_time},#{eshop_combo_pro_id},#{expiry_date},#{combo_price},#{total_quantity},
 				#{groupon_instance_id},#{status},#{version},#{create_user},#{create_time},#{update_user},#{update_time},#{create_user_id},#{update_user_id},
-				#{order_sn_reserve},#{eshop_name},#{eshop_white},#{department_id},#{store_name},#{storeno},#{store_status},#{store_white},#{store_number},
+				#{order_sn_reserve},#{normal_store_id},#{eshop_name},#{eshop_white},#{department_id},#{deptname},#{channelname},#{store_name},#{storeno},#{store_status},#{store_white},#{store_number},
 				#{city_code},#{city_name},#{order_quantity},#{signed_time},#{signed_status},#{receipts_status},#{receipts_type},#{receipts_paystatus},#{receipts_payplatform}
 	          )
 	           ]]>
 	</insert>
+	
+	<!-- 按订单编号删除实时数据里 -->
+	<delete id="deleteDfOrdersRealtimeByOrderId" parameterType="java.util.Map">
+      <![CDATA[
+	       delete from df_order_realtime where order_id = #{order_id}
+	  ]]>
+	</delete>
+	
+	<!-- 删除前一天状态为signed的数据 -->
+	<delete id="deleteDfOrdersRealtimeByPreDate" parameterType="java.lang.String">
+      <![CDATA[
+	       delete from df_order_realtime where date(signed_time) = #{predate} and signed_status ='signed'
+	  ]]>
+	</delete>
 	
 </mapper>

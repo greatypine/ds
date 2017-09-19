@@ -7,6 +7,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 public class DateUtils {
     /** 
      * 将日期字符串转化为日期。失败返回null。 
@@ -160,7 +162,7 @@ public class DateUtils {
     
     /** 
      * @param date 当前日期 
-     * @return 返回当前日期的年月
+     * @return 返回当前日期前一天所属的年月
      */ 
     public static String getPreYearAndMonth(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
@@ -170,4 +172,46 @@ public class DateUtils {
         String preDateFirst = df.format(calendar.getTime());
         return preDateFirst;
     }
+    
+    /** 
+     * @param date 当前日期 
+     * @return 返回当前日期前一天的上月
+     */
+    public static String getPreMonthofYear(){
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.add(Calendar.MONTH, -1);
+        String preDateFirst = df.format(calendar.getTime());
+        return preDateFirst;
+    }
+    
+    /** 
+     * @param date 当前日期 
+     * @return 返回当前日期
+     */ 
+    public static String getCurDate(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        String curDate = df.format(calendar.getTime());
+        return curDate;
+    }
+
+    /** 
+     * @param date 当前时间
+     * @return 返回当前时间
+     */ 
+    public static String getCurTime(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        String curTime = df.format(calendar.getTime());
+        return curTime;
+    }
+    
+    public static void main(String[] args) {
+		System.out.println(getCurTime(new Date()));
+	}
 }

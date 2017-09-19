@@ -37,4 +37,9 @@ public class TSendOrderService {
     public int deleteByYearMonth(Map<String, String> paraMap){
     	return tsendOrderDao.deleteByYearMonth(paraMap);
     }
+    
+    public List<Map<String, Object>> queryTSendOrdersChannelByMonth(Map<String, String> paraMap) throws Exception{
+        
+    	return tsendOrderDao.queryTSendOrdersChannelByMonth(paraMap);
+    }
 }

@@ -16,4 +16,6 @@ public interface TRebuyCusMapper{
 	void addTRebuyCus(Map<String, String> paraMap);
 	
 	int deleteByYearMonth(Map<String, String> paraMap);
+	
+	List<Map<String, Object>> queryTRebuyCusSumByMonth(Map<String, String> paraMap);
 }

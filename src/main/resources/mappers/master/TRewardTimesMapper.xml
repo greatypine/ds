@@ -7,14 +7,22 @@
 		resultType="java.util.Map">
         <![CDATA[
 			select 
- 				cityname, platformid,IFNULL(storeno,'') AS storeno,storename, employeename, cusid,ordersn, dashang
+ 				cityname, 
+ 				platformid,
+ 				IFNULL(storeno,'') AS storeno,
+ 				storename, employeename, cusid,ordersn, dashang
  			from ds_rewardtimes where year=#{year} and month=#{month}
 		]]>
-		   <if test="null != storeids and null != storeids">
-               <![CDATA[                   
-                  and storeno IN (${storeids})
-               ]]>
-           </if>
+	   	<if test="null != storeids and null != storeids">
+            <![CDATA[                   
+               and storeno IN (${storeids})
+            ]]>
+        </if>
+	    <if test="null != limitcond and '' != limitcond">
+	       <![CDATA[                   
+	          LIMIT ${limitcond}
+	       ]]>
+		</if>              
 	</select>
 	
 	<insert id="addTRewardTimes" parameterType="java.util.Map">
@@ -34,4 +42,17 @@
 			delete from ds_rewardtimes where year =#{year} and month =#{month}
 		]]>
 	</delete>
+	
+	<select id="queryTRewardTimesSumByMonth" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+        select ifnull(sum(dashang),0) as dashangsum,count(*) as totalcount from (
+			select 
+ 				cityname, 
+ 				platformid,
+ 				IFNULL(storeno,'') AS storeno,
+ 				storename, employeename, cusid,ordersn, dashang
+ 			from ds_rewardtimes where year=#{year} and month=#{month}  and storeno IN (${storeids})) rewardSumline
+		]]>
+	</select>
 </mapper>

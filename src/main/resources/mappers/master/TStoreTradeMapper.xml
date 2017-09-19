@@ -14,10 +14,15 @@
  			from ds_storetrade where year=#{year} and month=#{month}
 		]]>
 	   <if test="null != storeids and null != storeids">
-            <![CDATA[                   
-               and storeno IN (${storeids})
-            ]]>
+           <![CDATA[                   
+              and storeno IN (${storeids})
+           ]]>
         </if>
+	    <if test="null != limitcond and '' != limitcond">
+	       <![CDATA[                   
+	          LIMIT ${limitcond}
+	       ]]>
+		</if>        
 	</select>
 	
 	<insert id="addTStoreTrades" parameterType="java.util.Map">
@@ -41,4 +46,17 @@
 			delete from ds_storetrade where year =#{year} and month =#{month}
 		]]>
 	</delete>
+	
+	<select id="queryTStoreTradesSumByMonth" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+        select sum(pesgmv) as storetradesum,count(*) as totalcount from (
+			select 
+ 				city_name, platformid,IFNULL(storeno,'') AS storeno,store_name, pesgmv,order_amount, other_order_amount,
+ 				returned_amount, other_returned_amount, order_count,
+ 				other_order_count, returned_count, other_returned_count,
+ 				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
+ 			from ds_storetrade where year=#{year} and month=#{month} and storeno IN (${storeids})) storetradesumline
+		]]>
+	</select>
 </mapper>

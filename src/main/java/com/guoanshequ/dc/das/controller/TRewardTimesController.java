@@ -43,10 +43,17 @@ public class TRewardTimesController {
  	        	return new RestResponse(EnumRespStatus.DATA_TREWARDNOCOND);
  	        }
 			List<Map<String, String>> list = trewardTimesService.queryTRewardTimes(paraMap);
+			List<Map<String, Object>> sumlist = trewardTimesService.queryTRewardTimesSumByMonth(paraMap);
+			int totalcount = 1;
+			if(!sumlist.isEmpty()){
+				for (Map<String, Object> map : sumlist) {
+					totalcount =  ((Long)map.get("totalcount")).intValue();
+				}
+			}			
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,totalcount,list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -74,5 +81,26 @@ public class TRewardTimesController {
 			e.printStackTrace();
 			return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
 		}
+    }
+    
+    @RequestMapping(value = "rest/queryTRewardTimesSumByMonth",method = RequestMethod.POST)
+    public RestResponse queryTRewardTimesSumByMonth(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String year = paraMap.get("year") != null ? paraMap.get("year").toString() : null;
+ 	        String month = paraMap.get("month") != null ? paraMap.get("month").toString() : null;
+ 	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)){
+ 	        	return new RestResponse(EnumRespStatus.DATA_TREWARDNOCOND);
+ 	        }
+			List<Map<String, Object>> list = trewardTimesService.queryTRewardTimesSumByMonth(paraMap);
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
     }
 }

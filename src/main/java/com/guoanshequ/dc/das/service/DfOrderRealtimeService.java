@@ -33,4 +33,8 @@ public class DfOrderRealtimeService {
     public void deleteDfOrderRealtimeByOrderId(String orderid){
     	dfOrderRealtimeDao.deleteDfOrdersRealtimeByOrderId(orderid);
     }
+    
+    public void deleteDfOrdersRealtimeByPreDate(String predate){
+    	dfOrderRealtimeDao.deleteDfOrdersRealtimeByPreDate(predate);
+    }
 }

@@ -16,4 +16,6 @@ public interface TRewardTimesMapper{
 	void addTRewardTimes(Map<String, String> paraMap);
 	
 	int deleteByYearMonth(Map<String, String> paraMap);
+	
+	List<Map<String, Object>> queryTRewardTimesSumByMonth(Map<String, String> paraMap);
 }

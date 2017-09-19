@@ -43,6 +43,34 @@ public class TSendOrderSumController {
  	        	return new RestResponse(EnumRespStatus.DATA_TSENDNOCOND);
  	        }
 			List<Map<String, String>> list = tsendOrderSumService.queryTSendOrderSum(paraMap);
+			List<Map<String, Object>> sumlist = tsendOrderSumService.queryTSendOrderSumByMonth(paraMap);
+			int totalcount = 1;
+			if(!sumlist.isEmpty()){
+				for (Map<String, Object> map : sumlist) {
+					totalcount =  ((Long)map.get("totalcount")).intValue();
+				}
+			}			
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,totalcount,list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    @RequestMapping(value = "rest/queryTSendOrderSumByMonth",method = RequestMethod.POST)
+    public RestResponse queryTSendOrderSumByMonth(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String year = paraMap.get("year") != null ? paraMap.get("year").toString() : null;
+ 	        String month = paraMap.get("month") != null ? paraMap.get("month").toString() : null;
+ 	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)){
+ 	        	return new RestResponse(EnumRespStatus.DATA_TSENDNOCOND);
+ 	        }
+			List<Map<String, Object>> list = tsendOrderSumService.queryTSendOrderSumByMonth(paraMap);
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
@@ -53,5 +81,5 @@ public class TSendOrderSumController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
-    }
+    }    
 }

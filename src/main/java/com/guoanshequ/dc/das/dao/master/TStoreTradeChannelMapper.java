@@ -17,4 +17,5 @@ public interface TStoreTradeChannelMapper{
 	
 	int deleteByYearMonth(Map<String, String> paraMap);
 	
+	List<Map<String, Object>> queryTStoreTradeChannelSumByMonth(Map<String, String> paraMap);
 }

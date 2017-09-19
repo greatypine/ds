@@ -27,6 +27,11 @@
                   and storeno IN (${storeids})
                ]]>
            </if>
+	    <if test="null != limitcond and '' != limitcond">
+	       <![CDATA[                   
+	          LIMIT ${limitcond}
+	       ]]>
+		</if>              
 	</select>
 	
 	<insert id="addTSendOrderSum" parameterType="java.util.Map">
@@ -47,4 +52,22 @@
 			delete from ds_sendordersum where year =#{year} and month =#{month}
 		]]>
 	</delete>
+	
+	<select id="queryTSendOrderSumByMonth" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+		select count(*) as totalcount from (
+			select 
+				cityname,
+				IFNULL(platformid,'') as platformid,
+				IFNULL(storeno,'') as storeno,
+				IFNULL(storename,'') as storename,
+				IFNULL(employeename,'') as employeename,
+				employeeid,
+				dashang,
+				good
+			from ds_sendordersum where year =#{year} and month =#{month} and storeno IN (${storeids})) ordersumline
+		]]>
+	</select>	
+	
 </mapper>

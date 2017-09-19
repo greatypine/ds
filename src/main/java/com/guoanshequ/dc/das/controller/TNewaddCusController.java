@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -44,10 +43,17 @@ public class TNewaddCusController {
  	        	return new RestResponse(EnumRespStatus.DATA_TNEWADDNOCOND);
  	        }
 			List<Map<String, String>> list = tnewaddCusService.queryTNewaddCus(paraMap);
+			List<Map<String, Object>> sumlist = tnewaddCusService.queryTNewaddCusSumByMonth(paraMap);
+			int totalcount = 1;
+			if(!sumlist.isEmpty()){
+				for (Map<String, Object> map : sumlist) {
+					totalcount =  ((Long)map.get("totalcount")).intValue();
+				}
+			}
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,totalcount,list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -76,5 +82,26 @@ public class TNewaddCusController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
-    
+   
+    @RequestMapping(value = "rest/queryTNewaddCusSumByMonth",method = RequestMethod.POST)
+    public RestResponse queryTNewaddCusSumByMonth(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String year = paraMap.get("year") != null ? paraMap.get("year").toString() : null;
+ 	        String month = paraMap.get("month") != null ? paraMap.get("month").toString() : null;
+ 	        String storeids =  paraMap.get("storeids") != null ? paraMap.get("storeids").toString() : null;
+ 	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)||StringUtils.isBlank(storeids)){
+ 	        	return new RestResponse(EnumRespStatus.DATA_TNEWADDNOCOND);
+ 	        }
+			List<Map<String, Object>> list = tnewaddCusService.queryTNewaddCusSumByMonth(paraMap);
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }    
 }

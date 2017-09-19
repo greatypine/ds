@@ -44,10 +44,17 @@ public class TRebuyCusController {
  	        	return new RestResponse(EnumRespStatus.DATA_TREBUYNOCOND);
  	        }
 			List<Map<String, String>> list = trebuyCusService.queryTRebuyCus(paraMap);
+			List<Map<String, Object>> sumlist = trebuyCusService.queryTRebuyCusSumByMonth(paraMap);
+			int totalcount = 1;
+			if(!sumlist.isEmpty()){
+				for (Map<String, Object> map : sumlist) {
+					totalcount =  ((Long)map.get("totalcount")).intValue();
+				}
+			}
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
 	        }else{
-	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        	return new RestResponse(EnumRespStatus.DATA_OK,totalcount,list);
 	        }
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -76,4 +83,25 @@ public class TRebuyCusController {
 			return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
 		}
     }
+    
+    @RequestMapping(value = "rest/queryTRebuyCusSumByMonth",method = RequestMethod.POST)
+    public RestResponse queryTRebuyCusSumByMonth(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String year = paraMap.get("year") != null ? paraMap.get("year").toString() : null;
+ 	        String month = paraMap.get("month") != null ? paraMap.get("month").toString() : null;
+ 	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)){
+ 	        	return new RestResponse(EnumRespStatus.DATA_TREBUYNOCOND);
+ 	        }
+			List<Map<String, Object>> list = trebuyCusService.queryTRebuyCusSumByMonth(paraMap);
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }    
 }

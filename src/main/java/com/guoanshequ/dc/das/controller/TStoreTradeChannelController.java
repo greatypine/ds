@@ -44,6 +44,34 @@ public class TStoreTradeChannelController {
  	        	return new RestResponse(EnumRespStatus.DATA_TTRADENOCOND);
  	        }
 			List<Map<String, String>> list = tstoreTradeChannelService.queryTStoreTradeChannel(paraMap);
+			List<Map<String, Object>> sumlist = tstoreTradeChannelService.queryTStoreTradeChannelSumByMonth(paraMap);
+			int totalcount = 1;
+			if(!sumlist.isEmpty()){
+				for (Map<String, Object> map : sumlist) {
+					totalcount =  ((Long)map.get("totalcount")).intValue();
+				}
+			}	
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,totalcount,list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    @RequestMapping(value = "rest/queryTStoreTradeChannelSumByMonth",method = RequestMethod.POST)
+    public RestResponse queryTStoreTradeChannelSumByMonth(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String year = paraMap.get("year") != null ? paraMap.get("year").toString() : null;
+ 	        String month = paraMap.get("month") != null ? paraMap.get("month").toString() : null;
+ 	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)){
+ 	        	return new RestResponse(EnumRespStatus.DATA_TTRADENOCOND);
+ 	        }
+			List<Map<String, Object>> list = tstoreTradeChannelService.queryTStoreTradeChannelSumByMonth(paraMap);
 			
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
@@ -55,5 +83,5 @@ public class TStoreTradeChannelController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
-    }
+    }    
 }

@@ -60,45 +60,49 @@ public class TopDataScheduleTask {
      */
     @Scheduled(cron ="0 0 03 1 * ?")
     public void addHumanTask() {
-    	try {
-	    	logger.info("**********人员调度开始*************");
-    		//得到上月的月初月末日期
-    		Map<String, String> datemap = DateUtils.getFirstday_Lastday_Month(new Date());
-    		//上月月初日期
-    		String begindate = datemap.get("first");
-    		//取得年份
-    		String year = begindate.substring(0, 4);
-    		//取得上月月份
-    		String month = begindate.substring(5, 7);
-    	    //拼接月份
-    		String yearmonth = year+"-"+month;
+    	new Thread(){
+    		public void run() {
+    	    	try {
+    		    	logger.info("**********人员调度开始*************");
+    	    		//得到上月的月初月末日期
+    	    		Map<String, String> datemap = DateUtils.getFirstday_Lastday_Month(new Date());
+    	    		//上月月初日期
+    	    		String begindate = datemap.get("first");
+    	    		//取得年份
+    	    		String year = begindate.substring(0, 4);
+    	    		//取得上月月份
+    	    		String month = begindate.substring(5, 7);
+    	    	    //拼接月份
+    	    		String yearmonth = year+"-"+month;
 
-    		Map<String, String> paraMap=new HashMap<String, String>();
-    		paraMap.put("year", year);
-    		paraMap.put("month", month);
-    		paraMap.put("yearmonth", yearmonth);
-    	List<Map<String, String>> humanResourceList = humanResouceService.queryPreHumanresources(paraMap);
-    	if(!humanResourceList.isEmpty()){
-    		//若存在本月相应人员存在，则将其删除
-    		topDataService.deleteTopDatas(paraMap);
-       	    //先将人员写入到表中
-    		for (Map<String, String> humanResourcemap : humanResourceList) {
-    			topDataService.addHumanresources(humanResourcemap);
-			}
-	
-	    	//将店长写入到表中
-	    	logger.info("**********人员列表任务调度结束，共调度数据记录行数："+humanResourceList.size());
-	    	List<Map<String, String>> storeKeeperList = storeKeeperService.queryStoreKeepers(paraMap);
-	    	if(!storeKeeperList.isEmpty()){
-	    		for (Map<String, String> storeKeepermap : storeKeeperList) {
-	    			topDataService.addStoreKeepers(storeKeepermap);
-				}
-	    	}
-	    	logger.info("**********店长列表任务调度结束，共调度数据记录行数："+storeKeeperList.size());
-    	}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	    		Map<String, String> paraMap=new HashMap<String, String>();
+    	    		paraMap.put("year", year);
+    	    		paraMap.put("month", month);
+    	    		paraMap.put("yearmonth", yearmonth);
+    	    	List<Map<String, String>> humanResourceList = humanResouceService.queryPreHumanresources(paraMap);
+    	    	if(!humanResourceList.isEmpty()){
+    	    		//若存在本月相应人员存在，则将其删除
+    	    		topDataService.deleteTopDatas(paraMap);
+    	       	    //先将人员写入到表中
+    	    		for (Map<String, String> humanResourcemap : humanResourceList) {
+    	    			topDataService.addHumanresources(humanResourcemap);
+    				}
+    		
+    		    	//将店长写入到表中
+    		    	logger.info("**********人员列表任务调度结束，共调度数据记录行数："+humanResourceList.size());
+    		    	List<Map<String, String>> storeKeeperList = storeKeeperService.queryStoreKeepers(paraMap);
+    		    	if(!storeKeeperList.isEmpty()){
+    		    		for (Map<String, String> storeKeepermap : storeKeeperList) {
+    		    			topDataService.addStoreKeepers(storeKeepermap);
+    					}
+    		    	}
+    		    	logger.info("**********店长列表任务调度结束，共调度数据记录行数："+storeKeeperList.size());
+    	    	}
+    			} catch (Exception e) {
+    				e.printStackTrace();
+    			}
+    		}
+    	}.start();
     }
     
     /**

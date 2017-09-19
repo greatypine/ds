@@ -13,6 +13,14 @@ public class DFOrderRealtime {
 	private String business_model_id;
 	private String customer_id;
 	private String order_address_id;
+	private String addr_adname;
+	private String addr_placename;
+	private double addr_latitude;
+	private double addr_longitude;
+	private String addr_address;
+	private String addr_name;
+	private String addr_mobilephone;
+	private String tc_mobilephone;
 	private String store_id;
 	private String eshop_id;
 	private String order_status;
@@ -21,6 +29,7 @@ public class DFOrderRealtime {
 	private String buyer_remark;
 	private String seller_remark;
 	private String employee_remark;
+	private String store_remark;
 	private String abnormal_type;
 	private String abnormal_remark;
 	private String delivery_type;
@@ -47,6 +56,7 @@ public class DFOrderRealtime {
 	private String create_user_id;
 	private String update_user_id;
 	private String order_sn_reserve;
+	private String normal_store_id;
 	
 	private String eshop_name;
 	private String eshop_white;
@@ -64,7 +74,7 @@ public class DFOrderRealtime {
 	private String city_name;
 	
 	private Integer order_quantity;
-	private String signed_time;
+	private Date signed_time;
 	private String signed_status;
 	
 	private Integer receipts_status;
@@ -466,11 +476,11 @@ public class DFOrderRealtime {
 		this.order_quantity = order_quantity;
 	}
 
-	public String getSigned_time() {
+	public Date getSigned_time() {
 		return signed_time;
 	}
 
-	public void setSigned_time(String signed_time) {
+	public void setSigned_time(Date signed_time) {
 		this.signed_time = signed_time;
 	}
 
@@ -568,6 +578,86 @@ public class DFOrderRealtime {
 
 	public void setChannelname(String channelname) {
 		this.channelname = channelname;
+	}
+
+	public String getAddr_adname() {
+		return addr_adname;
+	}
+
+	public void setAddr_adname(String addr_adname) {
+		this.addr_adname = addr_adname;
+	}
+
+	public String getAddr_placename() {
+		return addr_placename;
+	}
+
+	public void setAddr_placename(String addr_placename) {
+		this.addr_placename = addr_placename;
+	}
+
+	public double getAddr_latitude() {
+		return addr_latitude;
+	}
+
+	public void setAddr_latitude(double addr_latitude) {
+		this.addr_latitude = addr_latitude;
+	}
+
+	public double getAddr_longitude() {
+		return addr_longitude;
+	}
+
+	public void setAddr_longitude(double addr_longitude) {
+		this.addr_longitude = addr_longitude;
+	}
+
+	public String getAddr_address() {
+		return addr_address;
+	}
+
+	public void setAddr_address(String addr_address) {
+		this.addr_address = addr_address;
+	}
+
+	public String getAddr_name() {
+		return addr_name;
+	}
+
+	public void setAddr_name(String addr_name) {
+		this.addr_name = addr_name;
+	}
+
+	public String getAddr_mobilephone() {
+		return addr_mobilephone;
+	}
+
+	public void setAddr_mobilephone(String addr_mobilephone) {
+		this.addr_mobilephone = addr_mobilephone;
+	}
+
+	public String getTc_mobilephone() {
+		return tc_mobilephone;
+	}
+
+	public void setTc_mobilephone(String tc_mobilephone) {
+		this.tc_mobilephone = tc_mobilephone;
+	}
+
+	public String getNormal_store_id() {
+		return normal_store_id;
+	}
+
+	public void setNormal_store_id(String normal_store_id) {
+		this.normal_store_id = normal_store_id;
+	}
+
+	public String getStore_remark() {
+		return store_remark;
+	}
+
+	public void setStore_remark(String store_remark) {
+		this.store_remark = store_remark;
 	}
 	
 }

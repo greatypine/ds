@@ -37,4 +37,9 @@ public class TNewaddCusService {
     public int deleteByYearMonth(Map<String, String> paraMap){
     	return tnewaddCusDao.deleteByYearMonth(paraMap);
     }
+    
+    public List<Map<String, Object>> queryTNewaddCusSumByMonth(Map<String, String> paraMap) throws Exception{
+        
+    	return tnewaddCusDao.queryTNewaddCusSumByMonth(paraMap);
+    }
 }

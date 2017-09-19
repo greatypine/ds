@@ -37,4 +37,9 @@ public class TRebuyCusService {
     public int deleteByYearMonth(Map<String, String> paraMap){
     	return trebuyCusDao.deleteByYearMonth(paraMap);
     }
+    
+    public List<Map<String, Object>> queryTRebuyCusSumByMonth(Map<String, String> paraMap) throws Exception{
+        
+    	return trebuyCusDao.queryTRebuyCusSumByMonth(paraMap);
+    }
 }

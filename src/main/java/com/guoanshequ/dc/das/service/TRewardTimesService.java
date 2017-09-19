@@ -37,4 +37,9 @@ public class TRewardTimesService {
     public int deleteByYearMonth(Map<String, String> paraMap){
     	return trewardTimesDao.deleteByYearMonth(paraMap);
     }
+    
+    public List<Map<String, Object>> queryTRewardTimesSumByMonth(Map<String, String> paraMap) throws Exception{
+        
+    	return trewardTimesDao.queryTRewardTimesSumByMonth(paraMap);
+    }
 }

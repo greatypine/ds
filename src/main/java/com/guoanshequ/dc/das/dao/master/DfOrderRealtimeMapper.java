@@ -1,9 +1,6 @@
 package com.guoanshequ.dc.das.dao.master;
 
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Repository;
 
 import com.guoanshequ.dc.das.datasource.DataSource;
@@ -17,5 +14,5 @@ public interface DfOrderRealtimeMapper {
 	
 	void deleteDfOrdersRealtimeByOrderId(String orderid);
 	
-	
+	void deleteDfOrdersRealtimeByPreDate(String predate);
 }

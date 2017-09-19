@@ -27,6 +27,11 @@
                   and storeno IN (${storeids})
                ]]>
            </if>
+		    <if test="null != limitcond and '' != limitcond">
+		       <![CDATA[                   
+		          LIMIT ${limitcond}
+		       ]]>
+			</if>
 	</select>
 	
 	<insert id="addTGmvPercent" parameterType="java.util.Map">

@@ -89,114 +89,126 @@ public class ScheduleTask {
      * 调度规则：每月1号0点30分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron ="0 30 0 * * ?")
+    @Scheduled(cron ="0 30 02 * * ?")
     public void sendOrdersTask() {
-    	try {
-    	logger.info("**********上门送单量任务调度开始**********");
-    	//前一天日期所在月份的1号
-    	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
-    	//前一天日期
-    	String enddate = DateUtils.getPreDate(new Date());
-		//取得年份
-		String year = begindate.substring(0, 4);
-		//取得月份
-		String month = begindate.substring(5, 7);
-    	//给后台接口构建参数
-    	Map<String, String> paraMap=new HashMap<String, String>();
-    	String storeIds = storeNumberService.queryStoreNumbers();
-    	paraMap.put("year", year);
-    	paraMap.put("month", month);
-    	paraMap.put("begindate", begindate);
-    	paraMap.put("enddate", enddate);
-    	paraMap.put("storeids", storeIds);
-		List<Map<String, String>> sendOrderList = sendOrderService.querySendOrders(paraMap);
-		if(!sendOrderList.isEmpty()){
-			tsendOrderService.deleteByYearMonth(paraMap);
-			for (Map<String, String> sendOrderMap : sendOrderList) {
-				tsendOrderService.addTSendOrders(sendOrderMap);
-			}
-		}
-		logger.info("**********上门送单量任务调度结束**********");
-		logger.info("共调度数据记录行数："+sendOrderList.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	new Thread(){
+    		public void run() {
+    	    	try {
+    	        	logger.info("**********上门送单量任务调度开始**********");
+    	        	//前一天日期所在月份的1号
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+    	        	//前一天日期
+    	        	String enddate = DateUtils.getPreDate(new Date());
+    	    		//取得年份
+    	    		String year = begindate.substring(0, 4);
+    	    		//取得月份
+    	    		String month = begindate.substring(5, 7);
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	String storeIds = storeNumberService.queryStoreNumbers();
+    	        	paraMap.put("year", year);
+    	        	paraMap.put("month", month);
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
+    	        	paraMap.put("storeids", storeIds);
+    	    		List<Map<String, String>> sendOrderList = sendOrderService.querySendOrders(paraMap);
+    	    		if(!sendOrderList.isEmpty()){
+    	    			tsendOrderService.deleteByYearMonth(paraMap);
+    	    			for (Map<String, String> sendOrderMap : sendOrderList) {
+    	    				tsendOrderService.addTSendOrders(sendOrderMap);
+    	    			}
+    	    		}
+    	    		logger.info("**********上门送单量任务调度结束**********");
+    	    		logger.info("共调度数据记录行数："+sendOrderList.size());
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    		}
+    	}.start();
     }
     
     /**
      * 门店交易额任务调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron ="0 30 0 * * ?")
+    @Scheduled(cron ="0 30 02 * * ?")
     public void storeTradesTask() {
-    	try {
-    	logger.info("**********门店交易额任务调度开始**********");
-    	//前一天日期所在月份的1号
-    	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
-    	//前一天日期
-    	String enddate = DateUtils.getPreDate(new Date());
-		//取得年份
-		String year = begindate.substring(0, 4);
-		//取得月份
-		String month = begindate.substring(5, 7);
-    	//给后台接口构建参数
-    	Map<String, String> paraMap=new HashMap<String, String>();
-    	String storeIds = storeNumberService.queryStoreNumbers();
-    	paraMap.put("year", year);
-    	paraMap.put("month", month);
-    	paraMap.put("begindate", begindate);
-    	paraMap.put("enddate", enddate);
-    	paraMap.put("storeids", storeIds);
-		List<Map<String, String>> storeTradesList = storeTradeService.queryStoreTrades(paraMap);
-		if(!storeTradesList.isEmpty()){
-			tstoreTradeService.deleteByYearMonth(paraMap);
-			for (Map<String, String> storeTradeMap : storeTradesList) {
-				tstoreTradeService.addTStoreTrades(storeTradeMap);
-			}
-		}
-		logger.info("**********门店交易额任务调度结束**********");
-		logger.info("共调度数据记录行数："+storeTradesList.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	new Thread(){
+    		public void run(){
+    	    	try {
+    	        	logger.info("**********门店交易额任务调度开始**********");
+    	        	//前一天日期所在月份的1号
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+    	        	//前一天日期
+    	        	String enddate = DateUtils.getPreDate(new Date());
+    	    		//取得年份
+    	    		String year = begindate.substring(0, 4);
+    	    		//取得月份
+    	    		String month = begindate.substring(5, 7);
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	String storeIds = storeNumberService.queryStoreNumbers();
+    	        	paraMap.put("year", year);
+    	        	paraMap.put("month", month);
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
+    	        	paraMap.put("storeids", storeIds);
+    	    		List<Map<String, String>> storeTradesList = storeTradeService.queryStoreTrades(paraMap);
+    	    		if(!storeTradesList.isEmpty()){
+    	    			tstoreTradeService.deleteByYearMonth(paraMap);
+    	    			for (Map<String, String> storeTradeMap : storeTradesList) {
+    	    				tstoreTradeService.addTStoreTrades(storeTradeMap);
+    	    			}
+    	    		}
+    	    		logger.info("**********门店交易额任务调度结束**********");
+    	    		logger.info("共调度数据记录行数："+storeTradesList.size());
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    		}
+    	}.start();
     }
     
     /**
      * 每月新增客户总量任务调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron ="0 30 0 * * ?")
+    @Scheduled(cron ="0 35 02 * * ?")
     public void newAddCusTask() {
-    	try {
-    	logger.info("**********每月新增客户总量调度开始**********");
-    	//前一天日期所在月份的1号
-    	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
-    	//前一天日期
-    	String enddate = DateUtils.getPreDate(new Date());
-		//取得年份
-		String year = begindate.substring(0, 4);
-		//取得月份
-		String month = begindate.substring(5, 7);
-    	//给后台接口构建参数
-    	Map<String, String> paraMap=new HashMap<String, String>();
-    	String storeIds = storeNumberService.queryStoreNumbers();
-    	paraMap.put("year", year);
-    	paraMap.put("month", month);
-    	paraMap.put("begindate", begindate);
-    	paraMap.put("enddate", enddate);
-    	paraMap.put("storeids", storeIds);
-		List<Map<String, String>> newaddCusList = newaddCusService.queryNewaddCus(paraMap);
-		if(!newaddCusList.isEmpty()){
-			tnewaddCusService.deleteByYearMonth(paraMap);
-			for (Map<String, String> newaddCusMap : newaddCusList) {
-				tnewaddCusService.addTNewaddCus(newaddCusMap);
-			}
-		}
-		logger.info("**********每月新增客户总量调度结束**********");
-		logger.info("共调度数据记录行数："+newaddCusList.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	new Thread(){
+    		public void run() {
+    	    	try {
+    	        	logger.info("**********每月新增客户总量调度开始**********");
+    	        	//前一天日期所在月份的1号
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+    	        	//前一天日期
+    	        	String enddate = DateUtils.getPreDate(new Date());
+    	    		//取得年份
+    	    		String year = begindate.substring(0, 4);
+    	    		//取得月份
+    	    		String month = begindate.substring(5, 7);
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	String storeIds = storeNumberService.queryStoreNumbers();
+    	        	paraMap.put("year", year);
+    	        	paraMap.put("month", month);
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
+    	        	paraMap.put("storeids", storeIds);
+    	    		List<Map<String, String>> newaddCusList = newaddCusService.queryNewaddCus(paraMap);
+    	    		if(!newaddCusList.isEmpty()){
+    	    			tnewaddCusService.deleteByYearMonth(paraMap);
+    	    			for (Map<String, String> newaddCusMap : newaddCusList) {
+    	    				tnewaddCusService.addTNewaddCus(newaddCusMap);
+    	    			}
+    	    		}
+    	    		logger.info("**********每月新增客户总量调度结束**********");
+    	    		logger.info("共调度数据记录行数："+newaddCusList.size());
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    		}
+    	}.start();
     }
     
     
@@ -204,185 +216,205 @@ public class ScheduleTask {
      * 复购客户任务调度
      * 参数：year   month   rebuyStoreName  storeids
      */
-    @Scheduled(cron ="0 30 0 * * ?")
+    @Scheduled(cron ="0 36 02 * * ?")
     public void rebuyCusTask() {
-    	try {
-    	logger.info("**********复购客户任务调度开始**********");
-    	//上月月初日期
-    	String begindate = DateUtils.getPreDate(new Date());
-    	//取得年份
-    	String year = begindate.substring(0, 4);
-    	//取得月份
-    	String month = begindate.substring(5, 7);
-    	//给后台接口构建参数
-    	Map<String, String> paraMap=new HashMap<String, String>();
-    	String storeIds = storeNumberService.queryStoreNumbers();
-    	paraMap.put("year", year);
-    	paraMap.put("month", month);
-    	paraMap.put("storeids", storeIds);
-		List<Map<String, String>> rebuyCusList = rebuyCusService.queryRebuyCus(paraMap);
-		if(!rebuyCusList.isEmpty()){
-			trebuyCusService.deleteByYearMonth(paraMap);
-			for (Map<String, String> rebuyCusMap : rebuyCusList) {
-				trebuyCusService.addTRebuyCus(rebuyCusMap);
-			}
-		}
-		logger.info("**********复购客户任务调度结束**********");
-		logger.info("共调度数据记录行数："+rebuyCusList.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	new Thread(){
+    		public void run() {
+    	    	try {
+    	        	logger.info("**********复购客户任务调度开始**********");
+    	        	//上月月初日期
+    	        	String begindate = DateUtils.getPreDate(new Date());
+    	        	//取得年份
+    	        	String year = begindate.substring(0, 4);
+    	        	//取得月份
+    	        	String month = begindate.substring(5, 7);
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	String storeIds = storeNumberService.queryStoreNumbers();
+    	        	paraMap.put("year", year);
+    	        	paraMap.put("month", month);
+    	        	paraMap.put("storeids", storeIds);
+    	    		List<Map<String, String>> rebuyCusList = rebuyCusService.queryRebuyCus(paraMap);
+    	    		if(!rebuyCusList.isEmpty()){
+    	    			trebuyCusService.deleteByYearMonth(paraMap);
+    	    			for (Map<String, String> rebuyCusMap : rebuyCusList) {
+    	    				trebuyCusService.addTRebuyCus(rebuyCusMap);
+    	    			}
+    	    		}
+    	    		logger.info("**********复购客户任务调度结束**********");
+    	    		logger.info("共调度数据记录行数："+rebuyCusList.size());
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    		}
+    	}.start();
     }
     
     /**
      * 国安侠好评次数任务调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 30 0 * * ?")
+    @Scheduled(cron ="0 30 02 * * ?")
     public void rewardTimesTask() {
-    	try {
-    	logger.info("**********国安侠好评次数调度开始**********");
-    	//前一天日期所在月份的1号
-    	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
-    	//前一天日期
-    	String enddate = DateUtils.getPreDate(new Date());
-		//取得年份
-		String year = begindate.substring(0, 4);
-		//取得月份
-		String month = begindate.substring(5, 7);
-    	//给后台接口构建参数
-    	Map<String, String> paraMap=new HashMap<String, String>();
-    	String storeIds = storeNumberService.queryStoreNumbers();
-    	paraMap.put("year", year);
-    	paraMap.put("month", month);
-    	paraMap.put("begindate", begindate);
-    	paraMap.put("enddate", enddate);
-    	paraMap.put("storeids", storeIds);
-		List<Map<String, String>> rewardTimesList = rewardTimesService.queryRewardTimes(paraMap);
-		if(!rewardTimesList.isEmpty()){
-			tRewardTimesService.deleteByYearMonth(paraMap);
-			for (Map<String, String> rewardTimesMap : rewardTimesList) {
-				tRewardTimesService.addTRewardTimes(rewardTimesMap);
-			}
-		}
-		logger.info("**********国安侠好评次数调度结束**********");
-		logger.info("共调度数据记录行数："+rewardTimesList.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	new Thread(){
+    		public void run() {
+    	    	try {
+    	        	logger.info("**********国安侠好评次数调度开始**********");
+    	        	//前一天日期所在月份的1号
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+    	        	//前一天日期
+    	        	String enddate = DateUtils.getPreDate(new Date());
+    	    		//取得年份
+    	    		String year = begindate.substring(0, 4);
+    	    		//取得月份
+    	    		String month = begindate.substring(5, 7);
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	String storeIds = storeNumberService.queryStoreNumbers();
+    	        	paraMap.put("year", year);
+    	        	paraMap.put("month", month);
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
+    	        	paraMap.put("storeids", storeIds);
+    	    		List<Map<String, String>> rewardTimesList = rewardTimesService.queryRewardTimes(paraMap);
+    	    		if(!rewardTimesList.isEmpty()){
+    	    			tRewardTimesService.deleteByYearMonth(paraMap);
+    	    			for (Map<String, String> rewardTimesMap : rewardTimesList) {
+    	    				tRewardTimesService.addTRewardTimes(rewardTimesMap);
+    	    			}
+    	    		}
+    	    		logger.info("**********国安侠好评次数调度结束**********");
+    	    		logger.info("共调度数据记录行数："+rewardTimesList.size());
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    		}
+    	}.start();
     }
     
     /**
      * 上门送单量按国侠个人总量
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 30 0 * * ?")
+    @Scheduled(cron ="0 30 02 * * ?")
     public void sendOrderSumTask() {
-    	try {
-    	logger.info("**********上门送单量按国侠个人总量调度开始**********");
-    	//前一天日期所在月份的1号
-    	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
-    	//前一天日期
-    	String enddate = DateUtils.getPreDate(new Date());
-		//取得年份
-		String year = begindate.substring(0, 4);
-		//取得月份
-		String month = begindate.substring(5, 7);
-    	//给后台接口构建参数
-    	Map<String, String> paraMap=new HashMap<String, String>();
-    	String storeIds = storeNumberService.queryStoreNumbers();
-    	paraMap.put("year", year);
-    	paraMap.put("month", month);
-    	paraMap.put("begindate", begindate);
-    	paraMap.put("enddate", enddate);
-    	paraMap.put("storeids", storeIds);
-		List<Map<String, String>> sendOrderSumList = sendOrderSumService.querySendOrderSum(paraMap);
-		if(!sendOrderSumList.isEmpty()){
-			tSendOrderSumService.deleteByYearMonth(paraMap);
-			for (Map<String, String> sendOrderSumMap : sendOrderSumList) {
-				tSendOrderSumService.addTSendOrderSum(sendOrderSumMap);
-			}
-		}
-		logger.info("**********上门送单量按国侠个人总量调度结束**********");
-		logger.info("共调度数据记录行数："+sendOrderSumList.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	new Thread(){
+    		public void run() {
+    	    	try {
+    	        	logger.info("**********上门送单量按国侠个人总量调度开始**********");
+    	        	//前一天日期所在月份的1号
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+    	        	//前一天日期
+    	        	String enddate = DateUtils.getPreDate(new Date());
+    	    		//取得年份
+    	    		String year = begindate.substring(0, 4);
+    	    		//取得月份
+    	    		String month = begindate.substring(5, 7);
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	String storeIds = storeNumberService.queryStoreNumbers();
+    	        	paraMap.put("year", year);
+    	        	paraMap.put("month", month);
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
+    	        	paraMap.put("storeids", storeIds);
+    	    		List<Map<String, String>> sendOrderSumList = sendOrderSumService.querySendOrderSum(paraMap);
+    	    		if(!sendOrderSumList.isEmpty()){
+    	    			tSendOrderSumService.deleteByYearMonth(paraMap);
+    	    			for (Map<String, String> sendOrderSumMap : sendOrderSumList) {
+    	    				tSendOrderSumService.addTSendOrderSum(sendOrderSumMap);
+    	    			}
+    	    		}
+    	    		logger.info("**********上门送单量按国侠个人总量调度结束**********");
+    	    		logger.info("共调度数据记录行数："+sendOrderSumList.size());
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    		}
+    	}.start();
     }
     
     /**
      * 门店交易额（按频道）任务调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 30 0 * * ?")
+    @Scheduled(cron ="0 30 02 * * ?")
     public void storeTradeChannelTask() {
-    	try {
-    	logger.info("**********门店交易额（按频道）任务调度开始**********");
-    	//前一天日期所在月份的1号
-    	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
-    	//前一天日期
-    	String enddate = DateUtils.getPreDate(new Date());
-		//取得年份
-		String year = begindate.substring(0, 4);
-		//取得月份
-		String month = begindate.substring(5, 7);   	
-    	//给后台接口构建参数
-    	Map<String, String> paraMap=new HashMap<String, String>();
-    	String storeIds = storeNumberService.queryStoreNumbers();
-    	paraMap.put("year", year);
-    	paraMap.put("month", month);
-    	paraMap.put("begindate", begindate);
-    	paraMap.put("enddate", enddate);
-    	paraMap.put("storeids", storeIds);
-		List<Map<String, String>> storetradeChannelList = storeTradeChannelService.queryStoreTradeChannels(paraMap);
-		if(!storetradeChannelList.isEmpty()){
-			tstoreTradeChannelService.deleteByYearMonth(paraMap);
-			for (Map<String, String> storetradeChannelMap : storetradeChannelList) {
-				tstoreTradeChannelService.addTStoreTradeChannel(storetradeChannelMap);
-			}
-		}
-		logger.info("**********门店交易额（按频道）任务调度开始**********");
-		logger.info("共调度数据记录行数："+storetradeChannelList.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	new Thread(){
+    		public void run() {
+    	    	try {
+    	        	logger.info("**********门店交易额（按频道）任务调度开始**********");
+    	        	//前一天日期所在月份的1号
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+    	        	//前一天日期
+    	        	String enddate = DateUtils.getPreDate(new Date());
+    	    		//取得年份
+    	    		String year = begindate.substring(0, 4);
+    	    		//取得月份
+    	    		String month = begindate.substring(5, 7);   	
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	String storeIds = storeNumberService.queryStoreNumbers();
+    	        	paraMap.put("year", year);
+    	        	paraMap.put("month", month);
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
+    	        	paraMap.put("storeids", storeIds);
+    	    		List<Map<String, String>> storetradeChannelList = storeTradeChannelService.queryStoreTradeChannels(paraMap);
+    	    		if(!storetradeChannelList.isEmpty()){
+    	    			tstoreTradeChannelService.deleteByYearMonth(paraMap);
+    	    			for (Map<String, String> storetradeChannelMap : storetradeChannelList) {
+    	    				tstoreTradeChannelService.addTStoreTradeChannel(storetradeChannelMap);
+    	    			}
+    	    		}
+    	    		logger.info("**********门店交易额（按频道）任务调度开始**********");
+    	    		logger.info("共调度数据记录行数："+storetradeChannelList.size());
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    		}
+    	}.start();
     }
     
     /**
      * gmv占比任务调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 30 0 * * ?")
+    @Scheduled(cron ="0 30 02 * * ?")
     public void gmvPercentTask() {
-    	try {
-    	logger.info("**********gmv占比任务调度开始**********");
-    	//前一天日期所在月份的1号
-    	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
-    	//前一天日期
-    	String enddate = DateUtils.getPreDate(new Date());
-		//取得年份
-		String year = begindate.substring(0, 4);
-		//取得月份
-		String month = begindate.substring(5, 7);
-    	//给后台接口构建参数
-    	Map<String, String> paraMap=new HashMap<String, String>();
-    	String storeIds = storeNumberService.queryStoreNumbers();
-    	paraMap.put("year", year);
-    	paraMap.put("month", month);
-    	paraMap.put("begindate", begindate);
-    	paraMap.put("enddate", enddate);
-    	paraMap.put("storeids", storeIds);
-		List<Map<String, String>> gmvPercentList = gmvPercentService.queryGmvPercentByDate(paraMap);
-		if(!gmvPercentList.isEmpty()){
-			tgmvPercentService.deleteByYearMonth(paraMap);
-			for (Map<String, String> gmvPercentMap : gmvPercentList) {
-				tgmvPercentService.addTGmvPercent(gmvPercentMap);
-			}
-		}
-		logger.info("**********gmv占比任务调度开始**********");
-		logger.info("共调度数据记录行数："+gmvPercentList.size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	new Thread(){
+    		public void run() {
+    	    	try {
+    	        	logger.info("**********gmv占比任务调度开始**********");
+    	        	//前一天日期所在月份的1号
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+    	        	//前一天日期
+    	        	String enddate = DateUtils.getPreDate(new Date());
+    	    		//取得年份
+    	    		String year = begindate.substring(0, 4);
+    	    		//取得月份
+    	    		String month = begindate.substring(5, 7);
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	String storeIds = storeNumberService.queryStoreNumbers();
+    	        	paraMap.put("year", year);
+    	        	paraMap.put("month", month);
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
+    	        	paraMap.put("storeids", storeIds);
+    	    		List<Map<String, String>> gmvPercentList = gmvPercentService.queryGmvPercentByDate(paraMap);
+    	    		if(!gmvPercentList.isEmpty()){
+    	    			tgmvPercentService.deleteByYearMonth(paraMap);
+    	    			for (Map<String, String> gmvPercentMap : gmvPercentList) {
+    	    				tgmvPercentService.addTGmvPercent(gmvPercentMap);
+    	    			}
+    	    		}
+    	    		logger.info("**********gmv占比任务调度开始**********");
+    	    		logger.info("共调度数据记录行数："+gmvPercentList.size());
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    		}
+    	}.start();
     }
 }

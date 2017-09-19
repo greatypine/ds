@@ -37,4 +37,9 @@ public class TStoreTradeService {
     public int deleteByYearMonth(Map<String, String> paraMap){
     	return tstoreTradeDao.deleteByYearMonth(paraMap);
     }
+    
+    public List<Map<String, Object>> queryTStoreTradesSumByMonth(Map<String, String> paraMap) throws Exception{
+        
+    	return tstoreTradeDao.queryTStoreTradesSumByMonth(paraMap);
+    }
 }

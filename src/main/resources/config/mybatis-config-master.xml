@@ -5,7 +5,8 @@
         <typeAlias alias="HumanresourcesEntity" type="com.guoanshequ.dc.das.model.Humanresources"/>
         <typeAlias alias="AuthEntity" type="com.guoanshequ.dc.das.model.Auth"/>
         <typeAlias alias="PersonEntity" type="com.guoanshequ.dc.das.model.Person"/>
-        <typeAlias alias="DfCustomerAmount" type="com.guoanshequ.dc.das.model.DfCustomerAmount"/>
+        <typeAlias alias="DfCustomerMonthEntity" type="com.guoanshequ.dc.das.model.DfCustomerMonth"/>
         <typeAlias alias="DFOrderRealTimeEntity" type="com.guoanshequ.dc.das.model.DFOrderRealtime"/>
+        <typeAlias alias="DfValidCustomerEntity" type="com.guoanshequ.dc.das.model.DfValidCustomer"/>
     </typeAliases>
 </configuration>

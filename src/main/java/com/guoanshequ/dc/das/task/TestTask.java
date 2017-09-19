@@ -1,6 +1,8 @@
 package com.guoanshequ.dc.das.task;
 
 import com.guoanshequ.dc.das.utils.DateUtils;
+
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;

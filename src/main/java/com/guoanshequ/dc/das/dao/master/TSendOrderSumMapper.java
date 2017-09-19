@@ -16,4 +16,6 @@ public interface TSendOrderSumMapper{
 	void addTSendOrderSum(Map<String, String> paraMap);
 	
 	int deleteByYearMonth(Map<String, String> paraMap);
+	
+	List<Map<String, Object>> queryTSendOrderSumByMonth(Map<String, String> paraMap);
 }

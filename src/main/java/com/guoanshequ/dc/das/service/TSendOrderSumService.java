@@ -38,4 +38,9 @@ public class TSendOrderSumService {
     public int deleteByYearMonth(Map<String, String> paraMap){
     	return tsendOrderSumDao.deleteByYearMonth(paraMap);
     }
+    
+    public List<Map<String, Object>> queryTSendOrderSumByMonth(Map<String, String> paraMap) throws Exception{
+        
+    	return tsendOrderSumDao.queryTSendOrderSumByMonth(paraMap);
+    }
 }

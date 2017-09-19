@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DfValidCustomerMapper">
+	<select id="queryByCustomerId" parameterType="java.lang.String" resultType="DfValidCustomerEntity">
+		<![CDATA[
+		select * from df_valid_customer where customer_id = #{customer_id}
+		]]>
+	</select>
+	
+	<update id="updateValidCustomer" parameterType="DfValidCustomerEntity">
+		<![CDATA[
+		update df_valid_customer set last_order_time = #{last_order_time},total_price = #{total_price},total_ordercount = #{total_ordercount},update_time = NOW() where customer_id = #{customer_id}
+		]]>
+	</update>
+	
+	<insert id="addValidCustomer" parameterType="DfValidCustomerEntity">
+	    <![CDATA[
+		insert into df_valid_customer(customer_id,customer_phone,first_order_time,last_order_time,total_price,total_ordercount,update_time)
+		values (#{customer_id},#{customer_phone},#{first_order_time},#{last_order_time},#{total_price},#{total_ordercount},NOW());
+		]]>
+	</insert>
+</mapper>
