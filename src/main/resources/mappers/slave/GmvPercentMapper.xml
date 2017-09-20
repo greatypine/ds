@@ -165,8 +165,7 @@ LEFT JOIN
                 FROM t_eshop te
                 JOIN t_ed_sys_role tesr ON (
                     tesr.id=te.department_id and
-                    tesr.role_name LIKE '%\_%' and
-                    tesr.role_name like '%物业%'
+                    tesr.role_name like '%家务事事业部%'
                     )
                 JOIN t_order tor ON (
                     tor.eshop_id=te.id and
