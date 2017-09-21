@@ -43,7 +43,7 @@ public class CustomerAmountTask {
 	 * 全部写入到daily表后，再取出相应数据进行操作；
 	 * 每天凌晨的第55分钟，cron ="0 55 0 * * ?"
 	 */
-	@Scheduled(cron ="0 55 0 * * ?")
+	//@Scheduled(cron ="0 55 0 * * ?")
 	public void dfValidCustomerTask() {
     	new Thread(){
     		public void run() {
@@ -141,6 +141,7 @@ public class CustomerAmountTask {
 			}
 			logger.info("*****************用户分析调度结束****************");
 			} catch (Exception e) {
+				logger.error(e.toString());
 				e.printStackTrace();
 			}
 		}

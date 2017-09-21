@@ -51,7 +51,7 @@ public class OrderRealtimeTask {
      * 以小时为单位调度，将查询数据写入df_order_realtime表中
      * 调度时间：每一小时的第5分钟，cron ="0 05 *1 * * ?"
      */
-    @Scheduled(cron ="0 05 07-13 * * ?")
+    //@Scheduled(cron ="0 05 07-13 * * ?")
     public void dfOrderRealtimeTask() {
     	new Thread(){
     		public void run() {
@@ -81,6 +81,7 @@ public class OrderRealtimeTask {
     	    		logger.info("**********order实时数据任务调度结束（7-13）：**********"+DateUtils.getCurTime(new Date()));
     	    		logger.info("共调度数据记录行数"+realtimeList.size()); 
     	    		} catch (Exception e) {
+    	    			logger.error(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}
@@ -89,7 +90,7 @@ public class OrderRealtimeTask {
     /**
      * 当天13点-24点的数据，第二天凌晨0点调度，执行一次
      */
-    @Scheduled(cron ="0 05 0 * * ?")
+    //@Scheduled(cron ="0 05 0 * * ?")
     public void dfOrderRealtimeTask1() {
     	new Thread(){
     		public void run() {
@@ -117,6 +118,7 @@ public class OrderRealtimeTask {
     	    		logger.info("**********order实时数据任务调度结束（13-24）：**********"+DateUtils.getCurTime(new Date()));
     	    		logger.info("共调度数据记录行数"+realtimeList.size()); 
     	    		} catch (Exception e) {
+    	    			logger.error(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}
@@ -126,7 +128,7 @@ public class OrderRealtimeTask {
     /**
      * 第二天0点-5点的数据，每天凌晨6点开始调度，执行一次
      */
-    @Scheduled(cron ="0 05 06 * * ?")
+    //@Scheduled(cron ="0 05 06 * * ?")
     public void dfOrderRealtimeTask2() {
     	new Thread(){
     		public void run() {
@@ -156,6 +158,7 @@ public class OrderRealtimeTask {
     	    		logger.info("**********order实时数据任务调度结束（0-5）：**********"+DateUtils.getCurTime(new Date()));
     	    		logger.info("共调度数据记录行数"+realtimeList.size()); 
     	    		} catch (Exception e) {
+    	    			logger.error(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}
@@ -168,7 +171,7 @@ public class OrderRealtimeTask {
      * 保证凌晨时realtime中24点的数据调度完成后，再将前一天所有signed数据写入表中
      * 每天凌晨的第35分钟，cron ="0 35 0 * * ?"
      */
-    @Scheduled(cron ="0 35 0 * * ?")
+    //@Scheduled(cron ="0 35 0 * * ?")
     public void dfOrderDailyTask() {
 	    	try {
 	        	logger.info("**********orderTodaily任务调度开始**********");
@@ -182,6 +185,7 @@ public class OrderRealtimeTask {
 	    		logger.info("**********orderTodaily任务调度结束**********");
 	    		logger.info("共调度数据记录行数"); 
 	    		} catch (Exception e) {
+	    			logger.error(e.toString());
 	    			e.printStackTrace();
 	    		}
     	}
@@ -190,7 +194,7 @@ public class OrderRealtimeTask {
      * 当业务数据处理完成后，将orderRealtime中前一天状态为singed的数据删除
      * 每天凌晨2点15分将前一天signed数据删除
      */
-    @Scheduled(cron ="0 15 02 * * ?")
+    //@Scheduled(cron ="0 15 02 * * ?")
     public void dfOrderRealtimeDeleteTask() {
 	    	try {
 	        	logger.info("**********orderRealtime删除任务调度开始**********");
@@ -198,9 +202,9 @@ public class OrderRealtimeTask {
 	        	String preDate = DateUtils.getPreDate(new Date());
 	        	dfOrderRealtimeService.deleteDfOrdersRealtimeByPreDate(preDate);
 	    		} catch (Exception e) {
+	    			logger.error(e.toString());
 	    			e.printStackTrace();
 	    		}
 	    		logger.info("**********orderRealtime删除任务调度结束**********");
-	    		logger.info("共调度数据记录行数"); 
     	}
 }
