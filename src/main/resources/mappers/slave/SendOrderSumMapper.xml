@@ -59,6 +59,7 @@
 					t_order  tor
 					JOIN t_order_flow tof on tof.order_id=tor.id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
+					LEFT JOIN t_ed_sys_role tesr on tesr.id=tep.department_id 
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
 					LEFT JOIN t_store ts on ts.id=tor.store_id 
 					LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
@@ -66,7 +67,7 @@
 					tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 					AND tof.order_status='signed'
 					AND EXISTS (select 1 from t_store where id=tor.store_id  and number IN (${storeids}))
-					AND tep.department_id!='00000000000000000000000000000059'
+					AND tesr.role_name not like '%线下联盟%' AND tesr.role_name not like '%快周边%'
 					AND ts.`name` not like '%测试%'
 					AND tep.`name` not like '%测试%'
 					AND ts.white!='QA'
@@ -142,6 +143,7 @@ SELECT COUNT(*) AS totalcount FROM (
 					t_order  tor
 					JOIN t_order_flow tof on tof.order_id=tor.id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
+					LEFT JOIN t_ed_sys_role tesr on tesr.id=tep.department_id 
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
 					LEFT JOIN t_store ts on ts.id=tor.store_id 
 					LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
@@ -149,7 +151,7 @@ SELECT COUNT(*) AS totalcount FROM (
 					tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 					AND tof.order_status='signed'
 					AND EXISTS (select 1 from t_store where id=tor.store_id  and number IN (${storeids}))
-					AND tep.department_id!='00000000000000000000000000000059'
+					AND tesr.role_name not like '%线下联盟%' AND tesr.role_name not like '%快周边%'
 					AND ts.`name` not like '%测试%'
 					AND tep.`name` not like '%测试%'
 					AND ts.white!='QA'
@@ -214,13 +216,14 @@ SELECT COUNT(*) AS totalcount FROM (
 					t_order  tor
 					JOIN t_order_flow tof on tof.order_id=tor.id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
+					LEFT JOIN t_ed_sys_role tesr on tesr.id=tep.department_id 
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
 					LEFT JOIN t_store ts on ts.id=tor.store_id 
 					LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
 					where 
 					tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 					AND tof.order_status='signed'
-					AND tep.department_id!='00000000000000000000000000000059'
+					AND tesr.role_name not like '%线下联盟%' AND tesr.role_name not like '%快周边%'
 					AND ts.`name` not like '%测试%'
 					AND tep.`name` not like '%测试%'
 					AND ts.white!='QA'
