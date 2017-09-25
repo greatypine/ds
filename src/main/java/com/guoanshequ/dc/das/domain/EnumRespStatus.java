@@ -58,6 +58,7 @@ public enum EnumRespStatus {
     TASK_STOERTRADEOK("8000023", "门店交易额手动调度成功"),
     TASK_SENDORDERSOK("8000024", "上门送单量手动调度成功"),
     TASK_REWARDTIMESOK("8000025", "国安侠好评次数手动调度成功"),
+    TASK_ABNORORDEROK("8000026", "异常订单手动调度成功"),
     SYSTEM_ERROR("9000001", "系统错误"),
     REQUEST_ERROR("9000002", "请求错误"),
     REQUEST_TIMEOUT("9000003", "已过期的请求"),

@@ -3,6 +3,7 @@ package com.guoanshequ.dc.das.controller;
 import com.guoanshequ.dc.das.domain.EnumRespStatus;
 import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.service.CustomerService;
+import com.guoanshequ.dc.das.task.AbnormalOrderScheduleTask;
 import com.guoanshequ.dc.das.task.ScheduleTask;
 import com.guoanshequ.dc.das.task.TopDataScheduleTask;
 
@@ -33,6 +34,8 @@ public class TaskByHandController {
     TopDataScheduleTask topDataScheduleTask;
     @Autowired
     ScheduleTask platformScheduleTask;
+    @Autowired
+    AbnormalOrderScheduleTask abnormalOrderScheduleTask;
 
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
@@ -296,6 +299,21 @@ public class TaskByHandController {
     public RestResponse gmvPercentTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		platformScheduleTask.gmvPercentTask();
+    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 平台数据接口手动调度：异常订单手动调度
+     */
+    @RequestMapping(value = "rest/abnormalOrderTaskRun",method = RequestMethod.POST)
+    public RestResponse abnormalOrderTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		abnormalOrderScheduleTask.abnormalOrderTask();
     		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
     	}catch (Exception e) {
             logger.error(e.toString());

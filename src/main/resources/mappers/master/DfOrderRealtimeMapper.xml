@@ -3,7 +3,7 @@
 <mapper namespace="com.guoanshequ.dc.das.dao.master.DfOrderRealtimeMapper">
 
 	<!-- 将从gemini查询到的数据结果写入到daqWeb表中 -->
-	<insert id="addDfOrderRealtimeByOrderId" parameterType="java.util.List" >
+	<insert id="addDfOrderRealtimeByOrderId" parameterType="DFOrderRealTimeEntity" >
 	<![CDATA[
         insert into df_order_realtime
               (order_id,order_sn,group_id,order_type,business_model_id,customer_id,order_address_id,

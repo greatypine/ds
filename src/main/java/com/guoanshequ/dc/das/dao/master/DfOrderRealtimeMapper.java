@@ -10,7 +10,7 @@ import com.guoanshequ.dc.das.model.DFOrderRealtime;
 @DataSource("master")
 public interface DfOrderRealtimeMapper {
 
-	void addDfOrderRealtimeByOrderId(DFOrderRealtime dfOrderRealtimeList);
+	Integer addDfOrderRealtimeByOrderId(DFOrderRealtime dfOrderRealtimeList);
 	
 	void deleteDfOrdersRealtimeByOrderId(String orderid);
 	

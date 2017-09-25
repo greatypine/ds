@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.AbnormalOrderMapper">
+
+	<!-- 异常订单类型A -->
+	<select id="queryAbnorOrderA" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select ordersn,cityname,storeno,storename,channelname,deptname,tradingprice,abnortype,datatype,
+			status,signedtime,year,month,createtime,updatetime from (
+			select
+			tor.order_sn as ordersn,
+			tsa.name as cityname,
+			ts.code as storeno,
+			ts.`name` as storename,
+			LEFT(tesr.role_name,POSITION('_' IN tesr.role_name)-1) AS channelname,
+			SUBSTRING(tesr.role_name,POSITION('_' IN tesr.role_name)+1) AS deptname,
+			tor.trading_price as tradingprice,
+			'类型A' as abnortype,
+			'auto' as datatype,
+			0 as status,
+			tof.create_time as signedtime,
+			YEAR(date_sub(now(),interval 1 day)) as year ,
+			MONTH(date_sub(now(),interval 1 day)) as month ,
+			NOW() as createtime,
+			NOW() as updatetime,
+			IF(IFNULL(order_address_id,'')='',2,0) + 
+			IF(IFNULL(buyer_remark,'')='',1,0) +
+			IF(IFNULL(employee_remark,'')='',1,0) +
+			IF(IFNULL(store_remark,'')='',1,0) as score
+			from t_order tor,t_order_flow tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa
+			where tor.id = tof.order_id
+			and tof.order_status ='signed'
+			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			and tor.store_id = ts.id
+			and tor.eshop_id = te.id
+			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
+			and te.name NOT LIKE '%测试%' and te.white!='QA'
+			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
+			and ts.city_code = tsa.code and tsa.level = 2
+			and ts.number IN (${storeids}) 
+			and te.id in ('a8cd55c25da6f2cbb2a383c6e19cb851','deca6b08f9cf3412633a37b1cdcb23a8','cfa41afcc881145fb98e93da5ff055df','5f0f68c4397188eda0b4cba091626d61',
+			'ca8ea9064365ea2a8dd07a08fee93399','1591627c9ddb63e21c16e811d368a697','a03ef918b97d96dd95317c1abf3ad001','5634a41663e1d65e0988b0cd11bbed75',
+			'73259f86785ded5b9710e4c632b25ffb','72243c9c0a7aeb1589fd8d5fd0d92c4d','75d880c61d9c1a28d3bbf44098024b8e','d759c6f3b884b63fa4de8cdb01451796')
+			) aa
+			where aa.score>=3
+			group by ordersn
+			order by ordersn
+		]]>
+	</select>
+	
+	<!-- 异常订单类型B -->
+	<select id="queryAbnorOrderB" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select
+			tor.order_sn as ordersn,
+			tsa.name as cityname,
+			ts.code as storeno,
+			ts.`name` as storename,
+			LEFT(tesr.role_name,POSITION('_' IN tesr.role_name)-1) AS channelname,
+			SUBSTRING(tesr.role_name,POSITION('_' IN tesr.role_name)+1) AS deptname,
+			tor.trading_price as tradingprice,
+			'类型B' as abnortype,
+			'auto' as datatype,
+			0 as status,
+			tof.create_time as signedtime,
+			YEAR(date_sub(now(),interval 1 day)) as year ,
+			MONTH(date_sub(now(),interval 1 day)) as month ,
+			NOW() as createtime,
+			NOW() as updatetime
+			from t_order tor,t_order_flow tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa
+			where tor.id = tof.order_id
+			and tof.order_status ='signed'
+			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			and tor.store_id = ts.id
+			and tor.eshop_id = te.id
+			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
+			and te.name NOT LIKE '%测试%' and te.white!='QA'
+			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
+			and ts.city_code = tsa.code and tsa.level = 2
+			and ts.number IN (${storeids}) 
+			and tor.payable_price/tor.trading_price <=0.9
+			group by ordersn
+			order by ordersn
+		]]>
+	</select>
+	
+	<!-- 异常订单类型D 金额大于1000-->
+	<select id="queryAbnorOrderD1" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select
+			tor.order_sn as ordersn,
+			tsa.name as cityname,
+			ts.code as storeno,
+			ts.`name` as storename,
+			LEFT(tesr.role_name,POSITION('_' IN tesr.role_name)-1) AS channelname,
+			SUBSTRING(tesr.role_name,POSITION('_' IN tesr.role_name)+1) AS deptname,
+			tor.trading_price as tradingprice,
+			'类型D' as abnortype,
+			'auto' as datatype,
+			1 as status,
+			tof.create_time as signedtime,
+			YEAR(date_sub(now(),interval 1 day)) as year ,
+			MONTH(date_sub(now(),interval 1 day)) as month ,
+			NOW() as createtime,
+			NOW() as updatetime
+			from t_order tor,t_order_flow tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa
+			where tor.id = tof.order_id
+			and tof.order_status ='signed'
+			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			and tor.store_id = ts.id
+			and tor.eshop_id = te.id
+			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
+			and te.name NOT LIKE '%测试%' and te.white!='QA'
+			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
+			and ts.city_code = tsa.code and tsa.level = 2
+			and ts.number IN (${storeids}) 
+			and groupon_instance_id is not null and trading_price > 1000
+			group by ordersn
+			order by ordersn
+		]]>
+	</select>
+	
+	<!-- 异常订单类型D2 金额小于1000，从异常订单库手动下载方式-->
+	<select id="queryAbnorOrderD2" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select
+			tor.order_sn as ordersn,
+			tc.mobilephone as mobilephone,
+			ifnull(tc.`name`,'') as customername,
+			tsa.name as cityname,
+			ts.code as storeno,
+			ts.`name` as storename,
+			LEFT(tesr.role_name,POSITION('_' IN tesr.role_name)-1) AS channelname,
+			SUBSTRING(tesr.role_name,POSITION('_' IN tesr.role_name)+1) AS deptname,
+			tor.trading_price as tradingprice,
+			'类型D2' as abnortype,
+			'manual' as datatype,
+			0 as status,
+			tof.create_time as signedtime,
+			YEAR(date_sub(now(),interval 1 day)) as year ,
+			MONTH(date_sub(now(),interval 1 day)) as month ,
+			NOW() as createtime,
+			NOW() as updatetime
+			from t_order tor,t_order_flow tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc 
+			where tor.id = tof.order_id
+			and tof.order_status ='signed'
+			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			and tor.store_id = ts.id
+			and tor.eshop_id = te.id
+			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
+			and te.name NOT LIKE '%测试%' and te.white!='QA'
+			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
+			and ts.city_code = tsa.code and tsa.level = 2
+			and tor.customer_id = tc.id
+			and ts.number IN (${storeids}) 
+			and groupon_instance_id is not null and trading_price < 1000
+			group by ordersn
+			order by ordersn
+		]]>
+	</select>
+	
+	<!--异常订单类型F，从异常订单库手动下载方式-->
+	<select id="queryAbnorOrderF" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select
+			tor.order_sn as ordersn,
+			tc.mobilephone as mobilephone,
+			ifnull(tc.`name`,'') as customername,
+			tsa.name as cityname,
+			ts.code as storeno,
+			ts.`name` as storename,
+			LEFT(tesr.role_name,POSITION('_' IN tesr.role_name)-1) AS channelname,
+			SUBSTRING(tesr.role_name,POSITION('_' IN tesr.role_name)+1) AS deptname,
+			tor.trading_price as tradingprice,
+			'类型F' as abnortype,
+			'manual' as datatype,
+			1 as status,
+			tof.create_time as signedtime,
+			YEAR(date_sub(now(),interval 1 day)) as year ,
+			MONTH(date_sub(now(),interval 1 day)) as month ,
+			NOW() as createtime,
+			NOW() as updatetime
+			from t_order tor,t_order_flow tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc 
+			where tor.id = tof.order_id
+			and tof.order_status ='signed'
+			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			and tor.store_id = ts.id
+			and tor.eshop_id = te.id
+			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
+			and te.name NOT LIKE '%测试%' and te.white!='QA'
+			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
+			and ts.city_code = tsa.code and tsa.level = 2
+			and tor.customer_id = tc.id
+			and ts.number IN (${storeids})
+			and tor.customer_id in (
+			select
+			customer_id
+			from t_order tor,t_order_flow tof
+			where tor.id = tof.order_id
+			and tof.order_status ='signed'
+			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			group by customer_id
+			having count(*)>=5 ) 
+			group by ordersn
+			order by mobilephone,ordersn
+		]]>
+	</select>
+	
+</mapper>

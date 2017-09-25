@@ -26,8 +26,8 @@ public class DfOrderRealtimeService {
     @Autowired
     DfOrderRealtimeMapper dfOrderRealtimeDao;
 
-    public void addDfOrderRealtimeByOrderId(DFOrderRealtime dfOrderRealtimeList){
-    	dfOrderRealtimeDao.addDfOrderRealtimeByOrderId(dfOrderRealtimeList);
+    public Integer addDfOrderRealtimeByOrderId(DFOrderRealtime dfOrderRealtimeList){
+    	return dfOrderRealtimeDao.addDfOrderRealtimeByOrderId(dfOrderRealtimeList);
     }
     
     public void deleteDfOrderRealtimeByOrderId(String orderid){

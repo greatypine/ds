@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TAbnormalOrderMapper">
+
+
+	<select id="queryTAbnorOrdersByOrdersn" parameterType="java.util.Map"
+		resultType="String">
+        <![CDATA[
+			select 
+			ordersn
+			from ds_abnormal_order
+			where year =#{year} and month =#{month} and ordersn =#{ordersn}
+		]]>
+	</select>
+
+	<select id="queryTAbnorOrders" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select 
+			ordersn,
+			storeno,
+			storename,
+			channelname,
+			deptname,
+			tradingprice,
+			abnortype
+			from ds_abnormal_order
+			where year =#{year} and month =#{month}
+		]]>
+	  	 <if test="null != storeids and null != storeids">
+              <![CDATA[                   
+                 and storeno IN (${storeids})
+              ]]>
+          </if>
+	</select>
+	
+	<insert id="addAbnorOrders" parameterType="java.util.Map">
+		<![CDATA[
+			insert into ds_abnormal_order(
+				ordersn,cityname,storeno,storename,channelname,deptname,tradingprice,abnortype,datatype,status,signedtime,
+				year,month,createtime,updatetime) 
+			values(
+				#{ordersn},#{cityname},#{storeno},#{storename},#{channelname},#{deptname},
+				#{tradingprice},#{abnortype},#{datatype},#{status},#{signedtime},
+				#{year},#{month},#{createtime},#{updatetime}
+			)
+		]]>
+	</insert>
+	
+	<delete id="deleteAbnorOrdersByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_abnormal_order where year =#{year} and month =#{month}
+		]]>
+	</delete>
+	
+	
+	<select id="queryTAbnorDownByOrdersn" parameterType="java.util.Map"
+		resultType="String">
+        <![CDATA[
+			select 
+			ordersn
+			from ds_abnormal_down
+			where year =#{year} and month =#{month} and ordersn =#{ordersn}
+		]]>
+	</select>
+	
+	<select id="queryTAbnorDown" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select 
+			ordersn,
+			storeno,
+			storename,
+			channelname,
+			deptname,
+			tradingprice,
+			abnortype
+			from ds_abnormal_down
+			where year =#{year} and month =#{month}
+		]]>
+	  	 <if test="null != storeids and null != storeids">
+              <![CDATA[                   
+                 and storeno IN (${storeids})
+              ]]>
+          </if>
+	</select>
+	
+	<insert id="addAbnorDown" parameterType="java.util.Map">
+		<![CDATA[
+			insert into ds_abnormal_down(
+				ordersn,mobilephone,customername,cityname,storeno,storename,channelname,deptname,tradingprice,abnortype,datatype,status,signedtime,
+				year,month,createtime,updatetime) 
+			values(
+				#{ordersn},#{mobilephone},#{customername},#{cityname},#{storeno},#{storename},#{channelname},#{deptname},
+				#{tradingprice},#{abnortype},#{datatype},#{status},#{signedtime},
+				#{year},#{month},#{createtime},#{updatetime}
+			)
+		]]>
+	</insert>
+	
+	<delete id="deleteAbnorDownByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_abnormal_down where year =#{year} and month =#{month}
+		]]>
+	</delete>
+	
+</mapper>
