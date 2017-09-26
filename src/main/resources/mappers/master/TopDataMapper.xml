@@ -178,6 +178,11 @@
 			where yearmonth = #{yearmonth}
 			and cusgrade1 is not null
 		]]>
+		<if test="null != storeids and null != storeids">
+             <![CDATA[                   
+                and storeno IN (${storeids})
+             ]]>
+        </if>
 	</select>
 	<!-- 单体画像二档数,提供给pes接口数据调用 -->
 	<select id="queryCusgrade2OnTop" parameterType="java.util.Map"
@@ -187,6 +192,11 @@
 			where yearmonth = #{yearmonth}
 			and cusgrade2 is not null
 		]]>
+		<if test="null != storeids and null != storeids">
+             <![CDATA[                   
+                and storeno IN (${storeids})
+             ]]>
+        </if>
 	</select>
 	<!-- 单体画像三档数,提供给pes接口数据调用 -->
 	<select id="queryCusgrade3OnTop" parameterType="java.util.Map"
@@ -196,6 +206,11 @@
 			where yearmonth = #{yearmonth}
 			and cusgrade3 is not null
 		]]>
+		<if test="null != storeids and null != storeids">
+             <![CDATA[                   
+                and storeno IN (${storeids})
+             ]]>
+        </if>		
 	</select>
 	
 	<!-- 单体画像(按门店)一档数,提供给pes接口数据调用 -->
@@ -314,6 +329,11 @@
 			where yearmonth = #{yearmonth}
 			and relationnum is not null
 		]]>
+		<if test="null != storeids and null != storeids">
+             <![CDATA[                   
+                and storeno IN (${storeids})
+             ]]>
+        </if>		
 	</select>
 	
 	<!-- 拜访记录(按门店),提供给pes接口数据调用 -->

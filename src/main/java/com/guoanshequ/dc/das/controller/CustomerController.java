@@ -44,7 +44,7 @@ public class CustomerController {
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
     /**
-     * 按国安侠统计拜访记录总量
+     * 按国安侠统计单体画像
      */
     @RequestMapping(value = "rest/queryCustomers",method = RequestMethod.POST)
     public RestResponse queryCustomers(@RequestBody Map<String, String> paraMap) throws Exception {
@@ -59,17 +59,17 @@ public class CustomerController {
 	    	//上月月初日期
 	    	String begindate = datemap.get("first");
 	    	//获取上月形式，年份月份：YYYY-MM
-	    	String preYearMonth = begindate.substring(0, 7);
+//	    	String preYearMonth = begindate.substring(0, 7);
 	        List<Map<String, String>> list = null;
-	    	if(yearmonth.compareTo(preYearMonth)>0){//请求月份大于绩效月份则取实时数据
-		        if("1".equals(grade)){
-		        	list = customerService.queryFirst(paraMap);
-		        }else if("2".equals(grade)){
-		        	list = customerService.querySecond(paraMap);
-		        }else if("3".equals(grade)){
-		        	list = customerService.queryThird(paraMap);
-		        }
-	    	}else{//请求月份小于等于绩效月份则取非实时表数据
+//	    	if(yearmonth.compareTo(preYearMonth)>0){//请求月份大于绩效月份则取实时数据
+//		        if("1".equals(grade)){
+//		        	list = customerService.queryFirst(paraMap);
+//		        }else if("2".equals(grade)){
+//		        	list = customerService.querySecond(paraMap);
+//		        }else if("3".equals(grade)){
+//		        	list = customerService.queryThird(paraMap);
+//		        }
+//	    	}else{//请求月份小于等于绩效月份则取非实时表数据
 		        if("1".equals(grade)){
 		        	list = topDataService.queryCusgrade1OnTop(paraMap);
 		        }else if("2".equals(grade)){
@@ -77,7 +77,7 @@ public class CustomerController {
 		        }else if("3".equals(grade)){
 		        	list = topDataService.queryCusgrade3OnTop(paraMap);
 		        }
-	    	}
+//	    	}
 
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);

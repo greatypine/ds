@@ -5,7 +5,8 @@
 	<!-- PES系统：与平台数据卡相对应sql，人员是实时人员 -->
 	<select id="queryRelations" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-        	SELECT employee_no as employeeno,num FROM (
+            SELECT employeeno,num FROM (
+        	SELECT employee_no as employeeno,num,t_store.storeno FROM (
 			SELECT  t.store_id,t.employee_no, SUM(t.curr_month_amount) AS num 
 			FROM (SELECT 	empamou.store_id,  empamou.employee_no, empamou.employee_name, empamou.data_amount AS curr_month_amount 
 			      FROM (  SELECT u.store_id, r.employee_name, r.employee_no, DATE_FORMAT(r.relation_date,'%Y-%m') AS mounth,
@@ -16,12 +17,18 @@
 			            WHERE r.status = 0 AND DATE_FORMAT(r.relation_date,'%Y-%m') = #{yearmonth}
 			            GROUP BY r.employee_no) empamou ) t 
 			GROUP BY  t.employee_no HAVING t.store_id is not NULL 
-			ORDER BY t.store_id,t.employee_no ) st_relation
+			ORDER BY t.store_id,t.employee_no ) st_relation,t_store
+			where st_relation.store_id = t_store.store_id) aa
 		]]>
 		 <where>
             <if test="null != employeeno and null != employeeno">
                <![CDATA[                   
-                   employee_no = #{employeeno}
+                   employeeno = #{employeeno}
+               ]]>
+            </if>
+            <if test="null != storeids and null != storeids">
+               <![CDATA[                   
+                   storeno IN (${storeids})
                ]]>
             </if>
          </where>
