@@ -20,7 +20,6 @@ public class SpringRestController {
     @Autowired
     RedisService redisService;
 
-//    @RequestMapping(value = "/{name}", method = RequestMethod.GET, headers = "Accept=application/json")
     @RequestMapping(value = "/{name}", method = RequestMethod.POST)
     public RestResponse hello(@PathVariable String name,  @RequestBody Map<String, String> paraMap) {
 

@@ -174,7 +174,7 @@
 	<select id="queryCusgrade1OnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-		select employeeno,cusgrade1 as datacount from ds_topdata
+		select storename,employeeno,username,cusgrade1 as datacount from ds_topdata
 			where yearmonth = #{yearmonth}
 			and cusgrade1 is not null
 		]]>
@@ -188,7 +188,7 @@
 	<select id="queryCusgrade2OnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-		select employeeno,cusgrade2 as datacount from ds_topdata
+		select storename,employeeno,username,cusgrade2 as datacount from ds_topdata
 			where yearmonth = #{yearmonth}
 			and cusgrade2 is not null
 		]]>
@@ -202,7 +202,7 @@
 	<select id="queryCusgrade3OnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-		select employeeno,cusgrade3 as datacount from ds_topdata
+		select storename,employeeno,username,cusgrade3 as datacount from ds_topdata
 			where yearmonth = #{yearmonth}
 			and cusgrade3 is not null
 		]]>
@@ -325,7 +325,7 @@
 	<select id="queryRelationnumOnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">
         <![CDATA[
-		select employeeno,relationnum as num from ds_topdata 
+		select storename,employeeno,username,relationnum as num from ds_topdata 
 			where yearmonth = #{yearmonth}
 			and relationnum is not null
 		]]>

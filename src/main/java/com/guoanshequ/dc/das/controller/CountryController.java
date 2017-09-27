@@ -16,14 +16,14 @@ public class CountryController {
     @Autowired
     CountryService countryService;
 
-    @RequestMapping(value = "/getAllCountries", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/getAllCountries", method = RequestMethod.POST, headers = "Accept=application/json")
     public List<Country> getCountries() {
 
         List<Country> listOfCountries = countryService.getAllCountries();
         return listOfCountries;
     }
 
-    @RequestMapping(value = "/getCountry/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/getCountry/{id}", method = RequestMethod.POST, headers = "Accept=application/json")
     public Country getCountryById(@PathVariable Long id) {
         return countryService.getCountry(id);
     }
@@ -34,12 +34,12 @@ public class CountryController {
 
     }
 
-    @RequestMapping(value = "/updateCountry", method = RequestMethod.PUT, headers = "Accept=application/json")
+    @RequestMapping(value = "/updateCountry", method = RequestMethod.POST, headers = "Accept=application/json")
     public void updateCountry(@RequestBody Country country) {
         countryService.updateCountry(country);
     }
 
-    @RequestMapping(value = "/deleteCountry/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+    @RequestMapping(value = "/deleteCountry/{id}", method = RequestMethod.POST, headers = "Accept=application/json")
     public void deleteCountry(@PathVariable("id") Long id) {
         countryService.deleteCountry(id);
     }
