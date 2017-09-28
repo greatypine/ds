@@ -60,14 +60,14 @@ public class RelationController {
 	    	//获取上月形式，年份月份：YYYY-MM
 	    	String preYearMonth = begindate.substring(0, 7);
 	        List<Map<String, String>> list = null;
-	    	if(yearmonth.compareTo(preYearMonth)>0){//请求月份大于绩效月份则取实时数据
-	    		list = relationService.queryRelations(paraMap);
-	    	}else{
+//	    	if(yearmonth.compareTo(preYearMonth)>0){//请求月份大于绩效月份则取实时数据
+//	    		list = relationService.queryRelations(paraMap);
+//	    	}else{
 	    		list = topDataService.queryRelationnumOnTop(paraMap);
 	    		 if(null==list||list.isEmpty()){
 	    			 list = relationService.queryRelations(paraMap);
 	    		 }
-	    	}
+//	    	}
 			
 	        if(null==list||list.isEmpty()){
 	        	return new RestResponse(EnumRespStatus.DATA_NODATA);

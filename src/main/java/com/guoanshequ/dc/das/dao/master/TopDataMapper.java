@@ -47,6 +47,8 @@ public interface TopDataMapper {
 	
 	List<Map<String, String>> queryCusgrade3OnTop(Map<String, String> paraMap);
 	
+	List<Map<String, String>> queryCusgradeAllOnTop(Map<String, String> paraMap);
+	
 	List<Map<String, String>> queryStoreCusgrade1OnTop(Map<String, String> paraMap);
 	
 	List<Map<String, String>> queryStoreCusgrade2OnTop(Map<String, String> paraMap);

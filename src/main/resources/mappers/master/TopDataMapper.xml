@@ -213,6 +213,22 @@
         </if>		
 	</select>
 	
+	<!-- 单体画像一、二档数同时显示,提供给pes接口数据调用 -->
+	<select id="queryCusgradeAllOnTop" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+		select storename,employeeno,username,ifnull(cusgrade1,0) as cus1count,
+			ifnull(cusgrade2,0) as datacount from ds_topdata
+			where yearmonth = #{yearmonth}
+			and (cusgrade1 is not null or cusgrade2 is not null) 
+		]]>
+		<if test="null != storeids and null != storeids">
+             <![CDATA[                   
+                and storeno IN (${storeids})
+             ]]>
+        </if>
+	</select>
+	
 	<!-- 单体画像(按门店)一档数,提供给pes接口数据调用 -->
 	<select id="queryStoreCusgrade1OnTop" parameterType="java.util.Map"
 		resultType="java.util.Map">

@@ -94,6 +94,10 @@ public class TopDataService {
     	return topDataDao.queryCusgrade3OnTop(paraMap);
     }
     
+    public List<Map<String, String>> queryCusgradeAllOnTop(Map<String, String> paraMap) throws Exception{
+    	return topDataDao.queryCusgradeAllOnTop(paraMap);
+    }
+    
     public List<Map<String, String>> queryStoreCusgrade1OnTop(Map<String, String> paraMap) throws Exception{
         return topDataDao.queryStoreCusgrade1OnTop(paraMap);
     }

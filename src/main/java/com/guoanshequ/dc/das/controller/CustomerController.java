@@ -76,6 +76,8 @@ public class CustomerController {
 		        	list = topDataService.queryCusgrade2OnTop(paraMap);
 		        }else if("3".equals(grade)){
 		        	list = topDataService.queryCusgrade3OnTop(paraMap);
+		        }else if("0".equals(grade)){
+		        	list = topDataService.queryCusgradeAllOnTop(paraMap);
 		        }
 //	    	}
 

@@ -6,7 +6,7 @@
 	<select id="queryRelations" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
             SELECT storename,employeeno,username,num FROM (
-        	SELECT employee_no as employeeno,employee_name as username,num,t_store.storeno,,t_store.name as storename FROM (
+        	SELECT employee_no as employeeno,employee_name as username,num,t_store.storeno,t_store.name as storename FROM (
 			SELECT  t.store_id,t.employee_no, t.employee_name, SUM(t.curr_month_amount) AS num 
 			FROM (SELECT 	empamou.store_id,  empamou.employee_no, empamou.employee_name, empamou.data_amount AS curr_month_amount 
 			      FROM (  SELECT u.store_id, r.employee_name, r.employee_no, DATE_FORMAT(r.relation_date,'%Y-%m') AS mounth,
