@@ -41,7 +41,7 @@ public class AbnormalOrderScheduleTask {
      * 调度规则：每天03点10分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron ="0 10 03 * * ?")
+//    @Scheduled(cron ="0 10 03 * * ?")
     public void abnormalOrderTask() {
     	new Thread(){
     		public void run() {
