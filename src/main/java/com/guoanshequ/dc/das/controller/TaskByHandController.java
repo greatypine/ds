@@ -179,6 +179,9 @@ public class TaskByHandController {
     		platformScheduleTask.rebuyCusTask();
     		platformScheduleTask.newAddCusTask();
     		platformScheduleTask.rewardTimesTask();
+    		platformScheduleTask.storeTradeChannelTask();
+    		platformScheduleTask.sendOrderSumTask();
+    		platformScheduleTask.gmvPercentTask();
     		return new RestResponse(EnumRespStatus.TASK_PLATFORMDATA);
     	}catch (Exception e) {
             logger.error(e.toString());

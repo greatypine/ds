@@ -28,7 +28,7 @@
 					1 AS _type
 					from  
 					t_order  tor
-					JOIN t_order_flow tof on tof.order_id=tor.id
+					JOIN df_order_flow_monthly tof on tof.order_id=tor.id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
 					LEFT JOIN t_store ts on ts.id=tor.store_id 
@@ -57,7 +57,7 @@
 					2 AS _type
 					from  
 					t_order  tor
-					JOIN t_order_flow tof on tof.order_id=tor.id
+					JOIN df_order_flow_monthly tof on tof.order_id=tor.id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
 					LEFT JOIN t_ed_sys_role tesr on tesr.id=tep.department_id 
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
@@ -113,7 +113,7 @@ SELECT COUNT(*) AS totalcount FROM (
 					1 AS _type
 					from  
 					t_order  tor
-					JOIN t_order_flow tof on tof.order_id=tor.id
+					JOIN df_order_flow_monthly tof on tof.order_id=tor.id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
 					LEFT JOIN t_store ts on ts.id=tor.store_id 
@@ -141,7 +141,7 @@ SELECT COUNT(*) AS totalcount FROM (
 					2 AS _type
 					from  
 					t_order  tor
-					JOIN t_order_flow tof on tof.order_id=tor.id
+					JOIN df_order_flow_monthly tof on tof.order_id=tor.id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
 					LEFT JOIN t_ed_sys_role tesr on tesr.id=tep.department_id 
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
@@ -186,7 +186,7 @@ SELECT COUNT(*) AS totalcount FROM (
 					1 AS _type
 					from  
 					t_order  tor
-					JOIN t_order_flow tof on tof.order_id=tor.id
+					JOIN df_order_flow_monthly tof on tof.order_id=tor.id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
 					LEFT JOIN t_store ts on ts.id=tor.store_id 
@@ -214,7 +214,7 @@ SELECT COUNT(*) AS totalcount FROM (
 					2 AS _type
 					from  
 					t_order  tor
-					JOIN t_order_flow tof on tof.order_id=tor.id
+					JOIN df_order_flow_monthly tof on tof.order_id=tor.id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
 					LEFT JOIN t_ed_sys_role tesr on tesr.id=tep.department_id 
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id

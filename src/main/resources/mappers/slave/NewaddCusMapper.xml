@@ -29,7 +29,7 @@ LEFT JOIN
 			FROM t_eshop te
 			JOIN t_order tor ON te.id=tor.eshop_id
 				AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-			JOIN t_order_flow tof ON tor.id=tof.order_id
+			JOIN df_order_flow tof ON tor.id=tof.order_id
 				AND tof.order_status='signed'
 				AND tof.create_time>=DATE(#{begindate})
 				AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
@@ -45,7 +45,7 @@ LEFT JOIN
 			FROM t_eshop te
 			JOIN t_order tor ON te.id=tor.eshop_id
 				AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-			JOIN t_order_flow tof ON tor.id=tof.order_id
+			JOIN df_order_flow tof ON tor.id=tof.order_id
 				AND tof.order_status='signed'
 				AND tof.create_time>=DATE(#{begindate})
 				AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
@@ -55,7 +55,7 @@ LEFT JOIN
 					FROM t_eshop te_in
 					JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
 						AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-					JOIN t_order_flow tof_in ON tor_in.id=tof_in.order_id
+					JOIN df_order_flow tof_in ON tor_in.id=tof_in.order_id
 						AND tof_in.order_status='signed'
 						AND tof_in.create_time<DATE(#{begindate})
 					WHERE te_in.`name` NOT LIKE '%测试%' AND te_in.white!='QA'
@@ -81,7 +81,7 @@ LEFT JOIN
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
 								AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-							JOIN t_order_flow tof ON tor.id=tof.order_id
+							JOIN df_order_flow tof ON tor.id=tof.order_id
 								AND tof.order_status='signed'
 								AND tof.create_time>=DATE(#{begindate})
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
@@ -91,7 +91,7 @@ LEFT JOIN
 									FROM t_eshop te_in
 									JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
 										AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-									JOIN t_order_flow tof_in ON tor_in.id=tof_in.order_id
+									JOIN df_order_flow tof_in ON tor_in.id=tof_in.order_id
 										AND tof_in.order_status='signed'
 										AND tof_in.create_time<DATE(#{begindate})
 									WHERE te_in.`name` NOT LIKE '%测试%' AND te_in.white!='QA'
@@ -114,7 +114,7 @@ LEFT JOIN
 			FROM t_eshop te
 			JOIN t_order tor ON te.id=tor.eshop_id
 				AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-			JOIN t_order_flow tof ON tor.id=tof.order_id
+			JOIN df_order_flow tof ON tor.id=tof.order_id
 				AND tof.order_status='signed'
 				AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
 			WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
@@ -134,7 +134,7 @@ LEFT JOIN
 							FROM t_eshop te
 							JOIN t_order tor_in ON te.id=tor_in.eshop_id
 								AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-							JOIN t_order_flow tof ON tor_in.id=tof.order_id
+							JOIN df_order_flow tof ON tor_in.id=tof.order_id
 								AND tof.order_status='signed'
 								AND tof.create_time>=DATE(#{begindate})
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
@@ -161,7 +161,7 @@ LEFT JOIN
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
 								AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-							JOIN t_order_flow tof ON tor.id=tof.order_id
+							JOIN df_order_flow tof ON tor.id=tof.order_id
 								AND tof.order_status='signed'
 								AND tof.create_time>=DATE(#{begindate})
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
@@ -171,7 +171,7 @@ LEFT JOIN
 									FROM t_eshop te_in
 									JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
 										AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-									JOIN t_order_flow tof_in ON tor_in.id=tof_in.order_id
+									JOIN df_order_flow tof_in ON tor_in.id=tof_in.order_id
 										AND tof_in.order_status='signed'
 										AND tof_in.create_time<DATE(#{begindate})
 									WHERE te_in.`name` NOT LIKE '%测试%' AND te_in.white!='QA'
@@ -200,7 +200,7 @@ LEFT JOIN
 							FROM t_eshop te
 							JOIN t_order tor_in ON te.id=tor_in.eshop_id
 								AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-							JOIN t_order_flow tof ON tor_in.id=tof.order_id
+							JOIN df_order_flow tof ON tor_in.id=tof.order_id
 								AND tof.order_status='signed'
 								AND tof.create_time>=DATE(#{begindate})
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
@@ -251,7 +251,7 @@ LEFT JOIN
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
 								AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-							JOIN t_order_flow tof ON tor.id=tof.order_id
+							JOIN df_order_flow tof ON tor.id=tof.order_id
 								AND tof.order_status='signed'
 								AND tof.create_time>=DATE(#{begindate})
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
@@ -261,7 +261,7 @@ LEFT JOIN
 									FROM t_eshop te_in
 									JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
 										AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
-									JOIN t_order_flow tof_in ON tor_in.id=tof_in.order_id
+									JOIN df_order_flow tof_in ON tor_in.id=tof_in.order_id
 										AND tof_in.order_status='signed'
 										AND tof_in.create_time<DATE(#{begindate})
 									WHERE te_in.`name` NOT LIKE '%测试%' AND te_in.white!='QA'

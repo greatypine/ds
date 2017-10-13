@@ -60,7 +60,7 @@
 		            trp.pay_status= 'payed' and 
 		            trp.pay_platform !='prepay'
 		            )
-		        JOIN t_order_flow tof ON (
+		        JOIN df_order_flow_monthly tof ON (
 		            tof.order_id=tor.id
 		            AND tof.order_status='signed'
 		            AND tof.create_time>=DATE(#{begindate})
@@ -93,7 +93,7 @@
 		            tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b'
 		            )
 		        JOIN t_order_group  tog ON  tog.id=tor.group_id
-		        JOIN t_order_flow tof ON (
+		        JOIN df_order_flow_monthly tof ON (
 		            tof.order_id=tor.id
 		            AND tof.order_status='signed'
 		            AND tof.create_time>=DATE(#{begindate})
@@ -171,7 +171,7 @@
 				            trp.pay_status= 'payed' and 
 				            trp.pay_platform !='prepay'
 				            )
-				        JOIN t_order_flow tof ON (
+				        JOIN df_order_flow_monthly tof ON (
 				            tof.order_id=tor.id
 				            AND tof.order_status='signed'
 				            AND tof.create_time>=DATE(#{begindate})
@@ -203,7 +203,7 @@
 				            tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b'
 				            )
 				        JOIN t_order_group  tog ON  tog.id=tor.group_id
-				        JOIN t_order_flow tof ON (
+				        JOIN df_order_flow_monthly tof ON (
 				            tof.order_id=tor.id
 				            AND tof.order_status='signed'
 				            AND tof.create_time>=DATE(#{begindate})

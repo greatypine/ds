@@ -14,7 +14,7 @@
 					LEFT JOIN (select thc2.id,thc2.house_id,thc2.customer_id,thc2.one_pay,thc2.six_pay,thc2.one_date,thc2.six_date,thc2.third_grade_pay,thc2.third_grade_date from (select max(id) as id from t_house_customer GROUP BY customer_id) thc1 INNER JOIN t_house_customer thc2 on thc1.id=thc2.id) thc ON tc.id = thc.customer_id
 					WHERE DATE_FORMAT(thc.one_date, '%Y-%m') =#{yearmonth}			
 				) T
-			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL 
 			GROUP BY T.emplyeeno
 			HAVING datacount > 0 ) st_customer
 		]]>
@@ -38,7 +38,7 @@
 					LEFT JOIN (select thc2.id,thc2.house_id,thc2.customer_id,thc2.one_pay,thc2.six_pay,thc2.one_date,thc2.six_date,thc2.third_grade_pay,thc2.third_grade_date from (select max(id) as id from t_house_customer GROUP BY customer_id) thc1 INNER JOIN t_house_customer thc2 on thc1.id=thc2.id) thc ON tc.id = thc.customer_id
 					WHERE	DATE_FORMAT(thc.six_date, '%Y-%m') = #{yearmonth} 			
 				) T
-			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL
 			GROUP BY T.emplyeeno
 			HAVING datacount > 0 ) st_customer
 		]]>
@@ -62,7 +62,7 @@
 					LEFT JOIN (select thc2.id,thc2.house_id,thc2.customer_id,thc2.one_pay,thc2.six_pay,thc2.one_date,thc2.six_date,thc2.third_grade_pay,thc2.third_grade_date from (select max(id) as id from t_house_customer GROUP BY customer_id) thc1 INNER JOIN t_house_customer thc2 on thc1.id=thc2.id) thc ON tc.id = thc.customer_id
 					WHERE	DATE_FORMAT(thc.third_grade_date, '%Y-%m') = #{yearmonth} 			
 				) T
-			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL 
 			GROUP BY T.emplyeeno
 			HAVING datacount > 0 ) st_customer
 		]]>
@@ -90,7 +90,7 @@
 				) T
 			LEFT JOIN tb_bizbase_user on tb_bizbase_user.employeeId = T.emplyeeno
 			LEFT JOIN t_store on t_store.store_id = tb_bizbase_user.store_id
-			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL 
 			GROUP BY T.emplyeeno
 			HAVING datacount>0 ) t1
 			GROUP BY store_id,storename ) customertmp1
@@ -119,7 +119,7 @@
 				) T
 			LEFT JOIN tb_bizbase_user on tb_bizbase_user.employeeId = T.emplyeeno
 			LEFT JOIN t_store on t_store.store_id = tb_bizbase_user.store_id
-			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL 
 			GROUP BY T.emplyeeno
 			HAVING datacount > 0 ) t2
 			GROUP BY store_id,storename ) customertmp2
@@ -149,7 +149,7 @@
 				) T
 			LEFT JOIN tb_bizbase_user on tb_bizbase_user.employeeId = T.emplyeeno
 			LEFT JOIN t_store on t_store.store_id = tb_bizbase_user.store_id
-			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL AND T.emplyeeno NOT LIKE 'T%'
+			WHERE T.emplyeeno != '' AND T.emplyeeno IS NOT NULL 
 			GROUP BY T.emplyeeno
 			HAVING datacount>0 ) t3
 			GROUP BY store_id,storename ) customertmp3

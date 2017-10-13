@@ -57,7 +57,7 @@ FROM (
 			                    trp.pay_status= 'payed' and 
 			                    trp.pay_platform !='prepay'
 			                    )
-			                JOIN t_order_flow tof ON (tof.order_id=tor.id
+			                JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
 			                    AND tof.order_status='signed'
 			                    AND tof.create_time>=#{begindate}
 			                    AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
@@ -92,7 +92,7 @@ FROM (
 			                    tor.eshop_id !='0d0c3a35b2438f0025e15bba7dd12407' and 
 			                    tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b')
 			                JOIN t_order_group  tog ON  tog.id=tor.group_id
-			                JOIN t_order_flow tof ON (tof.order_id=tor.id
+			                JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
 			                    AND tof.order_status='signed'
 			                    AND tof.create_time>=#{begindate}
 			                    AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
@@ -145,7 +145,7 @@ LEFT JOIN
                     trp.pay_status= 'payed' and 
                     trp.pay_platform !='prepay'
                     )
-                JOIN t_order_flow tof ON (tof.order_id=tor.id
+                JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
                     AND tof.order_status='signed'
                     AND tof.create_time>=#{begindate}
                     AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
@@ -180,7 +180,7 @@ LEFT JOIN
                     tor.eshop_id !='0d0c3a35b2438f0025e15bba7dd12407' and 
                     tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b')
                 JOIN t_order_group  tog ON  tog.id=tor.group_id
-                JOIN t_order_flow tof ON (tof.order_id=tor.id
+                JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
                     AND tof.order_status='signed'
                     AND tof.create_time>=#{begindate}
                     AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
@@ -219,7 +219,7 @@ LEFT JOIN
 						)
 						JOIN t_order tor ON tor.eshop_id=te.id
 						JOIN t_order_group  tog ON  tog.id=tor.group_id
-						JOIN t_order_flow tof ON (tof.order_id=tor.id
+						JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
 								AND tof.order_status='signed'
 								AND tof.create_time>=#{begindate}
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
@@ -258,7 +258,7 @@ LEFT JOIN
 									)
 									JOIN t_order tor ON tor.eshop_id=te.id 
 									JOIN t_order_group  tog ON  tog.id=tor.group_id
-									JOIN t_order_flow tof ON (tof.order_id=tor.id          
+									JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id          
 										AND tof.order_status='signed'
 										AND tof.create_time>=#{begindate}
 										AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))

@@ -17,7 +17,7 @@
 			IFNULL(SUBSTR(tesr.role_name FROM 1 FOR (POSITION('_' IN tesr.role_name)-1)),'') AS channelname,-- 频道
 			IFNULL(COUNT(DISTINCT tor.id),0) AS datanum -- 分各频道总送单量
 			from  t_order  tor
-			JOIN t_order_flow tof on tof.order_id=tor.id
+			JOIN df_order_flow_monthly tof on tof.order_id=tor.id
 			LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
 			LEFT JOIN t_ed_sys_role tesr on tesr.id=tep.department_id
 			LEFT JOIN t_employee tem on tem.id=tor.employee_id
@@ -56,7 +56,7 @@
 			SUBSTR(tesr.role_name FROM 1 FOR (POSITION('_' IN tesr.role_name)-1)) AS channelname,-- 频道
 			COUNT(DISTINCT tor.id) datanum -- 分各频道总送单量
 			from  t_order  tor
-			JOIN t_order_flow tof on tof.order_id=tor.id
+			JOIN df_order_flow_monthly tof on tof.order_id=tor.id
 			LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
 			LEFT JOIN t_ed_sys_role tesr on tesr.id=tep.department_id
 			LEFT JOIN t_employee tem on tem.id=tor.employee_id

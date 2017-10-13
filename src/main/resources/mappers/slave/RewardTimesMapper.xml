@@ -39,7 +39,7 @@ FROM
 						tor.order_sn orderSn,
 						tor.group_id
 					from  t_order  tor
-					JOIN  t_order_flow tof on tof.order_id=tor.id
+					JOIN  df_order_flow_monthly tof on tof.order_id=tor.id
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
 					LEFT JOIN t_customer tcs on tcs.id=tor.customer_id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
@@ -96,7 +96,7 @@ FROM
 						tor.order_sn orderSn,
 						tor.group_id
 					from  t_order  tor
-					JOIN  t_order_flow tof on tof.order_id=tor.id
+					JOIN  df_order_flow_monthly tof on tof.order_id=tor.id
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
 					LEFT JOIN t_customer tcs on tcs.id=tor.customer_id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
