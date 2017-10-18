@@ -102,7 +102,7 @@ LEFT JOIN
 								AND t.store_id IS NULL
 							GROUP BY tor.group_id
 						) t_in
-					GROUP BY t_in.store_id, t_in.customer_id HAVING SUM(t_in.trading_price)>=20.0
+					GROUP BY t_in.store_id, t_in.customer_id HAVING SUM(t_in.trading_price)>20.0
 				) t
 			GROUP BY t.store_id
 		)
@@ -182,7 +182,7 @@ LEFT JOIN
 								AND t.store_id IS NULL
 							GROUP BY tor.group_id
 						) t_in
-					GROUP BY t_in.store_id, t_in.customer_id HAVING SUM(t_in.trading_price)>=10.0
+					GROUP BY t_in.store_id, t_in.customer_id HAVING SUM(t_in.trading_price)>10.0
 				) t
 			GROUP BY t.store_id
 		)
@@ -272,7 +272,7 @@ LEFT JOIN
 								AND t.store_id IS NULL
 							GROUP BY tor.group_id
 						) t_in
-					GROUP BY t_in.store_id, t_in.customer_id HAVING SUM(t_in.trading_price)>=20.0
+					GROUP BY t_in.store_id, t_in.customer_id HAVING SUM(t_in.trading_price)>20.0
 				) t
 			GROUP BY t.store_id
 		)
