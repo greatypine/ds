@@ -31,16 +31,20 @@ public class AbnormalOrderService {
         return abnormalOrderDao.queryAbnorOrderB(paraMap);
     }
     
-    public List<Map<String, String>> queryAbnorOrderD1(Map<String, String> paraMap) throws Exception{
-        return abnormalOrderDao.queryAbnorOrderD1(paraMap);
+    public List<Map<String, String>> queryAbnorOrderDownA(Map<String, String> paraMap) throws Exception{
+        return abnormalOrderDao.queryAbnorOrderDownA(paraMap);
     }
     
-    public List<Map<String, String>> queryAbnorOrderD2(Map<String, String> paraMap) throws Exception{
-        return abnormalOrderDao.queryAbnorOrderD2(paraMap);
+    public List<Map<String, String>> queryAbnorOrderDownB(Map<String, String> paraMap) throws Exception{
+        return abnormalOrderDao.queryAbnorOrderDownB(paraMap);
     }
     
-    public List<Map<String, String>> queryAbnorOrderF(Map<String, String> paraMap) throws Exception{
-        return abnormalOrderDao.queryAbnorOrderF(paraMap);
+    public List<Map<String, String>> queryAbnorOrderDownC(Map<String, String> paraMap) throws Exception{
+        return abnormalOrderDao.queryAbnorOrderDownC(paraMap);
+    }
+    
+    public List<Map<String, String>> queryAbnorOrderDownD(Map<String, String> paraMap) throws Exception{
+    	return abnormalOrderDao.queryAbnorOrderDownD(paraMap);
     }
 
 }

@@ -7,7 +7,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
 
 public class DateUtils {
     /** 
@@ -136,6 +135,9 @@ public class DateUtils {
     /** 
      * @param date 当前日期 
      * @return 返回当前日期的前一天
+     * 功能说明：
+     * 日期2017-09-10，返回2017-09-09;
+     * 日期2017-09-01，返回2017-08-31;
      */ 
     public static String getPreDate(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -162,7 +164,10 @@ public class DateUtils {
     
     /** 
      * @param date 当前日期 
-     * @return 返回当前日期前一天所属的年月
+     * @return 返回当前日期前一天所在的年月
+     * 功能说明：
+     * 日期2017-09-10，返回"2017-09";
+     * 日期2017-09-01，返回"2017-08";
      */ 
     public static String getPreYearAndMonth(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
@@ -176,6 +181,9 @@ public class DateUtils {
     /** 
      * @param date 当前日期 
      * @return 返回当前日期前一天的上月
+     * 功能说明：
+     * 日期2017-09-10，返回"2017-08";
+     * 日期2017-09-01，返回"2017-07";
      */
     public static String getPreMonthofYear(){
     	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
@@ -190,6 +198,7 @@ public class DateUtils {
     /** 
      * @param date 当前日期 
      * @return 返回当前日期
+     * 功能说明：将当前日期转换成String类型
      */ 
     public static String getCurDate(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -202,6 +211,7 @@ public class DateUtils {
     /** 
      * @param date 当前时间
      * @return 返回当前时间
+     * 功能说明：将当前时间转换成String类型
      */ 
     public static String getCurTime(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -212,6 +222,7 @@ public class DateUtils {
     }
     
     public static void main(String[] args) {
-		System.out.println(getCurTime(new Date()));
+		System.out.println(getPreYearMonth(new Date()));
+		System.out.println(getFirstday_Lastday_Month(new Date()));
 	}
 }

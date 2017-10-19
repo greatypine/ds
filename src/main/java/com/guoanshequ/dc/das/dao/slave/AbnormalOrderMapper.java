@@ -15,10 +15,11 @@ public interface AbnormalOrderMapper{
 	
 	List<Map<String, String>> queryAbnorOrderB(Map<String, String> paraMap);
 	
-	List<Map<String, String>> queryAbnorOrderD1(Map<String, String> paraMap);
+	List<Map<String, String>> queryAbnorOrderDownA(Map<String, String> paraMap);
 	
-	List<Map<String, String>> queryAbnorOrderD2(Map<String, String> paraMap);
+	List<Map<String, String>> queryAbnorOrderDownB(Map<String, String> paraMap);
 
-	List<Map<String, String>> queryAbnorOrderF(Map<String, String> paraMap);
+	List<Map<String, String>> queryAbnorOrderDownC(Map<String, String> paraMap);
 	
+	List<Map<String, String>> queryAbnorOrderDownD(Map<String, String> paraMap);
 }

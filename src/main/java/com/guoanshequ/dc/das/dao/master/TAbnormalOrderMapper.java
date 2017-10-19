@@ -21,6 +21,8 @@ public interface TAbnormalOrderMapper{
 	
 	String queryTAbnorDownByOrdersn(Map<String, String> paraMap);
 	
+	String queryTAbnorDownByPhone(Map<String, String> paraMap);
+	
 	List<Map<String, String>> queryTAbnorDown(Map<String, String> paraMap);
 	
 	void addAbnorDown(Map<String, String> paraMap);

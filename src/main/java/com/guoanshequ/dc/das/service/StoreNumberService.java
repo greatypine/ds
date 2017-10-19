@@ -41,8 +41,11 @@ public class StoreNumberService {
     	String storeNoesStr = String.join(",", storeNoesList);
     	return storeNoesStr;
     }
-    
+    /**
+     * 统计门店总数
+     */
     public Integer queryStoreSum(Map<String, String> paraMap){
     	return storeNumberDao.queryStoreSum(paraMap);
     }
+    
 }

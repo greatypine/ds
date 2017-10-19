@@ -324,4 +324,19 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    /**
+     * 平台数据接口手动调度：异常订单下载库手动调度
+     */
+    @RequestMapping(value = "rest/abnormalOrderDownTaskRun",method = RequestMethod.POST)
+    public RestResponse abnormalOrderDownTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		abnormalOrderScheduleTask.abnormalDownTask();
+    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 }

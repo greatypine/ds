@@ -7,6 +7,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.guoanshequ.dc.das.service.AbnormalOrderService;
+import com.guoanshequ.dc.das.service.DfEshopPurchaseService;
+import com.guoanshequ.dc.das.service.EmployeeKeeperInfoService;
 import com.guoanshequ.dc.das.service.StoreNumberService;
 import com.guoanshequ.dc.das.service.TAbnormalOrderService;
 import com.guoanshequ.dc.das.utils.DateUtils;
@@ -32,7 +34,10 @@ public class AbnormalOrderScheduleTask {
     AbnormalOrderService abnormalOrderService;
     @Autowired
     TAbnormalOrderService tabnormalOrderService;
-    
+    @Autowired
+    DfEshopPurchaseService dfEshopPurchaseService;
+    @Autowired
+    EmployeeKeeperInfoService employeeKeeperInfoService;
     
     private static final Logger logger = LogManager.getLogger(AbnormalOrderScheduleTask.class);
     
@@ -41,12 +46,12 @@ public class AbnormalOrderScheduleTask {
      * 调度规则：每天03点10分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-//    @Scheduled(cron ="0 10 03 * * ?")
+    @Scheduled(cron ="0 10 03 * * ?")
     public void abnormalOrderTask() {
     	new Thread(){
     		public void run() {
     	    	try {
-    	        	logger.info("**********异常订单任务调度开始**********");
+    	        	logger.info("**********自动异常订单任务调度开始**********");
     	        	//前一天日期所在月份的1号
     	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
     	        	//前一天日期
@@ -58,14 +63,15 @@ public class AbnormalOrderScheduleTask {
     	        	//给后台接口构建参数
     	        	Map<String, String> paraMap=new HashMap<String, String>();
     	        	String storeIds = storeNumberService.queryStoreNumbers();
+    	        	String eshopIds = dfEshopPurchaseService.queryEshopIds();
     	        	paraMap.put("year", year);
     	        	paraMap.put("month", month);
     	        	paraMap.put("begindate", begindate);
     	        	paraMap.put("enddate", enddate);
     	        	paraMap.put("storeids", storeIds);
+    	        	paraMap.put("eshopids",eshopIds);
     	    		List<Map<String, String>> abnormalOrderAList =abnormalOrderService.queryAbnorOrderA(paraMap);
     	    		List<Map<String, String>> abnormalOrderBList =abnormalOrderService.queryAbnorOrderB(paraMap);
-    	    		List<Map<String, String>> abnormalOrderD1List =abnormalOrderService.queryAbnorOrderD1(paraMap);
     	    		
     	    		if(!abnormalOrderAList.isEmpty()){
     	    			for (Map<String, String> abnormalOrderAMap : abnormalOrderAList) {
@@ -76,7 +82,7 @@ public class AbnormalOrderScheduleTask {
     	    					tabnormalOrderService.addAbnorOrders(abnormalOrderAMap);
     	    				}
     	    			}
-    	    			logger.info("类型A异常订单共调度数据记录行数："+abnormalOrderAList.size());
+    	    			logger.info("自动类型A：企业购E店里面的订单共调度数据记录行数："+abnormalOrderAList.size());
     	    		}
     	    		
     	    		if(!abnormalOrderBList.isEmpty()){
@@ -88,22 +94,10 @@ public class AbnormalOrderScheduleTask {
     	    					tabnormalOrderService.addAbnorOrders(abnormalOrderBMap);
     	    				}
     	    			}
-    	    			logger.info("类型B异常订单共调度数据记录行数："+abnormalOrderBList.size());
+    	    			logger.info("自动类型B：营销费用异常异常订单共调度数据记录行数："+abnormalOrderBList.size());
     	    		}
     	    		
-    	    		if(!abnormalOrderD1List.isEmpty()){
-    	    			for (Map<String, String> abnormalOrderD1Map : abnormalOrderD1List) {
-    	    				String ordersn = abnormalOrderD1Map.get("ordersn");
-    	    				paraMap.put("ordersn", ordersn);
-    	    				String flag = tabnormalOrderService.queryTAbnorOrdersByOrdersn(paraMap);
-    	    				if("".equals(flag)||flag==null){
-    	    					tabnormalOrderService.addAbnorOrders(abnormalOrderD1Map);
-    	    				}
-    	    			}
-    	    			logger.info("类型D1异常订单共调度数据记录行数："+abnormalOrderD1List.size());
-    	    		}
-    	    		
-    	    		logger.info("**********异常订单任务调度结束**********");
+    	    		logger.info("**********自动异常订单任务调度结束**********");
     	    		} catch (Exception e) {
     	    			logger.info(e.toString());
     	    			e.printStackTrace();
@@ -116,12 +110,12 @@ public class AbnormalOrderScheduleTask {
      * 调度规则：每月03点25分开始调度
      * 参数：begindate  enddate  storename  storeids
      */    
-    //@Scheduled(cron ="0 25 03 * * ?")
+    @Scheduled(cron ="0 25 03 * * ?")
     public void abnormalDownTask() {
     	new Thread(){
     		public void run() {
     	    	try {
-    	        	logger.info("**********异常订单任务调度开始**********");
+    	        	logger.info("**********手动异常订单任务调度开始**********");
     	        	//前一天日期所在月份的1号
     	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
     	        	//前一天日期
@@ -138,33 +132,67 @@ public class AbnormalOrderScheduleTask {
     	        	paraMap.put("begindate", begindate);
     	        	paraMap.put("enddate", enddate);
     	        	paraMap.put("storeids", storeIds);
-    	    		List<Map<String, String>> abnormalOrderD2List =abnormalOrderService.queryAbnorOrderD2(paraMap);
-    	    		List<Map<String, String>> abnormalOrderFList =abnormalOrderService.queryAbnorOrderF(paraMap);
+    	    		List<Map<String, String>> abnormalOrderDownAList =abnormalOrderService.queryAbnorOrderDownA(paraMap);
+    	    		List<Map<String, String>> abnormalOrderDownBList =abnormalOrderService.queryAbnorOrderDownB(paraMap);
+    	    		List<Map<String, String>> abnormalOrderDownCList =abnormalOrderService.queryAbnorOrderDownC(paraMap);
+    	    		List<Map<String, String>> abnormalOrderDownDList =abnormalOrderService.queryAbnorOrderDownD(paraMap);
     	    		
-    	    		if(!abnormalOrderD2List.isEmpty()){
-    	    			for (Map<String, String> abnormalOrderD2Map : abnormalOrderD2List) {
-    	    				String ordersn = abnormalOrderD2Map.get("ordersn");
+    	    		if(!abnormalOrderDownAList.isEmpty()){
+    	    			for (Map<String, String> abnormalOrderDownAMap : abnormalOrderDownAList) {
+    	    				String ordersn = abnormalOrderDownAMap.get("ordersn");
     	    				paraMap.put("ordersn", ordersn);
     	    				String flag = tabnormalOrderService.queryTAbnorDownByOrdersn(paraMap);
     	    				if("".equals(flag)||flag==null){
-    	    					tabnormalOrderService.addAbnorDown(abnormalOrderD2Map);
+    	    					tabnormalOrderService.addAbnorDown(abnormalOrderDownAMap);
     	    				}
     	    			}
-    	    			logger.info("类型D2异常订单共调度数据记录行数："+abnormalOrderD2List.size());
+    	    			logger.info("手动下载类型A异常订单共调度数据记录行数："+abnormalOrderDownAList.size());
     	    		}
     	    		
-    	    		if(!abnormalOrderFList.isEmpty()){
-    	    			for (Map<String, String> abnormalOrderFMap : abnormalOrderFList) {
-    	    				String ordersn = abnormalOrderFMap.get("ordersn");
+    	    		if(!abnormalOrderDownBList.isEmpty()){
+    	    			List<Map<String,String>> phoneList = employeeKeeperInfoService.queryPhones();
+    	    			if(!phoneList.isEmpty()){
+    	    				for (Map<String, String> phoneMap : phoneList) {
+    	    					String phone = phoneMap.get("phone");
+    	    					for(int i=0;i<abnormalOrderDownBList.size();i++){
+    	    						if(abnormalOrderDownBList.get(i).get("mobilephone").equals(phone)){
+    	    							paraMap.put("ordersn", abnormalOrderDownBList.get(i).get("ordersn"));
+    	        	    				String flag = tabnormalOrderService.queryTAbnorDownByOrdersn(paraMap);
+    	        	    				if("".equals(flag)||flag==null){
+    	        	    					tabnormalOrderService.addAbnorDown(abnormalOrderDownBList.get(i));
+    	        	    				}
+    	    						}
+    	    					}
+							}
+    	    			}
+    	    			logger.info("手动下载类型B：代客下单异常订单共调度数据记录行数："+abnormalOrderDownBList.size());
+    	    		}
+    	    		
+    	    		if(!abnormalOrderDownCList.isEmpty()){
+    	    			for (Map<String, String> abnormalOrderDownCMap : abnormalOrderDownCList) {
+    	    				String ordersn = abnormalOrderDownCMap.get("ordersn");
     	    				paraMap.put("ordersn", ordersn);
     	    				String flag = tabnormalOrderService.queryTAbnorDownByOrdersn(paraMap);
     	    				if("".equals(flag)||flag==null){
-    	    					tabnormalOrderService.addAbnorDown(abnormalOrderFMap);
+    	    					tabnormalOrderService.addAbnorDown(abnormalOrderDownCMap);
     	    				}
     	    			}
-    	    			logger.info("类型F异常订单共调度数据记录行数："+abnormalOrderFList.size());
+    	    			logger.info("手动下载类型C：团购刷单共调度数据记录行数："+abnormalOrderDownCList.size());
     	    		}
-    	    		logger.info("**********异常订单任务调度结束**********");
+    	    		
+    	    		if(!abnormalOrderDownDList.isEmpty()){
+    	    			for (Map<String, String> abnormalOrderDownDMap : abnormalOrderDownDList) {
+    	    				String ordersn = abnormalOrderDownDMap.get("ordersn");
+    	    				paraMap.put("ordersn", ordersn);
+    	    				String flag = tabnormalOrderService.queryTAbnorDownByOrdersn(paraMap);
+    	    				if("".equals(flag)||flag==null){
+    	    					tabnormalOrderService.addAbnorDown(abnormalOrderDownDMap);
+    	    				}
+    	    			}
+    	    			logger.info("手动下载类型D：下架异常订单共调度数据记录行数："+abnormalOrderDownDList.size());
+    	    		}
+    	    		
+    	    		logger.info("**********手动异常订单任务调度结束**********");
     	    		} catch (Exception e) {
     	    			logger.info(e.toString());
     	    			e.printStackTrace();
@@ -172,5 +200,4 @@ public class AbnormalOrderScheduleTask {
     		}
     	}.start();
     }
-    
 }
