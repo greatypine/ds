@@ -78,7 +78,7 @@
 			select
 			tor.order_sn as ordersn,
 			tc.mobilephone as mobilephone,
-			ifnull(tc.short_name,'') as customername,
+			tc.id as customername,
 			tsa.name as cityname,
 			ts.code as storeno,
 			ts.`name` as storename,
@@ -130,7 +130,7 @@
 			select
 			tor.order_sn as ordersn,
 			tc.mobilephone as mobilephone,
-			ifnull(tc.short_name,'') as customername,
+			tc.id as customername,
 			tsa.name as cityname,
 			ts.code as storeno,
 			ts.`name` as storename,
@@ -182,7 +182,7 @@
 			select
 			tor.order_sn as ordersn,
 			tc.mobilephone as mobilephone,
-			ifnull(tc.short_name,'') as customername,
+			tc.id as customername,
 			tsa.name as cityname,
 			ts.code as storeno,
 			ts.`name` as storename,
@@ -238,7 +238,7 @@
 			select
 			tor.order_sn as ordersn,
 			tc.mobilephone as mobilephone,
-			ifnull(tc.short_name,'') as customername,
+			tc.id as customername,
 			tsa.name as cityname,
 			ts.code as storeno,
 			ts.`name` as storename,
