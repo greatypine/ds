@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TAreaZdGmvMapper">
+
+	<!-- 片区重点产品GMV -->
+	<select id="queryTAreaZdGmv" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			select city_name, storeno,store_name, area_no, area_name,employee_a_no,employee_a_name,
+				pesgmv, jwsa_other_order_amount, jwsb_other_returned_amount,yanglaoa_other_order_amount,
+				yanglaob_other_returned_amount,weichaoa_other_order_amount,weichaob_other_returned_count,pubseas 
+			from ds_areazdgmv
+			where year =#{year} and month =#{month}
+		]]>
+		<if test="null != storeids and null != storeids">
+			<![CDATA[                   
+			  and storeno IN (${storeids})
+			]]>
+		</if>
+		<if test="null != areano and '' != areano">
+           <![CDATA[                   
+              and area_no in (${areano})
+           ]]>
+		</if>
+  	</select>
+  	
+	<!-- 片区重点产品GMV -->
+	<select id="queryTAreaZdGmvGroupByEmp" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			select city_name, storeno,store_name, area_no, area_name,employee_a_no,employee_a_name,
+				sum(pesgmv) pesgmv,pubseas, (sum(pesgmv)+pubseas) totalsum
+			from ds_areazdgmv
+			where year =#{year} and month =#{month}
+		]]>
+		<if test="null != storeids and null != storeids">
+			<![CDATA[                   
+			  and storeno IN (${storeids})
+			]]>
+		</if>
+		<if test="null != areano and '' != areano">
+           <![CDATA[                   
+              and area_no in (${areano})
+           ]]>
+		</if>
+		group by employee_a_no
+  	</select>  	
+  	
+  	
+	<insert id="addTAreaZdGmv" parameterType="java.util.Map">
+		<![CDATA[
+			INSERT INTO ds_areazdgmv (
+				city_name, storeno,store_name, area_no, area_name,employee_a_no,employee_a_name,
+				pesgmv, jwsa_other_order_amount, jwsb_other_returned_amount,yanglaoa_other_order_amount,
+				yanglaob_other_returned_amount,weichaoa_other_order_amount,weichaob_other_returned_count,
+				year,month,createtime
+			) VALUES(
+				#{city_name},#{storeno},#{store_name},#{area_no},#{area_name},#{employee_a_no},	#{employee_a_name},
+				#{pesgmv},#{jwsa_other_order_amount},#{jwsb_other_returned_amount},#{yanglaoa_other_order_amount},
+				#{yanglaob_other_returned_amount},#{weichaoa_other_order_amount},#{weichaob_other_returned_count},
+				#{year},#{month},#{createtime}
+			)
+		]]>
+	</insert>
+	
+	<delete id="deleteByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_areazdgmv where year =#{year} and month =#{month}
+		]]>
+	</delete>
+	
+	<update id="updatePubSeasByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			update ds_areazdgmv set pubseas = #{pubseas}
+			where year =#{year} and month =#{month} and storeno = #{storeno}
+		]]>	
+	</update>		  	
+  	
+</mapper>

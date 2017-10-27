@@ -207,7 +207,7 @@
 					and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 					and groupon_instance_id is not null
 					and tor.trading_price >1000
-					group by tor.store_id
+					group by tor.store_id,toi.eshop_pro_id
 					having count(*)>=5
 			) tmpline
 			where tor.id = tof.order_id

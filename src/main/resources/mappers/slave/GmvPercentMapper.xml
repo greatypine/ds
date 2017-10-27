@@ -8,11 +8,16 @@ SELECT
 	totalgmv.city_name,
 	totalgmv.storeno,
 	totalgmv.store_name,
-	totalgmv.other_order_amount as totalamount,
-	jwsgmv.order_amount as jwsamount,
-	yanglaogmv.order_amount_yanglao as yanglaoamount,
-	weichaogmv.order_amount_microMarket as weichaoamount,
-	IFNULL(round(((jwsgmv.order_amount+yanglaogmv.order_amount_yanglao+weichaogmv.order_amount_microMarket)/totalgmv.other_order_amount)*100,2),0) as specvalue
+	(
+		IFNULL(jwsgmv.order_amount,0) - IFNULL(jwsgmv_th.other_returned_amount,0) +
+		IFNULL(yanglaogmv.order_amount_yanglao,0) - IFNULL(yanglaogmv_th.other_returned_amount,0) +
+		IFNULL(weichaogmv.order_amount_microMarket,0) - IFNULL(weichaogmv_th.other_returned_amount,0)
+    ) as pesgmv ,
+	(IFNULL(totalgmv.other_order_amount,0) - IFNULL(totalgmv_th.other_returned_amount,0)) as totalamount,
+	(IFNULL(jwsgmv.order_amount,0) - IFNULL(jwsgmv_th.other_returned_amount,0)) as jwsamount,
+	(IFNULL(yanglaogmv.order_amount_yanglao,0) - IFNULL(yanglaogmv_th.other_returned_amount,0)) as yanglaoamount,
+	(IFNULL(weichaogmv.order_amount_microMarket,0) - IFNULL(weichaogmv_th.other_returned_amount,0)) as weichaoamount,
+	0 as specvalue
 FROM (
 			SELECT 
 					a.`name` as city_name,
@@ -269,6 +274,122 @@ LEFT JOIN
 		WHERE ts.white!='QA' AND ts.`status`=0 AND ts.`name` NOT LIKE '%测试%'
 ) weichaogmv
 ON totalgmv.platformid = weichaogmv.platformid
+LEFT JOIN
+    (
+        SELECT
+            t.store_id as platformid,
+            SUM(IFNULL(toref.price,0.00)) AS other_returned_amount,
+            COUNT(DISTINCT t.group_id)  AS other_returned_count
+        FROM t_order_refund toref
+        JOIN
+            (
+                SELECT tor.store_id, tor.group_id
+                FROM t_order_returned toret
+                JOIN t_eshop te ON (
+                	te.id=toret.eshop_id AND
+                    te.white!='QA' AND te.name NOT LIKE '%测试%'
+                )
+            	JOIN t_ed_sys_role tesr ON (
+					tesr.id=te.department_id and
+					tesr.role_name not like '%线下联盟%' and tesr.role_name not like '%快周边%'
+				)
+                JOIN t_order tor ON toret.order_id=tor.id
+                WHERE toret.returned_status='done'
+                    AND toret.create_time>=#{begindate}
+                    AND toret.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+                GROUP BY tor.group_id
+            ) t ON toref.order_group_id=t.group_id
+        WHERE toref.refund_status='refunded'
+        GROUP BY t.store_id
+    ) totalgmv_th 
+ON totalgmv.platformid = totalgmv_th.platformid
+LEFT JOIN
+    (
+        SELECT
+            t.store_id as platformid,
+            SUM(IFNULL(toref.price,0.00)) AS other_returned_amount,
+            COUNT(DISTINCT t.group_id)  AS other_returned_count
+        FROM t_order_refund toref
+        JOIN
+            (
+                SELECT tor.store_id, tor.group_id
+                FROM t_order_returned toret
+                JOIN t_eshop te ON (
+                	te.id=toret.eshop_id AND
+                    te.white!='QA' AND te.name NOT LIKE '%测试%'
+                )
+            	JOIN t_ed_sys_role tesr ON (
+					tesr.id=te.department_id and
+					tesr.role_name like '%家务事事业部%'
+				)
+                JOIN t_order tor ON toret.order_id=tor.id
+                WHERE toret.returned_status='done'
+                    AND toret.create_time>=#{begindate}
+                    AND toret.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+                GROUP BY tor.group_id
+            ) t ON toref.order_group_id=t.group_id
+        WHERE toref.refund_status='refunded'
+        GROUP BY t.store_id
+    ) jwsgmv_th 
+ON totalgmv.platformid = jwsgmv_th.platformid
+LEFT JOIN
+    (
+        SELECT
+            t.store_id as platformid,
+            SUM(IFNULL(toref.price,0.00)) AS other_returned_amount,
+            COUNT(DISTINCT t.group_id)  AS other_returned_count
+        FROM t_order_refund toref
+        JOIN
+            (
+                SELECT tor.store_id, tor.group_id
+                FROM t_order_returned toret
+                JOIN t_eshop te ON (
+                	te.id=toret.eshop_id AND
+                    te.white!='QA' AND te.name NOT LIKE '%测试%'
+                )
+            	JOIN t_ed_sys_role tesr ON (
+					tesr.id=te.department_id and
+					tesr.role_name like '%老年之家事业部%'
+				)
+                JOIN t_order tor ON toret.order_id=tor.id
+                WHERE toret.returned_status='done'
+                    AND toret.create_time>=#{begindate}
+                    AND toret.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+                GROUP BY tor.group_id
+            ) t ON toref.order_group_id=t.group_id
+        WHERE toref.refund_status='refunded'
+        GROUP BY t.store_id
+    ) yanglaogmv_th 
+ON totalgmv.platformid = yanglaogmv_th.platformid
+LEFT JOIN
+    (
+        SELECT
+            t.store_id as platformid,
+            SUM(IFNULL(toref.price,0.00)) AS other_returned_amount,
+            COUNT(DISTINCT t.group_id)  AS other_returned_count
+        FROM t_order_refund toref
+        JOIN
+            (
+                SELECT tor.store_id, tor.group_id
+                FROM t_order_returned toret
+                JOIN t_eshop te ON (
+                	te.id=toret.eshop_id AND
+                    te.white!='QA' AND te.name NOT LIKE '%测试%'
+                )
+            	JOIN t_ed_sys_role tesr ON (
+					tesr.id=te.department_id and
+					tesr.role_name like '%国安优易事业部%'
+				)
+                JOIN t_order tor ON toret.order_id=tor.id
+                WHERE toret.returned_status='done'
+                    AND toret.create_time>=#{begindate}
+                    AND toret.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+                GROUP BY tor.group_id
+            ) t ON toref.order_group_id=t.group_id
+        WHERE toref.refund_status='refunded'
+        GROUP BY t.store_id
+    ) weichaogmv_th 
+ON totalgmv.platformid = weichaogmv_th.platformid
 WHERE totalgmv.storeno is not null and totalgmv.storeno !='' 
 AND totalgmv.number IN (${storeids})
 ORDER BY totalgmv.city_name,totalgmv.number

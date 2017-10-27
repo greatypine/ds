@@ -4,6 +4,7 @@ import com.guoanshequ.dc.das.domain.EnumRespStatus;
 import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.service.CustomerService;
 import com.guoanshequ.dc.das.task.AbnormalOrderScheduleTask;
+import com.guoanshequ.dc.das.task.AreaScheduleTask;
 import com.guoanshequ.dc.das.task.ScheduleTask;
 import com.guoanshequ.dc.das.task.TopDataScheduleTask;
 
@@ -24,7 +25,9 @@ import java.util.Map;
 * @version 1.0
 * 说明: 手动调度topDataScheduleTask与ScheduleTask；
 * 1、人员、店长、拜访记录、单体画像、绩效分数的调度；
-* 2、平台上新增用户、复购用户、上门送单量、门店交易额、国安侠好评次数的调度；
+* 2、平台上新增用户、复购用户、上门送单量、上门送单量按总数、门店交易额、门店交易额按门店、国安侠好评次数的调度；
+* 3、异常订单、异常订单下载基库的调度；
+* 4、片区绩效的调度；
 */ 
 @RestController
 @ResponseBody
@@ -36,6 +39,8 @@ public class TaskByHandController {
     ScheduleTask platformScheduleTask;
     @Autowired
     AbnormalOrderScheduleTask abnormalOrderScheduleTask;
+    @Autowired
+    AreaScheduleTask areaScheduleTask;
 
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
@@ -339,4 +344,187 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    
+    /**
+     * ========================片区业务任务调度=========================================================
+     * 片区新增用户
+     */
+    @RequestMapping(value = "rest/areaNewAddCusTaskRun",method = RequestMethod.POST)
+    public RestResponse areaNewAddCusTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaNewAddCusTask();
+    		return new RestResponse(EnumRespStatus.TASK_AREANEWADDCUSOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 片区新增用户按门店
+     */
+    @RequestMapping(value = "rest/areaNewAddCusStoreTaskRun",method = RequestMethod.POST)
+    public RestResponse areaNewAddCusStoreTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaNewAddCusStoreTask();
+    		return new RestResponse(EnumRespStatus.TASK_AREANEWADDCUSSTOREOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 片区交易额
+     */
+    @RequestMapping(value = "rest/areaTradeTaskRun",method = RequestMethod.POST)
+    public RestResponse areaTradeTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaTradeTask();
+    		return new RestResponse(EnumRespStatus.TASK_AREATRADEOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 片区交易额按门店
+     */
+    @RequestMapping(value = "rest/areaTradeStoreTaskRun",method = RequestMethod.POST)
+    public RestResponse areaTradeStoreTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaTradeStoreTask();
+    		return new RestResponse(EnumRespStatus.TASK_AREATRADESTOREOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 片区重点产品GMV
+     */
+    @RequestMapping(value = "rest/areaZdGmvTaskRun",method = RequestMethod.POST)
+    public RestResponse areaZdGmvTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaZdGmvTask();
+    		return new RestResponse(EnumRespStatus.TASK_AREAZDGMVOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 片区重点GMV按门店
+     */
+    @RequestMapping(value = "rest/areaZdGmvStoreTaskRun",method = RequestMethod.POST)
+    public RestResponse areaZdGmvStoreTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaZdGmvStoreTask();
+    		return new RestResponse(EnumRespStatus.TASK_AREAZDGMVSTOREOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 片区新增用户按门店--公海数据更新
+     */
+    @RequestMapping(value = "rest/areaNewAddCusStorePubseasTaskRun",method = RequestMethod.POST)
+    public RestResponse areaNewAddCusStorePubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaNewAddCusStorePubseasTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }    
+    
+    /**
+     * 片区交易额按门店--公海数据更新
+     */
+    @RequestMapping(value = "rest/areaTradeStorePubseasTaskRun",method = RequestMethod.POST)
+    public RestResponse areaTradeStorePubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaTradeStorePubseasTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }  
+    
+    /**
+     * 片区重点产品GMV按门店--公海数据更新
+     */
+    @RequestMapping(value = "rest/areaZdGmvStorePubseasTaskRun",method = RequestMethod.POST)
+    public RestResponse areaZdGmvStorePubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaZdGmvStorePubseasTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }     
+    
+    
+    /**
+     * 片区新增用户--公海数据更新
+     */
+    @RequestMapping(value = "rest/areaNewAddCusPubseasTaskRun",method = RequestMethod.POST)
+    public RestResponse areaNewAddCusPubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaNewAddCusPubseasTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
+    /**
+     * 片区交易额--公海数据更新
+     */
+    @RequestMapping(value = "rest/areaTradePubseasTaskRun",method = RequestMethod.POST)
+    public RestResponse areaTradePubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaTradePubseasTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 片区重点产品GMV--公海数据更新
+     */
+    @RequestMapping(value = "rest/areaZdGmvPubseasTaskRun",method = RequestMethod.POST)
+    public RestResponse areaZdGmvPubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaScheduleTask.areaZdGmvPubseasTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }    
 }

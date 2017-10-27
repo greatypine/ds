@@ -16,4 +16,5 @@ public interface HumanresourceMapper {
 	
 	List<Map<String, String>> queryPreHumanresources(Map<String, String> paraMap);
 
+	int queryStoreEmpCount(String storeno);
 }

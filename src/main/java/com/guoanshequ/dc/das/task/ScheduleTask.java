@@ -121,6 +121,7 @@ public class ScheduleTask {
     	    		logger.info("**********上门送单量任务调度结束**********");
     	    		logger.info("共调度数据记录行数："+sendOrderList.size());
     	    		} catch (Exception e) {
+    	    			logger.info(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}
@@ -163,6 +164,7 @@ public class ScheduleTask {
     	    		logger.info("**********门店交易额任务调度结束**********");
     	    		logger.info("共调度数据记录行数："+storeTradesList.size());
     	    		} catch (Exception e) {
+    	    			logger.info(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}
@@ -205,6 +207,7 @@ public class ScheduleTask {
     	    		logger.info("**********每月新增客户总量调度结束**********");
     	    		logger.info("共调度数据记录行数："+newaddCusList.size());
     	    		} catch (Exception e) {
+    	    			logger.info(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}
@@ -244,6 +247,7 @@ public class ScheduleTask {
     	    		logger.info("**********复购客户任务调度结束**********");
     	    		logger.info("共调度数据记录行数："+rebuyCusList.size());
     	    		} catch (Exception e) {
+    	    			logger.info(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}
@@ -286,6 +290,7 @@ public class ScheduleTask {
     	    		logger.info("**********国安侠好评次数调度结束**********");
     	    		logger.info("共调度数据记录行数："+rewardTimesList.size());
     	    		} catch (Exception e) {
+    	    			logger.info(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}
@@ -328,6 +333,7 @@ public class ScheduleTask {
     	    		logger.info("**********上门送单量按国侠个人总量调度结束**********");
     	    		logger.info("共调度数据记录行数："+sendOrderSumList.size());
     	    		} catch (Exception e) {
+    	    			logger.info(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}
@@ -367,9 +373,10 @@ public class ScheduleTask {
     	    				tstoreTradeChannelService.addTStoreTradeChannel(storetradeChannelMap);
     	    			}
     	    		}
-    	    		logger.info("**********门店交易额（按频道）任务调度开始**********");
+    	    		logger.info("**********门店交易额（按频道）任务调度结束**********");
     	    		logger.info("共调度数据记录行数："+storetradeChannelList.size());
     	    		} catch (Exception e) {
+    	    			logger.info(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}
@@ -409,9 +416,10 @@ public class ScheduleTask {
     	    				tgmvPercentService.addTGmvPercent(gmvPercentMap);
     	    			}
     	    		}
-    	    		logger.info("**********gmv占比任务调度开始**********");
+    	    		logger.info("**********gmv占比任务调度结束**********");
     	    		logger.info("共调度数据记录行数："+gmvPercentList.size());
     	    		} catch (Exception e) {
+    	    			logger.info(e.toString());
     	    			e.printStackTrace();
     	    		}
     		}

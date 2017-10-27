@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.AreaNewaddCusStoreMapper">
+
+	
+	<!-- 片区拉新按门店 -->
+	<select id="queryAreaNewaddCusStore" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+SELECT
+city_name, 
+storeno,
+store_name,
+sum(new_10_count) new_10_count,
+YEAR(date_sub(now(),interval 1 day)) as year ,
+MONTH(date_sub(now(),interval 1 day)) as month ,
+NOW() as createtime
+FROM (
+	SELECT 
+		tatob.city_name,
+		tatob.storeno,
+		tatob.store_name,
+		tatob.area_no,
+		tatob.area_name,
+		tatob.employee_a_no,
+		tatob.employee_a_name,
+		ifnull(bb.num,0) new_10_count
+	FROM
+	   (SELECT DISTINCT city_name,storeno,store_name,area_no,name as area_name,employee_a_no,employee_a_name FROM tmp_area_to_order_block where employee_a_no is not null) tatob
+	LEFT JOIN 
+		(
+			 SELECT    t_store_custom.area_no,
+					   t_store_custom.area_name,
+					   t_store_custom.employee_a_no,
+					   t_store_custom.employee_a_name,
+					   t_store_custom.storeno,
+					   count(t_store_custom.customer_id) num
+			 FROM
+				  (
+						SELECT t_m1.store_id,
+							   t_m1.customer_id,
+							   t_m1.tiny_village_name,
+							   t_m1.area_no,
+							   t_m1.area_name AS area_name,
+							   t_m1.order_placename,
+							   t_m1.employee_a_no,
+							   t_m1.employee_a_name,
+							   t_m1.storeno
+						FROM
+								(
+									SELECT tor.store_id, 
+											tor.customer_id, 
+											tor.trading_price,
+										   tatob.tiny_village_name,
+										   tatob.area_no,
+										   tatob.name AS area_name,
+										   tatob.order_placename,
+										   tatob.employee_a_no,
+										   tatob.employee_a_name,
+										   tatob.storeno
+									FROM t_eshop te
+									JOIN t_order tor ON (te.id=tor.eshop_id)
+									JOIN df_order_flow tof ON (tor.id=tof.order_id
+										AND tof.order_status='signed'
+										AND tof.create_time>=DATE(#{begindate})
+										AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY))
+									JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
+									JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+																			 AND tatob.employee_a_no IS NOT NULL
+																			 AND tatob.order_placename IS NOT NULL)
+									WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+									GROUP BY tor.store_id,tor.customer_id HAVING SUM(tor.trading_price)>10.0
+								) t_m1
+						LEFT JOIN
+								(
+									SELECT tor_in.store_id, tor_in.customer_id, 
+												   tatob.tiny_village_name,
+												   tatob.area_no,
+												   tatob.name AS area_name,
+												   tatob.order_placename,
+												   tatob.employee_a_no,
+												   tatob.employee_a_name,
+												   tatob.storeno,
+												   SUM(tor_in.trading_price)
+									FROM t_eshop te_in
+									JOIN t_order tor_in ON (te_in.id=tor_in.eshop_id )
+									JOIN df_order_flow tof_in ON tor_in.id=tof_in.order_id
+										AND tof_in.order_status='signed'
+										AND tof_in.create_time<DATE(#{begindate})
+									JOIN t_order_address taddr ON (taddr.id = tor_in.order_address_id)
+									JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+																			 AND tatob.employee_a_no IS NOT NULL
+																			 AND tatob.order_placename IS NOT NULL)
+									WHERE te_in.`name` NOT LIKE '%测试%' AND te_in.white!='QA'
+									GROUP BY tor_in.store_id,tor_in.customer_id
+								) t_old ON (t_m1.store_id=t_old.store_id AND t_m1.customer_id=t_old.customer_id)
+							WHERE t_old.store_id IS NULL
+					) t_store_custom
+				GROUP BY t_store_custom.area_no
+			) bb ON (bb.area_no = tatob.area_no)
+) areanewstore
+]]> 
+<where>
+	<if test="null != storeids and '' != storeids">
+        <![CDATA[                   
+           storeno in (${storeids})
+        ]]>
+	</if>
+</where>
+GROUP BY storeno
+</select>
+</mapper>

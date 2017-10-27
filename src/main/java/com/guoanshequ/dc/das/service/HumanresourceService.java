@@ -27,4 +27,8 @@ public class HumanresourceService {
     public List<Map<String, String>> queryPreHumanresources(Map<String, String> paraMap) throws Exception{
         return humanresourceDao.queryPreHumanresources(paraMap);
     }
+    
+    public int queryStoreEmpCount(String storeno) throws Exception{
+        return humanresourceDao.queryStoreEmpCount(storeno);
+    }
 }

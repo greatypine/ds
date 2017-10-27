@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TAreaNewaddCusMapper">
+
+	<!-- 片区拉新 -->
+	<select id="queryTAreaNewaddCus" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select city_name, storeno,store_name, area_no, area_name,
+				   employee_a_no, employee_a_name, new_10_count ,pubseas 
+			from ds_areanewaddcus
+			where year =#{year} and month =#{month}
+		]]>
+		<if test="null != storeids and null != storeids">
+			<![CDATA[                   
+			   and storeno IN (${storeids})
+			]]>
+		</if>
+		<if test="null != areano and '' != areano">
+           <![CDATA[                   
+              and area_no in (${areano})
+           ]]>
+		</if>		
+	</select>
+	
+	<!-- 片区拉新按人员统计 -->
+	<select id="queryTAreaNewaddCusGroupByEmp" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select city_name, storeno,store_name, area_no, area_name,
+				   employee_a_no, employee_a_name, sum(new_10_count) new_10_count ,pubseas,
+				   (sum(new_10_count) +pubseas) as totalsum
+			from ds_areanewaddcus
+			where year =#{year} and month =#{month}
+		]]>
+		<if test="null != storeids and null != storeids">
+			<![CDATA[                   
+			   and storeno IN (${storeids})
+			]]>
+		</if>
+		<if test="null != areano and '' != areano">
+           <![CDATA[                   
+              and area_no in (${areano})
+           ]]>
+		</if>
+		group by employee_a_no		
+	</select>	
+	
+	
+	
+	<insert id="addTAreaNewaddCus" parameterType="java.util.Map">
+		<![CDATA[
+			INSERT INTO ds_areanewaddcus (
+				city_name, storeno,store_name, area_no, area_name,
+				employee_a_no, employee_a_name, new_10_count,year,month,createtime
+			) VALUES(
+				#{city_name},#{storeno},#{store_name},#{area_no},#{area_name},
+				#{employee_a_no},#{employee_a_name},#{new_10_count},#{year},#{month},#{createtime}
+			)
+		]]>
+	</insert>
+
+	<delete id="deleteByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_areanewaddcus where year =#{year} and month =#{month}
+		]]>
+	</delete>
+	
+	<update id="updatePubSeasByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			update ds_areanewaddcus set pubseas = #{pubseas}
+			where year =#{year} and month =#{month} and storeno = #{storeno}
+		]]>	
+	</update>		
+	
+</mapper>

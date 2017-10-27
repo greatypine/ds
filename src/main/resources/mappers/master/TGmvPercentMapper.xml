@@ -37,11 +37,11 @@
 	<insert id="addTGmvPercent" parameterType="java.util.Map">
 		<![CDATA[
 			insert into ds_gmvpercent(
-				city_name,storeno,store_name,totalamount,jwsamount,yanglaoamount,weichaoamount,specvalue,
+				city_name,storeno,store_name,pesgmv,totalamount,jwsamount,yanglaoamount,weichaoamount,specvalue,
 				year,month,createtime) 
 			values(
-				#{city_name},#{storeno},#{store_name},#{totalamount},#{jwsamount},
-				#{yanglaoamount},#{weichaoamount},#{specvalue},
+				#{city_name},#{storeno},#{store_name},#{pesgmv},#{totalamount},
+				#{jwsamount},#{yanglaoamount},#{weichaoamount},#{specvalue},
 				YEAR(date_sub(now(),interval 1 day)),MONTH(date_sub(now(),interval 1 day)),NOW()
 			)
 		]]>

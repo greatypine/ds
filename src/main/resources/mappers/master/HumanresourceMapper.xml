@@ -139,4 +139,15 @@
           order by humanchangeb.update_time desc
         ]]>
     </select>
+    
+    <select id="queryStoreEmpCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+    	<![CDATA[
+    		select count(1) empcount from t_humanresources thuman,t_store ts 
+			where thuman.store_id = ts.store_id 
+			and thuman.humanstatus =1 
+			and thuman.zw ='国安侠'
+			and ts.storeno =#{storeno}
+		]]>
+    </select>
+    
 </mapper>

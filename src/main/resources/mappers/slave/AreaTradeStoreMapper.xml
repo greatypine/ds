@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.AreaTradeStoreMapper">
+
+	<!-- 片区GMV按门店 -->
+	<select id="queryAreaTradesStore" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+SELECT 
+	city_name,
+	storeno,
+	store_name,
+	(sum(other_order_amount) - sum(other_returned_amount)) as pesgmv,
+	sum(other_order_amount) other_order_amount,
+	sum(other_order_count) other_order_count,
+	sum(other_returned_amount) other_returned_amount,
+	sum(other_returned_count) other_returned_count,
+	YEAR(date_sub(now(),interval 1 day)) as year ,
+	MONTH(date_sub(now(),interval 1 day)) as month ,
+	NOW() as createtime
+FROM (
+	SELECT 
+		   city_name,
+		   tatob.storeno,
+		   tatob.store_name,
+		   tatob.area_no,
+		   tatob.area_name,
+		   tatob.employee_a_no,
+		   tatob.employee_a_name,
+		   (ifnull(a.totalprice,0) - ifnull(b.other_returned_amount,0)) pesgmv,
+		   ifnull(a.totalprice,0) other_order_amount,
+		   ifnull(a.ordercount,0) other_order_count,
+		   ifnull(b.other_returned_amount,0) other_returned_amount,
+		   ifnull(b.other_returned_count,0) other_returned_count
+	FROM
+		(SELECT DISTINCT city_name,storeno,store_name,area_no,name as area_name,employee_a_no,employee_a_name FROM tmp_area_to_order_block where employee_a_no is not null) tatob
+	LEFT JOIN
+	  (
+		  SELECT aa.storeno,
+				  aa.area_no,
+				  aa.employee_a_no,
+				  aa.employee_a_name,
+				  SUM(IFNULL(aa.price,0.00)) AS totalprice,
+				  COUNT(aa.group_id) AS ordercount
+		   FROM
+			 ( SELECT DISTINCT tor.id,
+							   tatob.tiny_village_name,
+							   tatob.area_no,
+							   tatob.name AS area_name,
+							   tatob.order_placename,
+							   tatob.employee_a_no,
+							   tatob.employee_a_name,
+							   tatob.storeno,
+							   tor.store_id,
+							   IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+							   tor.group_id AS group_id
+			  FROM t_eshop te
+			  JOIN t_order tor ON (tor.eshop_id=te.id
+								   AND (tor.eshop_id ='23465aaa7b2fe4edd4f79c2395110fc4'
+										OR tor.eshop_id ='d1d2edaa716017fb04a3302b63f1a468'
+										OR tor.eshop_id ='b87b2479f871070ee42add29b922a504'
+										OR tor.eshop_id ='dcd9672984adcbef2b5876f1189b6b4f'
+										OR tor.eshop_id ='00000000000000000000000000000127'
+										OR tor.eshop_id ='0d0c3a35b2438f0025e15bba7dd12407'
+										OR tor.eshop_id ='b9f47c74c0f11e5c4334c862822ede7b'))
+			  JOIN t_order_group tog ON tog.id=tor.group_id
+			  JOIN t_order_receipts trp ON (trp.eshop_id = te.id
+											AND trp.order_group_id = tor.group_id
+											AND trp.`status` =0
+											AND trp.type='order'
+											AND trp.pay_status= 'payed'
+											AND trp.pay_platform !='prepay')
+			  JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
+										AND tof.order_status='signed'
+										AND tof.create_time>=#{begindate}
+										AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+			  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
+			  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+													 AND tatob.employee_a_no IS NOT NULL
+													 AND tatob.order_placename IS NOT NULL)
+			  WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+			  UNION ALL 
+			  SELECT DISTINCT tor.id,
+							tatob.tiny_village_name,
+							tatob.area_no,
+							tatob.name AS area_name,
+							tatob.order_placename,
+							tatob.employee_a_no,
+							tatob.employee_a_name,
+							tatob.storeno,
+							tor.store_id,
+							IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+							tor.group_id AS group_id
+			  FROM t_eshop te
+			  JOIN t_ed_sys_role tesr ON (tesr.id=te.department_id
+										  AND tesr.role_name NOT LIKE '%线下联盟%'
+										  AND tesr.role_name NOT LIKE '%快周边%')
+			  JOIN t_order tor ON (tor.eshop_id=te.id
+								   AND tor.eshop_id !='23465aaa7b2fe4edd4f79c2395110fc4'
+								   AND tor.eshop_id !='d1d2edaa716017fb04a3302b63f1a468'
+								   AND tor.eshop_id !='b87b2479f871070ee42add29b922a504'
+								   AND tor.eshop_id !='dcd9672984adcbef2b5876f1189b6b4f'
+								   AND tor.eshop_id !='00000000000000000000000000000127'
+								   AND tor.eshop_id !='0d0c3a35b2438f0025e15bba7dd12407'
+								   AND tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b')
+			  JOIN t_order_group tog ON tog.id=tor.group_id
+			  JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
+										AND tof.order_status='signed'
+										AND tof.create_time>=#{begindate}
+										AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+			  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
+			  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+													 AND tatob.employee_a_no IS NOT NULL
+													 AND tatob.order_placename IS NOT NULL)
+			  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA') aa
+		   GROUP BY aa.area_no
+	  ) a ON (a.area_no = tatob.area_no)
+	LEFT JOIN
+	  (
+		  SELECT t.storeno,
+				  t.area_no,
+				  t.employee_a_no,
+				  t.employee_a_name,
+				  SUM(IFNULL(toref.price,0.00)) AS other_returned_amount,
+				  COUNT(DISTINCT t.group_id) AS other_returned_count
+		   FROM t_order_refund toref
+		   JOIN
+			  (
+				 SELECT tatob.tiny_village_name,
+						 tatob.area_no,
+						 tatob.name AS area_name,
+						 tatob.order_placename,
+						 tatob.employee_a_no,
+						 tatob.employee_a_name,
+						 tatob.storeno,
+						 tor.store_id,
+						 tor.group_id
+				  FROM t_order_returned toret
+				  JOIN t_eshop te ON (te.id=toret.eshop_id
+									  AND te.white!='QA'
+									  AND te.name NOT LIKE '%测试%')
+				  JOIN t_ed_sys_role tesr ON (tesr.id=te.department_id
+											  AND tesr.role_name NOT LIKE '%线下联盟%'
+											  AND tesr.role_name NOT LIKE '%快周边%')
+				  JOIN t_order tor ON toret.order_id=tor.id
+				  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
+				  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+														 AND tatob.employee_a_no IS NOT NULL
+														 AND tatob.order_placename IS NOT NULL)
+				  WHERE toret.returned_status='done'
+					AND toret.create_time>=#{begindate}
+					AND toret.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+				  GROUP BY tor.group_id
+			  ) t ON toref.order_group_id=t.group_id
+		   WHERE toref.refund_status='refunded'
+		   GROUP BY t.area_no
+	   ) b ON (b.area_no = tatob.area_no)
+  ) areagmvstore
+]]>
+	<where>
+		<if test="null != storeids and '' != storeids">
+	        <![CDATA[                   
+	           storeno in (${storeids})
+	        ]]>
+		</if>	
+	</where>
+	GROUP BY storeno
+</select>
+	
+</mapper>
