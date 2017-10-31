@@ -69,6 +69,25 @@
 			update ds_areanewaddcus set pubseas = #{pubseas}
 			where year =#{year} and month =#{month} and storeno = #{storeno}
 		]]>	
-	</update>		
+	</update>
+	
+	<insert id="addTAreaNewaddCusByStore" parameterType="java.util.Map">
+		<![CDATA[
+			insert into ds_areanewaddcus_store (
+				city_name, storeno,store_name,new_10_count, year, month,createtime
+			)
+			select 
+				city_name, 
+				storeno,
+				store_name,
+				sum(new_10_count) new_10_count,
+				YEAR(date_sub(now(),interval 1 day)) as year ,
+				MONTH(date_sub(now(),interval 1 day)) as month ,
+				NOW() as createtime 
+			from ds_areanewaddcus
+			where year =#{year} and month =#{month}
+			group by storeno
+		]]>
+	</insert>
 	
 </mapper>

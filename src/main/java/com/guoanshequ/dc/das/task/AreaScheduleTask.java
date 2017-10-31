@@ -27,6 +27,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 
+* @author CaoPs
+* @date 2017年10月30日
+* @version 1.0
+* 说明:
+* 1、基表数据调度在凌晨3:30
+* 2、基表按门店数据调度在凌晨5:30
+* 3、计算门店公海数据在凌晨6:00
+* 4、计算片区数据在凌晨6:20
+ */
 @Component
 public class AreaScheduleTask {
     @Autowired
@@ -65,7 +76,7 @@ public class AreaScheduleTask {
      * 调度规则：每月1号3点30分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-//    @Scheduled(cron ="0 30 03 * * ?")
+    @Scheduled(cron ="0 30 03 * * ?")
     public void areaNewAddCusTask() {
     	new Thread(){
     		public void run() {
@@ -106,7 +117,7 @@ public class AreaScheduleTask {
      * 片区新增用户按门店
      * 参数：begindate  enddate  storename  storeids
      */
-//    @Scheduled(cron ="0 30 03 * * ?")
+    @Scheduled(cron ="0 30 05 * * ?")
     public void areaNewAddCusStoreTask() {
     	new Thread(){
     		public void run(){
@@ -126,15 +137,14 @@ public class AreaScheduleTask {
     	        	paraMap.put("month", month);
     	        	paraMap.put("begindate", begindate);
     	        	paraMap.put("enddate", enddate);
-    	    		List<Map<String, String>> areaNewaddCusStoreList = areaNewaddCusStoreService.queryAreaNewaddCusStore(paraMap);
-    	    		if(!areaNewaddCusStoreList.isEmpty()){
+    	    		List<Map<String, String>> tareaNewaddCusList = tAreaNewaddCusService.queryTAreaNewaddCus(paraMap);
+    	    		int num =0;
+    	    		if(!tareaNewaddCusList.isEmpty()){
     	    			tAreaNewaddCusStoreService.deleteByYearMonth(paraMap);
-    	    			for (Map<String, String> areaNewaddCusStoreMap : areaNewaddCusStoreList) {
-    	    				tAreaNewaddCusStoreService.addTAreaNewaddCusStore(areaNewaddCusStoreMap);
-    	    			}
+    	    			num = tAreaNewaddCusService.addTAreaNewaddCusByStore(paraMap);
     	    		}
     	    		logger.info("**********片区新增用户按门店任务调度结束**********");
-    	    		logger.info("共调度数据记录行数："+areaNewaddCusStoreList.size());
+    	    		logger.info("共调度数据记录行数："+num);
     	    		} catch (Exception e) {
     	    			logger.error(e.toString());
     	    			e.printStackTrace();
@@ -147,7 +157,7 @@ public class AreaScheduleTask {
      * 片区交易额任务调度
      * 参数：begindate  enddate  storename  storeids
      */
-//    @Scheduled(cron ="0 30 03 * * ?")
+    @Scheduled(cron ="0 30 03 * * ?")
     public void areaTradeTask() {
     	new Thread(){
     		public void run() {
@@ -174,7 +184,7 @@ public class AreaScheduleTask {
     	    				tAreaTradeService.addTAreaTrades(areaTradeMap);
     	    			}
     	    		}
-    	    		logger.info("**********片区GMV调度结束**********");
+    	    		logger.info("**********片区交易额调度结束**********");
     	    		logger.info("共调度数据记录行数："+areaTradeList.size());
     	    		} catch (Exception e) {
     	    			logger.error(e.toString());
@@ -189,7 +199,7 @@ public class AreaScheduleTask {
      *片区交易额按门店任务调度
      * 参数：year   month   rebuyStoreName  storeids
      */
-//    @Scheduled(cron ="0 30 03 * * ?")
+    @Scheduled(cron ="0 30 05 * * ?")
     public void areaTradeStoreTask() {
     	new Thread(){
     		public void run() {
@@ -210,15 +220,14 @@ public class AreaScheduleTask {
     	        	paraMap.put("month", month);
     	        	paraMap.put("begindate", begindate);
     	        	paraMap.put("enddate", enddate);
-    	    		List<Map<String, String>> areaTradeStoreList = areaTradeStoreService.queryAreaTradesStore(paraMap);
-    	    		if(!areaTradeStoreList.isEmpty()){
+    	    		List<Map<String, String>> tareaTradeList = tAreaTradeService.queryTAreaTrades(paraMap);
+    	    		int num =0;
+    	    		if(!tareaTradeList.isEmpty()){
     	    			tAreaTradeStoreService.deleteByYearMonth(paraMap);
-    	    			for (Map<String, String> areaTradeStoreMap : areaTradeStoreList) {
-    	    				tAreaTradeStoreService.addTAreaTradesStore(areaTradeStoreMap);
-    	    			}
+    	    			num = tAreaTradeService.addTAreaTradeByStore(paraMap);
     	    		}
     	    		logger.info("**********片区交易额按门店任务调度结束**********");
-    	    		logger.info("共调度数据记录行数："+areaTradeStoreList.size());
+    	    		logger.info("共调度数据记录行数："+num);
     	    		} catch (Exception e) {
     	    			logger.error(e.toString());
     	    			e.printStackTrace();
@@ -231,7 +240,7 @@ public class AreaScheduleTask {
      * 片区重点产品gmv任务调度
      * 参数：begindate  enddate  storeids
      */
-//    @Scheduled(cron ="0 30 03 * * ?")
+    @Scheduled(cron ="0 30 03 * * ?")
     public void areaZdGmvTask() {
     	new Thread(){
     		public void run() {
@@ -272,7 +281,7 @@ public class AreaScheduleTask {
      * 片区重点产品gmv按门店
      * 参数：begindate  enddate  storeids
      */
-//    @Scheduled(cron ="0 30 03 * * ?")
+    @Scheduled(cron ="0 30 05 * * ?")
     public void areaZdGmvStoreTask() {
     	new Thread(){
     		public void run() {
@@ -292,15 +301,14 @@ public class AreaScheduleTask {
     	        	paraMap.put("month", month);
     	        	paraMap.put("begindate", begindate);
     	        	paraMap.put("enddate", enddate);
-    	    		List<Map<String, String>> areaZdGmvStoreList = areaZdGmvStoreService.queryAreaZdGmvStore(paraMap);
-    	    		if(!areaZdGmvStoreList.isEmpty()){
+    	    		List<Map<String, String>> tareaZdGmvList = tAreaZdGmvService.queryTAreaZdGmv(paraMap);
+    	    		int num =0;
+    	    		if(!tareaZdGmvList.isEmpty()){
     	    			tAreaZdGmvStoreService.deleteByYearMonth(paraMap);
-    	    			for (Map<String, String> areaZdGmvStoreMap : areaZdGmvStoreList) {
-    	    				tAreaZdGmvStoreService.addTAreaZdGmvStore(areaZdGmvStoreMap);
-    	    			}
+    	    			num = tAreaZdGmvService.addTAreaZdGmvByStore(paraMap);
     	    		}
     	    		logger.info("**********片区重点产品gmv按门店调度结束**********");
-    	    		logger.info("共调度数据记录行数："+areaZdGmvStoreList.size());
+    	    		logger.info("共调度数据记录行数："+num);
     	    		} catch (Exception e) {
     	    			logger.error(e.toString());
     	    			e.printStackTrace();
@@ -315,7 +323,7 @@ public class AreaScheduleTask {
      * 片区拉新用户门店公海数据
      * 参数：begindate  enddate  storeids
      */
-//    @Scheduled(cron ="0 30 05* * ?")
+    @Scheduled(cron ="0 01 06 * * ?")
     public void areaNewAddCusStorePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -351,7 +359,7 @@ public class AreaScheduleTask {
      * 片区交易额门店公海数据
      * 参数：begindate  enddate  storeids
      */
-//    @Scheduled(cron ="0 30 05 * * ?")
+    @Scheduled(cron ="0 05 06 * * ?")
     public void areaTradeStorePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -386,7 +394,7 @@ public class AreaScheduleTask {
      * 片区重点产品GMV按门店公海数据
      * 参数：begindate  enddate  storeids
      */
-//    @Scheduled(cron ="0 30 05 * * ?")
+    @Scheduled(cron ="0 10 06 * * ?")
     public void areaZdGmvStorePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -423,7 +431,7 @@ public class AreaScheduleTask {
      * 调度规则：每天5点30分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-//    @Scheduled(cron ="0 30 05 * * ?")
+    @Scheduled(cron ="0 20 06 * * ?")
     public void areaNewAddCusPubseasTask() {
     	new Thread(){
     		public void run() {
@@ -478,7 +486,7 @@ public class AreaScheduleTask {
      * 片区交易额公海数据更新
      * 参数：begindate  enddate  storeids
      */
-//    @Scheduled(cron ="0 30 05 * * ?")
+    @Scheduled(cron ="0 25 06 * * ?")
     public void areaTradePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -533,7 +541,7 @@ public class AreaScheduleTask {
      * 片区重点产品Gmv公海数据更新
      * 参数：begindate  enddate  storeids
      */
-//    @Scheduled(cron ="0 30 05 * * ?")
+    @Scheduled(cron ="0 30 06 * * ?")
     public void areaZdGmvPubseasTask() {
     	new Thread(){
     		public void run() {

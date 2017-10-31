@@ -75,6 +75,7 @@ FROM (
 										AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
 			  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 			  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+													 AND tatob.platformid = tor.store_id
 													 AND tatob.employee_a_no IS NOT NULL
 													 AND tatob.order_placename IS NOT NULL)
 			  WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
@@ -109,6 +110,7 @@ FROM (
 										AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
 			  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 			  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+													 AND tatob.platformid = tor.store_id
 													 AND tatob.employee_a_no IS NOT NULL
 													 AND tatob.order_placename IS NOT NULL)
 			  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA') aa
@@ -144,6 +146,7 @@ FROM (
 				  JOIN t_order tor ON toret.order_id=tor.id
 				  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 				  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+														 AND tatob.platformid = tor.store_id
 														 AND tatob.employee_a_no IS NOT NULL
 														 AND tatob.order_placename IS NOT NULL)
 				  WHERE toret.returned_status='done'

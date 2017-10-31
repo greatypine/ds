@@ -19,7 +19,7 @@ SELECT
    areazdgmv.yanglaoa_other_order_amount,
    areazdgmv.yanglaob_other_returned_amount,
    areazdgmv.weichaoa_other_order_amount,
-   areazdgmv.weichaob_other_returned_count,   		   
+   areazdgmv.weichaob_other_returned_amount,   		   
    YEAR(date_sub(now(),interval 1 day)) as year ,
    MONTH(date_sub(now(),interval 1 day)) as month ,
    NOW() as createtime
@@ -34,8 +34,8 @@ FROM (
 		   tatob.employee_a_name,	   
 		   (
 			   ifnull(jwsa.totalprice,0)-ifnull(jwsb.other_returned_amount,0)+
-			   ifnull(yanglaoa.totalprice,0)- ifnull(yanglaob.other_returned_count,0)+
-			   ifnull(weichaoa.totalprice,0) - ifnull(weichaob.other_returned_count,0)
+			   ifnull(yanglaoa.totalprice,0)- ifnull(yanglaob.other_returned_amount,0)+
+			   ifnull(weichaoa.totalprice,0) - ifnull(weichaob.other_returned_amount,0)
 		   ) pesgmv,
 		   ifnull(jwsa.totalprice,0) jwsa_other_order_amount,
 		   ifnull(jwsa.ordercount,0) jwsa_other_order_count,
@@ -51,7 +51,7 @@ FROM (
 		   ifnull(weichaob.other_returned_count,0) weichaob_other_returned_count
 	FROM
 		  (SELECT DISTINCT city_name,storeno,store_name,area_no,name as area_name,employee_a_no,employee_a_name 
-  			FROM tmp_area_to_order_block where employee_a_no is not null order by storeno,area_no,employee_a_no) tatob
+  			FROM tmp_area_to_order_block where employee_a_no is not null ) tatob
 	LEFT JOIN
 	  (SELECT aa.storeno,
 			  aa.area_no,
@@ -93,6 +93,7 @@ FROM (
 									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
 		  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 		  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
 		  JOIN t_ed_sys_role tesr ON (
@@ -133,6 +134,7 @@ FROM (
 									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
 		  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 		  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
 		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA') aa
@@ -166,6 +168,7 @@ FROM (
 		  JOIN t_order tor ON toret.order_id=tor.id
 		  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 		  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
 		  WHERE toret.returned_status='done'
@@ -206,6 +209,7 @@ LEFT JOIN
 									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
 		  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 		  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
 		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA'
@@ -240,6 +244,7 @@ LEFT JOIN
 		  JOIN t_order tor ON toret.order_id=tor.id
 		  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 		  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
 		  WHERE toret.returned_status='done'
@@ -280,6 +285,7 @@ LEFT JOIN
 									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
 		  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 		  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
 		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA'
@@ -314,6 +320,7 @@ LEFT JOIN
 		  JOIN t_order tor ON toret.order_id=tor.id
 		  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 		  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
 		  WHERE toret.returned_status='done'

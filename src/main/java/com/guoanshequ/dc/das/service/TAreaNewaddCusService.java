@@ -45,4 +45,8 @@ public class TAreaNewaddCusService {
     public int updatePubSeasByYearMonth(Map<String, String> paraMap){
     	return tareaNewaddCusDao.updatePubSeasByYearMonth(paraMap);
     }
+    
+    public int addTAreaNewaddCusByStore(Map<String, String> paraMap){
+    	return tareaNewaddCusDao.addTAreaNewaddCusByStore(paraMap);
+    }
 }

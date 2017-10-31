@@ -10,6 +10,7 @@
 				city_name,
 				IFNULL(storeno,'') as storeno,
 				IFNULL(store_name,'') as store_name,
+				IFNULL(pesgmv,0) as pesgmv,
 				IFNULL(totalamount,0) as totalamount,
 				IFNULL(jwsamount,0) as jwsamount,
 				IFNULL(yanglaoamount,0) as yanglaoamount,

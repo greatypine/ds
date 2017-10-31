@@ -70,5 +70,31 @@
 			update ds_areatrade set pubseas = #{pubseas}
 			where year =#{year} and month =#{month} and storeno = #{storeno}
 		]]>	
-	</update>		
+	</update>
+	
+	
+	<insert id="addTAreaTradeByStore" parameterType="java.util.Map">
+		<![CDATA[
+			insert into ds_areatrade_store (
+				city_name,storeno,store_name,pesgmv,other_order_amount,other_order_count,
+				other_returned_amount,other_returned_count,year,month,createtime
+			)
+			select 
+				city_name,
+				storeno,
+				store_name,
+				(sum(other_order_amount) - sum(other_returned_amount)) as pesgmv,
+				sum(other_order_amount) other_order_amount,
+				sum(other_order_count) other_order_count,
+				sum(other_returned_amount) other_returned_amount,
+				sum(other_returned_count) other_returned_count,
+				YEAR(date_sub(now(),interval 1 day)) as year ,
+				MONTH(date_sub(now(),interval 1 day)) as month ,
+				NOW() as createtime
+			from ds_areatrade
+			where year =#{year} and month =#{month} 
+			group by storeno
+		]]>
+	</insert>	
+			
 </mapper>

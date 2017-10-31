@@ -19,7 +19,7 @@ MONTH(date_sub(now(),interval 1 day)) as month ,
 NOW() as createtime
 FROM
   (SELECT DISTINCT city_name,storeno,store_name,area_no,name as area_name,employee_a_no,employee_a_name 
-  	FROM tmp_area_to_order_block where employee_a_no is not null order by storeno,area_no,employee_a_no) tatob
+  	FROM tmp_area_to_order_block where employee_a_no is not null ) tatob
 LEFT JOIN 
 		(
 			SELECT 	   t_store_custom.area_no,
@@ -59,6 +59,7 @@ LEFT JOIN
 									AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY))
 								JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 								JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+																		 AND tatob.platformid = tor.store_id
 																		 AND tatob.employee_a_no IS NOT NULL
 																		 AND tatob.order_placename IS NOT NULL)
 								WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
@@ -82,6 +83,7 @@ LEFT JOIN
 									AND tof_in.create_time<DATE(#{begindate})
 								JOIN t_order_address taddr ON (taddr.id = tor_in.order_address_id)
 								JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
+																		 AND tatob.platformid = tor_in.store_id
 																		 AND tatob.employee_a_no IS NOT NULL
 																		 AND tatob.order_placename IS NOT NULL)
 								WHERE te_in.`name` NOT LIKE '%测试%' AND te_in.white!='QA'

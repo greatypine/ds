@@ -44,5 +44,9 @@ public class TAreaZdGmvService {
     
     public int updatePubSeasByYearMonth(Map<String, String> paraMap){
     	return tareaZdGmvDao.updatePubSeasByYearMonth(paraMap);
-    }    
+    }   
+    
+    public int addTAreaZdGmvByStore(Map<String, String> paraMap){
+    	return tareaZdGmvDao.addTAreaZdGmvByStore(paraMap);
+    }  
 }

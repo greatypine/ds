@@ -20,4 +20,6 @@ public interface TAreaZdGmvMapper{
 	 int deleteByYearMonth(Map<String, String> paraMap);
 		
 	 int updatePubSeasByYearMonth(Map<String, String> paraMap);
+	 
+	 int addTAreaZdGmvByStore(Map<String, String> paraMap);
 }

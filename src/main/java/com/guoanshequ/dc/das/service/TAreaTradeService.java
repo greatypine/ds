@@ -45,4 +45,8 @@ public class TAreaTradeService {
     public int updatePubSeasByYearMonth(Map<String, String> paraMap){
     	return tareaTradeDao.updatePubSeasByYearMonth(paraMap);
     }
+    
+    public int addTAreaTradeByStore(Map<String, String> paraMap){
+    	return tareaTradeDao.addTAreaTradeByStore(paraMap);
+    }
 }

@@ -7,7 +7,7 @@
 		<![CDATA[
 			select city_name, storeno,store_name, area_no, area_name,employee_a_no,employee_a_name,
 				pesgmv, jwsa_other_order_amount, jwsb_other_returned_amount,yanglaoa_other_order_amount,
-				yanglaob_other_returned_amount,weichaoa_other_order_amount,weichaob_other_returned_count,pubseas 
+				yanglaob_other_returned_amount,weichaoa_other_order_amount,weichaob_other_returned_amount,pubseas 
 			from ds_areazdgmv
 			where year =#{year} and month =#{month}
 		]]>
@@ -50,12 +50,12 @@
 			INSERT INTO ds_areazdgmv (
 				city_name, storeno,store_name, area_no, area_name,employee_a_no,employee_a_name,
 				pesgmv, jwsa_other_order_amount, jwsb_other_returned_amount,yanglaoa_other_order_amount,
-				yanglaob_other_returned_amount,weichaoa_other_order_amount,weichaob_other_returned_count,
+				yanglaob_other_returned_amount,weichaoa_other_order_amount,weichaob_other_returned_amount,
 				year,month,createtime
 			) VALUES(
 				#{city_name},#{storeno},#{store_name},#{area_no},#{area_name},#{employee_a_no},	#{employee_a_name},
 				#{pesgmv},#{jwsa_other_order_amount},#{jwsb_other_returned_amount},#{yanglaoa_other_order_amount},
-				#{yanglaob_other_returned_amount},#{weichaoa_other_order_amount},#{weichaob_other_returned_count},
+				#{yanglaob_other_returned_amount},#{weichaoa_other_order_amount},#{weichaob_other_returned_amount},
 				#{year},#{month},#{createtime}
 			)
 		]]>
@@ -72,6 +72,37 @@
 			update ds_areazdgmv set pubseas = #{pubseas}
 			where year =#{year} and month =#{month} and storeno = #{storeno}
 		]]>	
-	</update>		  	
+	</update>	
+	
+	<insert id="addTAreaZdGmvByStore" parameterType="java.util.Map">
+		<![CDATA[
+			insert into ds_areazdgmv_store (
+				city_name, storeno,store_name,pesgmv, jwsa_other_order_amount, jwsb_other_returned_amount,
+				yanglaoa_other_order_amount, yanglaob_other_returned_amount,
+				weichaoa_other_order_amount,weichaob_other_returned_amount,year,month,createtime
+			) 
+			select 
+				city_name,
+				storeno,
+				store_name,
+				(
+					sum(jwsa_other_order_amount)-sum(jwsb_other_returned_amount)+
+					sum(yanglaoa_other_order_amount)-sum(yanglaob_other_returned_amount)+
+					sum(weichaoa_other_order_amount)-sum(weichaob_other_returned_amount)
+				) pesgmv,
+				sum(jwsa_other_order_amount) jwsa_other_order_amount,
+				sum(jwsb_other_returned_amount) jwsb_other_returned_amount,
+				sum(yanglaoa_other_order_amount) yanglaoa_other_order_amount,
+				sum(yanglaob_other_returned_amount) yanglaob_other_returned_amount,
+				sum(weichaoa_other_order_amount) weichaoa_other_order_amount,
+				sum(weichaob_other_returned_amount) weichaob_other_returned_amount,
+				YEAR(date_sub(now(),interval 1 day)) as year ,
+				MONTH(date_sub(now(),interval 1 day)) as month ,
+				NOW() as createtime
+			from ds_areazdgmv
+			where year =#{year} and month =#{month}
+			group by storeno
+		]]>
+	</insert>		  	
   	
 </mapper>

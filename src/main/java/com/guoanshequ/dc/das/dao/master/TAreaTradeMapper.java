@@ -20,4 +20,6 @@ public interface TAreaTradeMapper{
 	int deleteByYearMonth(Map<String, String> paraMap);
 	
 	int updatePubSeasByYearMonth(Map<String, String> paraMap);
+	
+	int addTAreaTradeByStore(Map<String, String> paraMap);
 }

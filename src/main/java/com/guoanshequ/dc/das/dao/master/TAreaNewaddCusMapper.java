@@ -20,4 +20,6 @@ public interface TAreaNewaddCusMapper{
 	int deleteByYearMonth(Map<String, String> paraMap);
 	
 	int updatePubSeasByYearMonth(Map<String, String> paraMap);
+	
+	int addTAreaNewaddCusByStore(Map<String, String> paraMap);
 }
