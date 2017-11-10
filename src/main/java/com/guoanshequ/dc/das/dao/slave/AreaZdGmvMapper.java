@@ -12,5 +12,7 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 public interface AreaZdGmvMapper{
 	
 	 List<Map<String, String>> queryAreaZdGmv(Map<String, String> paraMap);
+	 
+	 String queryAreaZdGmvByOrderDaily(Map<String, String> paraMap);
 	
 }

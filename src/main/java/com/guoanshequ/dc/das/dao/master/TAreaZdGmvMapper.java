@@ -14,7 +14,9 @@ public interface TAreaZdGmvMapper{
 	 List<Map<String, String>> queryTAreaZdGmv(Map<String, String> paraMap);
 	 
 	 List<Map<String, String>> queryTAreaZdGmvGroupByEmp(Map<String, String> paraMap);
-	
+	 
+	 String queryTAreaZdGmvSumGroupByEmpOnMonth(Map<String, String> paraMap);
+	 
 	 void addTAreaZdGmv(Map<String, String> paraMap);
 		
 	 int deleteByYearMonth(Map<String, String> paraMap);

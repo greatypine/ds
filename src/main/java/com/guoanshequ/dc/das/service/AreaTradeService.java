@@ -28,4 +28,9 @@ public class AreaTradeService {
         
     	return areaTradeDao.queryAreaTrades(paraMap);
     }
+    
+    public String queryAreaTradesByOrderDaily(Map<String, String> paraMap) throws Exception{
+    	
+    	return areaTradeDao.queryAreaTradesByOrderDaily(paraMap);
+    }
 }

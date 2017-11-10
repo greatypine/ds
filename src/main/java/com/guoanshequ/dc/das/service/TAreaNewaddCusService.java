@@ -33,6 +33,11 @@ public class TAreaNewaddCusService {
     	return tareaNewaddCusDao.queryTAreaNewaddCusGroupByEmp(paraMap);
     }
     
+    public String queryTAreaNewaddcusGroupByEmpOnMonth(Map<String, String> paraMap) throws Exception{
+    	
+    	return tareaNewaddCusDao.queryTAreaNewaddcusGroupByEmpOnMonth(paraMap);
+    }
+    
     public void addTAreaNewaddCus(Map<String, String> paraMap){
     	tareaNewaddCusDao.addTAreaNewaddCus(paraMap);
     }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.DataContrastMapper">
+
+<!-- 清洗数据表与原数据运行所差的条数 -->
+	<select id="queryDataContrasts" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select 't_order_flow' as tbname,'flow原表' as tbdesc,count(distinct order_id) as tbnum from t_order_flow tof where tof.create_time>='2017-10-01' and tof.create_time <='2017-10-31' and tof.order_status = 'signed'
+			UNION
+			select 'df_order_flow' as tbname,'flow清洗全表' as tbdesc,count(1) as tbnum from df_order_flow tof where create_time >='2017-10-01' and create_time<='2017-10-31'
+			UNION
+			select 'df_order_flow_monthly' as tbname,'flow清洗月表' as tbdesc,count(1) as tbnum from df_order_flow_monthly where create_time >='2017-10-01' and create_time<='2017-10-31'
+			UNION
+			select 't_order' as tbname,'order原表' as tbdesc,count(distinct order_id) as tbnum from t_order tor,t_order_flow tof where tor.id=tof.order_id and tof.create_time>='2017-10-01' and tof.create_time <='2017-10-31' and tof.order_status = 'signed'
+			UNION
+			select 'df_order_signed_monthly' as tbname,'order清洗月表' as tbdesc,count(1) as tbnum from df_order_signed_monthly where df_signed_time >='2017-10-01' and df_signed_time<='2017-10-31'
+			UNION
+			select 'df_order_signed_daily' as tbname,'order清洗日表' as tbdesc,count(1) as tbnum from df_order_signed_daily where df_signed_time >='2017-10-01' and df_signed_time<='2017-10-31'
+		]]>
+	</select>
+
+<!-- 清洗数据表与原数据运行所差的订单明细 -->
+<select id="queryDataContrastsLine" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			
+		select 'df_order_signed_monthly',count(tor.id) as dvalue from t_order tor,t_order_flow tof where tor.id=tof.order_id and tof.create_time>='2017-11-01' and tof.create_time <'2017-11-06' and tof.order_status = 'signed' and tof.order_id not in (select id from df_order_signed_monthly where df_signed_time >='2017-11-01' and df_signed_time<'2017-11-06')
+		union
+		select 'df_order_flow_monthly',count(tof.order_id) as dvalue  from t_order_flow tof where tof.create_time>='2017-11-01' and tof.create_time <'2017-11-06' and tof.order_status = 'signed' and tof.order_id not in (select order_id from df_order_flow_monthly where create_time >='2017-11-01' and create_time<'2017-11-06')
+		union 
+		select 'df_order_flow',count(tof.order_id) as dvalue from t_order_flow tof where tof.create_time>='2017-11-01' and tof.create_time <'2017-11-06' and tof.order_status = 'signed' and tof.order_id not in (select order_id from df_order_flow where create_time >='2017-11-01' and create_time<'2017-11-06');
+			
+		]]>
+	</select>
+</mapper>

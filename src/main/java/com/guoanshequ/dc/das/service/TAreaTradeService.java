@@ -34,6 +34,11 @@ public class TAreaTradeService {
     	return tareaTradeDao.queryTAreaTradesGroupByEmp(paraMap);
     }
     
+    public String queryTAreaTradeSumGroupByEmpOnMonth(Map<String, String> paraMap) throws Exception{
+    	
+    	return tareaTradeDao.queryTAreaTradeSumGroupByEmpOnMonth(paraMap);
+    }
+    
     public void addTAreaTrades(Map<String, String> paraMap){
     	tareaTradeDao.addTAreaTrades(paraMap);
     }

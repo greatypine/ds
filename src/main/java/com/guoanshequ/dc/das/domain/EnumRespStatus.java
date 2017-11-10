@@ -13,6 +13,7 @@ public enum EnumRespStatus {
     DATA_LIMIT("2000003", "查询时间段不允许超过30天"),
     DATA_NODATA("2000004", "系统查无此条件的数据"),
     DATA_NOYEARMONTH("2000005", "请求参数必须包含年份、月份"),
+    DATA_NOPARA("2000006", "请提供查询所需参数"),
     DATA_WRNOCOND("2000010", "请求参数必须包含年月信息"),
     DATA_CSNOCOND("2000020", "请求参数必须包含年月、档数信息"),
     DATA_CSNOCOND1("2000021", "请求参数必须包含年月、门店名称、档数信息"),

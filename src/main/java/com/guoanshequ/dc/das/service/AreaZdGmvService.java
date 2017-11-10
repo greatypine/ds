@@ -28,4 +28,9 @@ public class AreaZdGmvService {
     	
     	return areaZdGmvDao.queryAreaZdGmv(paraMap);
     }
+    
+    public String queryAreaZdGmvByOrderDaily(Map<String, String> paraMap){
+    	
+    	return areaZdGmvDao.queryAreaZdGmvByOrderDaily(paraMap);
+    }
 }

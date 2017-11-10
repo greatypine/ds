@@ -13,4 +13,6 @@ public interface AreaTradeMapper{
 	
 	List<Map<String, String>> queryAreaTrades(Map<String, String> paraMap);
 	
+	String queryAreaTradesByOrderDaily(Map<String, String> paraMap);
+	
 }

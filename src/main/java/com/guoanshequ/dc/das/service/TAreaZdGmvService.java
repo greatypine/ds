@@ -34,6 +34,11 @@ public class TAreaZdGmvService {
     	return tareaZdGmvDao.queryTAreaZdGmvGroupByEmp(paraMap);
     }
     
+    public  String queryTAreaZdGmvSumGroupByEmpOnMonth(Map<String, String> paraMap){
+    	
+    	return tareaZdGmvDao.queryTAreaZdGmvSumGroupByEmpOnMonth(paraMap);
+    }
+    
     public void addTAreaZdGmv(Map<String, String> paraMap){
     	tareaZdGmvDao.addTAreaZdGmv(paraMap);
     }
