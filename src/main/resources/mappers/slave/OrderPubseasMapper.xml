@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.OrderPubseasMapper">
+
+	<select id="queryOrderPubseas" parameterType="java.util.Map" resultType="com.guoanshequ.dc.das.model.DfOrderPubseas">
+        <![CDATA[
+		SELECT  tor.id as df_order_id,
+				tor.order_sn as df_order_sn,
+				tor.trading_price as df_trading_price,
+				tor.customer_id as df_customer_id, 
+				tc.`name` as df_customer_name, 
+				tc.mobilephone as df_customer_phone, 
+				ts.id as df_store_id, 
+				ts.`code` as df_storeno,
+				ts.name as df_store_name, 
+				tatob.area_no as df_area_no,
+				tatob.`name` as df_area_name, 
+				tatob.employee_a_no as df_employee_a_no,
+				tatob.employee_a_name as df_employee_a_name,
+				tatob.tiny_village_id as df_tiny_village_id,
+				tatob.tiny_village_name as df_tiny_village_name,
+				tatob.order_placename as df_order_placename,
+				case when (tatob.employee_a_no is not null and tatob.order_placename is not null) then 0 else 1 end as df_ispubseas,
+				tor.df_signed_time,
+				NOW() as df_createtime,
+				NOW() as df_updatetime
+		FROM df_order_signed_monthly tor
+		LEFT JOIN t_store ts on ts.id = tor.store_id 
+		LEFT JOIN t_customer tc on tc.id = tor.customer_id 
+		LEFT JOIN t_order_address taddr on tor.order_address_id = taddr.id
+		LEFT JOIN tmp_area_to_order_block tatob on (tatob.order_placename = taddr.placename and tatob.platformid = tor.store_id)
+		WHERE tor.df_signed_time >=#{begindate} and tor.df_signed_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+		]]>
+	</select>
+	
+</mapper>

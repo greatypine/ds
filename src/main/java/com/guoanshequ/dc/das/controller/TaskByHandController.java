@@ -5,6 +5,7 @@ import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.service.CustomerService;
 import com.guoanshequ.dc.das.task.AbnormalOrderScheduleTask;
 import com.guoanshequ.dc.das.task.AreaScheduleTask;
+import com.guoanshequ.dc.das.task.OrderPubseasScheduleTask;
 import com.guoanshequ.dc.das.task.ScheduleTask;
 import com.guoanshequ.dc.das.task.TopDataScheduleTask;
 
@@ -41,6 +42,8 @@ public class TaskByHandController {
     AbnormalOrderScheduleTask abnormalOrderScheduleTask;
     @Autowired
     AreaScheduleTask areaScheduleTask;
+    @Autowired
+    OrderPubseasScheduleTask orderPubseasScheduleTask;
 
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
@@ -526,5 +529,21 @@ public class TaskByHandController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
-    }    
+    }  
+    
+    
+    /**
+     * 指定人员公海订单分配
+     */
+    @RequestMapping(value = "rest/orderPubseasTaskRun",method = RequestMethod.POST)
+    public RestResponse orderPubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		orderPubseasScheduleTask.orderPubseasTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }     
 }

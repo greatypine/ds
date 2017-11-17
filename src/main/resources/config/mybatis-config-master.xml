@@ -8,5 +8,6 @@
         <typeAlias alias="DfCustomerMonthEntity" type="com.guoanshequ.dc.das.model.DfCustomerMonth"/>
         <typeAlias alias="DFOrderRealTimeEntity" type="com.guoanshequ.dc.das.model.DFOrderRealtime"/>
         <typeAlias alias="DfValidCustomerEntity" type="com.guoanshequ.dc.das.model.DfValidCustomer"/>
+        <typeAlias alias="DFOrderPubseasEntity"  type="com.guoanshequ.dc.das.model.DFOrderRealtime"/>
     </typeAliases>
 </configuration>
