@@ -20,9 +20,11 @@
 			ordersn,
 			storeno,
 			storename,
+			eshopname,
 			channelname,
 			deptname,
 			tradingprice,
+			paybleprice,
 			abnortype
 			from ds_abnormal_order
 			where year =#{year} and month =#{month}
@@ -37,11 +39,12 @@
 	<insert id="addAbnorOrders" parameterType="java.util.Map">
 		<![CDATA[
 			insert into ds_abnormal_order(
-				ordersn,cityname,storeno,storename,channelname,deptname,tradingprice,abnortype,datatype,status,signedtime,
+				ordersn,cityname,storeno,storename,eshopname,channelname,deptname,
+				tradingprice,payableprice,abnortype,datatype,status,signedtime,
 				year,month,createtime,updatetime) 
 			values(
-				#{ordersn},#{cityname},#{storeno},#{storename},#{channelname},#{deptname},
-				#{tradingprice},#{abnortype},#{datatype},#{status},#{signedtime},
+				#{ordersn},#{cityname},#{storeno},#{storename},#{eshopname},#{channelname},#{deptname},
+				#{tradingprice},#{payableprice},#{abnortype},#{datatype},#{status},#{signedtime},
 				#{year},#{month},#{createtime},#{updatetime}
 			)
 		]]>
@@ -71,9 +74,11 @@
 			ordersn,
 			storeno,
 			storename,
+			eshopname,
 			channelname,
 			deptname,
 			tradingprice,
+			payableprice,
 			abnortype
 			from ds_abnormal_down
 			where year =#{year} and month =#{month}
@@ -88,11 +93,12 @@
 	<insert id="addAbnorDown" parameterType="java.util.Map">
 		<![CDATA[
 			insert into ds_abnormal_down(
-				ordersn,mobilephone,customername,cityname,storeno,storename,channelname,deptname,tradingprice,abnortype,datatype,status,signedtime,
+				ordersn,mobilephone,customername,cityname,storeno,storename,eshopname,channelname,deptname,
+				tradingprice,payableprice,abnortype,datatype,status,signedtime,
 				year,month,createtime,updatetime) 
 			values(
-				#{ordersn},#{mobilephone},#{customername},#{cityname},#{storeno},#{storename},#{channelname},#{deptname},
-				#{tradingprice},#{abnortype},#{datatype},#{status},#{signedtime},
+				#{ordersn},#{mobilephone},#{customername},#{cityname},#{storeno},#{storename},#{eshopname},#{channelname},#{deptname},
+				#{tradingprice},#{payableprice},#{abnortype},#{datatype},#{status},#{signedtime},
 				#{year},#{month},#{createtime},#{updatetime}
 			)
 		]]>

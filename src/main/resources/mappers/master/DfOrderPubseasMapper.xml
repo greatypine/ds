@@ -7,13 +7,13 @@
 		<![CDATA[
 	        insert into df_order_pubseas_monthly
 	              (
-		             df_order_id,df_order_sn,df_trading_price,df_customer_id,df_customer_name,df_customer_phone,df_store_id,df_storeno,df_store_name,
+		             df_order_id,df_order_sn,df_trading_price,df_customer_id,df_customer_name,df_customer_phone,df_cityname,df_store_id,df_storeno,df_store_name,
 		             df_area_no,df_area_name,df_employee_a_no,df_employee_a_name,df_tiny_village_id,df_tiny_village_name,df_order_placename,
 		             df_ispubseas,df_signed_time,df_createtime,df_updatetime
 	              )
 	        values
 		          (
-					#{df_order_id},#{df_order_sn},#{df_trading_price},#{df_customer_id},#{df_customer_name},#{df_customer_phone},#{df_store_id},#{df_storeno},#{df_store_name},
+					#{df_order_id},#{df_order_sn},#{df_trading_price},#{df_customer_id},#{df_customer_name},#{df_customer_phone},#{df_cityname},#{df_store_id},#{df_storeno},#{df_store_name},
 					#{df_area_no},#{df_area_name},#{df_employee_a_no},#{df_employee_a_name},#{df_tiny_village_id},#{df_tiny_village_name},#{df_order_placename},
 					#{df_ispubseas},#{df_signed_time},#{df_createtime},#{df_updatetime}
 		          )
@@ -31,7 +31,7 @@
 	<update id="updateOrderPubseasByOrderId" parameterType="DFOrderPubseasEntity" >
 		<![CDATA[
 			update df_order_pubseas_monthly 
-			set df_area_no = #{df_area_no} , df_area_name =#{df_area_name},df_employee_a_no =#{df_employee_a_no},df_employee_a_name=#{df_employee_a_name},
+			set df_cityname = #{df_cityname}, df_area_no = #{df_area_no} , df_area_name =#{df_area_name},df_employee_a_no =#{df_employee_a_no},df_employee_a_name=#{df_employee_a_name},
 				df_tiny_village_id =#{df_tiny_village_id},df_tiny_village_name =#{df_tiny_village_name}, df_order_placename=#{df_order_placename},
 				df_ispubseas = #{df_ispubseas},df_updatetime = now()
 			where df_order_id = #{df_order_id}

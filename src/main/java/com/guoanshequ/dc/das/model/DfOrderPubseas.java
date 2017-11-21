@@ -12,6 +12,7 @@ public class DfOrderPubseas {
     private String df_customer_id;
     private String df_customer_name;
     private String df_customer_phone;
+    private String df_cityname;
     private String df_store_id;
     private String df_storeno;
     private String df_store_name;
@@ -145,5 +146,11 @@ public class DfOrderPubseas {
 	}
 	public void setDf_updatetime(Date df_updatetime) {
 		this.df_updatetime = df_updatetime;
+	}
+	public String getDf_cityname() {
+		return df_cityname;
+	}
+	public void setDf_cityname(String df_cityname) {
+		this.df_cityname = df_cityname;
 	}
 }

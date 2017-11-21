@@ -10,9 +10,10 @@
 				tor.customer_id as df_customer_id, 
 				tc.`name` as df_customer_name, 
 				tc.mobilephone as df_customer_phone, 
+				tsa.name as df_cityname,
 				ts.id as df_store_id, 
 				ts.`code` as df_storeno,
-				ts.name as df_store_name, 
+				ts.name as df_store_name,
 				tatob.area_no as df_area_no,
 				tatob.`name` as df_area_name, 
 				tatob.employee_a_no as df_employee_a_no,
@@ -26,6 +27,7 @@
 				NOW() as df_updatetime
 		FROM df_order_signed_monthly tor
 		LEFT JOIN t_store ts on ts.id = tor.store_id 
+		LEFT JOIN t_sys_area tsa on ts.city_code = tsa.code and tsa.level = 2
 		LEFT JOIN t_customer tc on tc.id = tor.customer_id 
 		LEFT JOIN t_order_address taddr on tor.order_address_id = taddr.id
 		LEFT JOIN tmp_area_to_order_block tatob on (tatob.order_placename = taddr.placename and tatob.platformid = tor.store_id)
