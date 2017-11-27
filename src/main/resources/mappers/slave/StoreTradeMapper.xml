@@ -36,17 +36,11 @@ LEFT JOIN
                     IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
                     tor.group_id AS group_id
                 FROM t_eshop te
-                JOIN t_order tor ON (
-                    tor.eshop_id=te.id and (
-                        tor.eshop_id ='23465aaa7b2fe4edd4f79c2395110fc4' OR 
-                        tor.eshop_id ='d1d2edaa716017fb04a3302b63f1a468' OR 
-                        tor.eshop_id ='b87b2479f871070ee42add29b922a504' OR 
-                        tor.eshop_id ='dcd9672984adcbef2b5876f1189b6b4f' OR 
-                        tor.eshop_id ='00000000000000000000000000000127' OR 
-                        tor.eshop_id ='0d0c3a35b2438f0025e15bba7dd12407' OR 
-                        tor.eshop_id ='b9f47c74c0f11e5c4334c862822ede7b'
-                        )
-                    )
+            	JOIN t_ed_sys_role tesr ON (
+					tesr.id=te.department_id and
+					tesr.role_name like '%洗衣%'
+				)                
+                JOIN t_order tor ON ( tor.eshop_id=te.id )
                 JOIN t_order_group  tog ON  tog.id=tor.group_id
                 JOIN t_order_receipts trp ON (
                     trp.eshop_id = te.id and 
@@ -78,15 +72,11 @@ LEFT JOIN
                     IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
                     tor.group_id AS group_id
                 FROM t_eshop te
-                JOIN t_order tor ON (
-                    tor.eshop_id=te.id and
-                    tor.eshop_id !='23465aaa7b2fe4edd4f79c2395110fc4' and 
-                    tor.eshop_id !='d1d2edaa716017fb04a3302b63f1a468' and 
-                    tor.eshop_id !='b87b2479f871070ee42add29b922a504' and 
-                    tor.eshop_id !='dcd9672984adcbef2b5876f1189b6b4f' and 
-                    tor.eshop_id !='00000000000000000000000000000127' and 
-                    tor.eshop_id !='0d0c3a35b2438f0025e15bba7dd12407' and 
-                    tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b')
+            	JOIN t_ed_sys_role tesr ON (
+					tesr.id=te.department_id and
+					tesr.role_name not like '%洗衣%'
+				)                 
+                JOIN t_order tor ON ( tor.eshop_id=te.id )
                 JOIN t_order_group  tog ON  tog.id=tor.group_id
                 JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
                     AND tof.order_status='signed'
@@ -111,18 +101,10 @@ LEFT JOIN
                     tor.group_id AS group_id
                 FROM t_eshop te
             	JOIN t_ed_sys_role tesr ON (
-					tesr.id=te.department_id and
+					tesr.id=te.department_id and tesr.role_name not like '%洗衣%' and
 					tesr.role_name not like '%线下联盟%' and tesr.role_name not like '%快周边%'
 				)
-                JOIN t_order tor ON (
-                    tor.eshop_id=te.id and
-                    tor.eshop_id !='23465aaa7b2fe4edd4f79c2395110fc4' and 
-                    tor.eshop_id !='d1d2edaa716017fb04a3302b63f1a468' and 
-                    tor.eshop_id !='b87b2479f871070ee42add29b922a504' and 
-                    tor.eshop_id !='dcd9672984adcbef2b5876f1189b6b4f' and 
-                    tor.eshop_id !='00000000000000000000000000000127' and 
-                    tor.eshop_id !='0d0c3a35b2438f0025e15bba7dd12407' and 
-                    tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b')
+                JOIN t_order tor ON ( tor.eshop_id=te.id )
                 JOIN t_order_group  tog ON  tog.id=tor.group_id
                 JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
                     AND tof.order_status='signed'
@@ -221,17 +203,11 @@ AND ts.number IN (${storeids})
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
 			                FROM t_eshop te
-			                JOIN t_order tor ON (
-			                    tor.eshop_id=te.id and (
-			                        tor.eshop_id ='23465aaa7b2fe4edd4f79c2395110fc4' OR 
-			                        tor.eshop_id ='d1d2edaa716017fb04a3302b63f1a468' OR 
-			                        tor.eshop_id ='b87b2479f871070ee42add29b922a504' OR 
-			                        tor.eshop_id ='dcd9672984adcbef2b5876f1189b6b4f' OR 
-			                        tor.eshop_id ='00000000000000000000000000000127' OR 
-			                        tor.eshop_id ='0d0c3a35b2438f0025e15bba7dd12407' OR 
-			                        tor.eshop_id ='b9f47c74c0f11e5c4334c862822ede7b'
-			                        )
-			                    )
+			            	JOIN t_ed_sys_role tesr ON (
+								tesr.id=te.department_id and
+								tesr.role_name like '%洗衣%'
+							)  			                
+			                JOIN t_order tor ON ( tor.eshop_id=te.id )
 			                JOIN t_order_group  tog ON  tog.id=tor.group_id
 			                JOIN t_order_receipts trp ON (
 			                    trp.eshop_id = te.id and 
@@ -263,15 +239,11 @@ AND ts.number IN (${storeids})
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
 			                FROM t_eshop te
-			                JOIN t_order tor ON (
-			                    tor.eshop_id=te.id and
-			                    tor.eshop_id !='23465aaa7b2fe4edd4f79c2395110fc4' and 
-			                    tor.eshop_id !='d1d2edaa716017fb04a3302b63f1a468' and 
-			                    tor.eshop_id !='b87b2479f871070ee42add29b922a504' and 
-			                    tor.eshop_id !='dcd9672984adcbef2b5876f1189b6b4f' and 
-			                    tor.eshop_id !='00000000000000000000000000000127' and 
-			                    tor.eshop_id !='0d0c3a35b2438f0025e15bba7dd12407' and 
-			                    tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b')
+			            	JOIN t_ed_sys_role tesr ON (
+								tesr.id=te.department_id and
+								tesr.role_name not like '%洗衣%'
+							) 			                
+			                JOIN t_order tor ON ( tor.eshop_id=te.id )
 			                JOIN t_order_group  tog ON  tog.id=tor.group_id
 			                JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
 			                    AND tof.order_status='signed'
@@ -315,17 +287,11 @@ AND ts.number IN (${storeids})
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
 			                FROM t_eshop te
-			                JOIN t_order tor ON (
-			                    tor.eshop_id=te.id and (
-			                        tor.eshop_id ='23465aaa7b2fe4edd4f79c2395110fc4' OR 
-			                        tor.eshop_id ='d1d2edaa716017fb04a3302b63f1a468' OR 
-			                        tor.eshop_id ='b87b2479f871070ee42add29b922a504' OR 
-			                        tor.eshop_id ='dcd9672984adcbef2b5876f1189b6b4f' OR 
-			                        tor.eshop_id ='00000000000000000000000000000127' OR 
-			                        tor.eshop_id ='0d0c3a35b2438f0025e15bba7dd12407' OR 
-			                        tor.eshop_id ='b9f47c74c0f11e5c4334c862822ede7b'
-			                        )
-			                    )
+			            	JOIN t_ed_sys_role tesr ON (
+								tesr.id=te.department_id and
+								tesr.role_name like '%洗衣%'
+							) 			                
+			                JOIN t_order tor ON ( tor.eshop_id=te.id )
 			                JOIN t_order_group  tog ON  tog.id=tor.group_id
 			                JOIN t_order_receipts trp ON (
 			                    trp.eshop_id = te.id and 
@@ -357,15 +323,11 @@ AND ts.number IN (${storeids})
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
 			                FROM t_eshop te
-			                JOIN t_order tor ON (
-			                    tor.eshop_id=te.id and
-			                    tor.eshop_id !='23465aaa7b2fe4edd4f79c2395110fc4' and 
-			                    tor.eshop_id !='d1d2edaa716017fb04a3302b63f1a468' and 
-			                    tor.eshop_id !='b87b2479f871070ee42add29b922a504' and 
-			                    tor.eshop_id !='dcd9672984adcbef2b5876f1189b6b4f' and 
-			                    tor.eshop_id !='00000000000000000000000000000127' and 
-			                    tor.eshop_id !='0d0c3a35b2438f0025e15bba7dd12407' and 
-			                    tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b')
+			            	JOIN t_ed_sys_role tesr ON (
+								tesr.id=te.department_id and
+								tesr.role_name not like '%洗衣%'
+							) 			                
+			                JOIN t_order tor ON ( tor.eshop_id=te.id )
 			                JOIN t_order_group  tog ON  tog.id=tor.group_id
 			                JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
 			                    AND tof.order_status='signed'
@@ -414,17 +376,11 @@ AND ts.number IN (${storeids})
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
 			                FROM t_eshop te
-			                JOIN t_order tor ON (
-			                    tor.eshop_id=te.id and (
-			                        tor.eshop_id ='23465aaa7b2fe4edd4f79c2395110fc4' OR 
-			                        tor.eshop_id ='d1d2edaa716017fb04a3302b63f1a468' OR 
-			                        tor.eshop_id ='b87b2479f871070ee42add29b922a504' OR 
-			                        tor.eshop_id ='dcd9672984adcbef2b5876f1189b6b4f' OR 
-			                        tor.eshop_id ='00000000000000000000000000000127' OR 
-			                        tor.eshop_id ='0d0c3a35b2438f0025e15bba7dd12407' OR 
-			                        tor.eshop_id ='b9f47c74c0f11e5c4334c862822ede7b'
-			                        )
-			                    )
+			            	JOIN t_ed_sys_role tesr ON (
+								tesr.id=te.department_id and
+								tesr.role_name like '%洗衣%'
+							) 			                
+			                JOIN t_order tor ON ( tor.eshop_id=te.id )
 			                JOIN t_order_group  tog ON  tog.id=tor.group_id
 			                JOIN t_order_receipts trp ON (
 			                    trp.eshop_id = te.id and 
@@ -456,15 +412,11 @@ AND ts.number IN (${storeids})
 			                    IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
 			                    tor.group_id AS group_id
 			                FROM t_eshop te
-			                JOIN t_order tor ON (
-			                    tor.eshop_id=te.id and
-			                    tor.eshop_id !='23465aaa7b2fe4edd4f79c2395110fc4' and 
-			                    tor.eshop_id !='d1d2edaa716017fb04a3302b63f1a468' and 
-			                    tor.eshop_id !='b87b2479f871070ee42add29b922a504' and 
-			                    tor.eshop_id !='dcd9672984adcbef2b5876f1189b6b4f' and 
-			                    tor.eshop_id !='00000000000000000000000000000127' and 
-			                    tor.eshop_id !='0d0c3a35b2438f0025e15bba7dd12407' and 
-			                    tor.eshop_id !='b9f47c74c0f11e5c4334c862822ede7b')
+			            	JOIN t_ed_sys_role tesr ON (
+								tesr.id=te.department_id and
+								tesr.role_name not like '%洗衣%'
+							) 			                
+			                JOIN t_order tor ON ( tor.eshop_id=te.id )
 			                JOIN t_order_group  tog ON  tog.id=tor.group_id
 			                JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
 			                    AND tof.order_status='signed'

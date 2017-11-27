@@ -4,8 +4,10 @@ import com.guoanshequ.dc.das.domain.EnumRespStatus;
 import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.service.CustomerService;
 import com.guoanshequ.dc.das.task.AbnormalOrderScheduleTask;
+import com.guoanshequ.dc.das.task.AreaPubseasScheduleTask;
 import com.guoanshequ.dc.das.task.AreaScheduleTask;
 import com.guoanshequ.dc.das.task.OrderPubseasScheduleTask;
+import com.guoanshequ.dc.das.task.PreMonthAreaScheduleTask;
 import com.guoanshequ.dc.das.task.ScheduleTask;
 import com.guoanshequ.dc.das.task.TopDataScheduleTask;
 
@@ -44,7 +46,11 @@ public class TaskByHandController {
     AreaScheduleTask areaScheduleTask;
     @Autowired
     OrderPubseasScheduleTask orderPubseasScheduleTask;
-
+    @Autowired
+    AreaPubseasScheduleTask areaPubseasScheduleTask;
+    @Autowired
+    PreMonthAreaScheduleTask preMonthAreaScheduleTask;
+    
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
     /**
@@ -366,21 +372,6 @@ public class TaskByHandController {
     }
     
     /**
-     * 片区新增用户按门店
-     */
-    @RequestMapping(value = "rest/areaNewAddCusStoreTaskRun",method = RequestMethod.POST)
-    public RestResponse areaNewAddCusStoreTask(@RequestBody Map<String, String> paraMap) throws Exception {
-    	try{
-    		areaScheduleTask.areaNewAddCusStoreTask();
-    		return new RestResponse(EnumRespStatus.TASK_AREANEWADDCUSSTOREOK);
-    	}catch (Exception e) {
-            logger.error(e.toString());
-            e.printStackTrace();
-            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
-        }
-    }
-    
-    /**
      * 片区交易额
      */
     @RequestMapping(value = "rest/areaTradeTaskRun",method = RequestMethod.POST)
@@ -395,20 +386,6 @@ public class TaskByHandController {
         }
     }
     
-    /**
-     * 片区交易额按门店
-     */
-    @RequestMapping(value = "rest/areaTradeStoreTaskRun",method = RequestMethod.POST)
-    public RestResponse areaTradeStoreTask(@RequestBody Map<String, String> paraMap) throws Exception {
-    	try{
-    		areaScheduleTask.areaTradeStoreTask();
-    		return new RestResponse(EnumRespStatus.TASK_AREATRADESTOREOK);
-    	}catch (Exception e) {
-            logger.error(e.toString());
-            e.printStackTrace();
-            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
-        }
-    }
     
     /**
      * 片区重点产品GMV
@@ -425,20 +402,6 @@ public class TaskByHandController {
         }
     }
     
-    /**
-     * 片区重点GMV按门店
-     */
-    @RequestMapping(value = "rest/areaZdGmvStoreTaskRun",method = RequestMethod.POST)
-    public RestResponse areaZdGmvStoreTask(@RequestBody Map<String, String> paraMap) throws Exception {
-    	try{
-    		areaScheduleTask.areaZdGmvStoreTask();
-    		return new RestResponse(EnumRespStatus.TASK_AREAZDGMVSTOREOK);
-    	}catch (Exception e) {
-            logger.error(e.toString());
-            e.printStackTrace();
-            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
-        }
-    }
     
     /**
      * 片区新增用户按门店--公海数据更新
@@ -533,7 +496,7 @@ public class TaskByHandController {
     
     
     /**
-     * 指定人员公海订单分配
+     * ========================指定人员订单分配==================================
      */
     @RequestMapping(value = "rest/orderPubseasTaskRun",method = RequestMethod.POST)
     public RestResponse orderPubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
@@ -545,5 +508,114 @@ public class TaskByHandController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
+    }   
+    
+    /**
+     * 指定人员订单拉新用户
+     */    
+    @RequestMapping(value = "rest/areaPubseasNewAddCusTaskRun",method = RequestMethod.POST)
+    public RestResponse areaPubseasNewAddCusTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaPubseasScheduleTask.areaPubseasNewAddCusTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
+    
+    /**
+     * 指定人员订单交易额
+     */    
+    @RequestMapping(value = "rest/areaPubseasTradeTaskRun",method = RequestMethod.POST)
+    public RestResponse areaPubseasTradeTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaPubseasScheduleTask.areaPubseasTradeTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }  
+    
+    
+    /**
+     * 指定人员订单重点产品交易额
+     */    
+    @RequestMapping(value = "rest/areaPubseasZdGmvTaskRun",method = RequestMethod.POST)
+    public RestResponse areaPubseasZdGmvTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		areaPubseasScheduleTask.areaPubseasZdGmvTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }  
+    
+    
+    /**
+     * =============================每月2号凌晨调度上月月度数据开始===================================
+     * 
+     * 月度指定公海订单调度，指定订单新增用户、交易额、重点产品调度
+     * 
+     */
+    @RequestMapping(value = "rest/preMonthAssignPubseasTaskRun",method = RequestMethod.POST)
+    public RestResponse preMonthAssignPubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		preMonthAreaScheduleTask.areaPubseasNewAddCusTask();
+    		preMonthAreaScheduleTask.areaPubseasTradeTask();
+    		preMonthAreaScheduleTask.areaPubseasZdGmvTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }  
+
+    /**
+     * 月度公海订单(按门店)调度，门店公海
+     *      
+     */
+    @RequestMapping(value = "rest/preMonthAreaStorePubseasTaskRun",method = RequestMethod.POST)
+    public RestResponse preMonthAreaStorePubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		preMonthAreaScheduleTask.areaNewAddCusStorePubseasTask();
+    		preMonthAreaScheduleTask.areaTradeStorePubseasTask();
+    		preMonthAreaScheduleTask.areaZdGmvStorePubseasTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+
+    /**
+     * 月度公海订单调度，人均公海
+     */
+    @RequestMapping(value = "rest/preMonthAreaPubseasTaskRun",method = RequestMethod.POST)
+    public RestResponse preMonthAreaPubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		preMonthAreaScheduleTask.areaNewAddCusPubseasTask();
+    		preMonthAreaScheduleTask.areaTradePubseasTask();
+    		preMonthAreaScheduleTask.areaZdGmvPubseasTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
     }     
+    
+    /**
+     * =============================每月2号凌晨调度上月月度数据结束===================================
+     */
+    
+    
 }

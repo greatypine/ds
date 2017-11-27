@@ -42,11 +42,14 @@
 	
 	<update id="updatePubSeasByYearMonth" parameterType="java.util.Map">
 		<![CDATA[
-			update ds_storetrade aa, ds_areatrade_store bb 
-			set bb.pubseas = aa.pesgmv - bb.pesgmv 
+			update ds_storetrade aa, ds_areatrade_store bb ,ds_areapubseas_trade_store cc 
+			set bb.pubseas = aa.pesgmv - bb.pesgmv - cc.pesgmv
 			where aa.storeno = bb.storeno
+			and aa.storeno = cc.storeno
 			and aa.`year`= bb.`year`
 			and aa.`month` = bb.`month`
+			and aa.`year`= cc.`year`
+			and aa.`month` = cc.`month`
 			and aa.`year` = #{year}
 			and aa.`month`= #{month}
 		]]>	

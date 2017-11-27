@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TAreaPubseasZdGmvMapper">
+
+	<!-- 片区重点产品GMV -->
+	<select id="queryTAreaPubseasZdGmv" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			select storeno,store_name, employee_no,employee_name,
+				pesgmv, jwsa_other_order_amount, jwsb_other_returned_amount,yanglaoa_other_order_amount,
+				yanglaob_other_returned_amount,weichaoa_other_order_amount,weichaob_other_returned_amount
+			from ds_areapubseas_zdgmv
+			where year =#{year} and month =#{month}
+		]]>
+		<if test="null != storeids and null != storeids">
+			<![CDATA[                   
+			  and storeno IN (${storeids})
+			]]>
+		</if>
+  	</select>
+  	
+  	
+	<insert id="addTAreaPubseasZdGmv" parameterType="java.util.Map">
+		<![CDATA[
+			INSERT INTO ds_areapubseas_zdgmv (
+				storeno,store_name, employee_no,employee_name,
+				pesgmv, jwsa_other_order_amount, jwsb_other_returned_amount,yanglaoa_other_order_amount,
+				yanglaob_other_returned_amount,weichaoa_other_order_amount,weichaob_other_returned_amount,
+				year,month,createtime
+			) VALUES(
+				#{storeno},#{store_name},#{employee_no},#{employee_name},
+				#{pesgmv},#{jwsa_other_order_amount},#{jwsb_other_returned_amount},#{yanglaoa_other_order_amount},
+				#{yanglaob_other_returned_amount},#{weichaoa_other_order_amount},#{weichaob_other_returned_amount},
+				#{year},#{month},#{createtime}
+			)
+		]]>
+	</insert>
+	
+	<delete id="deleteByYearMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_areapubseas_zdgmv where year =#{year} and month =#{month}
+		]]>
+	</delete>
+	
+	
+	<insert id="addTAreaPubseasZdGmvByStore" parameterType="java.util.Map">
+		<![CDATA[
+			insert into ds_areapubseas_zdgmv_store (
+				storeno,store_name,pesgmv, jwsa_other_order_amount, jwsb_other_returned_amount,
+				yanglaoa_other_order_amount, yanglaob_other_returned_amount,
+				weichaoa_other_order_amount,weichaob_other_returned_amount,year,month,createtime
+			) 
+			select 
+				storeno,
+				store_name,
+				(
+					sum(jwsa_other_order_amount)-sum(jwsb_other_returned_amount)+
+					sum(yanglaoa_other_order_amount)-sum(yanglaob_other_returned_amount)+
+					sum(weichaoa_other_order_amount)-sum(weichaob_other_returned_amount)
+				) pesgmv,
+				sum(jwsa_other_order_amount) jwsa_other_order_amount,
+				sum(jwsb_other_returned_amount) jwsb_other_returned_amount,
+				sum(yanglaoa_other_order_amount) yanglaoa_other_order_amount,
+				sum(yanglaob_other_returned_amount) yanglaob_other_returned_amount,
+				sum(weichaoa_other_order_amount) weichaoa_other_order_amount,
+				sum(weichaob_other_returned_amount) weichaob_other_returned_amount,
+				YEAR(date_sub(now(),interval 1 day)) as year ,
+				MONTH(date_sub(now(),interval 1 day)) as month ,
+				NOW() as createtime
+			from ds_areapubseas_zdgmv
+			where year =#{year} and month =#{month}
+			group by storeno
+		]]>
+	</insert>	
+	
+</mapper>

@@ -17,7 +17,7 @@ public interface TAreaTradeMapper{
 
 	String queryTAreaTradeSumGroupByEmpOnMonth(Map<String, String> paraMap);
 	
-	void addTAreaTrades(Map<String, String> paraMap);
+	int addTAreaTrades(Map<String, String> paraMap);
 	
 	int deleteByYearMonth(Map<String, String> paraMap);
 	

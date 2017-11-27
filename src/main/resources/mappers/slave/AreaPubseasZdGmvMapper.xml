@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.AreaPubseasZdGmvMapper">
+
+<!-- 公海订单指定人员重点产品GMV -->
+	<select id="queryAreaPubseasZdGmv" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+ SELECT 
+   areazdgmv.storeno,
+   areazdgmv.store_name,
+   areazdgmv.employee_no,
+   areazdgmv.employee_name,
+   areazdgmv.pesgmv,
+   areazdgmv.jwsa_other_order_amount,
+   areazdgmv.jwsb_other_returned_amount,
+   areazdgmv.yanglaoa_other_order_amount,
+   areazdgmv.yanglaob_other_returned_amount,
+   areazdgmv.weichaoa_other_order_amount,
+   areazdgmv.weichaob_other_returned_amount,   		   
+   YEAR(date_sub(now(),interval 1 day)) as year ,
+   MONTH(date_sub(now(),interval 1 day)) as month ,
+   NOW() as createtime
+FROM (
+		SELECT 
+		   tatob.storeno,
+		   tatob.store_name,
+		   tatob.employee_no,
+		   tatob.employee_name,	   
+		   (
+			   ifnull(jwsa.totalprice,0)-ifnull(jwsb.other_returned_amount,0)+
+			   ifnull(yanglaoa.totalprice,0)- ifnull(yanglaob.other_returned_amount,0)+
+			   ifnull(weichaoa.totalprice,0) - ifnull(weichaob.other_returned_amount,0)
+		   ) pesgmv,
+		   ifnull(jwsa.totalprice,0) jwsa_other_order_amount,
+		   ifnull(jwsa.ordercount,0) jwsa_other_order_count,
+		   ifnull(jwsb.other_returned_amount,0) jwsb_other_returned_amount,
+		   ifnull(jwsb.other_returned_count,0) jwsb_other_returned_count,
+		   ifnull(yanglaoa.totalprice,0) yanglaoa_other_order_amount,
+		   ifnull(yanglaoa.ordercount,0) yanglaoa_other_order_count,
+		   ifnull(yanglaob.other_returned_amount,0) yanglaob_other_returned_amount,
+		   ifnull(yanglaob.other_returned_count,0) yanglaob_other_returned_count,
+		   ifnull(weichaoa.totalprice,0) weichaoa_other_order_amount,
+		   ifnull(weichaoa.ordercount,0) weichaoa_other_order_count,
+		   ifnull(weichaob.other_returned_amount,0) weichaob_other_returned_amount,
+		   ifnull(weichaob.other_returned_count,0) weichaob_other_returned_count
+	FROM
+		  ( SELECT DISTINCT employee_no , employee_name ,df_storeno AS storeno ,df_store_name AS store_name
+				FROM tmp_order_pubseas_monthly 
+				WHERE df_ispubseas =1 AND employee_no is not null 
+				AND df_signed_time >=#{begindate} AND df_signed_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)) tatob
+	LEFT JOIN
+	  (SELECT 
+			  aa.df_storeno,
+			  aa.df_store_name,
+			  aa.employee_no,
+			  aa.employee_name,
+			  SUM(IFNULL(aa.price,0.00)) AS totalprice,
+			  COUNT(aa.group_id) AS ordercount
+	   FROM
+		 ( SELECT DISTINCT tor.id,
+						   topm.df_storeno,
+						   topm.df_store_name,
+						   topm.employee_no,
+						   topm.employee_name,
+						   tor.store_id,
+						   IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+						   tor.group_id AS group_id
+		  FROM t_eshop te
+      	  JOIN t_ed_sys_role tesr ON (
+						tesr.id=te.department_id and
+						tesr.role_name like '%洗衣%'
+		  ) 		  
+		  JOIN t_order tor ON ( tor.eshop_id=te.id )
+		  JOIN tmp_order_pubseas_monthly topm ON( tor.id = topm.df_order_id 
+										AND topm.df_ispubseas = 1 
+										AND topm.employee_no is not null )
+		  JOIN t_order_group tog ON tog.id=tor.group_id
+		  JOIN t_order_receipts trp ON (trp.eshop_id = te.id
+										AND trp.order_group_id = tor.group_id
+										AND trp.`status` =0
+										AND trp.type='order'
+										AND trp.pay_status= 'payed'
+										AND trp.pay_platform !='prepay')
+		  JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
+									AND tof.order_status='signed'
+									AND tof.create_time>=#{begindate}
+									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+		  WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+		  UNION ALL 
+		  SELECT DISTINCT tor.id,
+						 topm.df_storeno,
+						 topm.df_store_name,
+						 topm.employee_no,
+						 topm.employee_name,						
+						tor.store_id,
+						IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+						tor.group_id AS group_id
+		  FROM t_eshop te
+		  JOIN t_ed_sys_role tesr ON (
+					tesr.id=te.department_id and
+					tesr.role_name like '%家务事事业部%' and tesr.role_name not like '%洗衣%'
+		  )	
+		  JOIN t_order tor ON ( tor.eshop_id=te.id )
+			JOIN tmp_order_pubseas_monthly topm ON( tor.id = topm.df_order_id 
+										AND topm.df_ispubseas = 1 
+										AND topm.employee_no is not null )			
+		  JOIN t_order_group tog ON tog.id=tor.group_id
+		  JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
+									AND tof.order_status='signed'
+									AND tof.create_time>=#{begindate}
+									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA') aa
+	   GROUP BY aa.employee_no) jwsa ON (jwsa.employee_no = tatob.employee_no)
+	LEFT JOIN
+	  (SELECT
+			  t.df_storeno,
+			  t.df_store_name,
+			  t.employee_no,
+			  t.employee_name,
+			  SUM(IFNULL(toref.price,0.00)) AS other_returned_amount,
+			  COUNT(DISTINCT t.group_id) AS other_returned_count
+	   FROM t_order_refund toref
+	   JOIN
+		 (SELECT 
+					topm.df_storeno,
+					topm.df_store_name,
+					topm.employee_no,
+					topm.employee_name,					
+				 tor.store_id,
+				 tor.group_id
+		  FROM t_order_returned toret
+		  JOIN t_eshop te ON (te.id=toret.eshop_id
+							  AND te.white!='QA'
+							  AND te.name NOT LIKE '%测试%')
+		  JOIN t_ed_sys_role tesr ON (
+				tesr.id=te.department_id and
+				tesr.role_name like '%家务事事业部%'
+		  )					
+		  JOIN t_order tor ON toret.order_id=tor.id	
+			JOIN tmp_order_pubseas_monthly topm ON( tor.id = topm.df_order_id 
+											AND topm.df_ispubseas =1 
+											AND topm.employee_no is not null) 
+		  WHERE toret.returned_status='done'
+			AND toret.create_time>=#{begindate}
+			AND toret.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+		  GROUP BY tor.group_id) t ON toref.order_group_id=t.group_id
+	   WHERE toref.refund_status='refunded'
+	   GROUP BY t.employee_no) jwsb ON (jwsb.employee_no = tatob.employee_no)
+LEFT JOIN
+	  (SELECT 
+			  aa.df_storeno,
+			  aa.df_store_name,
+			  aa.employee_no,
+			  aa.employee_name,
+			  SUM(IFNULL(aa.price,0.00)) AS totalprice,
+			  COUNT(aa.group_id) AS ordercount
+	   FROM
+		 ( SELECT DISTINCT tor.id,
+					 topm.df_storeno,
+					 topm.df_store_name,
+					 topm.employee_no,
+					 topm.employee_name,
+					tor.store_id,
+					IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+					tor.group_id AS group_id
+		  FROM t_eshop te
+		  JOIN t_ed_sys_role tesr ON (
+				 tesr.id=te.department_id and
+				 tesr.role_name like '%老年之家事业部%'
+		  )	
+		  JOIN t_order tor ON tor.eshop_id=te.id
+		  JOIN tmp_order_pubseas_monthly topm ON( tor.id = topm.df_order_id 
+										AND topm.df_ispubseas =1 
+										AND topm.employee_no is not null)
+		  JOIN t_order_group tog ON tog.id=tor.group_id
+		  JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
+									AND tof.order_status='signed'
+									AND tof.create_time>=#{begindate}
+									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA'
+		 ) aa
+	   GROUP BY aa.employee_no) yanglaoa ON (yanglaoa.employee_no = tatob.employee_no)
+	LEFT JOIN
+	  (SELECT 
+			  t.df_storeno,
+			  t.df_store_name,
+			  t.employee_no,
+			  t.employee_name,
+			  SUM(IFNULL(toref.price,0.00)) AS other_returned_amount,
+			  COUNT(DISTINCT t.group_id) AS other_returned_count
+	   FROM t_order_refund toref
+	   JOIN
+		 (SELECT 
+					topm.df_storeno,
+					topm.df_store_name,
+					topm.employee_no,
+					topm.employee_name,
+				 tor.store_id,
+				 tor.group_id
+		  FROM t_order_returned toret
+		  JOIN t_eshop te ON (te.id=toret.eshop_id
+							  AND te.white!='QA'
+							  AND te.name NOT LIKE '%测试%')
+		  JOIN t_ed_sys_role tesr ON (
+				tesr.id=te.department_id and
+				tesr.role_name like '%老年之家事业部%'
+		  )					
+		  JOIN t_order tor ON toret.order_id=tor.id
+			JOIN tmp_order_pubseas_monthly topm ON( tor.id = topm.df_order_id 
+									AND topm.df_ispubseas =1 
+									AND topm.employee_no is not null) 			
+		  WHERE toret.returned_status='done'
+			AND toret.create_time>=#{begindate}
+			AND toret.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+		  GROUP BY tor.group_id) t ON toref.order_group_id=t.group_id
+	   WHERE toref.refund_status='refunded'
+	   GROUP BY t.employee_no) yanglaob ON (yanglaob.employee_no = tatob.employee_no) 
+LEFT JOIN
+	  (SELECT 
+			  aa.df_storeno,
+			  aa.df_store_name,
+			  aa.employee_no,
+			  aa.employee_name,
+			  SUM(IFNULL(aa.price,0.00)) AS totalprice,
+			  COUNT(aa.group_id) AS ordercount
+	   FROM
+		 ( SELECT DISTINCT tor.id,
+					 topm.df_storeno,
+					 topm.df_store_name,
+					 topm.employee_no,
+					 topm.employee_name,
+					tor.store_id,
+					IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0) AS price,
+					tor.group_id AS group_id
+		  FROM t_eshop te
+		  JOIN t_ed_sys_role tesr ON (
+				 tesr.id=te.department_id and
+				 tesr.role_name like '%国安优易事业部%'
+		  )	
+		  JOIN t_order tor ON tor.eshop_id=te.id
+			JOIN tmp_order_pubseas_monthly topm ON( tor.id = topm.df_order_id 
+							AND topm.df_ispubseas =1 
+							AND topm.employee_no is not null)
+		  JOIN t_order_group tog ON tog.id=tor.group_id
+		  JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
+									AND tof.order_status='signed'
+									AND tof.create_time>=#{begindate}
+									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA'
+		 ) aa
+	   GROUP BY aa.employee_no) weichaoa ON (weichaoa.employee_no = tatob.employee_no)
+	LEFT JOIN
+	  (SELECT 
+			  t.df_storeno,
+			  t.df_store_name,
+			  t.employee_no,
+			  t.employee_name,
+			  SUM(IFNULL(toref.price,0.00)) AS other_returned_amount,
+			  COUNT(DISTINCT t.group_id) AS other_returned_count
+	   FROM t_order_refund toref
+	   JOIN
+		 (SELECT 
+					topm.df_storeno,
+					topm.df_store_name,
+					topm.employee_no,
+					topm.employee_name,			
+				 tor.store_id,
+				 tor.group_id
+		  FROM t_order_returned toret
+		  JOIN t_eshop te ON (te.id=toret.eshop_id
+							  AND te.white!='QA'
+							  AND te.name NOT LIKE '%测试%')
+		  JOIN t_ed_sys_role tesr ON (
+				tesr.id=te.department_id and
+				tesr.role_name like '%国安优易事业部%'
+		  )					
+		  JOIN t_order tor ON toret.order_id=tor.id
+		  JOIN tmp_order_pubseas_monthly topm ON( tor.id = topm.df_order_id 
+									AND topm.df_ispubseas =1 
+									AND topm.employee_no is not null) 
+		  WHERE toret.returned_status='done'
+			AND toret.create_time>=#{begindate}
+			AND toret.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+		  GROUP BY tor.group_id) t ON toref.order_group_id=t.group_id
+	   WHERE toref.refund_status='refunded'
+	   GROUP BY t.employee_no) weichaob ON (weichaob.employee_no = tatob.employee_no) 
+  ) areazdgmv
+		]]>
+		<where>
+			<if test="null != employee_no and '' != employee_no">
+	           <![CDATA[                   
+	              employee_no in (${employee_no})
+	           ]]>
+			</if>
+		</where>
+	</select>
+	
+</mapper>

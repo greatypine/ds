@@ -222,7 +222,6 @@ public class DateUtils {
     }
     
     public static void main(String[] args) {
-		System.out.println(getPreYearMonth(new Date()));
-		System.out.println(getFirstday_Lastday_Month(new Date()));
+		System.out.println(getPreMonthofYear());
 	}
 }

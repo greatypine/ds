@@ -39,8 +39,8 @@ public class TAreaTradeService {
     	return tareaTradeDao.queryTAreaTradeSumGroupByEmpOnMonth(paraMap);
     }
     
-    public void addTAreaTrades(Map<String, String> paraMap){
-    	tareaTradeDao.addTAreaTrades(paraMap);
+    public int addTAreaTrades(Map<String, String> paraMap){
+    	return tareaTradeDao.addTAreaTrades(paraMap);
     }
     
     public int deleteByYearMonth(Map<String, String> paraMap){

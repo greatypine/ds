@@ -38,8 +38,8 @@ public class TAreaNewaddCusService {
     	return tareaNewaddCusDao.queryTAreaNewaddcusGroupByEmpOnMonth(paraMap);
     }
     
-    public void addTAreaNewaddCus(Map<String, String> paraMap){
-    	tareaNewaddCusDao.addTAreaNewaddCus(paraMap);
+    public int addTAreaNewaddCus(Map<String, String> paraMap){
+    	return tareaNewaddCusDao.addTAreaNewaddCus(paraMap);
     }
     
     public int deleteByYearMonth(Map<String, String> paraMap){

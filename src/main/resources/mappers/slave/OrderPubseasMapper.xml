@@ -21,7 +21,7 @@
 				tatob.tiny_village_id as df_tiny_village_id,
 				tatob.tiny_village_name as df_tiny_village_name,
 				taddr.placename as df_order_placename,
-				case when (tatob.employee_a_no is not null and taddr.placename is not null) then 0 else 1 end as df_ispubseas,
+				case when (tatob.employee_a_no is not null and tatob.tiny_village_name is not null and taddr.placename is not null) then 0 else 1 end as df_ispubseas,
 				tor.df_signed_time,
 				NOW() as df_createtime,
 				NOW() as df_updatetime

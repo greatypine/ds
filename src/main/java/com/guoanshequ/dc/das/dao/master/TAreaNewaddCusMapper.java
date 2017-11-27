@@ -17,7 +17,7 @@ public interface TAreaNewaddCusMapper{
 	
 	String queryTAreaNewaddcusGroupByEmpOnMonth(Map<String, String> paraMap);
 	
-	void addTAreaNewaddCus(Map<String, String> paraMap);
+	int addTAreaNewaddCus(Map<String, String> paraMap);
 	
 	int deleteByYearMonth(Map<String, String> paraMap);
 	

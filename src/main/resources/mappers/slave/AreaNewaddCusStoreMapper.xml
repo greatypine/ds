@@ -84,9 +84,9 @@ FROM (
 												   SUM(tor_in.trading_price)
 									FROM t_eshop te_in
 									JOIN t_order tor_in ON (te_in.id=tor_in.eshop_id )
-									JOIN df_order_flow tof_in ON tor_in.id=tof_in.order_id
+									JOIN df_order_flow tof_in ON (tor_in.id=tof_in.order_id
 										AND tof_in.order_status='signed'
-										AND tof_in.create_time<DATE(#{begindate})
+										AND tof_in.create_time<DATE(#{begindate}))
 									JOIN t_order_address taddr ON (taddr.id = tor_in.order_address_id)
 									JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
 																			 AND tatob.platformid = tor_in.store_id

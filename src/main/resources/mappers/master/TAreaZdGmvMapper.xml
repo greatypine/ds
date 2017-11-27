@@ -26,22 +26,32 @@
 	<!-- 片区重点产品GMV -->
 	<select id="queryTAreaZdGmvGroupByEmp" parameterType="java.util.Map" resultType="java.util.Map">
 		<![CDATA[
-			select city_name, storeno,store_name, area_no, area_name,employee_a_no,employee_a_name,
-				sum(pesgmv) pesgmv,pubseas, (sum(pesgmv)+pubseas) totalsum
-			from ds_areazdgmv
-			where year =#{year} and month =#{month}
+		select * from (
+				select aa.city_name, aa.storeno,aa.store_name, aa.area_no, aa.area_name,aa.employee_a_no,aa.employee_a_name,
+					sum(aa.pesgmv) pesgmv,aa.pubseas, ifnull(bb.pesgmv,0) as assign_gmv,
+					(sum(aa.pesgmv)+ aa.pubseas+ifnull(bb.pesgmv,0)) totalsum
+				from ds_areazdgmv aa
+				left join ds_areapubseas_zdgmv bb on (
+						 aa.employee_a_no = bb.employee_no  
+						 and aa.`year` = bb.`year`  
+						 and bb.`month` = bb.`month`
+				)
+				where aa.year =#{year} and aa.month =#{month}
+				group by aa.employee_a_no
+		) tmppzdgmv
 		]]>
-		<if test="null != storeids and null != storeids">
-			<![CDATA[                   
-			  and storeno IN (${storeids})
-			]]>
-		</if>
-		<if test="null != areano and '' != areano">
-           <![CDATA[                   
-              and area_no in (${areano})
-           ]]>
-		</if>
-		group by employee_a_no
+		<where>
+			<if test="null != storeids and null != storeids">
+				<![CDATA[                   
+				  storeno IN (${storeids})
+				]]>
+			</if>
+			<if test="null != areano and '' != areano">
+	           <![CDATA[                   
+	              and area_no in (${areano})
+	           ]]>
+			</if>
+		</where>
   	</select>  	
   	
 	<!-- 
@@ -49,10 +59,15 @@
 	-->
 	<select id="queryTAreaZdGmvSumGroupByEmpOnMonth" parameterType="java.util.Map" resultType="String">
         <![CDATA[
-			select (sum(pesgmv) +pubseas) as totalsum
-			from ds_areazdgmv
-			where year =#{year} and month =#{month} and employee_a_no =#{employee_no}
-			group by employee_a_no
+			select (sum(aa.pesgmv)+ aa.pubseas+ifnull(bb.pesgmv,0)) as totalsum
+			from ds_areazdgmv aa
+			left join ds_areapubseas_zdgmv bb on (
+					 aa.employee_a_no = bb.employee_no  
+					 and aa.`year` = bb.`year`  
+					 and bb.`month` = bb.`month`
+			)			
+			where aa.year =#{year} and aa.month =#{month} and aa.employee_a_no =#{employee_no}
+			group by aa.employee_a_no
 		]]>
 	</select>  	
   	
