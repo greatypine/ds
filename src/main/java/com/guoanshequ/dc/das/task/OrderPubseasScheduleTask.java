@@ -38,10 +38,10 @@ public class OrderPubseasScheduleTask {
     
     /**
      * 指定人员订单分配调度
-     * 调度规则：每天凌晨3点30分开始调度
+     * 调度规则：每天凌晨00点20分开始调度
      * 参数：begindate  enddate
      */
-    @Scheduled(cron ="0 30 03 * * ?")
+    @Scheduled(cron ="0 20 00 * * ?")
     public void orderPubseasTask() {
     	new Thread(){
     		public void run() {

@@ -46,15 +46,11 @@
 
 	<update id="updatePubSeasByYearMonth" parameterType="java.util.Map">
 		<![CDATA[
-			update ds_gmvpercent aa ,ds_areazdgmv_store bb ,ds_areapubseas_zdgmv_store cc 
-			set bb.pubseas = aa.pesgmv - bb.pesgmv - cc.pesgmv
-			where aa.storeno = bb.storeno 
-			and aa.storeno = cc.storeno 
-			and aa.`year` = bb.`year`
-			and aa.`month` = bb.`month`
-			and aa.`year` = cc.`year`
-			and aa.`month` = cc.`month`
-			and aa.`year` = #{year}
+			update ds_gmvpercent aa 
+			left join ds_areazdgmv_store bb on (aa.storeno = bb.storeno and aa.`year` = bb.`year` and aa.`month` = bb.`month`)
+			left join ds_areapubseas_zdgmv_store cc on (aa.storeno = cc.storeno and aa.`year` = cc.`year` and aa.`month` = cc.`month`) 
+			set bb.pubseas = aa.pesgmv - ifnull(bb.pesgmv,0) - ifnull(cc.pesgmv,0)
+			where aa.`year` = #{year}
 			and aa.`month` = #{month}
 		]]>	
 	</update>	

@@ -100,10 +100,10 @@ public class PreMonthAreaScheduleTask {
     
     /**
      * 指定人员订单新增用户
-     * 调度规则：每月2号1点30分开始调度
+     * 调度规则：每月1号21点30分开始调度
      * 参数：begindate  enddate 
      */
-    @Scheduled(cron ="0 30 01 2 * ?")
+    @Scheduled(cron ="0 30 21 1 * ?")
     public void areaPubseasNewAddCusTask() {
     	new Thread(){
     		public void run() {
@@ -154,10 +154,10 @@ public class PreMonthAreaScheduleTask {
     
     /**
      * 指定人员订单交易额任务调度
-     * 调度规则：每月2号1点30分开始调度
+     * 调度规则：每月1号21点30分开始调度
      * 参数：begindate  enddate 
      */
-    @Scheduled(cron ="0 30 01 2 * ?")
+    @Scheduled(cron ="0 30 21 1 * ?")
     public void areaPubseasTradeTask() {
     	new Thread(){
     		public void run() {
@@ -210,10 +210,10 @@ public class PreMonthAreaScheduleTask {
     
     /**
      * 指定人员订单重点产品gmv任务调度
-     * 调度规则：每月2号1点30分开始调度
+     * 调度规则：每月1号21点30分开始调度
      * 参数：begindate  enddate 
      */
-    @Scheduled(cron ="0 30 01 2 * ?")
+    @Scheduled(cron ="0 30 21 1 * ?")
     public void areaPubseasZdGmvTask() {
     	new Thread(){
     		public void run() {
@@ -268,10 +268,10 @@ public class PreMonthAreaScheduleTask {
      * ==================================公海数据===================================================
      * 
      * 片区拉新用户门店公海数据
-     * 调度规则：每月2号3点01分开始调度
+     * 调度规则：每月1号22点30分开始调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 01 03 2 * ?")
+    @Scheduled(cron ="0 30 22 1 * ?")
     public void areaNewAddCusStorePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -307,10 +307,10 @@ public class PreMonthAreaScheduleTask {
     
     /**
      * 片区交易额门店公海数据
-     * 调度规则：每月2号3点05分开始调度
+     * 调度规则：每月1号22点31分开始调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 05 03 2 * ?")
+    @Scheduled(cron ="0 31 22 1 * ?")
     public void areaTradeStorePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -345,10 +345,10 @@ public class PreMonthAreaScheduleTask {
     
     /**
      * 片区重点产品GMV按门店公海数据
-     * 调度规则：每月2号3点10分开始调度
+     * 调度规则：每月1号22点32分开始调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 10 03 2 * ?")
+    @Scheduled(cron ="0 32 22 1 * ?")
     public void areaZdGmvStorePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -384,10 +384,10 @@ public class PreMonthAreaScheduleTask {
     
     /**
      * 片区新增用户--公海数据更新
-     * 调度规则：每月2号3点15分开始调度
+     * 调度规则：每月1号22点40分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron ="0 15 03 2 * ?")
+    @Scheduled(cron ="0 40 22 1 * ?")
     public void areaNewAddCusPubseasTask() {
     	new Thread(){
     		public void run() {
@@ -444,7 +444,7 @@ public class PreMonthAreaScheduleTask {
      * 片区交易额公海数据更新
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 18 03 2 * ?")
+    @Scheduled(cron ="0 41 22 1 * ?")
     public void areaTradePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -501,7 +501,7 @@ public class PreMonthAreaScheduleTask {
      * 片区重点产品Gmv公海数据更新
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 20 03 2 * ?")
+    @Scheduled(cron ="0 42 22 1 * ?")
     public void areaZdGmvPubseasTask() {
     	new Thread(){
     		public void run() {
