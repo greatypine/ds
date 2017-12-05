@@ -34,7 +34,7 @@
 				left join ds_areapubseas_zdgmv bb on (
 						 aa.employee_a_no = bb.employee_no  
 						 and aa.`year` = bb.`year`  
-						 and bb.`month` = bb.`month`
+						 and aa.`month` = bb.`month`
 				)
 				where aa.year =#{year} and aa.month =#{month}
 				group by aa.employee_a_no
