@@ -83,7 +83,7 @@ FROM (
 										AND trp.`status` =0
 										AND trp.type='order'
 										AND trp.pay_status= 'payed'
-										AND trp.pay_platform !='prepay')
+										AND (trp.pay_platform !='prepay' or trp.pay_platform is null))
 		  JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
 									AND tof.order_status='signed'
 									AND tof.create_time>=#{begindate}
@@ -93,7 +93,7 @@ FROM (
 												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
-		  WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+		  WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 		  UNION ALL 
 		  SELECT DISTINCT tor.id,
 						tatob.tiny_village_name,
@@ -122,7 +122,7 @@ FROM (
 												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
-		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA') aa
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%') aa
 	   GROUP BY aa.area_no) jwsa ON (jwsa.area_no = tatob.area_no)
 	LEFT JOIN
 	  (SELECT t.storeno,
@@ -197,7 +197,7 @@ LEFT JOIN
 												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
-		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA'
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 		 ) aa
 	   GROUP BY aa.area_no) yanglaoa ON (yanglaoa.area_no = tatob.area_no)
 	LEFT JOIN
@@ -273,7 +273,7 @@ LEFT JOIN
 												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
-		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA'
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 		 ) aa
 	   GROUP BY aa.area_no) weichaoa ON (weichaoa.area_no = tatob.area_no)
 	LEFT JOIN
@@ -395,13 +395,13 @@ FROM (
 										AND trp.`status` =0
 										AND trp.type='order'
 										AND trp.pay_status= 'payed'
-										AND trp.pay_platform !='prepay')
+										AND (trp.pay_platform !='prepay' or trp.pay_platform is null))
 		  JOIN t_order_address taddr ON (taddr.id = tor.order_address_id)
 		  JOIN tmp_area_to_order_block tatob ON (tatob.order_placename = taddr.placename
 												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)	
-		  WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+		  WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 		  UNION ALL 
 		  SELECT DISTINCT tor.id,
 						tatob.tiny_village_name,
@@ -417,7 +417,7 @@ FROM (
 		  FROM t_eshop te
 		  JOIN t_ed_sys_role tesr ON (
 			tesr.id=te.department_id and
-			tesr.role_name like '%家务事事业部%' and tesr.role_name not like '%洗衣%'
+			tesr.role_name like '%家务事事业部%' and tesr.role_name not like '%洗衣%' 
 		  )	
 		  JOIN df_order_signed_daily tor ON (
                     tor.df_signed_time>=#{begindate}
@@ -430,7 +430,7 @@ FROM (
 												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
-		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA') aa
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%' ) aa
 	   GROUP BY aa.area_no) jwsa ON (jwsa.area_no = tatob.area_no)
 	LEFT JOIN
 	  (SELECT t.storeno,
@@ -504,7 +504,7 @@ LEFT JOIN
 												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
-		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA'
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 		 ) aa
 	   GROUP BY aa.area_no) yanglaoa ON (yanglaoa.area_no = tatob.area_no)
 	LEFT JOIN
@@ -583,7 +583,7 @@ LEFT JOIN
 												 AND tatob.platformid = tor.store_id
 												 AND tatob.employee_a_no IS NOT NULL
 												 AND tatob.order_placename IS NOT NULL)
-		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA'
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 		 ) aa
 	   GROUP BY aa.area_no) weichaoa ON (weichaoa.area_no = tatob.area_no)
 	LEFT JOIN

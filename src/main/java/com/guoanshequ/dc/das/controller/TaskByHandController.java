@@ -286,7 +286,7 @@ public class TaskByHandController {
     public RestResponse sendOrderSumTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		platformScheduleTask.sendOrderSumTask();
-    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();
@@ -301,7 +301,7 @@ public class TaskByHandController {
     public RestResponse storeTradeChannelTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		platformScheduleTask.storeTradeChannelTask();
-    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();
@@ -316,7 +316,7 @@ public class TaskByHandController {
     public RestResponse gmvPercentTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		platformScheduleTask.gmvPercentTask();
-    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();
@@ -331,7 +331,7 @@ public class TaskByHandController {
     public RestResponse abnormalOrderTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		abnormalOrderScheduleTask.abnormalOrderTask();
-    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();
@@ -346,7 +346,7 @@ public class TaskByHandController {
     public RestResponse abnormalOrderDownTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		abnormalOrderScheduleTask.abnormalDownTask();
-    		return new RestResponse(EnumRespStatus.TASK_REWARDTIMESOK);
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();

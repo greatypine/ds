@@ -44,10 +44,11 @@ FROM (
 		   ifnull(weichaob.other_returned_amount,0) weichaob_other_returned_amount,
 		   ifnull(weichaob.other_returned_count,0) weichaob_other_returned_count
 	FROM
-		  ( SELECT DISTINCT employee_no , employee_name ,df_storeno AS storeno ,df_store_name AS store_name
+		  ( SELECT employee_no , employee_name ,df_storeno AS storeno ,df_store_name AS store_name
 				FROM tmp_order_pubseas_monthly 
 				WHERE df_ispubseas =1 AND employee_no is not null 
-				AND df_signed_time >=#{begindate} AND df_signed_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)) tatob
+				AND df_signed_time >=#{begindate} AND df_signed_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+				group by employee_no,df_storeno ) tatob
 	LEFT JOIN
 	  (SELECT 
 			  aa.df_storeno,
@@ -80,12 +81,12 @@ FROM (
 										AND trp.`status` =0
 										AND trp.type='order'
 										AND trp.pay_status= 'payed'
-										AND trp.pay_platform !='prepay')
+										AND (trp.pay_platform !='prepay' or trp.pay_platform is null))
 		  JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
 									AND tof.order_status='signed'
 									AND tof.create_time>=#{begindate}
 									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
-		  WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+		  WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 		  UNION ALL 
 		  SELECT DISTINCT tor.id,
 						 topm.df_storeno,
@@ -109,7 +110,7 @@ FROM (
 									AND tof.order_status='signed'
 									AND tof.create_time>=#{begindate}
 									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
-		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA') aa
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%' ) aa
 	   GROUP BY aa.employee_no) jwsa ON (jwsa.employee_no = tatob.employee_no)
 	LEFT JOIN
 	  (SELECT
@@ -177,7 +178,7 @@ LEFT JOIN
 									AND tof.order_status='signed'
 									AND tof.create_time>=#{begindate}
 									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
-		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA'
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 		 ) aa
 	   GROUP BY aa.employee_no) yanglaoa ON (yanglaoa.employee_no = tatob.employee_no)
 	LEFT JOIN
@@ -246,7 +247,7 @@ LEFT JOIN
 									AND tof.order_status='signed'
 									AND tof.create_time>=#{begindate}
 									AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
-		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA'
+		  WHERE te.name NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 		 ) aa
 	   GROUP BY aa.employee_no) weichaoa ON (weichaoa.employee_no = tatob.employee_no)
 	LEFT JOIN

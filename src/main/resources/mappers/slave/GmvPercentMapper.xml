@@ -54,13 +54,13 @@ FROM (
 			                    trp.`status` =0 and 
 			                    trp.type='order' and 
 			                    trp.pay_status= 'payed' and 
-			                    trp.pay_platform !='prepay'
+			                    (trp.pay_platform !='prepay' or trp.pay_platform is null)
 			                    )
 			                JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
 			                    AND tof.order_status='signed'
 			                    AND tof.create_time>=#{begindate}
 			                    AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
-			                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+			                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%' 
 			            ) tt
 			        GROUP BY tt.store_id
 			    ) t0 ON ts.id=t0.store_id
@@ -87,7 +87,7 @@ FROM (
 			                    AND tof.order_status='signed'
 			                    AND tof.create_time>=#{begindate}
 			                    AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
-			                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+			                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 			            ) tt
 			        GROUP BY tt.store_id
 			    ) t1 ON ts.id=t1.store_id
@@ -128,13 +128,13 @@ LEFT JOIN
                     trp.`status` =0 and 
                     trp.type='order' and 
                     trp.pay_status= 'payed' and 
-                    trp.pay_platform !='prepay'
-                    )
+                    (trp.pay_platform !='prepay' or trp.pay_platform is null)
+                 )
                 JOIN df_order_flow_monthly tof ON (tof.order_id=tor.id
                     AND tof.order_status='signed'
                     AND tof.create_time>=#{begindate}
                     AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
-                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
             ) tt
         GROUP BY tt.store_id
     ) t0 ON ts.id=t0.store_id
@@ -161,7 +161,7 @@ LEFT JOIN
                     AND tof.order_status='signed'
                     AND tof.create_time>=#{begindate}
                     AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
-                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+                WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA'  AND te.name not like '%国安社区畅卡%' 
             ) tt
         GROUP BY tt.store_id
     ) t1 ON ts.id=t1.store_id
@@ -200,7 +200,7 @@ LEFT JOIN
 								AND tof.order_status='signed'
 								AND tof.create_time>=#{begindate}
 								AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
-						WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+						WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 					) tt
 				GROUP BY tt.store_id
 			) t0 ON ts.id=t0.store_id
@@ -239,7 +239,7 @@ LEFT JOIN
 										AND tof.order_status='signed'
 										AND tof.create_time>=#{begindate}
 										AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY))
-									WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+									WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 								) tt
 						GROUP BY tt.store_id
 				) t1 ON ts.id=t1.store_id

@@ -15,10 +15,11 @@ SELECT
 		MONTH(date_sub(now(),interval 1 day)) as month ,
 		NOW() as createtime
 FROM
-		( SELECT DISTINCT employee_no , employee_name , df_storeno AS storeno ,df_store_name AS store_name
+		( SELECT employee_no , employee_name , df_storeno AS storeno ,df_store_name AS store_name
 			FROM tmp_order_pubseas_monthly 
 			WHERE df_ispubseas =1 AND employee_no is not null 
-			AND df_signed_time >=#{begindate} AND df_signed_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)) tatob
+			AND df_signed_time >=#{begindate} AND df_signed_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+		  group by employee_no,df_storeno ) tatob
 LEFT JOIN 
 		(
 			SELECT

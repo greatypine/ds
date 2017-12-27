@@ -149,8 +149,8 @@ public class DateUtils {
     }
     
     /** 
-     * @param date 当前日期 
-     * @return 返回当前日期的所在月份的1号
+     * @param date 前一天日期所在月份的1号
+     * @return 返回前一天日期所在月份的1号
      */ 
     public static String getPreDateFirstOfMonth(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
@@ -221,7 +221,24 @@ public class DateUtils {
         return curTime;
     }
     
+    /** 
+     * @param m 前N个月
+     * @return 返回当前日期前一天所在月份的前N个月的1号
+     * 功能说明：
+     * 当前日期2018-01-01，前一天：2017-12-31，前1个月：2017-11-01 ;
+     * 当前日期2018-01-02，前一天：2017-01-01，前1个月：2017-12-01 ;
+     */ 
+    public static String getPreNMonthFirstDay(int m) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.add(Calendar.MONTH, -m);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        String preDateFirst = df.format(calendar.getTime());
+        return preDateFirst;
+    }
+    
     public static void main(String[] args) {
-		System.out.println(getPreMonthofYear());
+		System.out.println(getPreNMonthFirstDay(3));
 	}
 }

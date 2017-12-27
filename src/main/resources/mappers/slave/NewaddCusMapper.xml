@@ -28,7 +28,6 @@ LEFT JOIN
 				0 AS new_10_count,0 AS pay_10_count
 			FROM t_eshop te
 			JOIN t_order tor ON te.id=tor.eshop_id
-				AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
 			JOIN df_order_flow tof ON tor.id=tof.order_id
 				AND tof.order_status='signed'
 				AND tof.create_time>=DATE(#{begindate})
@@ -44,7 +43,6 @@ LEFT JOIN
 				0 AS new_10_count,0 AS pay_10_count
 			FROM t_eshop te
 			JOIN t_order tor ON te.id=tor.eshop_id
-				AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
 			JOIN df_order_flow tof ON tor.id=tof.order_id
 				AND tof.order_status='signed'
 				AND tof.create_time>=DATE(#{begindate})
@@ -54,7 +52,6 @@ LEFT JOIN
 					SELECT tor_in.store_id, tor_in.customer_id
 					FROM t_eshop te_in
 					JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
-						AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
 					JOIN df_order_flow tof_in ON tor_in.id=tof_in.order_id
 						AND tof_in.order_status='signed'
 						AND tof_in.create_time<DATE(#{begindate})
@@ -80,7 +77,6 @@ LEFT JOIN
 							SELECT tor.group_id, tor.store_id, tor.customer_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
-								AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
 							JOIN df_order_flow tof ON tor.id=tof.order_id
 								AND tof.order_status='signed'
 								AND tof.create_time>=DATE(#{begindate})
@@ -90,7 +86,6 @@ LEFT JOIN
 									SELECT tor_in.store_id, tor_in.customer_id
 									FROM t_eshop te_in
 									JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
-										AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
 									JOIN df_order_flow tof_in ON tor_in.id=tof_in.order_id
 										AND tof_in.order_status='signed'
 										AND tof_in.create_time<DATE(#{begindate})
@@ -113,7 +108,6 @@ LEFT JOIN
 				0 AS new_10_count,0 AS pay_10_count
 			FROM t_eshop te
 			JOIN t_order tor ON te.id=tor.eshop_id
-				AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
 			JOIN df_order_flow tof ON tor.id=tof.order_id
 				AND tof.order_status='signed'
 				AND tof.create_time<DATE_ADD(DATE(#{enddate}),INTERVAL 1 DAY)
@@ -133,7 +127,6 @@ LEFT JOIN
 							SELECT tor_in.customer_id, tor_in.store_id, tor_in.trading_price
 							FROM t_eshop te
 							JOIN t_order tor_in ON te.id=tor_in.eshop_id
-								AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
 							JOIN df_order_flow tof ON tor_in.id=tof.order_id
 								AND tof.order_status='signed'
 								AND tof.create_time>=DATE(#{begindate})
@@ -160,7 +153,6 @@ LEFT JOIN
 							SELECT tor.group_id, tor.store_id, tor.customer_id, tor.trading_price
 							FROM t_eshop te
 							JOIN t_order tor ON te.id=tor.eshop_id
-								AND tor.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
 							JOIN df_order_flow tof ON tor.id=tof.order_id
 								AND tof.order_status='signed'
 								AND tof.create_time>=DATE(#{begindate})
@@ -170,7 +162,6 @@ LEFT JOIN
 									SELECT tor_in.store_id, tor_in.customer_id
 									FROM t_eshop te_in
 									JOIN t_order tor_in ON te_in.id=tor_in.eshop_id
-										AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
 									JOIN df_order_flow tof_in ON tor_in.id=tof_in.order_id
 										AND tof_in.order_status='signed'
 										AND tof_in.create_time<DATE(#{begindate})
@@ -199,7 +190,6 @@ LEFT JOIN
 							SELECT tor_in.customer_id, tor_in.store_id, tor_in.trading_price
 							FROM t_eshop te
 							JOIN t_order tor_in ON te.id=tor_in.eshop_id
-								AND tor_in.store_id IN (SELECT ts_in.id FROM t_store ts_in WHERE ts_in.number IN (${storeids}))
 							JOIN df_order_flow tof ON tor_in.id=tof.order_id
 								AND tof.order_status='signed'
 								AND tof.create_time>=DATE(#{begindate})
@@ -213,7 +203,7 @@ LEFT JOIN
 			GROUP BY t.store_id
 		)
 	) t ON t.store_id=ts.id
-WHERE ts.number IN (${storeids}) AND ts.`name` NOT LIKE '%测试%'  AND ts.`status`=0 AND ts.white != 'QA'
+WHERE ts.`name` NOT LIKE '%测试%'  AND ts.`status`=0 AND ts.white != 'QA'
 GROUP BY ts.id
 
 		]]>

@@ -34,7 +34,6 @@
 			and te.name NOT LIKE '%测试%' and te.white!='QA'
 			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
 			and ts.city_code = tsa.code and tsa.level = 2
-			and ts.number IN (${storeids}) 
 		]]>
 	</select>
 	
@@ -59,23 +58,58 @@
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
+			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_order_receipts trp
+			where tor.id = tof.order_id
+			and tof.order_status ='signed'
+			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			and tor.store_id = ts.id
+			and tor.eshop_id = te.id
+			and tesr.id = te.department_id and tesr.role_name like '%洗衣%'
+			and te.name NOT LIKE '%测试%' and te.white!='QA'
+			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
+			and ts.city_code = tsa.code and tsa.level = 2
+			and  trp.eshop_id = te.id  
+			and	 trp.order_group_id = tor.group_id   
+			and	 trp.`status` =0  
+			and	 trp.type='order'  
+			and	 trp.pay_status= 'payed'  
+			and	 (trp.pay_platform !='prepay' or trp.pay_platform is null)			
+			and tor.payable_price/tor.trading_price < 0.5
+			UNION
+			select
+			tor.order_sn as ordersn,
+			tsa.name as cityname,
+			ts.code as storeno,
+			ts.`name` as storename,
+			te.name as eshopname,
+			LEFT(tesr.role_name,POSITION('_' IN tesr.role_name)-1) AS channelname,
+			SUBSTRING(tesr.role_name,POSITION('_' IN tesr.role_name)+1) AS deptname,
+			tor.trading_price as tradingprice,
+			tor.payable_price as payableprice,
+			'营销费用异常' as abnortype,
+			'auto' as datatype,
+			0 as status,
+			tof.create_time as signedtime,
+			YEAR(date_sub(now(),interval 1 day)) as year ,
+			MONTH(date_sub(now(),interval 1 day)) as month ,
+			NOW() as createtime,
+			NOW() as updatetime
 			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa
 			where tor.id = tof.order_id
 			and tof.order_status ='signed'
 			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			and tor.store_id = ts.id
 			and tor.eshop_id = te.id
-			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
+			and tesr.id = te.department_id and tesr.role_name not like '%洗衣%'
 			and te.name NOT LIKE '%测试%' and te.white!='QA'
 			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
 			and ts.city_code = tsa.code and tsa.level = 2
-			and ts.number IN (${storeids}) 
 			and tor.payable_price/tor.trading_price < 0.5
 		]]>
 	</select>
 	
-	<!-- 手动筛选:异常订单A
-		同一手机号在同一个月在同一门店下单大于等于10单的订单且金额大于1000
+	<!-- 手动筛选:连续购买型
+		同一手机号连续4个月内在同一门店下单大于等于10单的订单且金额大于1000
 	-->
 	<select id="queryAbnorOrderDownA" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
@@ -91,7 +125,7 @@
 			SUBSTRING(tesr.role_name,POSITION('_' IN tesr.role_name)+1) AS deptname,
 			tor.trading_price as tradingprice,
 			tor.payable_price as payableprice,
-			'异常订单' as abnortype,
+			'连续购买型' as abnortype,
 			'manual' as datatype,
 			0 as status,
 			tof.create_time as signedtime,
@@ -99,29 +133,28 @@
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
-			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc,(
+			from t_order tor,t_order_flow tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc,(
 					select
 					customer_id,tor.store_id
-					from t_order tor,df_order_flow_monthly tof
+					from t_order tor,t_order_flow tof
 					where tor.id = tof.order_id
 					and tof.order_status ='signed'
-					and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-					and tor.trading_price >1000
+					and tof.create_time >=#{prenbegindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					and tor.trading_price >=1000
 					group by customer_id,tor.store_id
 					having count(*)>=10 
 			) cusline
 			where tor.id = tof.order_id
 			and tof.order_status ='signed'
-			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			and tof.create_time >=#{prenbegindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			and tor.store_id = ts.id
 			and tor.eshop_id = te.id
 			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
 			and te.name NOT LIKE '%测试%' and te.white!='QA'
 			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
 			and ts.city_code = tsa.code and tsa.level = 2
-			and ts.number IN (${storeids}) 
 			and tor.customer_id = tc.id
-			and tor.trading_price >1000 
+			and tor.trading_price >=1000 
 			and tor.customer_id = cusline.customer_id
 			and tor.store_id = cusline.store_id
 			order by tor.customer_id,tor.store_id
@@ -129,7 +162,7 @@
 	</select>
 	
 	<!-- 手动筛选:代客下单异常 B
-		国安侠手机号在同一门店，一月内下单量大于等于5单的订单，金额大于1000
+		订单渠道是（门店）的订单，客单价超过3000的商品
 	-->
 	<select id="queryAbnorOrderDownB" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
@@ -153,18 +186,9 @@
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
-			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc,(
-					select
-					customer_id,tor.store_id
-					from t_order tor,df_order_flow_monthly tof
-					where tor.id = tof.order_id
-					and tof.order_status ='signed'
-					and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-					and tor.trading_price >1000
-					group by customer_id,tor.store_id
-					having count(*)>=5
-			) cusline
+			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc
 			where tor.id = tof.order_id
+			and tor.order_source ='store'
 			and tof.order_status ='signed'
 			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			and tor.store_id = ts.id
@@ -173,17 +197,13 @@
 			and te.name NOT LIKE '%测试%' and te.white!='QA'
 			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
 			and ts.city_code = tsa.code and tsa.level = 2
-			and ts.number IN (${storeids}) 
 			and tor.customer_id = tc.id
-			and tor.trading_price >1000 
-			and tor.customer_id = cusline.customer_id
-			and tor.store_id = cusline.store_id
-			order by tor.customer_id,tor.store_id
+			and tor.trading_price >3000 
 		]]>
 	</select>
 	
-	<!--手动筛选:团购刷单C
-		团购商品，同一门店一个月内同一商品且金额大于1000且订单量超过5的订单
+	<!--手动筛选:大额订单
+		大额订单:商品总金额大于10000的商品
 	-->
 	<select id="queryAbnorOrderDownC" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
@@ -199,7 +219,7 @@
 			SUBSTRING(tesr.role_name,POSITION('_' IN tesr.role_name)+1) AS deptname,
 			tor.trading_price as tradingprice,
 			tor.payable_price as payableprice,
-			'团购刷单' as abnortype,
+			'大额订单' as abnortype,
 			'manual' as datatype,
 			0 as status,
 			tof.create_time as signedtime,
@@ -207,19 +227,7 @@
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
-			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc,t_order_item toi,(
-					select
-					tor.store_id,toi.eshop_pro_id
-					from t_order tor,df_order_flow_monthly tof,t_order_item toi
-					where tor.id = tof.order_id
-					and tor.id = toi.order_id
-					and tof.order_status ='signed'
-					and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-					and groupon_instance_id is not null
-					and tor.trading_price >1000
-					group by tor.store_id,toi.eshop_pro_id
-					having count(*)>=5
-			) tmpline
+			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc
 			where tor.id = tof.order_id
 			and tof.order_status ='signed'
 			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
@@ -229,20 +237,13 @@
 			and te.name NOT LIKE '%测试%' and te.white!='QA'
 			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
 			and ts.city_code = tsa.code and tsa.level = 2
-			and ts.number IN (${storeids}) 
 			and tor.customer_id = tc.id
-			and tor.groupon_instance_id is not null
-			and tor.trading_price >1000 
-			and tor.id = toi.order_id
-			and tor.store_id = tmpline.store_id
-			and toi.eshop_pro_id = tmpline.eshop_pro_id
-			order by tor.store_id
+			and tor.trading_price >10000 
 		]]>
 	</select>
 	
 	<!--手动筛选:下架异常订单D
 		当月下架产品存在交易记录的订单，金额大于1000的订单
-	-->
 	<select id="queryAbnorOrderDownD" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 			select
@@ -275,7 +276,6 @@
 			and te.name NOT LIKE '%测试%' and te.white!='QA'
 			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
 			and ts.city_code = tsa.code and tsa.level = 2
-			and ts.number IN (${storeids}) 
 			and tor.customer_id = tc.id
 			and tor.trading_price >1000 
 			and tor.id = toi.order_id
@@ -285,4 +285,5 @@
 			order by tor.store_id
 		]]>
 	</select>
+	-->
 </mapper>

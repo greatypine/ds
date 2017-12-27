@@ -48,15 +48,15 @@
 		            trp.`status` =0 and 
 		            trp.type='order' and 
 		            trp.pay_status= 'payed' and 
-		            trp.pay_platform !='prepay'
-		            )
+		             (trp.pay_platform !='prepay' or trp.pay_platform is null)
+		        )
 		        JOIN df_order_flow_monthly tof ON (
 		            tof.order_id=tor.id
 		            AND tof.order_status='signed'
 		            AND tof.create_time>=DATE(#{begindate})
 		            AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 		            )
-		        WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+		        WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 		        UNION ALL
 		        SELECT DISTINCT
 		        tor.id,
@@ -80,7 +80,7 @@
 		            AND tof.create_time>=DATE(#{begindate})
 		            AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 		            )
-		        WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+		        WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%' 
 		        ) tt
 		GROUP BY tt.store_id,tt.channel_id
 		) tor ON ts.id=tor.store_id
@@ -140,15 +140,15 @@
 				            trp.`status` =0 and 
 				            trp.type='order' and 
 				            trp.pay_status= 'payed' and 
-				            trp.pay_platform !='prepay'
-				            )
+				             (trp.pay_platform !='prepay' or trp.pay_platform is null)
+				         )
 				        JOIN df_order_flow_monthly tof ON (
 				            tof.order_id=tor.id
 				            AND tof.order_status='signed'
 				            AND tof.create_time>=DATE(#{begindate})
 				            AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 				            )
-				        WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+				        WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%'
 				        UNION ALL
 				        SELECT DISTINCT
 				        tor.store_id,
@@ -171,7 +171,7 @@
 				            AND tof.create_time>=DATE(#{begindate})
 				            AND tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 				            )
-				        WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' 
+				        WHERE te.`name` NOT LIKE '%测试%' AND te.white!='QA' AND te.name not like '%国安社区畅卡%' 
 				        ) tt
 				GROUP BY tt.store_id,tt.channel_id
 				) tor ON ts.id=tor.store_id
