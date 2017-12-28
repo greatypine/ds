@@ -106,7 +106,10 @@ LEFT JOIN
 						tor.store_id,
 						tor.group_id
 					FROM t_order_returned toret
-					JOIN t_eshop te ON (te.id=toret.eshop_id AND te.white!='QA' AND te.name NOT LIKE '%测试%')
+					JOIN t_eshop te ON (
+								te.id=toret.eshop_id AND te.white!='QA' AND te.name NOT LIKE '%测试%' AND 
+								te.name not like '%国安社区畅卡%'
+						)
 					JOIN t_ed_sys_role tesr ON (tesr.id=te.department_id
 												AND tesr.role_name NOT LIKE '%线下联盟%'
 												AND tesr.role_name NOT LIKE '%快周边%')

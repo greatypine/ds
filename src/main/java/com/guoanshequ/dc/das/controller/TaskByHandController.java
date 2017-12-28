@@ -9,6 +9,7 @@ import com.guoanshequ.dc.das.task.AreaScheduleTask;
 import com.guoanshequ.dc.das.task.OrderPubseasScheduleTask;
 import com.guoanshequ.dc.das.task.PreMonthAreaScheduleTask;
 import com.guoanshequ.dc.das.task.ScheduleTask;
+import com.guoanshequ.dc.das.task.StoreTradeHistoryTask;
 import com.guoanshequ.dc.das.task.TopDataScheduleTask;
 
 import org.apache.logging.log4j.LogManager;
@@ -50,6 +51,8 @@ public class TaskByHandController {
     AreaPubseasScheduleTask areaPubseasScheduleTask;
     @Autowired
     PreMonthAreaScheduleTask preMonthAreaScheduleTask;
+    @Autowired
+    StoreTradeHistoryTask storeTradeHistoryTask;
     
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
@@ -617,5 +620,18 @@ public class TaskByHandController {
      * =============================每月2号凌晨调度上月月度数据结束===================================
      */
     
-    
+    /**
+     * =============================门店历史营业额手动调度开始===================================
+     */
+    @RequestMapping(value = "rest/storeTradeHistoryTaskRun",method = RequestMethod.POST)
+    public RestResponse storeTradeHistoryTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		storeTradeHistoryTask.storeTradeHistoryTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
 }

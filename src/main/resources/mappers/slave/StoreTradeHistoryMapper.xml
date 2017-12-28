@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.StoreTradeHistoryMapper">
+
+	<!-- 每日以门店为单位统计order_daily表中交易额 -->
+	<select id="queryStoreTradesHistory" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select tor.store_id as platformid,
+			ts.code as storeno,
+			ts.`name` as storename,
+			sum(trading_price) as order_amount,
+			count(1) as order_count
+			from df_order_signed_daily tor 
+			left join t_store ts on (tor.store_id = ts.id)
+			where tor.df_signed_time >= #{begindate} and tor.df_signed_time <= #{enddate}
+			group by tor.store_id 
+		]]>
+	</select>
+</mapper>
