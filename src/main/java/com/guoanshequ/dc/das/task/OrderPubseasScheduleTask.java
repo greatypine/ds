@@ -37,7 +37,7 @@ public class OrderPubseasScheduleTask {
     private static final Logger logger = LogManager.getLogger(OrderPubseasScheduleTask.class);
     
     /**
-     * 指定人员订单分配调度
+     * 指定人员订单分配调度,数据统计来源：gemini
      * 调度规则：每天凌晨00点20分开始调度
      * 参数：begindate  enddate
      */
@@ -84,5 +84,30 @@ public class OrderPubseasScheduleTask {
     		}
     	}.start();
     }
-    
+	/**
+	 * 公海订单清单,数据计算来源：df_mass_order
+	 * 调度规则：10秒调度一次
+	 * 参数：begindate  enddate
+	 */
+	//@Scheduled(cron ="0/10 * *  * * ? ")
+	public void orderPubseasTaskByMassOrder() {
+		new Thread(){
+			public void run() {
+				try {
+					logger.info("**********指定人员公海订单分配调度开始**********");
+					//取得公海表中最大签收时间
+					String maxSignedTime = dfOrderPubseasService.queryMaxSignedTime();
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					paraMap.put("maxSignedTime", maxSignedTime);
+					int updatenum  = dfOrderPubseasService.addDfOrderPubseasByMassOrder(paraMap);
+					logger.info("**********指定人员公海订单分配调度结束**********");
+					logger.info("共插入记录行数："+updatenum);
+				} catch (Exception e) {
+					logger.error(e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
 }

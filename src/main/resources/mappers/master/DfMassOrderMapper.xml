@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DfMassOrderMapper">
+
+	<!-- 用于海量订单 -->
+    <select id="queryMaxSignedTime" resultType="java.lang.String">
+        <![CDATA[
+			select max(sign_time) as max_signed_time from df_mass_order_daily
+		]]>
+    </select>
+    
+    <!-- 操作Daily -->
+	<insert id="addDfMassOrderDaily" parameterType="java.util.List" >
+        insert ignore into df_mass_order_daily(id, order_sn, group_id, order_type, business_model_id, customer_id, order_address_id, store_id, eshop_id, order_status, 
+        		order_source , invoice_status , buyer_remark , seller_remark ,employee_remark, abnormal_type, abnormal_remark,  delivery_type, trading_price, payable_price, 
+        		is_split, employee_id, employee_phone, employee_name, appointment_start_time,  appointment_end_time , eshop_combo_pro_id , expiry_date, combo_price , total_quantity ,  
+        		status, version, create_user, create_time, update_user,	 update_time, create_user_id, update_user_id, order_sn_reserve, store_remark,  score,  groupon_instance_id, 
+        		normal_store_id, third_part, sign_time, info_village_code,area_code,info_employee_a_no,store_name,store_code,store_city_code,store_white,store_province_code,store_status,
+        		customer_name,customer_mobile_phone,order_quantity,eshop_name,eshop_white,department_id, bussiness_group_id,area_company_id, channel_id,store_city_name, company_name,channel_name,
+        		department_name, gmv_price) values 
+       <foreach item="item"  collection="dfMassOrderList" open="(" separator="),(" close=")"> 
+				#{item.id}, #{item.order_sn}, #{item.group_id}, #{item.order_type}, #{item.business_model_id}, #{item.customer_id}, #{item.order_address_id}, #{item.store_id}, #{item.eshop_id}, #{item.order_status}, 
+				#{item.order_source} , #{item.invoice_status} , #{item.buyer_remark} , #{item.seller_remark} ,#{item.employee_remark}, #{item.abnormal_type}, #{item.abnormal_remark},  #{item.delivery_type}, #{item.trading_price}, #{item.payable_price}, 
+				#{item.is_split}, #{item.employee_id} , #{item.employee_phone}, #{item.employee_name}, #{item.appointment_start_time},  #{item.appointment_end_time} , #{item.eshop_combo_pro_id} , #{item.expiry_date}, #{item.combo_price} , #{item.total_quantity} ,  
+				#{item.status}, #{item.version} , #{item.create_user}, #{item.create_time}, #{item.update_user}, #{item.update_time}, #{item.create_user_id}, #{item.update_user_id}, #{item.order_sn_reserve}, #{item.store_remark},  #{item.score},  #{item.groupon_instance_id}, 
+				#{item.normal_store_id}, #{item.third_part} , #{item.sign_time}, #{item.info_village_code},#{item.area_code},#{item.info_employee_a_no}, #{item.store_name}, #{item.store_code}, #{item.store_city_code},#{item.store_white},#{item.store_province_code},#{item.store_status}, 
+				#{item.customer_name}, #{item.customer_mobile_phone}, #{item.order_quantity}, #{item.eshop_name}, #{item.eshop_white}, #{item.department_id}, #{item.bussiness_group_id},#{item.area_company_id} , #{item.channel_id}, #{item.store_city_name}, #{item.company_name}, #{item.channel_name},
+				#{item.department_name}, #{item.gmv_price}
+       </foreach>
+	</insert> 
+	
+	<!-- 操作Monthly -->
+	<insert id="addDfMassOrderMonthly" parameterType="java.util.List" >
+       	insert ignore into df_mass_order_monthly(id, order_sn, group_id, order_type, business_model_id, customer_id, order_address_id, store_id, eshop_id, order_status, 
+        		order_source , invoice_status , buyer_remark , seller_remark ,employee_remark, abnormal_type, abnormal_remark,  delivery_type, trading_price, payable_price, 
+        		is_split, employee_id, employee_phone, employee_name, appointment_start_time,  appointment_end_time , eshop_combo_pro_id , expiry_date, combo_price , total_quantity ,  
+        		status, version, create_user, create_time, update_user,	 update_time, create_user_id, update_user_id, order_sn_reserve, store_remark,  score,  groupon_instance_id, 
+        		normal_store_id, third_part, sign_time, info_village_code,area_code,info_employee_a_no,store_name,store_code,store_city_code,store_white,store_province_code,store_status,
+        		customer_name,customer_mobile_phone,order_quantity,eshop_name,eshop_white,department_id, bussiness_group_id,area_company_id, channel_id,store_city_name, company_name,channel_name,
+        		department_name, gmv_price) values 
+       <foreach item="item"  collection="dfMassOrderList" open="(" separator="),(" close=")"> 
+				#{item.id}, #{item.order_sn}, #{item.group_id}, #{item.order_type}, #{item.business_model_id}, #{item.customer_id}, #{item.order_address_id}, #{item.store_id}, #{item.eshop_id}, #{item.order_status}, 
+				#{item.order_source} , #{item.invoice_status} , #{item.buyer_remark} , #{item.seller_remark} ,#{item.employee_remark}, #{item.abnormal_type}, #{item.abnormal_remark},  #{item.delivery_type}, #{item.trading_price}, #{item.payable_price}, 
+				#{item.is_split}, #{item.employee_id} , #{item.employee_phone}, #{item.employee_name}, #{item.appointment_start_time},  #{item.appointment_end_time} , #{item.eshop_combo_pro_id} , #{item.expiry_date}, #{item.combo_price} , #{item.total_quantity} ,  
+				#{item.status}, #{item.version} , #{item.create_user}, #{item.create_time}, #{item.update_user}, #{item.update_time}, #{item.create_user_id}, #{item.update_user_id}, #{item.order_sn_reserve}, #{item.store_remark},  #{item.score},  #{item.groupon_instance_id}, 
+				#{item.normal_store_id}, #{item.third_part} , #{item.sign_time}, #{item.info_village_code},#{item.area_code},#{item.info_employee_a_no}, #{item.store_name}, #{item.store_code}, #{item.store_city_code},#{item.store_white},#{item.store_province_code},#{item.store_status}, 
+				#{item.customer_name}, #{item.customer_mobile_phone}, #{item.order_quantity}, #{item.eshop_name}, #{item.eshop_white}, #{item.department_id}, #{item.bussiness_group_id},#{item.area_company_id} , #{item.channel_id}, #{item.store_city_name}, #{item.company_name}, #{item.channel_name},
+				#{item.department_name}, #{item.gmv_price}
+       </foreach>
+	</insert>
+	
+	<!-- 操作Total -->
+	<insert id="addDfMassOrderTotal" parameterType="java.util.List" >
+       	insert ignore into df_mass_order_total(id, order_sn, group_id, order_type, business_model_id, customer_id, order_address_id, store_id, eshop_id, order_status, 
+        		order_source , invoice_status , buyer_remark , seller_remark ,employee_remark, abnormal_type, abnormal_remark,  delivery_type, trading_price, payable_price, 
+        		is_split, employee_id, employee_phone, employee_name, appointment_start_time,  appointment_end_time , eshop_combo_pro_id , expiry_date, combo_price , total_quantity ,  
+        		status, version, create_user, create_time, update_user,	 update_time, create_user_id, update_user_id, order_sn_reserve, store_remark,  score,  groupon_instance_id, 
+        		normal_store_id, third_part, sign_time, info_village_code,area_code,info_employee_a_no,store_name,store_code,store_city_code,store_white,store_province_code,store_status,
+        		customer_name,customer_mobile_phone,order_quantity,eshop_name,eshop_white,department_id, bussiness_group_id,area_company_id, channel_id,store_city_name, company_name,channel_name,
+        		department_name, gmv_price) values 
+       <foreach item="item"  collection="dfMassOrderList" open="(" separator="),(" close=")"> 
+				#{item.id}, #{item.order_sn}, #{item.group_id}, #{item.order_type}, #{item.business_model_id}, #{item.customer_id}, #{item.order_address_id}, #{item.store_id}, #{item.eshop_id}, #{item.order_status}, 
+				#{item.order_source} , #{item.invoice_status} , #{item.buyer_remark} , #{item.seller_remark} ,#{item.employee_remark}, #{item.abnormal_type}, #{item.abnormal_remark},  #{item.delivery_type}, #{item.trading_price}, #{item.payable_price}, 
+				#{item.is_split}, #{item.employee_id} , #{item.employee_phone}, #{item.employee_name}, #{item.appointment_start_time},  #{item.appointment_end_time} , #{item.eshop_combo_pro_id} , #{item.expiry_date}, #{item.combo_price} , #{item.total_quantity} ,  
+				#{item.status}, #{item.version} , #{item.create_user}, #{item.create_time}, #{item.update_user}, #{item.update_time}, #{item.create_user_id}, #{item.update_user_id}, #{item.order_sn_reserve}, #{item.store_remark},  #{item.score},  #{item.groupon_instance_id}, 
+				#{item.normal_store_id}, #{item.third_part} , #{item.sign_time}, #{item.info_village_code},#{item.area_code},#{item.info_employee_a_no}, #{item.store_name}, #{item.store_code}, #{item.store_city_code},#{item.store_white},#{item.store_province_code},#{item.store_status}, 
+				#{item.customer_name}, #{item.customer_mobile_phone}, #{item.order_quantity}, #{item.eshop_name}, #{item.eshop_white}, #{item.department_id}, #{item.bussiness_group_id},#{item.area_company_id} , #{item.channel_id}, #{item.store_city_name}, #{item.company_name}, #{item.channel_name},
+				#{item.department_name}, #{item.gmv_price}
+       </foreach>
+	</insert>  
+	
+	<!-- 更新Daily中需要计算的字段信息 -->
+	<update id="updateDfMassOrderDaily" parameterType="java.util.Map">
+		<![CDATA[
+			update df_mass_order_daily set return_label = #{returnLabel}, return_time = #{returnTime} where id = #{id} 
+		]]>
+	</update>
+	
+	<!-- 更新Monthly中需要计算的字段信息 -->
+	<update id="updateDfMassOrderMonthly" parameterType="java.util.Map">
+		<![CDATA[
+			update df_mass_order_monthly set return_label = #{returnLabel}, return_time = #{returnTime} where id = #{id} 
+		]]>
+	</update>
+	
+	<!-- 更新Total中需要计算的字段信息 -->
+	<update id="updateDfMassOrderTotal" parameterType="java.util.Map">
+		<![CDATA[
+			update df_mass_order_total set return_label = #{returnLabel}, return_time = #{returnTime} where id = #{id} 
+		]]>
+	</update>
+	
+	<!-- 更新异常订单标识 -->
+	<update id="updateAbnormalOrder" parameterType="java.util.Map">
+		<![CDATA[
+			UPDATE df_mass_order_daily dmod,
+			 df_mass_order_monthly dmom,
+			 df_mass_order_total dmot
+			SET dmod.abnormal_label = #{abnormalLabel},
+			 dmom.abnormal_label = #{abnormalLabel},
+			 dmot.abnormal_label = #{abnormalLabel}
+			WHERE
+				dmod.order_sn = dmom.order_sn
+			AND dmom.order_sn = dmot.order_sn
+			AND dmod.order_sn IN (
+				SELECT
+					ordersn AS order_sn
+				FROM
+					ds_abnormal_order
+				WHERE
+					updatetime >= #{queryTime}
+				AND STATUS != 3
+			)
+		]]>
+	</update>
+	
+	<!-- 更新异常订单标识:更新申诉通过的订单 -->
+	<update id="updateAbnormalOrderToNormal" parameterType="java.util.Map">
+		<![CDATA[
+			UPDATE df_mass_order_daily dmod,
+			 df_mass_order_monthly dmom,
+			 df_mass_order_total dmot
+			SET dmod.abnormal_label = #{abnormalNormalLabel},
+			 dmom.abnormal_label = #{abnormalNormalLabel},
+			 dmot.abnormal_label = #{abnormalNormalLabel}
+			WHERE
+				dmod.order_sn = dmom.order_sn
+			AND dmom.order_sn = dmot.order_sn
+			AND dmod.order_sn IN (
+				SELECT
+					ordersn AS order_sn
+				FROM
+					ds_abnormal_order
+				WHERE
+					updatetime >= #{queryTime}
+				AND STATUS = 3
+			)
+		]]>
+	</update>
+	
+	<!-- 每天删除Daily前一天数据 -->
+	<delete  id="deleteDfMassOrderDaily" parameterType="java.lang.String">
+		<![CDATA[
+			delete from df_mass_order_daily where sign_time < #{date_time}
+		]]>
+	</delete>
+	
+	<!-- Monthly每月1号删数据，保留最近2个月 -->
+	<delete  id="deleteDfMassOrderMonthly" parameterType="java.lang.String">
+		<![CDATA[
+			delete from df_mass_order_monthly where sign_time < #{date_time}
+		]]>
+	</delete>
+
+</mapper>

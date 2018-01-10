@@ -19,6 +19,7 @@ public class RedisConfig {
 
     private @Value("${redis.host}") String redisHost;
     private @Value("${redis.port}") int redisPort;
+    //private @Value("${redis.password}") String redisPassword;
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
@@ -30,6 +31,7 @@ public class RedisConfig {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         factory.setHostName(redisHost);
         factory.setPort(redisPort);
+        //factory.setPassword(redisPassword);
 
         factory.setUsePool(true);
         return factory;

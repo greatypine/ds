@@ -37,5 +37,45 @@
 			where df_order_id = #{df_order_id}
 		]]>
 	</update>
+
+	<!-- 用于查询最大签收时间 -->
+	<select id="queryMaxSignedTime" resultType="java.lang.String">
+		<![CDATA[
+			select max(df_signed_time) as max_signed_time from df_order_pubseas_monthly
+		]]>
+	</select>
+
+	<!-- 通过mass_order清洗公海订单 -->
+	<insert id="addDfOrderPubseasByMassOrder" parameterType="java.util.Map">
+		<![CDATA[
+			insert IGNORE into df_order_pubseas_monthly	(
+				df_order_id,df_order_sn,df_trading_price,df_customer_id,df_customer_name,df_customer_phone,df_cityname,df_store_id,
+				df_storeno,df_store_name,df_area_no,df_area_name,df_tiny_village_id,df_tiny_village_name,df_ispubseas,df_signed_time,
+				df_createtime,df_updatetime
+			)
+			select tor.id as df_order_id,
+					tor.order_sn as df_order_sn,
+					tor.trading_price as df_trading_price,
+					tor.customer_id as df_customer_id,
+					tor.customer_name as df_customer_name,
+					tor.customer_mobile_phone as df_customer_phone,
+					tor.store_city_name as df_cityname,
+					tor.store_id as df_store_id,
+					tor.store_code as df_storeno,
+					tor.store_name as df_store_name,
+					tor.area_code as df_area_no,
+					tarea.`name` as df_area_name,
+					tvc.tiny_village_id as df_tiny_village_id,
+					tvc.tiny_village_name as df_tiny_village_name,
+					1 as df_ispubseas,
+					tor.sign_time as df_signed_time,
+					NOW() as df_createtime,
+					NOW() as df_updatetime
+			from df_mass_order_daily tor
+			left join t_area tarea on (tor.area_code = tarea.area_no)
+			left join tiny_village_code tvc on (tor.info_village_code = tvc.`code`)
+			where tor.info_employee_a_no is null and tor.sign_time >= #{maxSignedTime}
+		]]>
+	</insert>
 	
 </mapper>

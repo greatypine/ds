@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.AreaInfoMapper">
+
+
+    <select id="queryAreaNoByTinyNo" parameterType="String" resultType="String">
+        <![CDATA[
+            select area_no from t_area_info
+            where status=0 and tin_village_id is not null
+            and tin_village_id in (
+              select tiny_village_id from tiny_village_code where code=#{code}
+            )
+            UNION
+            select area_no from t_area_info
+            where status=0 and tin_village_id is null and village_id is not null
+            and village_id in (
+              select t1.village_id from t_tiny_village t1
+              inner join tiny_village_code t2
+              on t1.id = t2.tiny_village_id and t2.code=#{code}
+            )
+		]]>
+    </select>
+
+</mapper>

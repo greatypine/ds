@@ -238,7 +238,34 @@ public class DateUtils {
         return preDateFirst;
     }
     
+    /**
+     * @param date 目标日期
+     * @return 返回目标日期的零点零分零秒
+     */
+    public static String getDayTimeZero(Date date){
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	 	Calendar calendar = Calendar.getInstance();
+	 	calendar.set(Calendar.HOUR_OF_DAY,0);
+	 	calendar.set(Calendar.MINUTE,0);
+	 	calendar.set(Calendar.SECOND,0);
+	 	String dateTimeZero = df.format(calendar.getTime());
+	    return dateTimeZero;
+    }
+    
+    /**
+     * @param date 目标日期
+     * @return 返回目标日期所在月份的1号
+     */
+    public static String getDateFirstOfMonth(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        String preDateFirst = df.format(calendar.getTime());
+        preDateFirst += "-01";
+        return preDateFirst;
+    }
+    
     public static void main(String[] args) {
-		System.out.println(getPreNMonthFirstDay(3));
+		System.out.println(getDateFirstOfMonth(new Date()));
 	}
 }

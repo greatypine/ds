@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.TProductCityMapper">
+
+	<select id="queryTProductCity" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select province_name,city_name, product_name,product_count
+			from ds_product_city
+		]]>
+	</select>
+	
+
+	<insert id="addTProductCity" parameterType="java.util.Map">
+		<![CDATA[
+			INSERT INTO ds_product_city (
+				province_name,city_name, product_name,product_count,create_time
+			) VALUES(
+				#{province_name},#{city_name},#{product_name},#{product_count},now()
+			)
+		]]>
+	</insert>	
+	
+	<delete id="deleteByYearMonth">
+		<![CDATA[
+			delete from ds_product_city
+		]]>
+	</delete>
+
+</mapper>

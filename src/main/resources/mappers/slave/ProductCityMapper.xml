@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.ProductCityMapper">
+
+	<select id="queryByProductCity" resultType="java.util.Map">
+		<![CDATA[
+			select tsb.name province_name,tsa.`name` as city_name,product_name,sum(cur_month) product_count from t_product_store_stat dpross
+			join t_store ts on (dpross.store_id = ts.id )
+			join t_sys_area tsa on (ts.city_code = tsa.code and tsa.level = 2)
+			join t_sys_area tsb on (tsa.parent_code = tsb.code and tsb.`level` = 1)
+			where cur_month !=0
+			group by tsa.`name`,product_id
+		]]>
+	</select>
+
+</mapper>

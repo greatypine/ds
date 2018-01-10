@@ -3,5 +3,6 @@
 <configuration>
     <typeAliases>
         <typeAlias alias="CountryEntity" type="com.guoanshequ.dc.das.model.Country"/>
+        <typeAlias alias="MassOrderEntity" type="com.guoanshequ.dc.das.model.DfMassOrder"/>
     </typeAliases>
 </configuration>

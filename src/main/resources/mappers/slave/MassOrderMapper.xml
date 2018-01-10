@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.MassOrderMapper">
+
+<resultMap type="MassOrderEntity" id="massOrderResultMap">
+        <id property="id" column="ID" />
+		<result property="order_sn" column="ORDER_SN" />
+		<result property="group_id" column="GROUP_ID" />
+		<result property="order_type" column="ORDER_TYPE" />
+		<result property="business_model_id" column="BUSINESS_MODEL_ID" />
+		<result property="customer_id" column="CUSTOMER_ID" />
+		<result property="order_address_id" column="ORDER_ADDRESS_ID" />
+		<result property="store_id" column="STORE_ID" />
+		<result property="eshop_id" column="ESHOP_ID" />
+		<result property="order_status" column="ORDER_STATUS" />
+		<result property="order_source" column="ORDER_SOURCE" />
+		<result property="invoice_status" column="INVOICE_STATUS" />
+		<result property="buyer_remark" column="BUYER_REMARK" />
+		<result property="seller_remark" column="SELLER_REMARK" />
+		<result property="employee_remark" column="EMPLOYEE_REMARK" />
+		<result property="abnormal_type" column="ABNORMAL_TYPE" />
+		<result property="abnormal_remark" column="ABNORMAL_REMARK" />
+		<result property="delivery_type" column="DELIVERY_TYPE" />
+		<result property="trading_price" column="TRADING_PRICE" />
+		<result property="payable_price" column="PAYABLE_PRICE" />
+		<result property="is_split" column="IS_SPLIT" />
+		<result property="employee_id" column="EMPLOYEE_ID" />
+		<result property="employee_phone" column="EMPLOYEE_PHONE" />
+		<result property="employee_name" column="EMPLOYEE_NAME" />
+		<result property="appointment_start_time" column="APPOINTMENT_START_TIME" />
+		<result property="appointment_end_time" column="APPOINTMENT_END_TIME" />
+		<result property="eshop_combo_pro_id" column="ESHOP_COMBO_PRO_ID" />
+		<result property="expiry_date" column="EXPIRY_DATE" />
+		<result property="combo_price" column="COMBO_PRICE" />
+		<result property="total_quantity" column="TOTAL_QUANTITY" />
+		<result property="status" column="STATUS" />
+		<result property="version" column="VERSION" />
+		<result property="create_user" column="CREATE_USER" />
+		<result property="create_time" column="CREATE_TIME" />
+		<result property="update_user" column="UPDATE_USER" />
+		<result property="update_time" column="UPDATE_TIME" />
+		<result property="create_user_id" column="CREATE_USER_ID" />
+		<result property="update_user_id" column="UPDATE_USER_ID" />
+		<result property="order_sn_reserve" column="ORDER_SN_RESERVE" />
+		<result property="store_remark" column="STORE_REMARK" />
+		<result property="score" column="SCORE" />
+		<result property="groupon_instance_id" column="GROUPON_INSTANCE_ID" />
+		<result property="normal_store_id" column="NORMAL_STORE_ID" />
+		<result property="third_part" column="THIRD_PART" />
+		<result property="sign_time" column="SIGN_TIME" />
+		<result property="info_village_code" column="INFO_VILLAGE_CODE" />
+		<result property="area_code" column="AREA_CODE" />
+		<result property="info_employee_a_no" column="INFO_EMPLOYEE_A_NO" />
+		<result property="store_name" column="STORE_NAME" />
+		<result property="store_code" column="STORE_CODE" />
+		<result property="store_city_code" column="STORE_CITY_CODE" />
+		<result property="store_white" column="STORE_WHITE" />
+		<result property="store_province_code" column="STORE_PROVINCE_CODE" />
+		<result property="store_status" column="STORE_STATUS" />
+		<result property="customer_name" column="CUSTOMER_NAME" />
+		<result property="customer_mobile_phone" column="CUSTOMER_MOBILE_PHONE" />
+		<result property="order_quantity" column="ORDER_QUANTITY" />
+		<result property="eshop_name" column="ESHOP_NAME" />
+		<result property="eshop_white" column="ESHOP_WHITE" />
+		<result property="department_id" column="DEPARTMENT_ID" />
+		<result property="bussiness_group_id" column="BUSSINESS_GROUP_ID" />
+		<result property="area_company_id" column="AREA_COMPANY_ID" />
+		<result property="channel_id" column="CHANNEL_ID" />
+		<result property="store_city_name" column="STORE_CITY_NAME" />
+		<result property="company_name" column="COMPANY_NAME" />
+		<result property="channel_name" column="CHANNEL_NAME" />
+		<result property="department_name" column="DEPARTMENT_NAME" />
+		<result property="gmv_price" column="GMV_PRICE" />
+</resultMap>
+
+<select id="queryMassOrderByDate" parameterType="java.util.Map" resultMap="massOrderResultMap">
+	<![CDATA[
+		SELECT
+		  tor.`id`,
+		  tor.`order_sn`,
+		  tor.`group_id` ,
+		  tor.`order_type`,
+		  tor.`business_model_id` ,
+		  tor.`customer_id`,
+		  tor.`order_address_id` ,
+		  tor.`store_id` ,
+		  tor.`eshop_id` ,
+		  tor.`order_status` ,
+		  tor.`order_source` ,
+		  tor.`invoice_status` ,
+		  tor.`buyer_remark` ,
+		  tor.`seller_remark` ,
+		  tor.`employee_remark` ,
+		  tor.`abnormal_type`,
+		  tor.`abnormal_remark` ,
+		  tor.`delivery_type` ,
+		  tor.`trading_price` ,
+		  tor.`payable_price` ,
+		  tor.`is_split` ,
+		  tor.`employee_id`,
+		  tor.`employee_phone` ,
+		  tor.`employee_name` ,
+		  tor.`appointment_start_time`,
+		  tor.`appointment_end_time` ,
+		  tor.`eshop_combo_pro_id` ,
+		  tor.`expiry_date`,
+		  tor.`combo_price` ,
+		  tor.`total_quantity` ,
+		  tor.`status`,
+		  tor.`version`,
+		  tor.`create_user`,
+		  tor.`create_time`,
+		  tor.`update_user`,
+		  tor.`update_time`,
+		  tor.`create_user_id`,
+		  tor.`update_user_id`,
+		  tor.`order_sn_reserve`,
+		  tor.`store_remark`,
+		  tor.`score`,
+		  tor.`groupon_instance_id`,
+		  tor.`normal_store_id`,
+		  tor.`third_part`,
+    	  tor.`sign_time`,
+			ts. NAME AS store_name,
+			ts. CODE AS store_code,
+			ts.city_code AS store_city_code,
+			ts.white AS store_white,
+		  	ts.province_code AS store_province_code,
+		  	ts.status AS store_status,
+			tc. NAME AS customer_name,
+			tc.mobilephone AS customer_mobile_phone,
+			tog.order_quantity as order_quantity,
+			te. NAME AS eshop_name,
+			te.white AS eshop_white,
+			te.department_id AS department_id,
+			te.bussiness_group_id AS bussiness_group_id,
+			te.area_company_id AS area_company_id,
+			te.channel_id AS channel_id,
+			tsa.`name` AS store_city_name,
+			tcp.`name` AS company_name,
+		    tdc1.`name`  AS channel_name,
+		    tdc2.`name` AS department_name,
+		  CASE WHEN te.name like '%国安社区畅卡%' THEN 1  ELSE 0 END AS loan_lable,
+		  CASE WHEN tesr.role_name not like '%洗衣%' THEN
+		        IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
+		    ELSE
+		        CASE WHEN (trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay') THEN
+		            0
+		        ELSE
+		            IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
+		        END
+		    END AS gmv_price
+		FROM
+			t_order tor
+		LEFT JOIN t_store ts ON  (tor.store_id = ts.id)
+		LEFT JOIN t_customer tc ON  (tor.customer_id = tc.id)
+		LEFT JOIN t_eshop te ON  (tor.eshop_id = te.id)
+		LEFT JOIN t_sys_area tsa ON (tsa.`code` = ts.city_code and tsa.`level` = 2)
+		LEFT JOIN t_company tcp ON  (	te.area_company_id = tcp.id)
+		LEFT JOIN t_ed_sys_role tesr on (tesr.id=te.department_id)
+		LEFT JOIN t_order_group  tog ON (tog.id=tor.group_id)
+		LEFT JOIN t_department_channel tdc1 ON te.channel_id = tdc1.id	LEFT JOIN t_department_channel tdc2 ON te.bussiness_group_id = tdc2.id
+		LEFT JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.order_group_id = tor.group_id and trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay') 
+	]]>
+	<where>
+		<if test="maxSignedTime != null and '' != maxSignedTime">
+	       <![CDATA[                   
+ 	          tor.sign_time >=  #{maxSignedTime} 
+	       ]]> 
+		</if>
+	</where>
+  </select>
+  
+  <!-- 查询当前最大的退款时间 -->
+  <select id="queryMaxReturnTime" resultType="java.lang.String">
+      <![CDATA[
+		select max(create_time) as max_return_time from t_order_returned
+		]]>
+  </select>
+  
+  <!-- 查询退货订单 -->
+  <select id="queryReturnOrderByDate" parameterType="java.util.Map" resultType="java.util.Map">
+  	<![CDATA[
+		SELECT t.order_id, t.create_time 
+        FROM t_order_refund toref
+        JOIN
+            (
+                SELECT tor.store_id, tor.group_id,toret.order_id,toret.create_time
+                FROM t_order_returned toret
+                JOIN t_eshop te ON (
+                	te.id=toret.eshop_id AND
+                    te.white!='QA' AND te.name NOT LIKE '%测试%' AND te.name not like '%国安社区畅卡%'
+                )
+            	JOIN t_ed_sys_role tesr ON (
+					tesr.id=te.department_id and
+					tesr.role_name not like '%线下联盟%' and tesr.role_name not like '%快周边%'
+				)
+                JOIN t_order tor ON toret.order_id=tor.id
+                WHERE toret.returned_status='done' 
+           ]]>
+       	<if test="maxReturnTime != null and '' != maxReturnTime">
+           	<![CDATA[
+ 	           AND toret.create_time >= date_sub(#{maxReturnTime}, INTERVAL 1 DAY)
+			]]>
+		</if>
+		<![CDATA[
+           	GROUP BY tor.group_id
+	       	) t ON toref.order_group_id=t.group_id
+	        WHERE toref.refund_status='refunded'
+	        GROUP BY t.store_id  	
+        ]]>
+  </select>
+  
+</mapper>

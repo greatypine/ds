@@ -5,11 +5,14 @@
              xmlns:context="http://www.springframework.org/schema/context"
              xmlns:tx="http://www.springframework.org/schema/tx"
              xmlns:task="http://www.springframework.org/schema/task"
+             xmlns:aop="http://www.springframework.org/schema/aop"
              xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-  http://www.springframework.org/schema/task  http://www.springframework.org/schema/task/spring-task.xsd">
+  http://www.springframework.org/schema/task  http://www.springframework.org/schema/task/spring-task.xsd
+  http://www.springframework.org/schema/aop  http://www.springframework.org/schema/aop/spring-aop.xsd
+  ">
 
 	<!-- 告知Spring启用注解驱动 -->
     <annotation-driven/>
@@ -48,5 +51,8 @@
 	<!-- 引入配置多数据源-->
     <beans:import resource="spring-datasource-master.xml"/>
     <beans:import resource="spring-datasource-slave.xml"/>
+
+    <!-- 开启Aop注解扫描 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
 </beans:beans>

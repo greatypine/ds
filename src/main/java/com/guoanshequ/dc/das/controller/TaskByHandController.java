@@ -3,14 +3,7 @@ package com.guoanshequ.dc.das.controller;
 import com.guoanshequ.dc.das.domain.EnumRespStatus;
 import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.service.CustomerService;
-import com.guoanshequ.dc.das.task.AbnormalOrderScheduleTask;
-import com.guoanshequ.dc.das.task.AreaPubseasScheduleTask;
-import com.guoanshequ.dc.das.task.AreaScheduleTask;
-import com.guoanshequ.dc.das.task.OrderPubseasScheduleTask;
-import com.guoanshequ.dc.das.task.PreMonthAreaScheduleTask;
-import com.guoanshequ.dc.das.task.ScheduleTask;
-import com.guoanshequ.dc.das.task.StoreTradeHistoryTask;
-import com.guoanshequ.dc.das.task.TopDataScheduleTask;
+import com.guoanshequ.dc.das.task.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +46,11 @@ public class TaskByHandController {
     PreMonthAreaScheduleTask preMonthAreaScheduleTask;
     @Autowired
     StoreTradeHistoryTask storeTradeHistoryTask;
-    
+    @Autowired
+    MassOrderScheduleTask massOrderScheduleTask;
+    @Autowired
+    ProductCityTask productCityTask;
+
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
     /**
@@ -504,7 +501,7 @@ public class TaskByHandController {
     @RequestMapping(value = "rest/orderPubseasTaskRun",method = RequestMethod.POST)
     public RestResponse orderPubseasTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
-    		orderPubseasScheduleTask.orderPubseasTask();
+    		orderPubseasScheduleTask.orderPubseasTaskByMassOrder();
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -633,5 +630,116 @@ public class TaskByHandController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
-    } 
+    }
+    /**
+     * =============================门店历史营业额手动调度结束===================================
+     */
+    
+    /**
+     * 手动调度清洗订单定时任务（数据根据最大签收时间signtime同时写入daily/monthly/total表）
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/massOrderTaskRun",method = RequestMethod.POST)
+    public RestResponse massOrderTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.massOrderTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 手动调度删除Daily订单定时任务
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/deleteDailyMassOrderTaskRun",method = RequestMethod.POST)
+    public RestResponse deleteDailyMassOrderTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.deleteDailyMassOrderTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 手动调度删除Monthly订单定时任务
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/deleteMonthlyMassOrderTaskRun",method = RequestMethod.POST)
+    public RestResponse deleteMonthlyMassOrderTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.deleteMonthlyMassOrderTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 手动调度退货订单更新定时任务
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/returnMassOrderTaskRun",method = RequestMethod.POST)
+    public RestResponse returnMassOrderTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.returnMassOrderTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 手动调度异常订单更新定时任务
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/abnormalMassOrderTaskRun",method = RequestMethod.POST)
+    public RestResponse abnormalMassOrderTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.abnormalMassOrderTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+
+    /**
+     * 手动调度商品按城市排名任务
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/productCityTaskRun",method = RequestMethod.POST)
+    public RestResponse productCityTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            productCityTask.productCityTask();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 }

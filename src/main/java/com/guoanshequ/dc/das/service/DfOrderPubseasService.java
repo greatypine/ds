@@ -2,12 +2,11 @@ package com.guoanshequ.dc.das.service;
 
 import com.guoanshequ.dc.das.dao.master.DfOrderPubseasMapper;
 import com.guoanshequ.dc.das.model.DfOrderPubseas;
-
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 
 /**
@@ -34,5 +33,13 @@ public class DfOrderPubseasService {
     
     public Integer updateOrderPubseasByOrderId(DfOrderPubseas dfOrderPubseas){
     	return dfOrderPubseasDao.updateOrderPubseasByOrderId(dfOrderPubseas);
+    }
+
+    public String queryMaxSignedTime(){
+        return dfOrderPubseasDao.queryMaxSignedTime();
+    }
+
+    public Integer addDfOrderPubseasByMassOrder(Map<String, String> paraMap){
+        return dfOrderPubseasDao.addDfOrderPubseasByMassOrder(paraMap);
     }
 }

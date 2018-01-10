@@ -1,8 +1,6 @@
 package com.guoanshequ.dc.das.task;
 
 import com.guoanshequ.dc.das.utils.DateUtils;
-
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
@@ -11,6 +9,12 @@ import java.util.Map;
 
 /**
  * Created by daishuhua on 2017/4/11.
+ *
+ * 调度配置说明：
+ * 每隔5秒执行一次：  * /5 * * * * ?
+ * 每隔1分钟执行一次：0 * /1 * * * ?
+ * 每天的下午2点至2：55和6点至6点55分两个时间段内每5分钟一次触发  "0 0/5 14,18 * * ?"
+ * 每天的下午2点到6点每1分钟一次触发  "0 0/1 14-18 * * ?"
  */
 @Component
 public class TestTask {
