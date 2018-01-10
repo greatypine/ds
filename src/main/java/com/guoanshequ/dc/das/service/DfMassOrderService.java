@@ -1,6 +1,5 @@
 package com.guoanshequ.dc.das.service;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +20,16 @@ public class DfMassOrderService {
 		return dfMassOrderDao.queryMaxSignedTime();
 	}
 
-	public Integer addDfMassOrderDaily(List<DfMassOrder> dfMassOrderList) {
-		return dfMassOrderDao.addDfMassOrderDaily(dfMassOrderList);
+	public Integer addDfMassOrderDaily(DfMassOrder dfMassOrder) {
+		return dfMassOrderDao.addDfMassOrderDaily(dfMassOrder);
 	}
 	
-	public Integer addDfMassOrderMonthly(List<DfMassOrder> dfMassOrderList) {
-		return dfMassOrderDao.addDfMassOrderMonthly(dfMassOrderList);
+	public Integer addDfMassOrderMonthly(DfMassOrder dfMassOrder) {
+		return dfMassOrderDao.addDfMassOrderMonthly(dfMassOrder);
 	}
 	
-	public Integer addDfMassOrderTotal(List<DfMassOrder> dfMassOrderList) {
-		return dfMassOrderDao.addDfMassOrderTotal(dfMassOrderList);
+	public Integer addDfMassOrderTotal(DfMassOrder dfMassOrder) {
+		return dfMassOrderDao.addDfMassOrderTotal(dfMassOrder);
 	}
 	
 	public Integer deleteDfMassOrderDaily(String dateTime){

@@ -10,7 +10,6 @@ import com.guoanshequ.dc.das.utils.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -44,7 +43,7 @@ public class MassOrderScheduleTask {
 	 * 调度规则：根据情况1小时调度一次
 	 * 参数：maxSignTime
 	 */
-    @Scheduled(cron ="0 0 */1 * * ?")
+//    @Scheduled(cron ="0 0 */1 * * ?")
 	public void massOrderTask() {
     	new Thread(){
     		public void run() {
@@ -58,10 +57,7 @@ public class MassOrderScheduleTask {
     	    		List<DfMassOrder> massOrderList =massOrderService.queryMassOrderByDate(paraMap);
     	    		
     	    		if(!massOrderList.isEmpty()){
-    	    			massOrderList = paramsPackage(massOrderList);
-    	    			dfMassOrderService.addDfMassOrderDaily(massOrderList);
-    	    			dfMassOrderService.addDfMassOrderMonthly(massOrderList);
-    	    			dfMassOrderService.addDfMassOrderTotal(massOrderList);
+    	    			paramsPackage(massOrderList);
     	    		}
     	    		
     	    		logger.info("自动清洗海量订单共调度数据记录行数："+massOrderList.size());
@@ -76,7 +72,7 @@ public class MassOrderScheduleTask {
     /**
      *  每天12点40分删除前1天的数据
      */
-    @Scheduled(cron ="0 40 12 * * ?")
+//    @Scheduled(cron ="0 40 12 * * ?")
     public void deleteDailyMassOrderTask(){
     	new Thread(){
     		public void run() {
@@ -94,7 +90,7 @@ public class MassOrderScheduleTask {
     /**
      * 每月1号删数据，保留最近2个月
      */
-    @Scheduled(cron ="0 40 12 1 * ?")
+//    @Scheduled(cron ="0 40 12 1 * ?")
     public void deleteMonthlyMassOrderTask(){
     	new Thread(){
     		public void run() {
@@ -112,7 +108,7 @@ public class MassOrderScheduleTask {
     /**
      * 定时查询退货订单并更新状态,间隔1分钟
      */
-    @Scheduled(cron ="0 0 */2 * * ?")
+//    @Scheduled(cron ="0 0 */2 * * ?")
     public void returnMassOrderTask(){
     	new Thread(){
     		public void run() {
@@ -146,7 +142,7 @@ public class MassOrderScheduleTask {
      * massOrder中异常订单任务调度
      * 基于ds_abnormal_order，故调度在异常订单任务时间之后
      */
-    @Scheduled(cron ="0 30 04 * * ?")
+//    @Scheduled(cron ="0 30 04 * * ?")
     public void abnormalMassOrderTask(){
     	new Thread(){
     		public void run() {
@@ -172,25 +168,27 @@ public class MassOrderScheduleTask {
      * @param list
      * @return
      */
-    public List<DfMassOrder> paramsPackage(List<DfMassOrder> list){
+    public void paramsPackage(List<DfMassOrder> list){
 //		String customer_isnew_flag;
-    	list.parallelStream().forEach(record ->{
-			TinyDispatch tinyDispatch;
-			try {
-				tinyDispatch = tinyDispatchService.queryTinyDispatchByOrderId(record.getId());
-				if(tinyDispatch!=null){
-					record.setInfo_village_code(tinyDispatch.getCode());
-					record.setInfo_employee_a_no(tinyDispatch.getEmployee_a_no());
-					if(tinyDispatch.getEmployee_a_no()==null){
-						record.setPubseas_label(DfMassOrder.PubseasLabel.PUBSEAS.code);
+    	try{
+	    	for(DfMassOrder record:list){
+	    		TinyDispatch tinyDispatch;
+					tinyDispatch = tinyDispatchService.queryTinyDispatchByOrderId(record.getId());
+					if(tinyDispatch!=null){
+						record.setInfo_village_code(tinyDispatch.getCode());
+						record.setInfo_employee_a_no(tinyDispatch.getEmployee_a_no());
+						if(tinyDispatch.getEmployee_a_no()==null){
+							record.setPubseas_label(DfMassOrder.PubseasLabel.PUBSEAS.code);
+						}
+						record.setArea_code(areaInfoService.queryAreaNoByTinyNo(tinyDispatch.getCode()));
 					}
-					record.setArea_code(areaInfoService.queryAreaNoByTinyNo(tinyDispatch.getCode()));
-				}
-			} catch (Exception e) {
-				logger.info("获取订单信息异常：",e);
-			}
-		});
-    	return list;
+					dfMassOrderService.addDfMassOrderDaily(record);
+	    			dfMassOrderService.addDfMassOrderMonthly(record);
+	    			dfMassOrderService.addDfMassOrderTotal(record);
+	    	}
+	    } catch (Exception e) {
+			logger.info("获取订单信息异常：",e);
+		}
     }
 
 }

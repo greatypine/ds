@@ -1,9 +1,7 @@
 package com.guoanshequ.dc.das.dao.master;
 
-import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.guoanshequ.dc.das.datasource.DataSource;
@@ -15,11 +13,11 @@ public interface DfMassOrderMapper {
 
 	String queryMaxSignedTime();
 
-	Integer addDfMassOrderDaily(@Param("dfMassOrderList")List<DfMassOrder> dfMassOrderList);
+	Integer addDfMassOrderDaily(DfMassOrder dfMassOrder);
 	
-	Integer addDfMassOrderMonthly(@Param("dfMassOrderList")List<DfMassOrder> dfMassOrderList);
+	Integer addDfMassOrderMonthly(DfMassOrder dfMassOrder);
 	
-	Integer addDfMassOrderTotal(@Param("dfMassOrderList")List<DfMassOrder> dfMassOrderList);
+	Integer addDfMassOrderTotal(DfMassOrder dfMassOrder);
 	
 	Integer deleteDfMassOrderDaily(String dateTime);
 	
