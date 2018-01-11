@@ -1,5 +1,6 @@
 package com.guoanshequ.dc.das.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,34 @@ public class DfMassOrderService {
 	
 	public Integer updateAbnormalOrderToNormal(Map<String, String> paraMap){
 		return dfMassOrderDao.updateAbnormalOrderToNormal(paraMap);
+	}
+	
+	public Integer updateCustomerOrderDaily(Map<String, String> paraMap){
+		return dfMassOrderDao.updateCustomerOrderDaily(paraMap);
+	}
+	
+	public Integer updateCustomerOrderMonthly(Map<String, String> paraMap){
+		return dfMassOrderDao.updateCustomerOrderMonthly(paraMap);
+	}
+	
+	public Integer updateCustomerOrderTotal(Map<String, String> paraMap){
+		return dfMassOrderDao.updateCustomerOrderTotal(paraMap);
+	}
+	
+	public List<DfMassOrder> queryMassOrderByDate(Map<String, String> paraMap){
+        return dfMassOrderDao.queryMassOrderByDate(paraMap);
+    }
+	
+	public Integer updateOrderVillageCodeDaily(Map<String, String> paraMap){
+		return dfMassOrderDao.updateOrderVillageCodeDaily(paraMap);
+	}
+	
+	public Integer updateOrderVillageCodeMonthly(Map<String, String> paraMap){
+		return dfMassOrderDao.updateOrderVillageCodeMonthly(paraMap);
+	}
+	
+	public Integer updateOrderVillageCodeTotal(Map<String, String> paraMap){
+		return dfMassOrderDao.updateOrderVillageCodeTotal(paraMap);
 	}
 
 }

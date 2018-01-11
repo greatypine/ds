@@ -742,4 +742,40 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    /**
+     * 手动调度新客标识
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/customerTradeTaskRun",method = RequestMethod.POST)
+    public RestResponse customerTradeTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+        	massOrderScheduleTask.customerTradeTask();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 手动调度恢复小区Code
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/recoveryVillageCodeTaskRun",method = RequestMethod.POST)
+    public RestResponse recoveryVillageCodeTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+        	massOrderScheduleTask.recoveryVillageCodeTask();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 }

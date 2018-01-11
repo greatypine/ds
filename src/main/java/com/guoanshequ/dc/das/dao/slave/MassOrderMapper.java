@@ -17,4 +17,9 @@ public interface MassOrderMapper {
 	String queryMaxReturnTime();
 	
 	List<Map<String, String>> queryReturnOrderByDate(Map<String, String> paraMap);
+	
+	String queryMaxQueryTime();
+	
+	List<Map<String, String>> queryCustomerTradeTask(Map<String, String> paraMap);
+	
 }

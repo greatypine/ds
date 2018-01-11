@@ -30,4 +30,12 @@ public class MassOrderService {
 		return massOrderDao.queryReturnOrderByDate(paraMap);
 	}
 	
+	public String queryMaxQueryTime(){
+		return massOrderDao.queryMaxQueryTime();
+	}
+	
+	public List<Map<String, String>> queryCustomerTradeTask(Map<String, String> paraMap){
+		return massOrderDao.queryCustomerTradeTask(paraMap);
+	}
+	
 }

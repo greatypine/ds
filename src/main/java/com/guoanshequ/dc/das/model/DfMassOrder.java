@@ -140,4 +140,36 @@ public class DfMassOrder {
     	}
     }
 
+	public enum CustomerIsnewLabel{
+		DEFAULT("-1", "否"),
+		ZERO_CUSTOMER("0", "0元新客"),
+		TEN_CUSTOMER("10", "10元新客"),
+		TWENTY_CUSTOMER("20", "20元新客"),
+    	;
+    	
+    	public String code;
+    	public String desc;
+    	
+    	CustomerIsnewLabel(String code, String desc){
+    		this.code = code;
+    		this.desc = desc;
+    	}
+	}
+	
+	/**
+	 * 判断新客标准
+	 * @param trading_price
+	 * @return
+	 */
+	public static String checkCustomerIsnew(String trading_price){
+		BigDecimal tradingPrice = trading_price==null?BigDecimal.ZERO:new BigDecimal(trading_price);
+		if(new BigDecimal(CustomerIsnewLabel.TEN_CUSTOMER.code).compareTo(tradingPrice)>0){
+			return CustomerIsnewLabel.ZERO_CUSTOMER.code;
+		}else if(new BigDecimal(CustomerIsnewLabel.TWENTY_CUSTOMER.code).compareTo(tradingPrice)>0){
+			return CustomerIsnewLabel.TEN_CUSTOMER.code;
+		}else{
+			return CustomerIsnewLabel.TWENTY_CUSTOMER.code;
+		}
+	}
+	
 }

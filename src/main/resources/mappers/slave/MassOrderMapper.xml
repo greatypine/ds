@@ -160,13 +160,13 @@
 		LEFT JOIN t_ed_sys_role tesr on (tesr.id=te.department_id)
 		LEFT JOIN t_order_group  tog ON (tog.id=tor.group_id)
 		LEFT JOIN t_department_channel tdc1 ON te.channel_id = tdc1.id	LEFT JOIN t_department_channel tdc2 ON te.bussiness_group_id = tdc2.id
-		LEFT JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.order_group_id = tor.group_id and trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay') 
+		LEFT JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.order_group_id = tor.group_id and trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay')
 	]]>
 	<where>
 		<if test="maxSignedTime != null and '' != maxSignedTime">
-	       <![CDATA[                   
- 	          tor.sign_time >=  #{maxSignedTime} 
-	       ]]> 
+	       <![CDATA[
+ 	          tor.sign_time >=  #{maxSignedTime}
+	       ]]>
 		</if>
 	</where>
   </select>
@@ -209,6 +209,30 @@
 	        WHERE toref.refund_status='refunded'
 	        GROUP BY t.store_id  	
         ]]>
+  </select>
+  
+  <!-- 查询当前最大的新客时间 -->
+  <select id="queryMaxQueryTime" resultType="java.lang.String">
+      <![CDATA[
+		select max(create_time) as max_query_time from df_customer_order_month_trade
+		]]>
+  </select>
+  
+  <!-- 查询新客订单 -->
+  <select id="queryCustomerTradeTask" parameterType="java.util.Map" resultType="java.util.Map">
+  		<![CDATA[
+  			SELECT
+				t.trading_price,
+				t.order_sn
+			FROM
+				df_customer_order_month_trade t
+			WHERE
+				t.order_sn is not null 
+			AND
+				t.create_time >= #{maxQueryTime}
+			AND 
+				t.order_month_count = 1
+  		]]>
   </select>
   
 </mapper>

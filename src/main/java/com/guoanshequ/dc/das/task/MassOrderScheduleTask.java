@@ -7,6 +7,7 @@ import com.guoanshequ.dc.das.service.DfMassOrderService;
 import com.guoanshequ.dc.das.service.MassOrderService;
 import com.guoanshequ.dc.das.service.TinyDispatchService;
 import com.guoanshequ.dc.das.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,10 @@ public class MassOrderScheduleTask {
 	private static final Logger logger = LogManager.getLogger(MassOrderScheduleTask.class);
 	
 	/**
-	 * 调度规则：根据情况1小时调度一次
+	 * 调度规则：根据情况5分钟调度一次
 	 * 参数：maxSignTime
 	 */
-//    @Scheduled(cron ="0 0 */1 * * ?")
+//    @Scheduled(cron ="0 */1 * * * ?")
 	public void massOrderTask() {
     	new Thread(){
     		public void run() {
@@ -108,7 +109,7 @@ public class MassOrderScheduleTask {
     /**
      * 定时查询退货订单并更新状态,间隔1分钟
      */
-//    @Scheduled(cron ="0 0 */2 * * ?")
+//    @Scheduled(cron ="0 0 */30 * * ?")
     public void returnMassOrderTask(){
     	new Thread(){
     		public void run() {
@@ -164,12 +165,75 @@ public class MassOrderScheduleTask {
     }
     
     /**
+     * massOrder中新客订单任务调度
+     * 夜间4:30调度
+     */
+//  @Scheduled(cron ="0 30 04 * * ?")
+    public void customerTradeTask(){
+    	new Thread(){
+    		public void run() {
+    			try{
+    				logger.info("**********定时新客订单任务调度开始**********");
+    				//获取上次调度时的最大退货时间
+    	        	String maxQueryTime = massOrderService.queryMaxQueryTime()==null?DateUtils.getPreDate(new Date()):massOrderService.queryMaxQueryTime();
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	paraMap.put("maxQueryTime", maxQueryTime);
+    				List<Map<String, String>> list =massOrderService.queryCustomerTradeTask(paraMap);
+    				
+    				list.parallelStream().forEach(record ->{
+    	    			Map<String, String> params=new HashMap<String, String>();
+    	    			params.put("order_sn", record.get("order_sn"));
+    	    			params.put("customer_isnew_flag", DfMassOrder.checkCustomerIsnew(String.valueOf(record.get("trading_price"))));
+    	    			dfMassOrderService.updateCustomerOrderDaily(params);
+    	    			dfMassOrderService.updateCustomerOrderMonthly(params);
+    	    			dfMassOrderService.updateCustomerOrderTotal(params);
+    	    		});
+		        	logger.info("**********定时新客订单任务调度结束**********");
+    			} catch (Exception e) {
+	    			logger.info("定时新客订单任务调度异常：",e);
+	    		}
+    		}
+    	}.start();
+    }
+    
+    /**
+     * 恢复小区Code
+     */
+    public void recoveryVillageCodeTask(){
+    	new Thread(){
+    		public void run() {
+    			try{
+    				logger.info("**********恢复小区Code任务调度开始**********");
+    				Map<String, String> paraMap=new HashMap<String, String>();
+    	        	paraMap.put("queryTime", "2018-01-01");
+    				List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderByDate(paraMap);
+    				for(DfMassOrder record:massOrderList){
+    		    		TinyDispatch tinyDispatch;
+    						tinyDispatch = tinyDispatchService.queryTinyDispatchByOrderId(record.getId());
+    						if(tinyDispatch!=null){
+    							Map<String, String> params=new HashMap<String, String>();
+        						params.put("order_id", record.getId());
+        						params.put("villageCode", tinyDispatch.getCode());
+        						dfMassOrderService.updateOrderVillageCodeDaily(params);
+        						dfMassOrderService.updateOrderVillageCodeMonthly(params);
+        						dfMassOrderService.updateOrderVillageCodeTotal(params);
+    						}
+    		    	}
+		        	logger.info("**********恢复小区Code任务调度结束**********");
+    			} catch (Exception e) {
+	    			logger.info("恢复小区Code任务调度异常：",e);
+	    		}
+    		}
+    	}.start();
+    }
+    
+    /**
      * 获取订单信息：小区Code/片区Code/国安A侠No
      * @param list
      * @return
      */
     public void paramsPackage(List<DfMassOrder> list){
-//		String customer_isnew_flag;
     	try{
 	    	for(DfMassOrder record:list){
 	    		TinyDispatch tinyDispatch;
@@ -177,7 +241,7 @@ public class MassOrderScheduleTask {
 					if(tinyDispatch!=null){
 						record.setInfo_village_code(tinyDispatch.getCode());
 						record.setInfo_employee_a_no(tinyDispatch.getEmployee_a_no());
-						if(tinyDispatch.getEmployee_a_no()==null){
+						if(StringUtils.isBlank(tinyDispatch.getEmployee_a_no())){
 							record.setPubseas_label(DfMassOrder.PubseasLabel.PUBSEAS.code);
 						}
 						record.setArea_code(areaInfoService.queryAreaNoByTinyNo(tinyDispatch.getCode()));
