@@ -121,35 +121,35 @@
 		  tor.`normal_store_id`,
 		  tor.`third_part`,
     	  tor.`sign_time`,
-			ts. NAME AS store_name,
-			ts. CODE AS store_code,
-			ts.city_code AS store_city_code,
-			ts.white AS store_white,
-		  	ts.province_code AS store_province_code,
-		  	ts.status AS store_status,
-			tc. NAME AS customer_name,
-			tc.mobilephone AS customer_mobile_phone,
-			tog.order_quantity as order_quantity,
-			te. NAME AS eshop_name,
-			te.white AS eshop_white,
-			te.department_id AS department_id,
-			te.bussiness_group_id AS bussiness_group_id,
-			te.area_company_id AS area_company_id,
-			te.channel_id AS channel_id,
-			tsa.`name` AS store_city_name,
-			tcp.`name` AS company_name,
-		    tdc1.`name`  AS channel_name,
-		    tdc2.`name` AS department_name,
-		  CASE WHEN te.name like '%国安社区畅卡%' THEN 1  ELSE 0 END AS loan_lable,
+		  ts. NAME AS store_name,
+		  ts. CODE AS store_code,
+		  ts.city_code AS store_city_code,
+		  ts.white AS store_white,
+		  ts.province_code AS store_province_code,
+		  ts.status AS store_status,
+		  tc. NAME AS customer_name,
+		  tc.mobilephone AS customer_mobile_phone,
+		  tog.order_quantity as order_quantity,
+		  te. NAME AS eshop_name,
+		  te.white AS eshop_white,
+		  te.department_id AS department_id,
+		  te.bussiness_group_id AS bussiness_group_id,
+		  te.area_company_id AS area_company_id,
+		  te.channel_id AS channel_id,
+		  tsa.`name` AS store_city_name,
+		  tcp.`name` AS company_name,
+		  tdc1.`name`  AS channel_name,
+		  tdc2.`name` AS department_name,
+		  CASE WHEN te.name like '%国安社区畅卡%' THEN '1'  ELSE '0' END AS loan_label,
 		  CASE WHEN tesr.role_name not like '%洗衣%' THEN
-		        IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
-		    ELSE
-		        CASE WHEN (trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay') THEN
+		      IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
+		  ELSE
+		      CASE WHEN (trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay') THEN
 		            0
-		        ELSE
+		      ELSE
 		            IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
-		        END
-		    END AS gmv_price
+		       END
+		  END AS gmv_price
 		FROM
 			t_order tor
 		LEFT JOIN t_store ts ON  (tor.store_id = ts.id)

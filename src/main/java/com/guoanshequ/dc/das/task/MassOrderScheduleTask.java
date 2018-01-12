@@ -44,10 +44,10 @@ public class MassOrderScheduleTask {
 	 * 调度规则：根据情况5分钟调度一次
 	 * 参数：maxSignTime
 	 */
-//    @Scheduled(cron ="0 */1 * * * ?")
+//    @Scheduled(cron ="*/10 * * * * ?")
 	public void massOrderTask() {
-    	new Thread(){
-    		public void run() {
+//    	new Thread(){
+//    		public void run() {
     	    	try {
     	        	logger.info("**********自动清洗海量订单任务调度开始**********");
     	        	//获取上次调度时的最大签收时间
@@ -66,8 +66,8 @@ public class MassOrderScheduleTask {
     	    		} catch (Exception e) {
     	    			logger.info("自动清洗海量订单调度异常：",e);
     	    		}
-    		}
-    	}.start();
+//    		}
+//    	}.start();
 	}
     
     /**
@@ -107,7 +107,7 @@ public class MassOrderScheduleTask {
     }
    
     /**
-     * 定时查询退货订单并更新状态,间隔1分钟
+     * 定时查询退货订单并更新状态,间隔30分钟
      */
 //    @Scheduled(cron ="0 0 */30 * * ?")
     public void returnMassOrderTask(){
@@ -208,8 +208,8 @@ public class MassOrderScheduleTask {
     				Map<String, String> paraMap=new HashMap<String, String>();
     	        	paraMap.put("queryTime", "2018-01-01");
     				List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderByDate(paraMap);
+    				TinyDispatch tinyDispatch;
     				for(DfMassOrder record:massOrderList){
-    		    		TinyDispatch tinyDispatch;
     						tinyDispatch = tinyDispatchService.queryTinyDispatchByOrderId(record.getId());
     						if(tinyDispatch!=null){
     							Map<String, String> params=new HashMap<String, String>();
@@ -219,6 +219,7 @@ public class MassOrderScheduleTask {
         						dfMassOrderService.updateOrderVillageCodeMonthly(params);
         						dfMassOrderService.updateOrderVillageCodeTotal(params);
     						}
+    						record = null;
     		    	}
 		        	logger.info("**********恢复小区Code任务调度结束**********");
     			} catch (Exception e) {
@@ -235,20 +236,25 @@ public class MassOrderScheduleTask {
      */
     public void paramsPackage(List<DfMassOrder> list){
     	try{
+    		TinyDispatch tinyDispatch;
 	    	for(DfMassOrder record:list){
-	    		TinyDispatch tinyDispatch;
 					tinyDispatch = tinyDispatchService.queryTinyDispatchByOrderId(record.getId());
 					if(tinyDispatch!=null){
 						record.setInfo_village_code(tinyDispatch.getCode());
 						record.setInfo_employee_a_no(tinyDispatch.getEmployee_a_no());
 						if(StringUtils.isBlank(tinyDispatch.getEmployee_a_no())){
 							record.setPubseas_label(DfMassOrder.PubseasLabel.PUBSEAS.code);
+						}else{
+							record.setPubseas_label(DfMassOrder.PubseasLabel.DEFAULT.code);
 						}
 						record.setArea_code(areaInfoService.queryAreaNoByTinyNo(tinyDispatch.getCode()));
+					}else{
+						record.setPubseas_label(DfMassOrder.PubseasLabel.PUBSEAS.code);
 					}
 					dfMassOrderService.addDfMassOrderDaily(record);
 	    			dfMassOrderService.addDfMassOrderMonthly(record);
 	    			dfMassOrderService.addDfMassOrderTotal(record);
+	    			record = null;
 	    	}
 	    } catch (Exception e) {
 			logger.info("获取订单信息异常：",e);

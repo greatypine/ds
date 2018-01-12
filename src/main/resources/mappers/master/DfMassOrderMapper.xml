@@ -241,12 +241,12 @@
 	<!-- 查询MassOrder订单列表 -->
 	<select id="queryMassOrderByDate" parameterType="java.util.Map" resultMap="massOrderResultMap">
 	<![CDATA[
-		 select dmod.id from df_mass_order_daily dmod   
+		 select dmod.id from df_mass_order_daily dmod
 	]]>
 	<where>
 		<if test="queryTime != null and '' != queryTime">
 	       <![CDATA[                   
- 	          dmod.sign_time >=  #{queryTime} 
+ 	          dmod.sign_time >=  #{queryTime} and info_village_code is NULL
 	       ]]> 
 		</if>
 	</where>
