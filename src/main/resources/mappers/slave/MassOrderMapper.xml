@@ -140,7 +140,10 @@
 		  tcp.`name` AS company_name,
 		  tdc1.`name`  AS channel_name,
 		  tdc2.`name` AS department_name,
-		  CASE WHEN te.name like '%国安社区畅卡%' THEN '1'  ELSE '0' END AS loan_label,
+		  CASE WHEN tor.order_address_id is NULL THEN '1' ELSE '0' END AS pubseas_label,
+		  CASE WHEN te.name like '%国安社区畅卡%' THEN '1'
+		 	   WHEN (tdc1.`name` like '%快周边%' OR tdc1.`name` like '%线下联盟%') THEN '4'
+		  	   ELSE '0' END AS loan_label,
 		  CASE WHEN tesr.role_name not like '%洗衣%' THEN
 		      IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
 		  ELSE
@@ -148,19 +151,26 @@
 		            0
 		      ELSE
 		            IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
-		       END
-		  END AS gmv_price
+		      END
+		  END AS gmv_price ,
+		  tepy.code AS employee_no,
+		  taddr.name AS addr_name,
+		  taddr.mobilephone AS addr_mobilephone,
+		  taddr.address AS  addr_address
 		FROM
 			t_order tor
 		LEFT JOIN t_store ts ON  (tor.store_id = ts.id)
 		LEFT JOIN t_customer tc ON  (tor.customer_id = tc.id)
 		LEFT JOIN t_eshop te ON  (tor.eshop_id = te.id)
 		LEFT JOIN t_sys_area tsa ON (tsa.`code` = ts.city_code and tsa.`level` = 2)
-		LEFT JOIN t_company tcp ON  (	te.area_company_id = tcp.id)
+		LEFT JOIN t_company tcp ON  (te.area_company_id = tcp.id)
 		LEFT JOIN t_ed_sys_role tesr on (tesr.id=te.department_id)
 		LEFT JOIN t_order_group  tog ON (tog.id=tor.group_id)
-		LEFT JOIN t_department_channel tdc1 ON te.channel_id = tdc1.id	LEFT JOIN t_department_channel tdc2 ON te.bussiness_group_id = tdc2.id
+		LEFT JOIN t_department_channel tdc1 ON (te.channel_id = tdc1.id)
+		LEFT JOIN t_department_channel tdc2 ON (te.bussiness_group_id = tdc2.id)
 		LEFT JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.order_group_id = tor.group_id and trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay')
+		LEFT JOIN t_employee tepy ON (tepy.id = tor.employee_id)
+		LEFT JOIN t_order_address taddr ON (tor.order_address_id = taddr.id)
 	]]>
 	<where>
 		<if test="maxSignedTime != null and '' != maxSignedTime">
@@ -174,27 +184,19 @@
   <!-- 查询当前最大的退款时间 -->
   <select id="queryMaxReturnTime" resultType="java.lang.String">
       <![CDATA[
-		select max(create_time) as max_return_time from t_order_returned
+			select max(create_time) as max_return_time from t_order_returned
 		]]>
   </select>
   
   <!-- 查询退货订单 -->
   <select id="queryReturnOrderByDate" parameterType="java.util.Map" resultType="java.util.Map">
   	<![CDATA[
-		SELECT t.order_id, t.create_time 
+		SELECT t.order_id, t.create_time ,toref.price
         FROM t_order_refund toref
         JOIN
             (
-                SELECT tor.store_id, tor.group_id,toret.order_id,toret.create_time
+                SELECT tor.group_id,toret.order_id,toret.create_time
                 FROM t_order_returned toret
-                JOIN t_eshop te ON (
-                	te.id=toret.eshop_id AND
-                    te.white!='QA' AND te.name NOT LIKE '%测试%' AND te.name not like '%国安社区畅卡%'
-                )
-            	JOIN t_ed_sys_role tesr ON (
-					tesr.id=te.department_id and
-					tesr.role_name not like '%线下联盟%' and tesr.role_name not like '%快周边%'
-				)
                 JOIN t_order tor ON toret.order_id=tor.id
                 WHERE toret.returned_status='done' 
            ]]>
@@ -207,7 +209,6 @@
            	GROUP BY tor.group_id
 	       	) t ON toref.order_group_id=t.group_id
 	        WHERE toref.refund_status='refunded'
-	        GROUP BY t.store_id  	
         ]]>
   </select>
   

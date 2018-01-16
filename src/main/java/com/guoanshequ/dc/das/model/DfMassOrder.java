@@ -58,6 +58,8 @@ public class DfMassOrder {
 	private String pubseas_label;
 	private String abnormal_label;
 	private String return_label;
+	private Date return_time;
+	private BigDecimal returned_amount;
 	private String loan_label;
 	private Integer order_quantity;
 	private String eshop_name;
@@ -80,6 +82,10 @@ public class DfMassOrder {
 	private String channel_id;
 	private String channel_name;
 	private BigDecimal gmv_price;
+	private String employee_no;
+	private String addr_name;
+	private String addr_mobilephone;
+	private String addr_address;
 	private Date insert_time;
 	
 	public enum PubseasLabel{
@@ -115,6 +121,7 @@ public class DfMassOrder {
 		LOAN("1", "小贷"),
 		HOUSE("2", "房贷"),
 		CAR("3", "车贷"),
+		KZB("4", "快周边"),
     	;
     	
     	public String code;

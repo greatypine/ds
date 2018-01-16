@@ -1,17 +1,15 @@
 package com.guoanshequ.dc.das.task;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import com.guoanshequ.dc.das.model.DfOrderPubseas;
 import com.guoanshequ.dc.das.service.DfOrderPubseasService;
 import com.guoanshequ.dc.das.service.OrderPubseasService;
 import com.guoanshequ.dc.das.service.StoreNumberService;
 import com.guoanshequ.dc.das.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -41,7 +39,7 @@ public class OrderPubseasScheduleTask {
      * 调度规则：每天凌晨00点20分开始调度
      * 参数：begindate  enddate
      */
-    @Scheduled(cron ="0 20 00 * * ?")
+//    @Scheduled(cron ="0 20 00 * * ?")
     public void orderPubseasTask() {
     	new Thread(){
     		public void run() {
@@ -89,7 +87,7 @@ public class OrderPubseasScheduleTask {
 	 * 调度规则：10秒调度一次
 	 * 参数：begindate  enddate
 	 */
-	//@Scheduled(cron ="0/10 * *  * * ? ")
+//	@Scheduled(cron ="0 */2 * * * ? ")
 	public void orderPubseasTaskByMassOrder() {
 		new Thread(){
 			public void run() {
