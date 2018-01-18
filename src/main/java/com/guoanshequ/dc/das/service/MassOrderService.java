@@ -1,14 +1,13 @@
 package com.guoanshequ.dc.das.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.guoanshequ.dc.das.dao.slave.MassOrderMapper;
+import com.guoanshequ.dc.das.model.DfMassOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.guoanshequ.dc.das.dao.slave.MassOrderMapper;
-import com.guoanshequ.dc.das.model.DfMassOrder;
+import java.util.List;
+import java.util.Map;
 
 @Service("MassOrderService")
 @Transactional(value = "slave",rollbackFor = Exception.class)
@@ -37,5 +36,8 @@ public class MassOrderService {
 	public List<Map<String, String>> queryCustomerTradeTask(Map<String, String> paraMap){
 		return massOrderDao.queryCustomerTradeTask(paraMap);
 	}
-	
+
+	public List<Map<String, String>> queryReturnOrders(Map<String, String> paraMap){
+		return massOrderDao.queryReturnOrders(paraMap);
+	}
 }

@@ -170,9 +170,9 @@ public class DfMassOrder {
 	 */
 	public static String checkCustomerIsnew(String trading_price){
 		BigDecimal tradingPrice = trading_price==null?BigDecimal.ZERO:new BigDecimal(trading_price);
-		if(new BigDecimal(CustomerIsnewLabel.TEN_CUSTOMER.code).compareTo(tradingPrice)>0){
+		if(new BigDecimal(CustomerIsnewLabel.TEN_CUSTOMER.code).compareTo(tradingPrice)>=0){
 			return CustomerIsnewLabel.ZERO_CUSTOMER.code;
-		}else if(new BigDecimal(CustomerIsnewLabel.TWENTY_CUSTOMER.code).compareTo(tradingPrice)>0){
+		}else if(new BigDecimal(CustomerIsnewLabel.TWENTY_CUSTOMER.code).compareTo(tradingPrice)>=0){
 			return CustomerIsnewLabel.TEN_CUSTOMER.code;
 		}else{
 			return CustomerIsnewLabel.TWENTY_CUSTOMER.code;

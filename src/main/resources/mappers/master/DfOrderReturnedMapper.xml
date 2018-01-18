@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DfOrderReturnedMapper">
+
+    <select id="queryDfOrderReturneds" resultType="java.util.Map">
+        <![CDATA[
+			select * from df_order_returned
+		]]>
+    </select>
+
+    <select id="queryMaxReturnedTime" resultType="java.lang.String">
+        <![CDATA[
+            select max(return_time) from df_order_returned
+        ]]>
+    </select>
+
+    <insert id="addDfOrderReturned" parameterType="java.util.Map">
+        <![CDATA[
+			insert ignore into df_order_returned(
+				order_id,order_sn,sign_time,order_group_id,store_id,
+				eshop_id,order_address_id,return_time,returned_amount
+			)
+			values(
+				#{order_id},#{order_sn},#{sign_time},#{order_group_id},#{store_id},
+				#{eshop_id},#{order_address_id},#{return_time},#{returned_amount}
+			)
+		]]>
+    </insert>
+
+
+</mapper>

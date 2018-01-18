@@ -2,10 +2,7 @@ package com.guoanshequ.dc.das.task;
 
 import com.guoanshequ.dc.das.model.DfMassOrder;
 import com.guoanshequ.dc.das.model.TinyDispatch;
-import com.guoanshequ.dc.das.service.AreaInfoService;
-import com.guoanshequ.dc.das.service.DfMassOrderService;
-import com.guoanshequ.dc.das.service.MassOrderService;
-import com.guoanshequ.dc.das.service.TinyDispatchService;
+import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +34,8 @@ public class MassOrderScheduleTask {
 	DfMassOrderService dfMassOrderService;
 	@Autowired
 	TinyDispatchService tinyDispatchService;
+	@Autowired
+	DfOrderReturnedService dfOrderReturnedService;
 
 	private static final Logger logger = LogManager.getLogger(MassOrderScheduleTask.class);
 	
@@ -104,39 +103,69 @@ public class MassOrderScheduleTask {
     }
    
     /**
-     * 定时查询退货订单并更新状态
-	 * 间隔30分钟查询一次，调度范围：当前时间前一天到现在
+     * 将数据写入到退货order_returned表中
+	 *
      */
-    @Scheduled(cron ="0 */30 * * * ?")
-    public void returnMassOrderTask(){
+//    @Scheduled(cron ="0 */30 * * * ?")
+    public void OrderReturnedTask(){
     	new Thread(){
     		public void run() {
     			try{
-    				logger.info("**********定时更新退货订单任务调度开始**********");
+    				logger.info("**********定时插入退货订单任务调度开始**********");
     	        	//获取上次调度时的最大退货时间
-    	        	String maxReturnTime = massOrderService.queryMaxReturnTime()==null?DateUtils.getPreDate(new Date()):massOrderService.queryMaxReturnTime();
+    	        	String maxReturnedTime = dfOrderReturnedService.queryMaxReturnedTime()==null?DateUtils.getPreDate(new Date()):dfOrderReturnedService.queryMaxReturnedTime();
     	        	//给后台接口构建参数
     	        	Map<String, String> paraMap=new HashMap<String, String>();
     	        	paraMap.put("maxReturnTime", "2018-01-01");
-    	    		List<Map<String, String>> list =massOrderService.queryReturnOrderByDate(paraMap);
-    	    		
-    	    		list.parallelStream().forEach(record ->{
-    	    			Map<String, String> params=new HashMap<String, String>();
-    	    			params.put("id", record.get("order_id"));
-    	    			params.put("returnTime", String.valueOf(record.get("create_time")));
-						params.put("returned_amount",record.get("returned_amount"));
-    	    			params.put("returnLabel", DfMassOrder.ReturnLabel.RETURN.code);
-    	    			dfMassOrderService.updateDfMassOrderDaily(params);
-    	    			dfMassOrderService.updateDfMassOrderMonthly(params);
-    	    			dfMassOrderService.updateDfMassOrderTotal(params);
-    	    		});
-    	    		logger.info("**********定时更新退货订单任务调度结束**********");
+    	    		List<Map<String, String>> list =massOrderService.queryReturnOrders(paraMap);
+					int addnum =0;
+					int n =0;
+					for (Map<String, String> returnMap:list) {
+						n = dfOrderReturnedService.addDfOrderReturned(returnMap);
+						addnum +=n;
+					}
+					logger.info("**********定时插入退货订单任务调度结束,记录行数："+addnum);
     			} catch (Exception e) {
-	    			logger.info("定时更新退货订单任务调度异常：",e);
+	    			logger.info("定时插入退货订单任务调度异常：",e);
 	    		}
     		}
     	}.start();
     }
+
+	/**
+	 * 定时查询退货订单并更新状态
+	 * 间隔30分钟查询一次，调度范围：当前时间前一天到现在
+	 */
+	@Scheduled(cron ="0 */30 * * * ?")
+	public void returnMassOrderTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********定时更新退货订单任务调度开始**********");
+					//获取上次调度时的最大退货时间
+					String maxReturnTime = massOrderService.queryMaxReturnTime()==null?DateUtils.getPreDate(new Date()):massOrderService.queryMaxReturnTime();
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					paraMap.put("maxReturnTime", "2018-01-01");
+					List<Map<String, String>> list =massOrderService.queryReturnOrderByDate(paraMap);
+
+					list.parallelStream().forEach(record ->{
+						Map<String, String> params=new HashMap<String, String>();
+						params.put("id", record.get("order_id"));
+						params.put("returnTime", String.valueOf(record.get("create_time")));
+						params.put("returned_amount",record.get("returned_amount"));
+						params.put("returnLabel", DfMassOrder.ReturnLabel.RETURN.code);
+						dfMassOrderService.updateDfMassOrderDaily(params);
+						dfMassOrderService.updateDfMassOrderMonthly(params);
+						dfMassOrderService.updateDfMassOrderTotal(params);
+					});
+					logger.info("**********定时更新退货订单任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("定时更新退货订单任务调度异常：",e);
+				}
+			}
+		}.start();
+	}
     
     /**
      * massOrder中异常订单任务调度
@@ -255,5 +284,4 @@ public class MassOrderScheduleTask {
 			logger.info("获取订单信息异常：",e);
 		}
     }
-
 }

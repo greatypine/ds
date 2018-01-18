@@ -79,7 +79,7 @@
 			select max(sign_time) as max_signed_time from df_mass_order_daily
 		]]>
     </select>
-    
+
     <!-- 操作Daily -->
 	<insert id="addDfMassOrderDaily" parameterType="MassOrderEntity" >
         insert ignore into df_mass_order_daily(id, order_sn, group_id, order_type, business_model_id, customer_id, order_address_id, store_id, eshop_id, order_status, 
@@ -137,21 +137,21 @@
 	<!-- 更新Daily中需要计算的字段信息 -->
 	<update id="updateDfMassOrderDaily" parameterType="java.util.Map">
 		<![CDATA[
-			update df_mass_order_daily set return_label = #{returnLabel}, return_time = #{returnTime} where id = #{id} 
+			update df_mass_order_daily set return_label = #{returnLabel}, return_time = #{returnTime},returned_amount = #{returned_amount} where id = #{id}
 		]]>
 	</update>
 	
 	<!-- 更新Monthly中需要计算的字段信息 -->
 	<update id="updateDfMassOrderMonthly" parameterType="java.util.Map">
 		<![CDATA[
-			update df_mass_order_monthly set return_label = #{returnLabel}, return_time = #{returnTime} where id = #{id} 
+			update df_mass_order_monthly set return_label = #{returnLabel}, return_time = #{returnTime},returned_amount = #{returned_amount} where id = #{id}
 		]]>
 	</update>
 	
 	<!-- 更新Total中需要计算的字段信息 -->
 	<update id="updateDfMassOrderTotal" parameterType="java.util.Map">
 		<![CDATA[
-			update df_mass_order_total set return_label = #{returnLabel}, return_time = #{returnTime} where id = #{id} 
+			update df_mass_order_total set return_label = #{returnLabel}, return_time = #{returnTime},returned_amount = #{returned_amount} where id = #{id}
 		]]>
 	</update>
 	

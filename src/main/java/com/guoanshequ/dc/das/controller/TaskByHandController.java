@@ -690,7 +690,7 @@ public class TaskByHandController {
     }
     
     /**
-     * 手动调度退货订单更新定时任务
+     * 手动调度退货订单更新定时任务，用于更新df_mass_order表中的退货标识
      * @param paraMap
      * @return
      * @throws Exception
@@ -701,6 +701,24 @@ public class TaskByHandController {
     		massOrderScheduleTask.returnMassOrderTask();
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+
+    /**
+     * 手动调度退货订单更新定时任务写入到本地表退货表order_returned表中
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/OrderReturnedTaskRun",method = RequestMethod.POST)
+    public RestResponse OrderReturnedTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            massOrderScheduleTask.OrderReturnedTask();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);

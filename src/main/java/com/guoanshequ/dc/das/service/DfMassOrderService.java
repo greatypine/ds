@@ -1,14 +1,13 @@
 package com.guoanshequ.dc.das.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.guoanshequ.dc.das.dao.master.DfMassOrderMapper;
+import com.guoanshequ.dc.das.model.DfMassOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.guoanshequ.dc.das.dao.master.DfMassOrderMapper;
-import com.guoanshequ.dc.das.model.DfMassOrder;
+import java.util.List;
+import java.util.Map;
 
 @Service("DfMassOrderService")
 @Transactional(value = "master", rollbackFor = Exception.class)
@@ -88,5 +87,6 @@ public class DfMassOrderService {
 	public Integer updateOrderVillageCodeTotal(Map<String, String> paraMap){
 		return dfMassOrderDao.updateOrderVillageCodeTotal(paraMap);
 	}
+
 
 }

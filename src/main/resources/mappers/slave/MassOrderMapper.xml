@@ -142,6 +142,7 @@
 		  tdc2.`name` AS department_name,
 		  CASE WHEN tor.order_address_id is NULL THEN '1' ELSE '0' END AS pubseas_label,
 		  CASE WHEN te.name like '%国安社区畅卡%' THEN '1'
+		  	   WHEN te.name like '%品质汽车%' THEN '3'
 		 	   WHEN (tdc1.`name` like '%快周边%' OR tdc1.`name` like '%线下联盟%') THEN '4'
 		  	   ELSE '0' END AS loan_label,
 		  CASE WHEN tesr.role_name not like '%洗衣%' THEN
@@ -191,7 +192,7 @@
   <!-- 查询退货订单 -->
   <select id="queryReturnOrderByDate" parameterType="java.util.Map" resultType="java.util.Map">
   	<![CDATA[
-		SELECT t.order_id, t.create_time ,toref.price
+		SELECT t.order_id, t.create_time ,toref.price as returned_amount
         FROM t_order_refund toref
         JOIN
             (
@@ -211,7 +212,43 @@
 	        WHERE toref.refund_status='refunded'
         ]]>
   </select>
-  
+
+	<!-- 查询退货订单 -->
+	<select id="queryReturnOrders" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			SELECT t.order_id,
+				t.order_sn,
+				t.sign_time,
+				toref.order_group_id,
+				toref.store_id,
+				toref.eshop_id,
+				t.order_address_id as order_address_id,
+				t.create_time as return_time,
+				toref.price as returned_amount
+			FROM t_order_refund toref
+			JOIN
+				(
+						SELECT tor.group_id,toret.order_id,
+									 tor.order_sn,tor.sign_time,
+									 tor.order_address_id,
+									 toret.create_time
+						FROM t_order_returned toret
+						JOIN t_order tor ON toret.order_id=tor.id
+						WHERE toret.returned_status='done'
+           ]]>
+		<if test="maxReturnTime != null and '' != maxReturnTime">
+			<![CDATA[
+ 	           AND toret.create_time >= #{maxReturnTime}
+			]]>
+		</if>
+		<![CDATA[
+           	GROUP BY tor.group_id
+	       	) t ON toref.order_group_id=t.group_id
+	        WHERE toref.refund_status='refunded'
+        ]]>
+	</select>
+
+
   <!-- 查询当前最大的新客时间 -->
   <select id="queryMaxQueryTime" resultType="java.lang.String">
       <![CDATA[
