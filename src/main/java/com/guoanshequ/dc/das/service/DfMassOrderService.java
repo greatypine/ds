@@ -20,6 +20,10 @@ public class DfMassOrderService {
 		return dfMassOrderDao.queryMaxSignedTime();
 	}
 
+	public String queryMaxReturnTime(){
+		return dfMassOrderDao.queryMaxReturnTime();
+	}
+
 	public Integer addDfMassOrderDaily(DfMassOrder dfMassOrder) {
 		return dfMassOrderDao.addDfMassOrderDaily(dfMassOrder);
 	}
@@ -88,5 +92,8 @@ public class DfMassOrderService {
 		return dfMassOrderDao.updateOrderVillageCodeTotal(paraMap);
 	}
 
+	public String queryOrersnByOrderId(Map<String, String> paraMap){
+		return dfMassOrderDao.queryOrersnByOrderId(paraMap);
+	}
 
 }

@@ -4,16 +4,14 @@ import com.guoanshequ.dc.das.model.DfMassOrder;
 import com.guoanshequ.dc.das.model.TinyDispatch;
 import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 
@@ -36,6 +34,9 @@ public class MassOrderScheduleTask {
 	TinyDispatchService tinyDispatchService;
 	@Autowired
 	DfOrderReturnedService dfOrderReturnedService;
+	@Autowired
+	DsCronTaskService dsCronTaskService;
+
 
 	private static final Logger logger = LogManager.getLogger(MassOrderScheduleTask.class);
 	
@@ -46,26 +47,84 @@ public class MassOrderScheduleTask {
     @Scheduled(cron ="0 */1 * * * ?")
 	public void massOrderTask() {
 			try {
-				long startTime = System.currentTimeMillis();    //获取开始时间
+				long taskStartTime = System.currentTimeMillis();    //获取开始时间
 				logger.info("**********自动清洗海量订单任务调度开始**********");
 				//获取上次调度时的最大签收时间
 				String maxSignedTime = dfMassOrderService.queryMaxSignedTime()==null?DateUtils.getDateFirstOfMonth(new Date()):dfMassOrderService.queryMaxSignedTime();
+				String endSignedTime = DateUtils.getCurTime(new Date());
 				//给后台接口构建参数
 				Map<String, String> paraMap=new HashMap<String, String>();
 				paraMap.put("maxSignedTime", maxSignedTime);
+				paraMap.put("endSignedTime", endSignedTime);
 				List<DfMassOrder> massOrderList =massOrderService.queryMassOrderByDate(paraMap);
 
 				if(!massOrderList.isEmpty()){
 					paramsPackage(massOrderList);
 				}
-				long endTime = System.currentTimeMillis();    //获取结束时间
-				logger.info("自动清洗海量订单共调度数据记录行数："+massOrderList.size());
-				logger.info("**********自动清洗海量订单任务调度结束:"+(endTime - startTime) + "ms**********");
+				long taskEndTime = System.currentTimeMillis();    //获取结束时间
+				logger.info("自动清洗海量订单共调度数据记录行数："+massOrderList.size()+",maxSignedTime："+maxSignedTime+",endSignedTime:"+endSignedTime);
+				logger.info("**********自动清洗海量订单任务调度结束:"+(taskEndTime - taskStartTime) + "ms**********");
 				} catch (Exception e) {
 					logger.info("自动清洗海量订单调度异常：",e);
 				}
 	}
-    
+
+	/**
+	 * 调度规则：订单信息打补丁
+	 * 说明：根据开始时间与结束时间补期间所丢失的订单数据
+	 * 每天凌晨12点半将前一数据打补丁
+	 */
+//	@Scheduled(cron ="0 30 0 * * ?")
+	public void massOrderPatchTask() {
+		try {
+			Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(2);
+			String isrun = taskMap.get("isrun");
+			if("ON".equals(isrun)){
+				logger.info("**********订单打补丁任务调度开始**********");
+				long taskStartTime = System.currentTimeMillis();    //获取开始时间
+				String runtype = taskMap.get("runtype");
+				String maxSignedTime = null;
+				String endSignedTime = null;
+				//获取上次调度时的最大签收时间开始时间与结束时间
+				if("MANUAL".equals(runtype)){
+					maxSignedTime = taskMap.get("begintime");
+					endSignedTime = taskMap.get("endtime");
+				}else{
+					maxSignedTime = DateUtils.getPreDate(new Date());
+					endSignedTime = DateUtils.getCurTime(new Date());
+				}
+				//给后台接口构建参数
+				Map<String, String> paraMap=new HashMap<String, String>();
+				paraMap.put("maxSignedTime", maxSignedTime);
+				paraMap.put("endSignedTime", endSignedTime);
+				List<DfMassOrder> massOrderList =massOrderService.queryMassOrderByDate(paraMap);
+
+				if(!massOrderList.isEmpty()){
+					//根据结果去清洗表mass_order中查找不存在的订单
+					List<DfMassOrder> massOrderPatchList = new ArrayList<DfMassOrder>();
+					String ordersn =null;
+					for (DfMassOrder dfMassOrder:massOrderList) {
+						paraMap.put("orderid", dfMassOrder.getId());
+						ordersn = dfMassOrderService.queryOrersnByOrderId(paraMap);
+						if (StringUtils.isBlank(ordersn)){
+							massOrderPatchList.add(dfMassOrder);
+						}
+					}
+					if(!massOrderPatchList.isEmpty()){
+						paramsPackage(massOrderPatchList);
+					}
+					logger.info("订单打补丁共调度数据记录行数："+massOrderPatchList.size());
+				}
+				long taskEndTime = System.currentTimeMillis();    //获取结束时间
+				logger.info("**********订单打补丁任务调度结束:"+(taskEndTime - taskStartTime) + "ms**********");
+			}
+
+		} catch (Exception e) {
+			logger.info("自动清洗海量订单调度异常：",e);
+		}
+	}
+
+
     /**
      *  每天12点40分删除前1天的数据
      */
@@ -87,12 +146,12 @@ public class MassOrderScheduleTask {
     /**
      * 每月1号中午12点40删数据，保留最近2个月
      */
-    @Scheduled(cron ="0 40 12 1 * ?")
+//    @Scheduled(cron ="0 40 12 1 * ?")
     public void deleteMonthlyMassOrderTask(){
     	new Thread(){
     		public void run() {
     			try {
-    				String dateTime = DateUtils.getPreDateFirstOfMonth(new Date());//日期所在前一天的1号
+    				String dateTime = DateUtils.getPreDateFirstOfMonth(new Date());//日期前一天所在月份的1号
     				dfMassOrderService.deleteDfMassOrderMonthly(dateTime);
     	    		logger.info("**********自动删除Monthly海量订单任务调度结束**********");
     			} catch (Exception e) {
@@ -133,7 +192,7 @@ public class MassOrderScheduleTask {
     }
 
 	/**
-	 * 定时查询退货订单并更新状态
+	 * 定时查询退货订单并更新状态,用于更新mass_order表中退货标签
 	 * 间隔30分钟查询一次，调度范围：当前时间前一天到现在
 	 */
 	@Scheduled(cron ="0 */30 * * * ?")
@@ -143,7 +202,7 @@ public class MassOrderScheduleTask {
 				try{
 					logger.info("**********定时更新退货订单任务调度开始**********");
 					//获取上次调度时的最大退货时间
-					String maxReturnTime = massOrderService.queryMaxReturnTime()==null?DateUtils.getPreDate(new Date()):massOrderService.queryMaxReturnTime();
+					String maxReturnTime = dfMassOrderService.queryMaxReturnTime()==null?DateUtils.getPreDate(new Date()):dfMassOrderService.queryMaxReturnTime();
 					//给后台接口构建参数
 					Map<String, String> paraMap=new HashMap<String, String>();
 					paraMap.put("maxReturnTime", "2018-01-01");
@@ -258,7 +317,7 @@ public class MassOrderScheduleTask {
     }
     
     /**
-     * 获取订单信息：小区Code/片区Code/国安A侠No
+     * 获取订单信息：根据订单号从mongo中获取小区Code/片区Code/国安A侠No
      * @param list
      * @return
      */

@@ -73,12 +73,19 @@
 		<result property="gmv_price" column="GMV_PRICE" />
 </resultMap>
 
-	<!-- 用于海量订单 -->
+	<!-- 获取最大签收时间 -->
     <select id="queryMaxSignedTime" resultType="java.lang.String">
         <![CDATA[
 			select max(sign_time) as max_signed_time from df_mass_order_daily
 		]]>
     </select>
+
+	<!-- 获取最大退货时间 -->
+	<select id="queryMaxReturnTime" resultType="java.lang.String">
+		<![CDATA[
+			select max(return_time) as max_return_time from df_mass_order_daily
+		]]>
+	</select>
 
     <!-- 操作Daily -->
 	<insert id="addDfMassOrderDaily" parameterType="MassOrderEntity" >
@@ -251,6 +258,15 @@
 		</if>
 	</where>
   </select>
+
+	<!-- 根据订单号查询是否存在 -->
+	<select id="queryOrersnByOrderId" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[
+		 select order_sn from df_mass_order_monthly dmod
+		 where id = #{orderid} and dmod.sign_time >= #{maxSignedTime}
+		 and dmod.sign_time <= #{endSignedTime}
+		]]>
+	</select>
   
   <update id="updateOrderVillageCodeDaily" parameterType="java.util.Map">
   		<![CDATA[

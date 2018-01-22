@@ -18,11 +18,13 @@
         <![CDATA[
 			insert ignore into df_order_returned(
 				order_id,order_sn,sign_time,order_group_id,store_id,
-				eshop_id,order_address_id,return_time,returned_amount
+				eshop_id,order_address_id,return_time,returned_amount,
+				eshop_name,channel_name
 			)
 			values(
 				#{order_id},#{order_sn},#{sign_time},#{order_group_id},#{store_id},
-				#{eshop_id},#{order_address_id},#{return_time},#{returned_amount}
+				#{eshop_id},#{order_address_id},#{return_time},#{returned_amount},
+				#{eshop_name},#{channel_name}
 			)
 		]]>
     </insert>

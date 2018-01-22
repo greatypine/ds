@@ -796,4 +796,19 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+
+    /**
+     * 手动调度订单补丁
+     */
+    @RequestMapping(value = "rest/massOrderPatchTaskRun",method = RequestMethod.POST)
+    public RestResponse massOrderPatchTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            massOrderScheduleTask.massOrderPatchTask();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 }

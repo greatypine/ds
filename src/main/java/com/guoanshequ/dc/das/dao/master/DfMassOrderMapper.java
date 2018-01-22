@@ -13,6 +13,8 @@ public interface DfMassOrderMapper {
 
 	String queryMaxSignedTime();
 
+	String queryMaxReturnTime();
+
 	Integer addDfMassOrderDaily(DfMassOrder dfMassOrder);
 	
 	Integer addDfMassOrderMonthly(DfMassOrder dfMassOrder);
@@ -46,5 +48,7 @@ public interface DfMassOrderMapper {
 	Integer updateOrderVillageCodeMonthly(Map<String, String> paraMap);
 	
 	Integer updateOrderVillageCodeTotal(Map<String, String> paraMap);
+
+	String queryOrersnByOrderId (Map<String, String> paraMap);
 	
 }

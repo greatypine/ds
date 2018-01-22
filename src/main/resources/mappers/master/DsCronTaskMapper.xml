@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DsCronTaskMapper">
+
+
+	<select id="queryDsCronTask" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        <![CDATA[
+			select taskname,begintime,endtime,runtype,isrun
+			from ds_crontask
+		]]>
+	</select>
+
+	<select id="queryDsCronTaskById"  resultType="java.util.Map">
+		<![CDATA[
+			select taskname,begintime,endtime,runtype,isrun
+			from ds_crontask where id = #{id}
+		]]>
+	</select>
+</mapper>

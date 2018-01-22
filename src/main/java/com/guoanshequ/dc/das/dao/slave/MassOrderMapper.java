@@ -22,4 +22,5 @@ public interface MassOrderMapper {
 	List<Map<String, String>> queryCustomerTradeTask(Map<String, String> paraMap);
 
 	List<Map<String, String>> queryReturnOrders(Map<String, String> paraMap);
+
 }

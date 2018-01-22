@@ -176,20 +176,20 @@
 	<where>
 		<if test="maxSignedTime != null and '' != maxSignedTime">
 	       <![CDATA[
- 	          tor.sign_time >=  #{maxSignedTime}
+ 	          tor.sign_time >=  #{maxSignedTime} and tor.sign_time <= #{endSignedTime}
 	       ]]>
 		</if>
 	</where>
   </select>
   
   <!-- 查询当前最大的退款时间 -->
-  <select id="queryMaxReturnTime" resultType="java.lang.String">
-      <![CDATA[
+	<select id="queryMaxReturnTime" resultType="java.lang.String">
+		<![CDATA[
 			select max(create_time) as max_return_time from t_order_returned
 		]]>
-  </select>
+	</select>
   
-  <!-- 查询退货订单 -->
+  <!-- 查询退货订单给mass_order表中打退货标签 -->
   <select id="queryReturnOrderByDate" parameterType="java.util.Map" resultType="java.util.Map">
   	<![CDATA[
 		SELECT t.order_id, t.create_time ,toref.price as returned_amount
@@ -213,7 +213,7 @@
         ]]>
   </select>
 
-	<!-- 查询退货订单 -->
+	<!-- 查询退货订单，写入到daqWeb中order_returned表中 -->
 	<select id="queryReturnOrders" parameterType="java.util.Map" resultType="java.util.Map">
 		<![CDATA[
 			SELECT t.order_id,
@@ -224,15 +224,21 @@
 				toref.eshop_id,
 				t.order_address_id as order_address_id,
 				t.create_time as return_time,
-				toref.price as returned_amount
+				toref.price as returned_amount,
+				t.eshop_name as eshop_name,
+				t.channel_name as channel_name
 			FROM t_order_refund toref
 			JOIN
 				(
 						SELECT tor.group_id,toret.order_id,
-									 tor.order_sn,tor.sign_time,
-									 tor.order_address_id,
-									 toret.create_time
+								 tor.order_sn,tor.sign_time,
+								 tor.order_address_id,
+								 toret.create_time,
+								 te.name as eshop_name,
+								 tdc1.name as channel_name
 						FROM t_order_returned toret
+						JOIN t_eshop te ON ( te.id=toret.eshop_id AND te.white!='QA' AND te.name NOT LIKE '%测试%' AND te.name not like '%国安社区畅卡%' )
+						JOIN t_department_channel tdc1 ON (te.channel_id = tdc1.id)
 						JOIN t_order tor ON toret.order_id=tor.id
 						WHERE toret.returned_status='done'
            ]]>
