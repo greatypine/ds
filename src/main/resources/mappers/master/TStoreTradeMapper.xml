@@ -59,4 +59,62 @@
  			from ds_storetrade where year=#{year} and month=#{month} and storeno IN (${storeids})) storetradesumline
 		]]>
 	</select>
+
+	<insert id="addTStoreTradesByMassOrder" parameterType="java.util.Map">
+		<![CDATA[
+			INSERT INTO ds_storetrade (
+				storeno,platformid,city_name, store_name, pesgmv,order_amount, other_order_amount,
+				returned_amount, other_returned_amount,	order_count,
+				other_order_count, returned_count, other_returned_count,
+				year, month, createtime
+			) select
+				ts.storeno,
+				ts.platformid,
+				ts.city_name,
+				ts.`name` as store_name,
+				(ifnull(aa.other_order_amount,0.00) - ifnull(bb.other_returned_amount,0.00)) AS pesgmv,
+				ifnull(aa.order_amount,0) as order_amount,
+				ifnull(aa.other_order_amount,0) as other_order_amount,
+				ifnull(bb.returned_amount,0) as returned_amount,
+				ifnull(bb.other_returned_amount,0) as other_returned_amount,
+				ifnull(aa.order_count,0) as order_count,
+				ifnull(aa.other_order_count,0) as other_order_count,
+				ifnull(bb.returned_count,0) as returned_count,
+				ifnull(bb.other_returned_count,0) as other_returned_count,
+				YEAR(date_sub(now(),interval 1 day)),MONTH(date_sub(now(),interval 1 day)),NOW()
+				from t_store ts
+				left join (
+					select
+					tor.store_id,
+					tor.store_code,
+					tor.store_name,
+					sum(tor.gmv_price) as order_amount,
+					count(tor.id) as order_count,
+					sum(case when tor.loan_label ='4' then 0 else tor.gmv_price end) as other_order_amount,
+					sum(case when tor.loan_label ='4' then 0 else 1 end) as other_order_count
+					from df_mass_order_monthly tor
+					where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+					AND tor.store_white !='QA' and tor.store_status = 0
+					AND (tor.loan_label ='0' or tor.loan_label ='3' or tor.loan_label = '4')
+					AND (tor.abnormal_label ='0')
+					AND tor.sign_time >=#{begindate}
+					AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					group by store_id
+				)aa on (ts.platformid = aa.store_id)
+				left join (
+					select
+					store_id,
+					sum(returned_amount) as returned_amount,
+					count(order_id) as returned_count,
+					sum(case when toret.channel_name like '%快周边%' then 0 else toret.returned_amount end) as other_returned_amount,
+					sum(case when toret.channel_name like '%快周边%' then 0 else 1 end) as other_returned_count
+					from df_order_returned toret
+					where return_time >=#{begindate}
+					and return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					group by store_id
+				)bb on (ts.platformid = bb.store_id)
+				where ts.`name` not like '%测试%' and ts.status = '0' and platformid is not null ;
+		]]>
+	</insert>
+
 </mapper>

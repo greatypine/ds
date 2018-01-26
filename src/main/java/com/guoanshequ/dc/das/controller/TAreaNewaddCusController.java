@@ -91,10 +91,15 @@ public class TAreaNewaddCusController {
  	        String month = paraMap.get("month") != null ? paraMap.get("month").toString() : null;    		
     		String employee_no = paraMap.get("employee_no") != null ? paraMap.get("employee_no").toString() : null;
  	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)||StringUtils.isBlank(employee_no)){
- 	        	return new RestResponse(EnumRespStatus.DATA_NOPARA);
- 	        }
+				return new RestResponse(EnumRespStatus.DATA_NOPARA);
+			}
+			if(month.length()==1){
+				month = "0"+month;
+			}
+			String yearMonth = year+"-"+month;
+			paraMap.put("yearMonth",yearMonth);
  	        Integer areaNewaddCusSum =0;
- 			String areaNewaddCus = tareaNewaddCusService.queryTAreaNewaddcusGroupByEmpOnMonth(paraMap);
+ 			String areaNewaddCus = tareaNewaddCusService.queryAreaNewaddcusByEmpOnMass(paraMap);
  			if(!StringUtils.isBlank(areaNewaddCus)){
  				areaNewaddCusSum = Integer.valueOf(areaNewaddCus);
  			}

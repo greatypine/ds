@@ -1,11 +1,10 @@
 package com.guoanshequ.dc.das.dao.master;
 
-import java.util.List;
-import java.util.Map;
-
+import com.guoanshequ.dc.das.datasource.DataSource;
 import org.springframework.stereotype.Repository;
 
-import com.guoanshequ.dc.das.datasource.DataSource;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 @DataSource("master")
@@ -18,4 +17,6 @@ public interface TStoreTradeMapper{
 	int deleteByYearMonth(Map<String, String> paraMap);
 	
 	List<Map<String, Object>> queryTStoreTradesSumByMonth(Map<String, String> paraMap);
+
+	int addTStoreTradesByMassOrder(Map<String, String> paraMap);
 }

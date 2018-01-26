@@ -1,35 +1,11 @@
 package com.guoanshequ.dc.das.task;
 
+import com.guoanshequ.dc.das.service.*;
+import com.guoanshequ.dc.das.utils.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import com.guoanshequ.dc.das.service.AreaNewaddCusService;
-import com.guoanshequ.dc.das.service.AreaNewaddCusStoreService;
-import com.guoanshequ.dc.das.service.AreaPubseasNewaddCusService;
-import com.guoanshequ.dc.das.service.AreaPubseasTradeService;
-import com.guoanshequ.dc.das.service.AreaPubseasZdGmvService;
-import com.guoanshequ.dc.das.service.AreaTradeService;
-import com.guoanshequ.dc.das.service.AreaTradeStoreService;
-import com.guoanshequ.dc.das.service.AreaZdGmvService;
-import com.guoanshequ.dc.das.service.AreaZdGmvStoreService;
-import com.guoanshequ.dc.das.service.HumanresourceService;
-import com.guoanshequ.dc.das.service.StoreNumberService;
-import com.guoanshequ.dc.das.service.TAreaNewaddCusService;
-import com.guoanshequ.dc.das.service.TAreaNewaddCusStoreService;
-import com.guoanshequ.dc.das.service.TAreaPubseasNewaddCusService;
-import com.guoanshequ.dc.das.service.TAreaPubseasNewaddCusStoreService;
-import com.guoanshequ.dc.das.service.TAreaPubseasTradeService;
-import com.guoanshequ.dc.das.service.TAreaPubseasTradeStoreService;
-import com.guoanshequ.dc.das.service.TAreaPubseasZdGmvService;
-import com.guoanshequ.dc.das.service.TAreaPubseasZdGmvStoreService;
-import com.guoanshequ.dc.das.service.TAreaTradeService;
-import com.guoanshequ.dc.das.service.TAreaTradeStoreService;
-import com.guoanshequ.dc.das.service.TAreaZdGmvService;
-import com.guoanshequ.dc.das.service.TAreaZdGmvStoreService;
-import com.guoanshequ.dc.das.utils.DateUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -103,7 +79,7 @@ public class PreMonthAreaScheduleTask {
      * 调度规则：每月1号21点30分开始调度
      * 参数：begindate  enddate 
      */
-    @Scheduled(cron ="0 30 21 1 * ?")
+//    @Scheduled(cron ="0 30 21 1 * ?")
     public void areaPubseasNewAddCusTask() {
     	new Thread(){
     		public void run() {
@@ -157,7 +133,7 @@ public class PreMonthAreaScheduleTask {
      * 调度规则：每月1号21点30分开始调度
      * 参数：begindate  enddate 
      */
-    @Scheduled(cron ="0 30 21 1 * ?")
+//    @Scheduled(cron ="0 30 21 1 * ?")
     public void areaPubseasTradeTask() {
     	new Thread(){
     		public void run() {
@@ -213,7 +189,7 @@ public class PreMonthAreaScheduleTask {
      * 调度规则：每月1号21点30分开始调度
      * 参数：begindate  enddate 
      */
-    @Scheduled(cron ="0 30 21 1 * ?")
+//    @Scheduled(cron ="0 30 21 1 * ?")
     public void areaPubseasZdGmvTask() {
     	new Thread(){
     		public void run() {
@@ -271,7 +247,7 @@ public class PreMonthAreaScheduleTask {
      * 调度规则：每月1号22点30分开始调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 30 22 1 * ?")
+//    @Scheduled(cron ="0 30 22 1 * ?")
     public void areaNewAddCusStorePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -310,7 +286,7 @@ public class PreMonthAreaScheduleTask {
      * 调度规则：每月1号22点31分开始调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 31 22 1 * ?")
+//    @Scheduled(cron ="0 31 22 1 * ?")
     public void areaTradeStorePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -348,7 +324,7 @@ public class PreMonthAreaScheduleTask {
      * 调度规则：每月1号22点32分开始调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 32 22 1 * ?")
+//    @Scheduled(cron ="0 32 22 1 * ?")
     public void areaZdGmvStorePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -387,7 +363,7 @@ public class PreMonthAreaScheduleTask {
      * 调度规则：每月1号22点40分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron ="0 40 22 1 * ?")
+//    @Scheduled(cron ="0 40 22 1 * ?")
     public void areaNewAddCusPubseasTask() {
     	new Thread(){
     		public void run() {
@@ -444,7 +420,7 @@ public class PreMonthAreaScheduleTask {
      * 片区交易额公海数据更新
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 41 22 1 * ?")
+//    @Scheduled(cron ="0 41 22 1 * ?")
     public void areaTradePubseasTask() {
     	new Thread(){
     		public void run() {
@@ -501,7 +477,7 @@ public class PreMonthAreaScheduleTask {
      * 片区重点产品Gmv公海数据更新
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 42 22 1 * ?")
+//    @Scheduled(cron ="0 42 22 1 * ?")
     public void areaZdGmvPubseasTask() {
     	new Thread(){
     		public void run() {

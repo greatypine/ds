@@ -1,22 +1,11 @@
 package com.guoanshequ.dc.das.task;
 
+import com.guoanshequ.dc.das.service.*;
+import com.guoanshequ.dc.das.utils.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import com.guoanshequ.dc.das.service.AreaPubseasNewaddCusService;
-import com.guoanshequ.dc.das.service.AreaPubseasTradeService;
-import com.guoanshequ.dc.das.service.AreaPubseasZdGmvService;
-import com.guoanshequ.dc.das.service.StoreNumberService;
-import com.guoanshequ.dc.das.service.TAreaPubseasNewaddCusService;
-import com.guoanshequ.dc.das.service.TAreaPubseasNewaddCusStoreService;
-import com.guoanshequ.dc.das.service.TAreaPubseasTradeService;
-import com.guoanshequ.dc.das.service.TAreaPubseasTradeStoreService;
-import com.guoanshequ.dc.das.service.TAreaPubseasZdGmvService;
-import com.guoanshequ.dc.das.service.TAreaPubseasZdGmvStoreService;
-import com.guoanshequ.dc.das.utils.DateUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -62,7 +51,7 @@ public class AreaPubseasScheduleTask {
      * 调度规则：每天凌晨3点40分开始调度
      * 参数：begindate  enddate 
      */
-    @Scheduled(cron ="0 40 03 * * ?")
+//    @Scheduled(cron ="0 40 03 * * ?")
     public void areaPubseasNewAddCusTask() {
     	new Thread(){
     		public void run() {
@@ -114,7 +103,7 @@ public class AreaPubseasScheduleTask {
      * 指定公海人员分配交易额任务调度 + 按门店调度
      * 参数：begindate  enddate 
      */
-    @Scheduled(cron ="0 40 03 * * ?")
+//    @Scheduled(cron ="0 40 03 * * ?")
     public void areaPubseasTradeTask() {
     	new Thread(){
     		public void run() {
@@ -168,7 +157,7 @@ public class AreaPubseasScheduleTask {
      * 指定公海人员分配重点产品gmv任务调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 40 03 * * ?")
+//    @Scheduled(cron ="0 40 03 * * ?")
     public void areaPubseasZdGmvTask() {
     	new Thread(){
     		public void run() {

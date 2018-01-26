@@ -42,4 +42,8 @@ public class TStoreTradeService {
         
     	return tstoreTradeDao.queryTStoreTradesSumByMonth(paraMap);
     }
+
+    public int addTStoreTradesByMassOrder(Map<String, String> paraMap){
+        return tstoreTradeDao.addTStoreTradesByMassOrder(paraMap);
+    }
 }

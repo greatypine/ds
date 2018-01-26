@@ -50,6 +50,8 @@ public class TaskByHandController {
     MassOrderScheduleTask massOrderScheduleTask;
     @Autowired
     ProductCityTask productCityTask;
+    @Autowired
+    PesNewScheduleTask pesNewScheduleTask;
 
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
@@ -240,7 +242,8 @@ public class TaskByHandController {
     @RequestMapping(value = "rest/storeTradesTaskRun",method = RequestMethod.POST)
     public RestResponse storeTradesTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
-    		platformScheduleTask.storeTradesTask();
+//    		platformScheduleTask.storeTradesTask();
+            pesNewScheduleTask.storeTradesByMassOrderTask();
     		return new RestResponse(EnumRespStatus.TASK_STOERTRADEOK);
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -248,7 +251,23 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
-    
+
+    /**
+     * 平台数据接口手动调度：手动调度国安侠gmv
+     */
+    @RequestMapping(value = "rest/empTradesTaskRun",method = RequestMethod.POST)
+    public RestResponse empTradesTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            pesNewScheduleTask.empTradesByMassOrderTask();
+            return new RestResponse(EnumRespStatus.TASK_STOERTRADEOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+
+
     /**
      * 平台数据接口手动调度：上门送单量
      */
@@ -634,7 +653,28 @@ public class TaskByHandController {
     /**
      * =============================门店历史营业额手动调度结束===================================
      */
-    
+    /**
+     * 手动调度商品按城市排名任务
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "rest/productCityTaskRun",method = RequestMethod.POST)
+    public RestResponse productCityTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            productCityTask.productCityTask();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+
+
+    /**
+     * =============================新订单任务调度===================================
+     */
     /**
      * 手动调度清洗订单定时任务（数据根据最大签收时间signtime同时写入daily/monthly/total表）
      * @param paraMap
@@ -689,7 +729,7 @@ public class TaskByHandController {
         }
     }
     
-    /**
+    /** 退货打标签：
      * 手动调度退货订单更新定时任务，用于更新df_mass_order表中的退货标识
      * @param paraMap
      * @return
@@ -707,7 +747,7 @@ public class TaskByHandController {
         }
     }
 
-    /**
+    /**退货表任务调度：
      * 手动调度退货订单更新定时任务写入到本地表退货表order_returned表中
      * @param paraMap
      * @return
@@ -725,7 +765,7 @@ public class TaskByHandController {
         }
     }
     
-    /**
+    /**异常打标签：
      * 手动调度异常订单更新定时任务
      * @param paraMap
      * @return
@@ -743,25 +783,7 @@ public class TaskByHandController {
         }
     }
 
-    /**
-     * 手动调度商品按城市排名任务
-     * @param paraMap
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "rest/productCityTaskRun",method = RequestMethod.POST)
-    public RestResponse productCityTask(@RequestBody Map<String, String> paraMap) throws Exception {
-        try{
-            productCityTask.productCityTask();
-            return new RestResponse(EnumRespStatus.TASK_RUNOK);
-        }catch (Exception e) {
-            logger.error(e.toString());
-            e.printStackTrace();
-            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
-        }
-    }
-    
-    /**
+    /**拉新标签
      * 手动调度新客标识
      * @param paraMap
      * @return
@@ -770,7 +792,7 @@ public class TaskByHandController {
     @RequestMapping(value = "rest/customerTradeTaskRun",method = RequestMethod.POST)
     public RestResponse customerTradeTask(@RequestBody Map<String, String> paraMap) throws Exception {
         try{
-        	massOrderScheduleTask.customerTradeTask();
+            massOrderScheduleTask.customerTradeTask();
             return new RestResponse(EnumRespStatus.TASK_RUNOK);
         }catch (Exception e) {
             logger.error(e.toString());
@@ -778,7 +800,7 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
-    
+
     /**
      * 手动调度恢复小区Code
      * @param paraMap
@@ -804,6 +826,20 @@ public class TaskByHandController {
     public RestResponse massOrderPatchTask(@RequestBody Map<String, String> paraMap) throws Exception {
         try{
             massOrderScheduleTask.massOrderPatchTask();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    /**
+     * 手动调度上月片区绩效GMV
+     */
+    @RequestMapping(value = "rest/preEmpTradesByMassOrderTaskRun",method = RequestMethod.POST)
+    public RestResponse preEmpTradesByMassOrderTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            pesNewScheduleTask.preEmpTradesByMassOrderTask();
             return new RestResponse(EnumRespStatus.TASK_RUNOK);
         }catch (Exception e) {
             logger.error(e.toString());

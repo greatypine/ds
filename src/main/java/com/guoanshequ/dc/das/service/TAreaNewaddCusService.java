@@ -54,4 +54,9 @@ public class TAreaNewaddCusService {
     public int addTAreaNewaddCusByStore(Map<String, String> paraMap){
     	return tareaNewaddCusDao.addTAreaNewaddCusByStore(paraMap);
     }
+
+    public String queryAreaNewaddcusByEmpOnMass(Map<String, String> paraMap) throws Exception{
+
+        return tareaNewaddCusDao.queryAreaNewaddcusByEmpOnMass(paraMap);
+    }
 }

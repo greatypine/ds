@@ -89,7 +89,7 @@ public class ScheduleTask {
      * 调度规则：每月1号0点30分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron ="0 30 02 * * ?")
+//    @Scheduled(cron ="0 30 02 * * ?")
     public void sendOrdersTask() {
     	new Thread(){
     		public void run() {
@@ -132,7 +132,7 @@ public class ScheduleTask {
      * 门店交易额任务调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron ="0 30 02 * * ?")
+//    @Scheduled(cron ="0 30 02 * * ?")
     public void storeTradesTask() {
     	new Thread(){
     		public void run(){
@@ -175,7 +175,7 @@ public class ScheduleTask {
      * 每月新增客户总量任务调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron ="0 35 02 * * ?")
+//    @Scheduled(cron ="0 35 02 * * ?")
     public void newAddCusTask() {
     	new Thread(){
     		public void run() {
@@ -219,7 +219,7 @@ public class ScheduleTask {
      * 复购客户任务调度
      * 参数：year   month   rebuyStoreName  storeids
      */
-    @Scheduled(cron ="0 36 02 * * ?")
+//    @Scheduled(cron ="0 36 02 * * ?")
     public void rebuyCusTask() {
     	new Thread(){
     		public void run() {
@@ -258,7 +258,7 @@ public class ScheduleTask {
      * 国安侠好评次数任务调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 30 02 * * ?")
+    @Scheduled(cron ="0 10 02 * * ?")
     public void rewardTimesTask() {
     	new Thread(){
     		public void run() {
@@ -301,7 +301,7 @@ public class ScheduleTask {
      * 上门送单量按国侠个人总量
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 30 02 * * ?")
+//    @Scheduled(cron ="0 30 02 * * ?")
     public void sendOrderSumTask() {
     	new Thread(){
     		public void run() {
@@ -344,7 +344,7 @@ public class ScheduleTask {
      * 门店交易额（按频道）任务调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 30 02 * * ?")
+//    @Scheduled(cron ="0 30 02 * * ?")
     public void storeTradeChannelTask() {
     	new Thread(){
     		public void run() {
@@ -387,7 +387,7 @@ public class ScheduleTask {
      * gmv占比任务调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 30 02 * * ?")
+//    @Scheduled(cron ="0 30 02 * * ?")
     public void gmvPercentTask() {
     	new Thread(){
     		public void run() {

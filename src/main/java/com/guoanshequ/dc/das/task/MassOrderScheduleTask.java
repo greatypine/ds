@@ -72,9 +72,9 @@ public class MassOrderScheduleTask {
 	/**
 	 * 调度规则：订单信息打补丁
 	 * 说明：根据开始时间与结束时间补期间所丢失的订单数据
-	 * 每天凌晨12点半将前一数据打补丁
+	 * 每天凌晨0点15分前一天数据打补丁
 	 */
-//	@Scheduled(cron ="0 30 0 * * ?")
+	@Scheduled(cron ="0 15 0 * * ?")
 	public void massOrderPatchTask() {
 		try {
 			Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(2);
@@ -102,18 +102,21 @@ public class MassOrderScheduleTask {
 				if(!massOrderList.isEmpty()){
 					//根据结果去清洗表mass_order中查找不存在的订单
 					List<DfMassOrder> massOrderPatchList = new ArrayList<DfMassOrder>();
+					StringBuilder sb = new StringBuilder();
 					String ordersn =null;
 					for (DfMassOrder dfMassOrder:massOrderList) {
 						paraMap.put("orderid", dfMassOrder.getId());
 						ordersn = dfMassOrderService.queryOrersnByOrderId(paraMap);
 						if (StringUtils.isBlank(ordersn)){
 							massOrderPatchList.add(dfMassOrder);
+							sb.append(ordersn+",");
 						}
 					}
 					if(!massOrderPatchList.isEmpty()){
 						paramsPackage(massOrderPatchList);
 					}
-					logger.info("订单打补丁共调度数据记录行数："+massOrderPatchList.size());
+					logger.info("订单打补丁共调度数据记录行数："+massOrderPatchList.size() +" 行,所补订单号为："+sb.toString()
+					);
 				}
 				long taskEndTime = System.currentTimeMillis();    //获取结束时间
 				logger.info("**********订单打补丁任务调度结束:"+(taskEndTime - taskStartTime) + "ms**********");
@@ -137,8 +140,8 @@ public class MassOrderScheduleTask {
     				dfMassOrderService.deleteDfMassOrderDaily(dateTime);
     	    		logger.info("**********自动删除Daily海量订单任务调度结束**********");
     			} catch (Exception e) {
-	    			logger.info("自动删除Daily海量订单调度异常：",e);
-	    		}
+					logger.info("自动删除Daily海量订单调度异常：",e);
+				}
     		}
     	}.start();
     }
@@ -163,9 +166,10 @@ public class MassOrderScheduleTask {
    
     /**
      * 将数据写入到退货order_returned表中
-	 *
+	 * 调度规则：每天凌晨1点40分
+	 * 根据表中最大退货时间顺序增量添加
      */
-//    @Scheduled(cron ="0 */30 * * * ?")
+    @Scheduled(cron ="0 40 1 * * ?")
     public void OrderReturnedTask(){
     	new Thread(){
     		public void run() {
@@ -175,7 +179,7 @@ public class MassOrderScheduleTask {
     	        	String maxReturnedTime = dfOrderReturnedService.queryMaxReturnedTime()==null?DateUtils.getPreDate(new Date()):dfOrderReturnedService.queryMaxReturnedTime();
     	        	//给后台接口构建参数
     	        	Map<String, String> paraMap=new HashMap<String, String>();
-    	        	paraMap.put("maxReturnTime", "2018-01-01");
+    	        	paraMap.put("maxReturnTime", maxReturnedTime);
     	    		List<Map<String, String>> list =massOrderService.queryReturnOrders(paraMap);
 					int addnum =0;
 					int n =0;
@@ -193,9 +197,10 @@ public class MassOrderScheduleTask {
 
 	/**
 	 * 定时查询退货订单并更新状态,用于更新mass_order表中退货标签
-	 * 间隔30分钟查询一次，调度范围：当前时间前一天到现在
+	 * 调度规则：每天凌晨1点10分
+	 * 根据mass_order表中最大退货时间顺序增量添加
 	 */
-	@Scheduled(cron ="0 */30 * * * ?")
+	@Scheduled(cron ="0 10 1 * * ?")
 	public void returnMassOrderTask(){
 		new Thread(){
 			public void run() {
@@ -205,7 +210,7 @@ public class MassOrderScheduleTask {
 					String maxReturnTime = dfMassOrderService.queryMaxReturnTime()==null?DateUtils.getPreDate(new Date()):dfMassOrderService.queryMaxReturnTime();
 					//给后台接口构建参数
 					Map<String, String> paraMap=new HashMap<String, String>();
-					paraMap.put("maxReturnTime", "2018-01-01");
+					paraMap.put("maxReturnTime", maxReturnTime);
 					List<Map<String, String>> list =massOrderService.queryReturnOrderByDate(paraMap);
 
 					list.parallelStream().forEach(record ->{
@@ -229,9 +234,9 @@ public class MassOrderScheduleTask {
     /**
      * massOrder中异常订单任务调度
      * 基于ds_abnormal_order，故调度在异常订单任务时间之后
-	 * 调度为一次性每天凌晨4点30分，调度范围：updatetime为当天的订单
+	 * 调度为一次性每天凌晨1点20分，调度范围：updatetime为当天的订单
      */
-    @Scheduled(cron ="0 30 04 * * ?")
+    @Scheduled(cron ="0 20 01 * * ?")
     public void abnormalMassOrderTask(){
     	new Thread(){
     		public void run() {
@@ -254,18 +259,20 @@ public class MassOrderScheduleTask {
     
     /**
      * massOrder中新客订单任务调度
-     * 夜间4:50调度
+     * 夜间1:30调度
      */
-  @Scheduled(cron ="0 50 04 * * ?")
+  @Scheduled(cron ="0 30 01 * * ?")
     public void customerTradeTask(){
     	new Thread(){
     		public void run() {
     			try{
     				logger.info("**********定时新客订单任务调度开始**********");
-    	        	String maxQueryTime = DateUtils.getDayTimeZero(new Date());
+    	        	String begindate = DateUtils.getPreDate(new Date());
+					String enddate = DateUtils.getCurTime(new Date());
     	        	//给后台接口构建参数
     	        	Map<String, String> paraMap=new HashMap<String, String>();
-    	        	paraMap.put("maxQueryTime", "2018-01-01");
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
     				List<Map<String, String>> list =massOrderService.queryCustomerTradeTask(paraMap);
     				
     				list.parallelStream().forEach(record ->{

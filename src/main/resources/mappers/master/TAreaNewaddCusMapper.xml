@@ -107,5 +107,18 @@
 			group by storeno
 		]]>
 	</insert>
+
+	<!--
+    国安侠片区交易额统计上月本月数据,为app提供数据
+	-->
+	<select id="queryAreaNewaddcusByEmpOnMass" parameterType="java.util.Map" resultType="String">
+		<![CDATA[
+			select sum(case when customer_isnew_flag >='10' then 1 else 0 end) as totalsum
+			from df_mass_order_monthly tor
+			where customer_isnew_flag !='-1'
+			and DATE_FORMAT(tor.sign_time,'%Y-%m') =#{yearMonth}
+			and tor.info_employee_a_no =#{employee_no}
+		]]>
+	</select>
 	
 </mapper>

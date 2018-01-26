@@ -8,13 +8,13 @@ import java.util.Map;
 
 @Repository
 @DataSource("master")
-public interface TNewaddCusMapper{
+public interface EmployeeTradeMapper{
 	
-	List<Map<String, String>> queryTNewaddCus(Map<String, String> paraMap);
+	List<Map<String, String>> queryEmployeeTrade(Map<String, String> paraMap);
 	
-	void addTNewaddCus(Map<String, String> paraMap);
+	int addEmployeeTradeByMassOrder(Map<String, String> paraMap);
 	
 	int deleteByYearMonth(Map<String, String> paraMap);
-	
-	List<Map<String, Object>> queryTNewaddCusSumByMonth(Map<String, String> paraMap);
+
+	String queryEmployeeTradeByEmp(Map<String, String> paraMap);
 }

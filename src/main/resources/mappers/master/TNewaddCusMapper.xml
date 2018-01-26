@@ -75,6 +75,6 @@
 				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
 			from ds_newaddcus where year =#{year} and month =#{month} and storeno IN (${storeids})) newaddsumline
 		]]>
-	</select>	
-	
+	</select>
+
 </mapper>

@@ -43,10 +43,10 @@ public class AbnormalOrderScheduleTask {
     
     /**
      * 异常订单任务调度
-     * 调度规则：每天03点10分开始调度
+     * 调度规则：每天0点30分开始调度
      * 参数：begindate  enddate  storename  storeids
      */
-    @Scheduled(cron ="0 10 03 * * ?")
+    @Scheduled(cron ="0 30 0 * * ?")
     public void abnormalOrderTask() {
     	new Thread(){
     		public void run() {
@@ -107,10 +107,10 @@ public class AbnormalOrderScheduleTask {
     }
     /**
      * 异常订单下载任务调度
-     * 调度规则：每月03点25分开始调度
+     * 调度规则：每月0点35分开始调度
      * 参数：begindate  enddate  storename  storeids
      */    
-    @Scheduled(cron ="0 25 03 * * ?")
+    @Scheduled(cron ="0 35 0 * * ?")
     public void abnormalDownTask() {
     	new Thread(){
     		public void run() {

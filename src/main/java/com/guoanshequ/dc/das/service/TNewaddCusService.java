@@ -42,4 +42,5 @@ public class TNewaddCusService {
         
     	return tnewaddCusDao.queryTNewaddCusSumByMonth(paraMap);
     }
+
 }

@@ -3,6 +3,7 @@ package com.guoanshequ.dc.das.controller;
 import com.guoanshequ.dc.das.domain.EnumRespStatus;
 import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.service.AreaTradeService;
+import com.guoanshequ.dc.das.service.EmployeeTradeService;
 import com.guoanshequ.dc.das.service.TAreaTradeService;
 import com.guoanshequ.dc.das.service.TAreaTradeStoreService;
 
@@ -39,6 +40,8 @@ public class TAreaTradeController {
     TAreaTradeStoreService tareaTradeStoreService;
     @Autowired
     AreaTradeService areaTradeService;
+	@Autowired
+	EmployeeTradeService employeeTradeService;
 
     private static final Logger logger = LogManager.getLogger(TAreaTradeService.class);
     
@@ -97,7 +100,7 @@ public class TAreaTradeController {
  	        	return new RestResponse(EnumRespStatus.DATA_NOPARA);
  	        }
  			Double areaTradeAmount =0.0;
- 			String areaTradeTrade = tareaTradeService.queryTAreaTradeSumGroupByEmpOnMonth(paraMap);
+ 			String areaTradeTrade = employeeTradeService.queryEmployeeTradeByEmp(paraMap);
  			if(!StringUtils.isBlank(areaTradeTrade)){
  				areaTradeAmount = Double.valueOf(areaTradeTrade);
  			}
