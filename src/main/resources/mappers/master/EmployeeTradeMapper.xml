@@ -196,5 +196,16 @@
 			where aa.year =#{year} and aa.month =#{month} and aa.employee_no =#{employee_no}
 		]]>
     </select>
+    
+        <!--
+    国安侠交易额按月份查询为APP提供
+    -->
+    <select id="queryEmployeePesgmvByEmp" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select pesgmv,pes_sendgmv ,pes_areagmv,pes_assigngmv,pes_pergmv
+			from ds_emptrade aa
+			where aa.year =#{year} and aa.month =#{month} and aa.employee_no =#{employee_no}
+		]]>
+    </select>
 
 </mapper>

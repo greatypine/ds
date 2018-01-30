@@ -120,4 +120,30 @@ public class TAreaTradeController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     } 
+    
+    /**
+     * 国安侠片区按月份统计app使用
+     */
+    @RequestMapping(value = "rest/queryEmployeePesgmvByEmp",method = RequestMethod.POST)
+    public RestResponse queryEmployeePesgmvByEmp(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		String year = paraMap.get("year") != null ? paraMap.get("year").toString() : null;
+ 	        String month = paraMap.get("month") != null ? paraMap.get("month").toString() : null;    		
+    		String employee_no = paraMap.get("employee_no") != null ? paraMap.get("employee_no").toString() : null;
+ 	        if(StringUtils.isBlank(year)||StringUtils.isBlank(month)||StringUtils.isBlank(employee_no)){
+ 	        	return new RestResponse(EnumRespStatus.DATA_NOPARA);
+ 	        }
+ 			List<Map<String, String>> areaTradeTradeList = employeeTradeService.queryEmployeePesgmvByEmp(paraMap);
+	        if(null==areaTradeTradeList||areaTradeTradeList.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,areaTradeTradeList);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
 }

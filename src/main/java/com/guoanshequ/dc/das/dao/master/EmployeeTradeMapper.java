@@ -17,4 +17,6 @@ public interface EmployeeTradeMapper{
 	int deleteByYearMonth(Map<String, String> paraMap);
 
 	String queryEmployeeTradeByEmp(Map<String, String> paraMap);
+	
+	List<Map<String, String>> queryEmployeePesgmvByEmp(Map<String, String> paraMap);
 }

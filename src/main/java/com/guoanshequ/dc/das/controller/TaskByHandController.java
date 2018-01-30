@@ -259,7 +259,7 @@ public class TaskByHandController {
     public RestResponse empTradesTask(@RequestBody Map<String, String> paraMap) throws Exception {
         try{
             pesNewScheduleTask.empTradesByMassOrderTask();
-            return new RestResponse(EnumRespStatus.TASK_STOERTRADEOK);
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
         }catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();

@@ -109,7 +109,7 @@ public class MassOrderScheduleTask {
 						ordersn = dfMassOrderService.queryOrersnByOrderId(paraMap);
 						if (StringUtils.isBlank(ordersn)){
 							massOrderPatchList.add(dfMassOrder);
-							sb.append(ordersn+",");
+							sb.append(dfMassOrder.getOrder_sn()+",");
 						}
 					}
 					if(!massOrderPatchList.isEmpty()){
@@ -267,7 +267,7 @@ public class MassOrderScheduleTask {
     		public void run() {
     			try{
     				logger.info("**********定时新客订单任务调度开始**********");
-    	        	String begindate = DateUtils.getPreDate(new Date());
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
 					String enddate = DateUtils.getCurTime(new Date());
     	        	//给后台接口构建参数
     	        	Map<String, String> paraMap=new HashMap<String, String>();

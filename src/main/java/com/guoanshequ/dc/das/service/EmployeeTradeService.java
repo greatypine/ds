@@ -40,4 +40,8 @@ public class EmployeeTradeService {
     public String queryEmployeeTradeByEmp(Map<String, String> paraMap){
         return  employeeTradeDao.queryEmployeeTradeByEmp(paraMap);
     }
+    
+    public List<Map<String, String>> queryEmployeePesgmvByEmp(Map<String, String> paraMap){
+        return  employeeTradeDao.queryEmployeePesgmvByEmp(paraMap);
+    }
 }
