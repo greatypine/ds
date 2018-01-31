@@ -344,7 +344,7 @@ public class ScheduleTask {
      * 门店交易额（按频道）任务调度
      * 参数：begindate  enddate  storeids
      */
-//    @Scheduled(cron ="0 30 02 * * ?")
+    @Scheduled(cron ="0 10 02 * * ?")
     public void storeTradeChannelTask() {
     	new Thread(){
     		public void run() {
@@ -360,21 +360,14 @@ public class ScheduleTask {
     	    		String month = begindate.substring(5, 7);   	
     	        	//给后台接口构建参数
     	        	Map<String, String> paraMap=new HashMap<String, String>();
-    	        	String storeIds = storeNumberService.queryStoreNumbers();
     	        	paraMap.put("year", year);
     	        	paraMap.put("month", month);
     	        	paraMap.put("begindate", begindate);
     	        	paraMap.put("enddate", enddate);
-    	        	paraMap.put("storeids", storeIds);
-    	    		List<Map<String, String>> storetradeChannelList = storeTradeChannelService.queryStoreTradeChannels(paraMap);
-    	    		if(!storetradeChannelList.isEmpty()){
-    	    			tstoreTradeChannelService.deleteByYearMonth(paraMap);
-    	    			for (Map<String, String> storetradeChannelMap : storetradeChannelList) {
-    	    				tstoreTradeChannelService.addTStoreTradeChannel(storetradeChannelMap);
-    	    			}
-    	    		}
-    	    		logger.info("**********门店交易额（按频道）任务调度结束**********");
-    	    		logger.info("共调度数据记录行数："+storetradeChannelList.size());
+    	        	
+    	        	tstoreTradeChannelService.deleteByYearMonth(paraMap);
+    	        	int num = tstoreTradeChannelService.addTStoreTradeChannelByMassOrder(paraMap);
+    	    		logger.info("**********门店交易额（按频道）任务调度结束********共调度数据记录行数："+num);
     	    		} catch (Exception e) {
     	    			logger.info(e.toString());
     	    			e.printStackTrace();

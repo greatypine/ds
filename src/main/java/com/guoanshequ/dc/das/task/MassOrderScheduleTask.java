@@ -267,12 +267,13 @@ public class MassOrderScheduleTask {
     		public void run() {
     			try{
     				logger.info("**********定时新客订单任务调度开始**********");
-    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
-					String enddate = DateUtils.getCurTime(new Date());
+    	        	String preDate = DateUtils.getPreDate(new Date());
+    	        	String year = preDate.substring(0,4);
+    	        	String month = preDate.substring(5,7);
+    	        	String order_ym = year+month;
     	        	//给后台接口构建参数
     	        	Map<String, String> paraMap=new HashMap<String, String>();
-    	        	paraMap.put("begindate", begindate);
-    	        	paraMap.put("enddate", enddate);
+    	        	paraMap.put("order_ym", order_ym);
     				List<Map<String, String>> list =massOrderService.queryCustomerTradeTask(paraMap);
     				
     				list.parallelStream().forEach(record ->{

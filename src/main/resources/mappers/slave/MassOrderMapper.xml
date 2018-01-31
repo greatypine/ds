@@ -273,7 +273,7 @@
 			WHERE
 				t.order_sn is not null 
 			AND
-				t.create_time >= #{begindate} and t.create_time <= #{enddate}
+				t.order_ym = #{order_ym}
 			AND 
 				t.order_month_count = 1
   		]]>

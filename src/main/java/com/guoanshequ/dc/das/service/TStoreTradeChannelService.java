@@ -42,4 +42,10 @@ public class TStoreTradeChannelService {
         
     	return tstoreTradeChannelDao.queryTStoreTradeChannelSumByMonth(paraMap);
     }
+    
+    public int addTStoreTradeChannelByMassOrder(Map<String, String> paraMap){
+    	
+    	return tstoreTradeChannelDao.addTStoreTradeChannelByMassOrder(paraMap);
+    }
+    
 }

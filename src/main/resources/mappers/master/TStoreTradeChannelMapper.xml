@@ -61,5 +61,33 @@
  				order_count
  			from ds_storetrade_channel where year=#{year} and month=#{month} and storeno IN (${storeids})) tradeChanline
 		]]>
-	</select>	
+	</select>
+	
+	<insert id="addTStoreTradeChannelByMassOrder" parameterType="java.util.Map">
+		<![CDATA[
+			insert into ds_storetrade_channel(
+				city_name,storeno,store_name,dep_name,channel_name,order_amount,order_count,
+				year,month,createtime) 
+			select
+			tor.store_city_name as city_name,
+			tor.store_code as storeno,
+			tor.store_name as store_name,
+			tor.department_name as dep_name,
+			tor.channel_name as channel_name,
+			sum(gmv_price) as order_amount,
+			count(tor.id) as order_count,
+			YEAR(date_sub(now(),interval 1 day)),
+			MONTH(date_sub(now(),interval 1 day)),
+			NOW()
+			from df_mass_order_monthly tor 
+			where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+			AND tor.store_white !='QA' and tor.store_status = 0
+			AND sign_time >=DATE(#{begindate}) 
+			and sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			group by
+			tor.store_id, 
+			tor.bussiness_group_id,
+			tor.channel_id 
+		]]>
+	</insert>	
 </mapper>
