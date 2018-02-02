@@ -847,12 +847,14 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
-    
+    /**
+     * 每月3号凌晨调度上月门店GMV与国安侠GMV
+     */
     @RequestMapping(value = "rest/prePesNewGmvTaskRun",method = RequestMethod.POST)
     public RestResponse prePesNewGmvTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
-    		pesNewScheduleTask.preEmpTradesByMassOrderTask();
     		pesNewScheduleTask.preStoreTradesByMassOrderTask();
+    		pesNewScheduleTask.preEmpTradesByMassOrderTask();
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());

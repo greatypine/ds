@@ -134,7 +134,7 @@ public class PesNewScheduleTask {
 					paraMap.put("begindate", begindate);
 					paraMap.put("enddate", enddate);
 					tstoreTradeService.deleteByYearMonth(paraMap);
-					int num = tstoreTradeService.addTStoreTradesByMassOrder(paraMap);
+					int num = tstoreTradeService.addPreTStoreTradesByMassOrder(paraMap);
 					logger.info("**********上月门店GMV任务调度结束**********共调度数据记录行数："+num);
 				} catch (Exception e) {
 					logger.info(e.toString());
@@ -173,7 +173,7 @@ public class PesNewScheduleTask {
 					paraMap.put("begindate", begindate);
 					paraMap.put("enddate", enddate);
 					employeeTradeService.deleteByYearMonth(paraMap);
-					int num = employeeTradeService.addEmployeeTradeByMassOrder(paraMap);
+					int num = employeeTradeService.addPreEmployeeTradeByMassOrder(paraMap);
 					logger.info("**********上月国安侠GMV任务调度结束**********共调度数据记录行数："+num);
 				} catch (Exception e) {
 					logger.info(e.toString());

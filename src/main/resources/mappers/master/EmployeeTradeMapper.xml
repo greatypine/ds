@@ -207,5 +207,178 @@
 			where aa.year =#{year} and aa.month =#{month} and aa.employee_no =#{employee_no}
 		]]>
     </select>
+    
+    
+        <insert id="addPreEmployeeTradeByMassOrder" parameterType="java.util.Map">
+        <![CDATA[
+            insert into ds_emptrade (
+              city_name,storeno,store_name,employee_no,employee_name,pesgmv,pes_sendgmv,
+              pes_areagmv,pes_assigngmv,pes_pergmv,sendgmv,sendthgmv,areagmv,areathgmv,
+              assigngmv,assignthgmv,pergmv,perthgmv,year,month
+            )
+			select
+			ts.city_name as city_name,
+			ts.storeno as storeno,
+			ts.`name` as store_name,
+			tman.employeeno as employee_no,
+			tman.username as employee_name,
+			(
+			 ifnull(sendemp.sendgmv,0) - ifnull(sendempth.sendthgmv,0) +
+			 ifnull(areaemp.areagmv,0) - ifnull(areaempth.areathgmv,0) +
+			 ifnull(assgin.assigngmv,0) - ifnull(assginth.assignthgmv,0) +
+			 ifnull(percap.pergmv,0) - ifnull(percapth.perthgmv,0)
+			) as pesgmv ,
+			(ifnull(sendemp.sendgmv,0) - ifnull(sendempth.sendthgmv,0)) as pes_sendgmv,
+			(ifnull(areaemp.areagmv,0) - ifnull(areaempth.areathgmv,0)) as pes_areagmv,
+			(ifnull(assgin.assigngmv,0) - ifnull(assginth.assignthgmv,0)) as pes_assigngmv,
+			(ifnull(percap.pergmv,0) - ifnull(percapth.perthgmv,0)) as pes_pergmv,
+			ifnull(sendemp.sendgmv,0) as sendgmv,
+			ifnull(sendempth.sendthgmv,0) as sendthgmv,
+			ifnull(areaemp.areagmv,0) as areagmv,
+			ifnull(areaempth.areathgmv,0) as areathgmv,
+			ifnull(assgin.assigngmv,0) as assigngmv,
+			ifnull(assginth.assignthgmv,0) as assignthgmv,
+			ifnull(percap.pergmv,0) as pergmv,
+			ifnull(percapth.perthgmv,0) as perthgmv,
+			YEAR(date_sub(now(),interval 1 month)),
+			MONTH(date_sub(now(),interval 1 month))
+			from ds_topdata tman
+			join t_store ts on (tman.storeid = ts.store_id)
+			left join (
+			select
+			employee_no,
+			store_id,
+			sum(gmv_price) * 0.5 as sendgmv
+			from df_mass_order_monthly tor
+			where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+			AND tor.store_white !='QA' and tor.store_status = 0
+			AND (tor.loan_label ='0' or tor.loan_label ='3')
+			AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
+			AND tor.sign_time >=#{begindate}
+			AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			group by employee_no,store_id
+			) sendemp  on (tman.employeeno = sendemp.employee_no and sendemp.store_id = ts.platformid)
+			left join (
+			select
+			employee_no,
+			store_id,
+			sum(returned_amount) * 0.5 as sendthgmv
+			from df_mass_order_total tor
+			where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+			AND tor.store_white !='QA' and tor.store_status = 0
+			AND (tor.loan_label ='0' or tor.loan_label ='3')
+			AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
+			AND tor.return_time >=#{begindate}
+			and tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			group by employee_no ,store_id
+			) sendempth on (tman.employeeno = sendempth.employee_no and sendempth.store_id = ts.platformid)
+			left join (
+			select
+			info_employee_a_no,
+			store_id,
+			sum(gmv_price) * 0.5 as areagmv
+			from df_mass_order_monthly tor
+			where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+			AND tor.store_white !='QA' and tor.store_status = 0
+			AND (tor.loan_label ='0' or tor.loan_label ='3')
+			AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
+			AND tor.sign_time >=#{begindate}
+			AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			group by info_employee_a_no
+			) areaemp on (tman.employeeno = areaemp.info_employee_a_no)
+			left join (
+			select
+			info_employee_a_no,
+			store_id,
+			sum(returned_amount) * 0.5 as areathgmv
+			from df_mass_order_total tor
+			where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+			AND tor.store_white !='QA' and tor.store_status = 0
+			AND (tor.loan_label ='0' or tor.loan_label ='3')
+			AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
+			AND tor.return_time >=#{begindate}
+			AND tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			group by info_employee_a_no
+			) areaempth on (tman.employeeno = areaempth.info_employee_a_no)
+			left join (
+			select
+			dopm.employee_no,
+			sum(tor.gmv_price) as assigngmv
+			from df_order_pubseas_monthly dopm
+			join df_mass_order_monthly tor on (dopm.df_order_id = tor.id)
+			where dopm.employee_no is not null
+			AND tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+			AND tor.store_white !='QA' and tor.store_status = 0
+			AND (tor.loan_label ='0' or tor.loan_label ='3')
+			AND (tor.abnormal_label ='0' AND tor.pubseas_label ='1')
+			AND dopm.df_signed_time >=#{begindate}
+			AND dopm.df_signed_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			group by dopm.employee_no
+			) assgin on (tman.employeeno = assgin.employee_no)
+			left join (
+			select
+			dopm.employee_no,
+			sum(tor.returned_amount) as assignthgmv
+			from df_order_pubseas_monthly dopm
+			join df_mass_order_total tor on (dopm.df_order_id = tor.id)
+			where dopm.employee_no is not null
+			AND tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+			AND tor.store_white !='QA' and tor.store_status = 0
+			AND (tor.loan_label ='0' or tor.loan_label ='3')
+			AND (tor.abnormal_label ='0' AND tor.pubseas_label ='1')
+			AND tor.return_time >=#{begindate}
+			AND tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			group by dopm.employee_no
+			) assginth on (tman.employeeno = assginth.employee_no)
+			left join (
+			select aa.store_id,(persum/pernum) as pergmv from (
+			select ts.platformid,ts.store_id ,count(1) as pernum
+			from ds_topdata thuman ,t_store ts
+			where thuman.storeid = ts.store_id
+			and thuman.zw ='国安侠'
+			and thuman.humanstatus =1
+			and thuman.year = #{year} 
+			and thuman.month = #{month}
+			group by ts.platformid
+			) aa ,
+			(select store_id,
+			sum(gmv_price) persum
+			from df_mass_order_monthly tor
+			where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+			AND tor.store_white !='QA' and tor.store_status = 0
+			AND customer_id like 'fakecustomer%'
+			AND tor.sign_time >=#{begindate}
+			and tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			group by store_id
+			) bb
+				where aa.platformid = bb.store_id
+			) percap on (tman.storeid = percap.store_id)
+			left join (
+			select aa.store_id,(persum/pernum) as perthgmv from (
+			select ts.platformid,ts.store_id ,count(1) as pernum
+			from ds_topdata thuman ,t_store ts
+			where thuman.storeid = ts.store_id
+			and thuman.zw ='国安侠'
+			and thuman.humanstatus =1
+			and thuman.year = #{year} 
+			and thuman.month = #{month}
+			group by ts.platformid
+			) aa ,
+			(select
+			store_id,
+			sum(returned_amount) persum
+			from df_mass_order_monthly tor
+			where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+			AND tor.store_white !='QA' and tor.store_status = 0
+			AND customer_id like 'fakecustomer%'
+			AND tor.return_time >=#{begindate}
+			and tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			group by store_id) bb
+			where aa.platformid = bb.store_id
+			) percapth on (tman.storeid = percapth.store_id)
+			where tman.humanstatus = 1 and zw ='国安侠' and tman.year = #{year} and tman.month = #{month}
+			order by tman.storeid
+		]]>
+    </insert>
 
 </mapper>

@@ -19,4 +19,6 @@ public interface EmployeeTradeMapper{
 	String queryEmployeeTradeByEmp(Map<String, String> paraMap);
 	
 	List<Map<String, String>> queryEmployeePesgmvByEmp(Map<String, String> paraMap);
+	
+	int addPreEmployeeTradeByMassOrder(Map<String, String> paraMap);
 }

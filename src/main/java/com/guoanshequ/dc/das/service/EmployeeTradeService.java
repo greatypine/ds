@@ -44,4 +44,9 @@ public class EmployeeTradeService {
     public List<Map<String, String>> queryEmployeePesgmvByEmp(Map<String, String> paraMap){
         return  employeeTradeDao.queryEmployeePesgmvByEmp(paraMap);
     }
+    
+    public int addPreEmployeeTradeByMassOrder(Map<String, String> paraMap){
+
+        return employeeTradeDao.addPreEmployeeTradeByMassOrder(paraMap);
+    }
 }

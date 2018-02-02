@@ -174,7 +174,7 @@ public class MassOrderScheduleTask {
     	new Thread(){
     		public void run() {
     			try{
-    				logger.info("**********定时插入退货订单任务调度开始**********");
+    				logger.info("**********定时插入退货订单表order_returned任务调度开始**********");
     	        	//获取上次调度时的最大退货时间
     	        	String maxReturnedTime = dfOrderReturnedService.queryMaxReturnedTime()==null?DateUtils.getPreDate(new Date()):dfOrderReturnedService.queryMaxReturnedTime();
     	        	//给后台接口构建参数
@@ -187,9 +187,9 @@ public class MassOrderScheduleTask {
 						n = dfOrderReturnedService.addDfOrderReturned(returnMap);
 						addnum +=n;
 					}
-					logger.info("**********定时插入退货订单任务调度结束,记录行数："+addnum);
+					logger.info("**********定时插入退货订单表order_returned任务调度结束,记录行数："+addnum);
     			} catch (Exception e) {
-	    			logger.info("定时插入退货订单任务调度异常：",e);
+	    			logger.info("定时插入退货订单表order_returned任务调度异常：",e);
 	    		}
     		}
     	}.start();
@@ -205,7 +205,7 @@ public class MassOrderScheduleTask {
 		new Thread(){
 			public void run() {
 				try{
-					logger.info("**********定时更新退货订单任务调度开始**********");
+					logger.info("**********massorder打退货标签任务调度开始**********");
 					//获取上次调度时的最大退货时间
 					String maxReturnTime = dfMassOrderService.queryMaxReturnTime()==null?DateUtils.getPreDate(new Date()):dfMassOrderService.queryMaxReturnTime();
 					//给后台接口构建参数
@@ -223,9 +223,9 @@ public class MassOrderScheduleTask {
 						dfMassOrderService.updateDfMassOrderMonthly(params);
 						dfMassOrderService.updateDfMassOrderTotal(params);
 					});
-					logger.info("**********定时更新退货订单任务调度结束**********");
+					logger.info("**********massorder打退货标签任务调度结束**********");
 				} catch (Exception e) {
-					logger.info("定时更新退货订单任务调度异常：",e);
+					logger.info("massorder打退货标签任务调度异常：",e);
 				}
 			}
 		}.start();
@@ -241,7 +241,7 @@ public class MassOrderScheduleTask {
     	new Thread(){
     		public void run() {
     			try{
-    				logger.info("**********定时异常订单任务调度开始**********");
+    				logger.info("**********massorder打异常订单标签任务调度开始**********");
 	    			String queryTime = DateUtils.getPreDate(new Date());
 	    			Map<String, String> paraMap=new HashMap<String, String>();
 		        	paraMap.put("queryTime", queryTime);
@@ -249,9 +249,9 @@ public class MassOrderScheduleTask {
 		        	paraMap.put("abnormalNormalLabel", DfMassOrder.AbnormalLabel.DEFAULT.code);
 		        	dfMassOrderService.updateAbnormalOrder(paraMap);
 		        	dfMassOrderService.updateAbnormalOrderToNormal(paraMap);
-		        	logger.info("**********定时异常订单任务调度结束**********");
+		        	logger.info("**********massorder打异常订单标签任务调度结束**********");
     			} catch (Exception e) {
-	    			logger.info("定时异常订单任务调度异常：",e);
+	    			logger.info("massorder打异常订单标签任务调度异常：",e);
 	    		}
     		}
     	}.start();
@@ -266,7 +266,7 @@ public class MassOrderScheduleTask {
     	new Thread(){
     		public void run() {
     			try{
-    				logger.info("**********定时新客订单任务调度开始**********");
+    				logger.info("**********massorder打 拉新标签 任务调度开始**********");
     	        	String preDate = DateUtils.getPreDate(new Date());
     	        	String year = preDate.substring(0,4);
     	        	String month = preDate.substring(5,7);
@@ -284,9 +284,9 @@ public class MassOrderScheduleTask {
     	    			dfMassOrderService.updateCustomerOrderMonthly(params);
     	    			dfMassOrderService.updateCustomerOrderTotal(params);
     	    		});
-		        	logger.info("**********定时新客订单任务调度结束**********");
+		        	logger.info("**********massorder打 拉新标签 任务调度结束**********");
     			} catch (Exception e) {
-	    			logger.info("定时新客订单任务调度异常：",e);
+	    			logger.info("massorder打 拉新标签 任务调度异常：",e);
 	    		}
     		}
     	}.start();

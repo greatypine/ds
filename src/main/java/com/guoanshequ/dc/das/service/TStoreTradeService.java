@@ -46,4 +46,8 @@ public class TStoreTradeService {
     public int addTStoreTradesByMassOrder(Map<String, String> paraMap){
         return tstoreTradeDao.addTStoreTradesByMassOrder(paraMap);
     }
+    
+    public int addPreTStoreTradesByMassOrder(Map<String, String> paraMap){
+        return tstoreTradeDao.addPreTStoreTradesByMassOrder(paraMap);
+    }
 }

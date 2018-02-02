@@ -19,4 +19,6 @@ public interface TStoreTradeMapper{
 	List<Map<String, Object>> queryTStoreTradesSumByMonth(Map<String, String> paraMap);
 
 	int addTStoreTradesByMassOrder(Map<String, String> paraMap);
+	
+	int addPreTStoreTradesByMassOrder(Map<String, String> paraMap);
 }
