@@ -116,22 +116,6 @@ public class DfMassOrder {
     	}
 	}
 	
-	public enum LoanLabel{
-		DEFAULT("0", "否"),
-		LOAN("1", "小贷"),
-		HOUSE("2", "房贷"),
-		CAR("3", "车贷"),
-		KZB("4", "快周边"),
-    	;
-    	
-    	public String code;
-    	public String desc;
-    	
-    	LoanLabel(String code, String desc){
-    		this.code = code;
-    		this.desc = desc;
-    	}
-	}
 	
 	public enum ReturnLabel{
 		DEFAULT("0", "否"),

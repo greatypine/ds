@@ -95,7 +95,7 @@
 					from df_mass_order_monthly tor
 					where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
 					AND tor.store_white !='QA' and tor.store_status = 0
-					AND (tor.loan_label ='0' or tor.loan_label ='3' or tor.loan_label = '4')
+					AND (tor.loan_label ='0' or tor.loan_label ='3' or tor.loan_label = '4' or tor.loan_label = '5')
 					AND (tor.abnormal_label ='0')
 					AND tor.sign_time >=#{begindate}
 					AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
@@ -155,7 +155,7 @@
 					from df_mass_order_monthly tor
 					where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
 					AND tor.store_white !='QA' and tor.store_status = 0
-					AND (tor.loan_label ='0' or tor.loan_label ='3' or tor.loan_label = '4')
+					AND (tor.loan_label ='0' or tor.loan_label ='3' or tor.loan_label = '4' or tor.loan_label = '5')
 					AND (tor.abnormal_label ='0')
 					AND tor.sign_time >=#{begindate}
 					AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)

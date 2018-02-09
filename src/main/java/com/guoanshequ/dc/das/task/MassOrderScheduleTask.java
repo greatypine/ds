@@ -65,7 +65,8 @@ public class MassOrderScheduleTask {
 				logger.info("自动清洗海量订单共调度数据记录行数："+massOrderList.size()+",maxSignedTime："+maxSignedTime+",endSignedTime:"+endSignedTime);
 				logger.info("**********自动清洗海量订单任务调度结束:"+(taskEndTime - taskStartTime) + "ms**********");
 				} catch (Exception e) {
-					logger.info("自动清洗海量订单调度异常：",e);
+					logger.info(e.toString());
+					e.printStackTrace();
 				}
 	}
 
@@ -123,7 +124,8 @@ public class MassOrderScheduleTask {
 			}
 
 		} catch (Exception e) {
-			logger.info("自动清洗海量订单调度异常：",e);
+			logger.info(e.toString());
+			e.printStackTrace();
 		}
 	}
 

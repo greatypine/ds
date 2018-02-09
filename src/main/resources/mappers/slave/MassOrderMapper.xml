@@ -144,9 +144,12 @@
 		  CASE WHEN te.name like '%国安社区畅卡%' THEN '1'
 		  	   WHEN te.name like '%品质汽车%' THEN '3'
 		 	   WHEN (tdc1.`name` like '%快周边%' OR tdc1.`name` like '%线下联盟%') THEN '4'
+		 	   WHEN (tccar.channel = 'wx_gift_card') THEN '5'
 		  	   ELSE '0' END AS loan_label,
-		  CASE WHEN tesr.role_name not like '%洗衣%' THEN
-		      IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
+		  CASE WHEN tesr.role_name not like '%洗衣%' and tccar.channel !='wx_gift_card' THEN
+		      	IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
+		       WHEN tccar.channel = 'wx_gift_card' THEN
+			  	IFNULL(twgcbr.price/tog.order_quantity,0.0) 
 		  ELSE
 		      CASE WHEN (trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay') THEN
 		            0
@@ -167,6 +170,8 @@
 		LEFT JOIN t_company tcp ON  (te.area_company_id = tcp.id)
 		LEFT JOIN t_ed_sys_role tesr on (tesr.id=te.department_id)
 		LEFT JOIN t_order_group  tog ON (tog.id=tor.group_id)
+		LEFT JOIN t_channel_card_activation_record tccar on (tor.group_id = tccar.order_group_id and tccar.channel ='wx_gift_card')
+		LEFT JOIN t_wx_gift_card_buy_record twgcbr ON (twgcbr.card_code = tccar.card_no)
 		LEFT JOIN t_department_channel tdc1 ON (te.channel_id = tdc1.id)
 		LEFT JOIN t_department_channel tdc2 ON (te.bussiness_group_id = tdc2.id)
 		LEFT JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.order_group_id = tor.group_id and trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay')
