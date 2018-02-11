@@ -88,7 +88,7 @@
             AND tor.sign_time >=#{begindate}
             AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
             group by info_employee_a_no,store_id
-            ) areaemp on (tman.employee_no = areaemp.info_employee_a_no and areaemp.store_id = ts.store_id)
+            ) areaemp on (tman.employee_no = areaemp.info_employee_a_no and areaemp.store_id = ts.platformid)
             left join (
             select
             info_employee_a_no,
@@ -102,7 +102,7 @@
             AND tor.return_time >=#{begindate}
             AND tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
             group by info_employee_a_no,store_id
-            ) areaempth on (tman.employee_no = areaempth.info_employee_a_no and areaempth.store_id = ts.store_id)
+            ) areaempth on (tman.employee_no = areaempth.info_employee_a_no and areaempth.store_id = ts.platformid)
             left join (
             select
             dopm.employee_no,
@@ -285,7 +285,7 @@
 			AND tor.sign_time >=#{begindate}
 			AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			group by info_employee_a_no,store_id
-			) areaemp on (tman.employeeno = areaemp.info_employee_a_no and areaemp.store_id = ts.store_id)
+			) areaemp on (tman.employeeno = areaemp.info_employee_a_no and areaemp.store_id = ts.platformid)
 			left join (
 			select
 			info_employee_a_no,
@@ -299,7 +299,7 @@
 			AND tor.return_time >=#{begindate}
 			AND tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			group by info_employee_a_no,store_id
-			) areaempth on (tman.employeeno = areaempth.info_employee_a_no and areaempth.store_id = ts.store_id)
+			) areaempth on (tman.employeeno = areaempth.info_employee_a_no and areaempth.store_id = ts.platformid)
 			left join (
 			select
 			dopm.employee_no,
