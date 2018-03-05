@@ -13,8 +13,15 @@
 
 	<select id="queryDsCronTaskById"  resultType="java.util.Map">
 		<![CDATA[
-			select taskname,begintime,endtime,runtype,isrun
+			select taskname,begintime,endtime,runtype,isrun,task_status
 			from ds_crontask where id = #{id}
 		]]>
 	</select>
+	
+	<update id="updateTaskStatusById" parameterType="java.util.Map">
+		<![CDATA[
+			update ds_crontask set task_status =#{task_status} where id =#{id} 
+		]]>
+	</update>
+	
 </mapper>

@@ -16,5 +16,7 @@ public interface DsCronTaskMapper {
     List<Map<String, String>> queryDsCronTask (Map<String, String> paraMap);
 
     Map<String, String> queryDsCronTaskById (int id);
+    
+    Integer updateTaskStatusById(Map<String, String> paraMap);
 
 }

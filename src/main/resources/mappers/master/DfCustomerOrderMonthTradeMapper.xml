@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DfCustomerOrderMonthTradeMapper">
+
+	<!-- 获取开始时间 -->
+    <select id="queryNextBeginTime" resultType="java.lang.String">
+        <![CDATA[
+			select begintime from ds_crontask where id = 3;
+		]]>
+    </select>
+
+	<!-- 更新开始时间 -->
+	<select id="updateNextBeginTime" parameterType="java.lang.String">
+		<![CDATA[
+			update ds_crontask set begintime = #{begintime} where id = 3;
+		]]>
+	</select>
+	
+	<!-- 以人店月查询用户最大消费次数 -->
+	<select id="queryCustomerMaxCount" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[
+			select max(order_month_count) from df_customer_order_month_trade_new
+			where customer_id = #{customer_id} and store_id =#{store_id} and order_ym < #{order_ym}
+		]]>
+	</select>
+
+	<!-- 单条插入数据 -->
+	<insert id="addDfCustomerOrderMonthTrade" parameterType="java.util.Map" >
+		INSERT INTO df_customer_order_month_trade_new (
+			`customer_id`,`store_id`,`order_ym`,`trading_price`,`placename`,`order_sn`,`create_time`,`update_time`,
+			`order_month_count`, `latitude`, `longitude`,`city_name`,`tiny_village_id`,`tiny_village_code`,
+			`tiny_village_name`,`mobilephone`
+		) VALUES (
+			#{customer_id},#{store_id},#{order_ym},#{amount},#{placename},#{order_sn},NOW(),NULL,
+			#{order_month_count},#{latitude},#{longitude},#{city_name},#{tiny_village_id},#{tiny_village_code},
+			#{tiny_village_name},#{mobilephone}
+		) ON duplicate key UPDATE trading_price = trading_price + #{amount}, `update_time` = CURRENT_TIMESTAMP()
+	</insert>  
+	
+	<!-- 批量插入数据，未使用 -->
+	<insert id="addDfCustomerOrderMonthTrades" parameterType="java.util.List" >
+		INSERT INTO df_customer_order_month_trade_new (
+			`customer_id`,`store_id`,`order_ym`,`trading_price`,`placename`,`order_sn`,`create_time`,`update_time`,
+			`order_month_count`, `latitude`, `longitude`,`city_name`,`tiny_village_id`,`tiny_village_code`,
+			`tiny_village_name`
+		) VALUES 
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{item.customer_id},#{item.store_id},#{item.order_ym},#{item.amount},#{item.placename},#{item.order_sn},NOW(),NULL,
+			#{item.order_month_count},#{item.latitude},#{item.longitude},#{item.city_name},#{item.tiny_village_id},#{item.tiny_village_code},
+			#{item.tiny_village_name}
+		) 
+		</foreach>
+	</insert>  
+	
+</mapper>

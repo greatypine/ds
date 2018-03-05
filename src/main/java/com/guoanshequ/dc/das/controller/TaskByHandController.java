@@ -52,6 +52,8 @@ public class TaskByHandController {
     ProductCityTask productCityTask;
     @Autowired
     PesNewScheduleTask pesNewScheduleTask;
+    @Autowired
+    CustomerOrderMonthTradeScheduleTask customerOrderMonthTradeScheduleTask;
 
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
@@ -862,4 +864,21 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     } 
+    
+    
+    /**
+     * 清洗用户相关逻辑
+     */
+    @RequestMapping(value = "rest/customerOrderMonthTradeTaskRun",method = RequestMethod.POST)
+    public RestResponse customerOrderMonthTradeTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		customerOrderMonthTradeScheduleTask.CustomerOrderMonthTradeTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
 }

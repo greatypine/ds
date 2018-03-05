@@ -31,5 +31,8 @@ public class DsCronTaskService {
         return dsCronTaskDao.queryDsCronTaskById(id);
     }
 
-
+    public Integer updateTaskStatusById(Map<String, String> paraMap) throws Exception{
+    	return dsCronTaskDao.updateTaskStatusById(paraMap);
+    }
+    
 }
