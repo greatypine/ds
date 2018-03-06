@@ -25,7 +25,7 @@ public class DfCustomerOrderMonthTradeService {
 	}
 	
 	
-	public String queryCustomerMaxCount(Map<String, String> paraMap){
+	public Integer queryCustomerMaxCount(Map<String, String> paraMap){
 		return dfCustomerOrderMonthTradeDao.queryCustomerMaxCount(paraMap);
 	}
 

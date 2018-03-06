@@ -12,7 +12,7 @@ public interface DfCustomerOrderMonthTradeMapper {
 
 	String queryNextBeginTime();
 
-	String queryCustomerMaxCount(Map<String, String> paraMap);
+	Integer queryCustomerMaxCount(Map<String, String> paraMap);
 	
 	Integer updateNextBeginTime(String begintime);
 

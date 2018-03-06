@@ -17,7 +17,7 @@
 	</select>
 	
 	<!-- 以人店月查询用户最大消费次数 -->
-	<select id="queryCustomerMaxCount" parameterType="java.util.Map" resultType="java.lang.String">
+	<select id="queryCustomerMaxCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		<![CDATA[
 			select max(order_month_count) from df_customer_order_month_trade_new
 			where customer_id = #{customer_id} and store_id =#{store_id} and order_ym < #{order_ym}

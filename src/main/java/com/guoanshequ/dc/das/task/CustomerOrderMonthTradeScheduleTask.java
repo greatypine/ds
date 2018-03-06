@@ -86,7 +86,7 @@ public class CustomerOrderMonthTradeScheduleTask {
 	    		String resuFlag ="";
 	    		if (!cusList.isEmpty()) {
 	        		//2从daqWeb表中查询上面人店月前最大的消费次数
-	    			String order_month_count ;
+	    			Integer order_month_count = 0;
 	    			String order_id;
 	    			TinyDispatch tinyDispatch;
 	    			Map<String, Object> addrMap;
@@ -94,10 +94,13 @@ public class CustomerOrderMonthTradeScheduleTask {
 	    			List<Map<String, String>> resultList = new ArrayList<Map<String,String>>();
 	    			for (Map<String, String> cusMap : cusList) {
 	    				order_month_count = dfCustomerOrderMonthTradeService.queryCustomerMaxCount(cusMap);
-	    				if(StringUtils.isBlank(order_month_count)){
-	    					order_month_count = "1";
+	    				if(order_month_count==null){
+	    					order_month_count = 1;
+	    				}else{
+	    					order_month_count += 1;
 	    				}
-	    				cusMap.put("order_month_count", order_month_count);
+
+	    				cusMap.put("order_month_count", String.valueOf(order_month_count));
 	    				//3根据最小order_sn从gemini中获取区块、坐标，
 	    				addrMap= orderService.queryOrderAddressByOrderSn(cusMap);
 	    				if(addrMap!=null){
