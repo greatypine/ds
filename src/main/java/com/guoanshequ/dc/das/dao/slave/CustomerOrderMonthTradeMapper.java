@@ -14,7 +14,4 @@ public interface CustomerOrderMonthTradeMapper {
 	
 	String queryMaxSigntime();
 	
-	List<String> queryCusOrderMonByCreatetime(Map<String, String> paraMap);
-	
-	Integer updateTinyInfo(Map<String, String> paraMap);
 }

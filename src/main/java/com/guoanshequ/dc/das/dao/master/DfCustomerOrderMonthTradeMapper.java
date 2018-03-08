@@ -20,4 +20,14 @@ public interface DfCustomerOrderMonthTradeMapper {
 	
 	Integer addDfCustomerOrderMonthTrades (List<Map<String, String>> resultList);
 	
+	Integer updateCustomerOrderNewDaily (Map<String, String> paraMap);
+	
+	Integer updateCustomerOrderNewMonthly (Map<String, String> paraMap);
+	
+	Integer updateCustomerOrderNewTotal (Map<String, String> paraMap);
+	
+	Integer updateTinyInfo(Map<String, String> paraMap);
+	
+	List<String> queryCusOrderMonByCreatetime(Map<String, String> paraMap);
+	
 }

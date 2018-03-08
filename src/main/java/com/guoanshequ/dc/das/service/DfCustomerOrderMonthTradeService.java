@@ -37,4 +37,23 @@ public class DfCustomerOrderMonthTradeService {
 		return dfCustomerOrderMonthTradeDao.addDfCustomerOrderMonthTrades(resultList);
 	}
 	
+	public Integer updateCustomerOrderNewDaily (Map<String, String> paraMap){
+		return dfCustomerOrderMonthTradeDao.updateCustomerOrderNewDaily(paraMap);
+	}
+	
+	public Integer updateCustomerOrderNewMonthly(Map<String, String> paraMap){
+		return dfCustomerOrderMonthTradeDao.updateCustomerOrderNewMonthly(paraMap);
+	}
+	
+	public Integer updateCustomerOrderNewTotal (Map<String, String> paraMap){
+		return dfCustomerOrderMonthTradeDao.updateCustomerOrderNewTotal(paraMap);
+	}
+	
+	public Integer updateTinyInfo(Map<String, String> paraMap){
+		return dfCustomerOrderMonthTradeDao.updateTinyInfo(paraMap);
+	} 
+	
+	public List<String> queryCusOrderMonByCreatetime(Map<String, String> paraMap){
+		return dfCustomerOrderMonthTradeDao.queryCusOrderMonByCreatetime(paraMap);
+	}
 }

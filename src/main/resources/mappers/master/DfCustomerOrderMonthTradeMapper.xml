@@ -51,6 +51,76 @@
 			#{item.tiny_village_name}
 		) 
 		</foreach>
-	</insert>  
+	</insert> 
+	
+	<!-- 给mass_order_daily中订单拉新打标签 -->
+	<update id="updateCustomerOrderNewDaily" parameterType="java.util.Map" >
+		<![CDATA[
+			update df_mass_order_daily tor ,df_customer_order_month_trade_new dcomtn 
+			set tor.customer_isnew_flag  = 
+			(
+			 case when dcomtn.trading_price > 20 then 20
+			      when dcomtn.trading_price > 10 then 10
+						else 0
+			 end
+			)
+			where tor.order_sn = dcomtn.order_sn
+			and dcomtn.order_month_count = 1
+			and dcomtn.order_ym = #{order_ym}
+		]]>
+	</update>
+	
+	<!-- 给mass_order_monthly中订单拉新打标签 -->
+	<update id="updateCustomerOrderNewMonthly" parameterType="java.util.Map" >
+		<![CDATA[
+			update df_mass_order_monthly tor ,df_customer_order_month_trade_new dcomtn 
+			set tor.customer_isnew_flag  = 
+			(
+			 case when dcomtn.trading_price > 20 then 20
+			      when dcomtn.trading_price > 10 then 10
+						else 0
+			 end
+			)
+			where tor.order_sn = dcomtn.order_sn
+			and dcomtn.order_month_count = 1
+			and dcomtn.order_ym = #{order_ym}
+		]]>
+	</update>
+	
+	<!-- 给mass_order_total中订单拉新打标签 -->
+	<update id="updateCustomerOrderNewTotal" parameterType="java.util.Map" >
+		<![CDATA[
+			update df_mass_order_total tor ,df_customer_order_month_trade_new dcomtn 
+			set tor.customer_isnew_flag  = 
+			(
+			 case when dcomtn.trading_price > 20 then 20
+			      when dcomtn.trading_price > 10 then 10
+					   else 0
+			 end
+			)
+			where tor.order_sn = dcomtn.order_sn
+			and dcomtn.order_month_count = 1
+			and dcomtn.order_ym = #{order_ym}
+		]]>
+	</update>
+	
+	<!-- 通过订单号将小区数据信息补充完整 -->
+	<update id="updateTinyInfo" parameterType="java.util.Map">
+		<![CDATA[
+			update df_customer_order_month_trade_new 
+			set tiny_village_id=#{tiny_village_id},
+				tiny_village_code=#{tiny_village_code},tiny_village_name=#{tiny_village_name}
+			where order_sn = #{order_sn}
+		]]>
+   </update>
+   
+  <select id="queryCusOrderMonByCreatetime" parameterType="java.util.Map" resultType="String">
+		<![CDATA[
+			select order_sn 
+			from df_customer_order_month_trade_new 
+			where create_time >=#{begintime} and create_time <=#{endtime} 
+			and order_sn is not null 
+		]]>
+  </select>
 	
 </mapper>

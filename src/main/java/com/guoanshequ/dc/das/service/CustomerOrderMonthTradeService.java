@@ -23,11 +23,4 @@ public class CustomerOrderMonthTradeService {
 		return customerOrderMonthTradeDao.queryMaxSigntime();
 	}
 	
-	public List<String> queryCusOrderMonByCreatetime(Map<String, String> paraMap){
-		return customerOrderMonthTradeDao.queryCusOrderMonByCreatetime(paraMap);
-	}
-	
-	public Integer updateTinyInfo(Map<String, String> paraMap){
-		return customerOrderMonthTradeDao.updateTinyInfo(paraMap);
-	} 
 }

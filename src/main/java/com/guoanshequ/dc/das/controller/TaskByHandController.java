@@ -794,7 +794,8 @@ public class TaskByHandController {
     @RequestMapping(value = "rest/customerTradeTaskRun",method = RequestMethod.POST)
     public RestResponse customerTradeTask(@RequestBody Map<String, String> paraMap) throws Exception {
         try{
-            massOrderScheduleTask.customerTradeTask();
+//            massOrderScheduleTask.customerTradeTask();
+        	customerOrderMonthTradeScheduleTask.newCustomerTagTask();
             return new RestResponse(EnumRespStatus.TASK_RUNOK);
         }catch (Exception e) {
             logger.error(e.toString());
@@ -881,4 +882,18 @@ public class TaskByHandController {
         }
     } 
     
+    /**
+     * 清洗用户表：更新指定时间段内的订单的小区信息
+     */
+    @RequestMapping(value = "rest/updateCustomerOrderMonthTradeTaskRun",method = RequestMethod.POST)
+    public RestResponse updateCustomerOrderMonthTradeTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		customerOrderMonthTradeScheduleTask.UpdateCustomerOrderMonthTrade();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
 }

@@ -2,7 +2,8 @@ package com.guoanshequ.dc.das.task;
 
 import com.guoanshequ.dc.das.model.TinyDispatch;
 import com.guoanshequ.dc.das.service.*;
-import org.apache.commons.lang3.StringUtils;
+import com.guoanshequ.dc.das.utils.DateUtils;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,11 +69,6 @@ public class CustomerOrderMonthTradeScheduleTask {
     		if("ON".equals(isrun)){
     		//如果任务状态为DONE，说明上一次任务执行成功，可以运行下一个任务
     		if("DONE".equals(task_status)){
-	    		//设置任务为运行中状态
-	    		Map<String, String> runMap = new HashMap<String,String>();
-	    		runMap.put("id", "3");
-	    		runMap.put("task_status", "RUNNING");
-	    		dsCronTaskService.updateTaskStatusById(runMap);
 	    		//构建参数
 	    		//获取开始时间,本地记录的时间戳
 	    		String begintime = dfCustomerOrderMonthTradeService.queryNextBeginTime();
@@ -85,6 +81,11 @@ public class CustomerOrderMonthTradeScheduleTask {
 	    		List<Map<String, String>> cusList = customerOrderMonthTradeService.queryCustomerOrderMonthTradeBySignTime(paraMap);
 	    		String resuFlag ="";
 	    		if (!cusList.isEmpty()) {
+		    		//设置任务为运行中状态
+		    		Map<String, String> runMap = new HashMap<String,String>();
+		    		runMap.put("id", "3");
+		    		runMap.put("task_status", "RUNNING");
+		    		dsCronTaskService.updateTaskStatusById(runMap);
 	        		//2从daqWeb表中查询上面人店月前最大的消费次数
 	    			Integer order_month_count = 0;
 	    			String order_id;
@@ -133,5 +134,93 @@ public class CustomerOrderMonthTradeScheduleTask {
 			logger.info(e.toString());
 			e.printStackTrace();
 		}
+    }
+	
+	/**
+	 * 
+	* @Title: UpdateCustomerOrderMonthTrade 
+	* @Description: 根据创建时间段内的订单号更新对应的小区信息 
+	* @param     设定文件 
+	* @return void    返回类型 
+	* @throws
+	 */
+    public void UpdateCustomerOrderMonthTrade(){
+    	try {
+			//1、根据创建的时间段循环订单号
+    		Map<String, String> taskMap = new HashMap<String,String>();
+    		Map<String, String> paraMap=new HashMap<String, String>();
+    		Map<String, String> cusMap=new HashMap<String, String>();
+    		taskMap = dsCronTaskService.queryDsCronTaskById(4);
+    		String begintime =taskMap.get("begintime");
+    		String endtime =taskMap.get("endtime");
+    		paraMap.put("begintime", begintime);
+    		paraMap.put("endtime", endtime);
+    		List<String> cusordmonList = dfCustomerOrderMonthTradeService.queryCusOrderMonByCreatetime(paraMap);
+    		int updatenum =0;
+    		if(!cusordmonList.isEmpty()){
+	    		//设置任务为运行中状态
+	    		Map<String, String> runMap = new HashMap<String,String>();
+	    		runMap.put("id", "4");
+	    		runMap.put("task_status", "RUNNING");
+	    		dsCronTaskService.updateTaskStatusById(runMap);
+    			String order_id="";
+    			TinyDispatch tinyDispatch;
+    			Map<String, Object> tinyVillageMap;
+    			for (String order_sn : cusordmonList) {
+    				paraMap.put("order_sn", order_sn);
+    				cusMap.put("order_sn", order_sn);
+    				order_id = orderService.queryIdByOrderSn(cusMap);
+    				tinyDispatch = tinyDispatchService.queryTinyDispatchByOrderId(order_id);
+    				if(tinyDispatch!=null){
+        				tinyVillageMap = tinyVillageService.queryTinyidByCode(tinyDispatch.getCode());
+        				cusMap.put("tiny_village_code", tinyDispatch.getCode().toString());
+        				cusMap.put("tiny_village_id", tinyVillageMap.get("tiny_village_id").toString());
+        				cusMap.put("tiny_village_name", tinyVillageMap.get("tiny_village_name").toString());
+        				dfCustomerOrderMonthTradeService.updateTinyInfo(cusMap);
+        				updatenum+=1;
+    				}
+				}
+	    		//设置任务为完成状态
+	    		Map<String, String> doneMap = new HashMap<String,String>();
+	    		doneMap.put("id", "4");
+	    		doneMap.put("task_status", "DONE");
+	    		dsCronTaskService.updateTaskStatusById(doneMap);
+    		}
+    		logger.info("**********清洗用户表根据订单更新小区信息，共更新数据条数："+updatenum+"**********");
+		} catch (Exception e) {
+			logger.info(e.toString());
+			e.printStackTrace();
+		}
+    }
+	
+	
+    /**
+     * massOrder中新客订单任务调度打标签
+     * 夜间1:30调度
+     */
+  @Scheduled(cron ="0 30 01 * * ?")
+    public void newCustomerTagTask(){
+    	new Thread(){
+    		public void run() {
+    			try{
+    				logger.info("**********massorder打 拉新标签 任务调度开始**********");
+    	        	String preDate = DateUtils.getPreDate(new Date());
+    	        	String year = preDate.substring(0,4);
+    	        	String month = preDate.substring(5,7);
+    	        	String order_ym = year+month;
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	paraMap.put("order_ym", order_ym);
+    	        	dfCustomerOrderMonthTradeService.updateCustomerOrderNewDaily(paraMap);
+    	        	dfCustomerOrderMonthTradeService.updateCustomerOrderNewMonthly(paraMap);
+    	        	dfCustomerOrderMonthTradeService.updateCustomerOrderNewTotal(paraMap);
+		        	logger.info("**********massorder打 拉新标签 任务调度结束**********");
+    			} catch (Exception e) {
+    		    	logger.info("massorder打拉新标签出问题请检查");
+    				logger.info(e.toString());
+    				e.printStackTrace();
+	    		}
+    		}
+    	}.start();
     }
 }

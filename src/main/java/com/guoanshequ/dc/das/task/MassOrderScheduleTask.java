@@ -260,10 +260,10 @@ public class MassOrderScheduleTask {
     }
     
     /**
-     * massOrder中新客订单任务调度
+     * massOrder中新客订单打标签任务调度
      * 夜间1:30调度
      */
-  @Scheduled(cron ="0 30 01 * * ?")
+  //@Scheduled(cron ="0 30 01 * * ?")
     public void customerTradeTask(){
     	new Thread(){
     		public void run() {

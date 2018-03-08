@@ -32,22 +32,4 @@
  		]]>
    </select>
    
-   <select id="queryCusOrderMonByCreatetime" parameterType="java.util.Map" resultType="String">
-		<![CDATA[
-			select order_sn 
-			from df_customer_order_month_trade 
-			where create_time >=#{begintime} and create_time <=#{endtime} 
-			and order_sn is not null 
-		]]>
-  </select>
-  
-   <update id="updateTinyInfo" parameterType="java.util.Map">
-		<![CDATA[
-			update df_customer_order_month_trade 
-			set city_name =#{city_name},tiny_village_id=#{tiny_village_id},
-				tiny_village_code=#{tiny_village_code},tiny_village_name={tiny_village_name}
-			where order_sn = #{order_sn}
-		]]>
-  </update>
-  
 </mapper>
