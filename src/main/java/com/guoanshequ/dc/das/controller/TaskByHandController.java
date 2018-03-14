@@ -54,8 +54,25 @@ public class TaskByHandController {
     PesNewScheduleTask pesNewScheduleTask;
     @Autowired
     CustomerOrderMonthTradeScheduleTask customerOrderMonthTradeScheduleTask;
+    @Autowired
+    UserProfileScheduleTask userProfileScheduleTask;
 
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
+    
+    /**
+     * 测试接口是否连接成功
+     */
+    @RequestMapping(value = "rest/portConnStatusTaskRun",method = RequestMethod.POST)
+    public RestResponse portConnStatusTask() throws Exception {
+	    try {
+	    	return new RestResponse("OK","接口连接成功！！！");
+		} catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+		}
+    }
+    
     
     /**
      * top数据接口手动全调度
@@ -889,6 +906,36 @@ public class TaskByHandController {
     public RestResponse updateCustomerOrderMonthTradeTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		customerOrderMonthTradeScheduleTask.UpdateCustomerOrderMonthTrade();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
+    /**
+     * 清洗用户数据表打补丁
+     */
+    @RequestMapping(value = "rest/customerTradePatchTaskRun",method = RequestMethod.POST)
+    public RestResponse customerTradePatchTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		customerOrderMonthTradeScheduleTask.customerTradePatchTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
+    /**
+     * 清洗用户档案
+     */
+    @RequestMapping(value = "rest/userProfileTaskRun",method = RequestMethod.POST)
+    public RestResponse userProfileTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		userProfileScheduleTask.userProfileTask();
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());

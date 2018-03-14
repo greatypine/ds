@@ -149,6 +149,22 @@ public class DateUtils {
     }
     
     /** 
+     * @param date 当前日期
+     * @return 返回当前日期的前一天0点0分0秒
+     * 功能说明：
+     * 日期2017-09-10，返回2017-09-09 00:00:00;
+     * 日期2017-09-01，返回2017-08-31 00:00:00;
+     */ 
+    public static String getPreDateTime(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        String preDateTime = df.format(calendar.getTime());
+        return preDateTime;
+    }
+    
+    /** 
      * @param date 前一天日期所在月份的1号
      * @return 返回前一天日期所在月份的1号
      */ 
@@ -206,6 +222,19 @@ public class DateUtils {
         calendar.setTime(date);
         String curDate = df.format(calendar.getTime());
         return curDate;
+    }
+    
+    /** 
+     * @param date 当前日期 
+     * @return 返回当前日期0时0分0秒
+     * 功能说明：将当前日期转换成String类型
+     */ 
+    public static String getCurDateTime(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        String curDateTime = df.format(calendar.getTime());
+        return curDateTime;
     }
 
     /** 
@@ -266,6 +295,6 @@ public class DateUtils {
     }
     
     public static void main(String[] args) {
-    	System.out.println(getFirstday_Lastday_Month(new Date())); 
+    	System.out.println(getCurDateTime(new Date())); 
 	}
 }

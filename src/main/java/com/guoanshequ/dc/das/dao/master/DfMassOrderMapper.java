@@ -51,4 +51,6 @@ public interface DfMassOrderMapper {
 
 	String queryOrersnByOrderId (Map<String, String> paraMap);
 	
+	Map<String, String> queryVillageAreaCodeByOrdersn (String orderSn);
+	
 }

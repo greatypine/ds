@@ -138,6 +138,58 @@ public class CustomerOrderMonthTradeScheduleTask {
 	
 	/**
 	 * 
+	* @Title: customerTradePatchTask 
+	* @Description: 每天晚上将整月数据进行人店月，将用户表中缺失补全
+	* 				可手动：根据ds_crontask中begintime、endtime进行
+	* 				可自动：每天凌晨0点30分，把1号到昨天晚上的数据补进来
+	* @param     设定文件 
+	* @return void    返回类型 
+	* @throws
+	 */
+	@Scheduled(cron ="0 30 0 * * ?")
+	public void customerTradePatchTask(){
+	new Thread(){
+		public void run() {
+    	try{
+    		logger.info("*************清洗用户打补丁任务调度开始**************");
+			Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(5);
+			String isrun = taskMap.get("isrun");
+			if("ON".equals(isrun)){
+				String runtype = taskMap.get("runtype");
+				String maxSignedTime = null;
+				String endSignedTime = null;
+				//获取上次调度时的最大签收时间开始时间与结束时间
+				if("MANUAL".equals(runtype)){
+					maxSignedTime = taskMap.get("begintime");
+					endSignedTime = taskMap.get("endtime");
+				}else{
+					//前一天日期所在月份的1号
+					maxSignedTime = DateUtils.getPreDateFirstOfMonth(new Date());
+					//前一天日期
+					endSignedTime = DateUtils.getCurDate(new Date());
+				}
+				//给后台接口构建参数
+				Map<String, String> paraMap=new HashMap<String, String>();
+				paraMap.put("maxSignedTime", maxSignedTime);
+				paraMap.put("endSignedTime", endSignedTime);
+				
+				int addnum = dfCustomerOrderMonthTradeService.customerTradePatch(paraMap);
+				
+				logger.info("***清洗用户打补丁任务调度结束******,开始时间："+maxSignedTime+",结束时间："+endSignedTime+"，共插入记录条数："+addnum);
+			}
+    		logger.info("************清洗用户打补丁任务调度结束***********************");
+	    } catch (Exception e) {
+	    	logger.info("用户清洗数据打补丁");
+			logger.info(e.toString());
+			e.printStackTrace();
+		}
+		}
+	}.start();
+}
+	
+	
+	/**
+	 * 
 	* @Title: UpdateCustomerOrderMonthTrade 
 	* @Description: 根据创建时间段内的订单号更新对应的小区信息 
 	* @param     设定文件 
@@ -145,6 +197,8 @@ public class CustomerOrderMonthTradeScheduleTask {
 	* @throws
 	 */
     public void UpdateCustomerOrderMonthTrade(){
+	new Thread(){
+		public void run() {
     	try {
 			//1、根据创建的时间段循环订单号
     		Map<String, String> taskMap = new HashMap<String,String>();
@@ -187,10 +241,12 @@ public class CustomerOrderMonthTradeScheduleTask {
 	    		dsCronTaskService.updateTaskStatusById(doneMap);
     		}
     		logger.info("**********清洗用户表根据订单更新小区信息，共更新数据条数："+updatenum+"**********");
-		} catch (Exception e) {
-			logger.info(e.toString());
-			e.printStackTrace();
-		}
+			} catch (Exception e) {
+				logger.info(e.toString());
+				e.printStackTrace();
+			}
+    	  }
+    	}.start();
     }
 	
 	

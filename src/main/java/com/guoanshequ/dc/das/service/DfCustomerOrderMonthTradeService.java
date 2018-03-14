@@ -56,4 +56,8 @@ public class DfCustomerOrderMonthTradeService {
 	public List<String> queryCusOrderMonByCreatetime(Map<String, String> paraMap){
 		return dfCustomerOrderMonthTradeDao.queryCusOrderMonByCreatetime(paraMap);
 	}
+	
+	public Integer customerTradePatch(Map<String, String> paraMap){
+		return dfCustomerOrderMonthTradeDao.customerTradePatch(paraMap);
+	}
 }

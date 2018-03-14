@@ -286,4 +286,10 @@
 		]]>
   </update>
 
+	<select id="queryVillageAreaCodeByOrdersn" parameterType="java.lang.String" resultType="java.util.Map">
+		<![CDATA[
+			select info_village_code,area_code from df_mass_order_monthly where order_sn =#{order_sn} limit 1 
+		]]>
+	</select>
+	
 </mapper>

@@ -30,4 +30,6 @@ public interface DfCustomerOrderMonthTradeMapper {
 	
 	List<String> queryCusOrderMonByCreatetime(Map<String, String> paraMap);
 	
+	Integer customerTradePatch(Map<String, String> paraMap);
+	
 }

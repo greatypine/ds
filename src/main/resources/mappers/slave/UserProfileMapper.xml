@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.UserProfileMapper">
+
+	<!-- 根据order_sn获取order_id -->
+	<select id="queryCustomerInfoBySignTime" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select 
+				cusline.customer_id,
+				cusline.trading_price_sum,
+				cusline.order_count,
+				cusline.trading_price_max,
+				cusline.first_order_time,
+				cusline.first_order_sn,
+				cusline.last_order_time,
+				tc.`name` as customer_name,
+				tc.mobilephone as customer_phone, 
+				tc.create_time as regist_time
+			from (
+				select 
+				tor.customer_id,
+				sum(trading_price) as trading_price_sum,
+				count(1) as order_count,
+				max(trading_price) as trading_price_max,
+				min(create_time) as first_order_time,
+				min(order_sn) as first_order_sn,
+				max(create_time) as last_order_time
+				from t_order tor
+				where tor.sign_time >= #{begintime} 
+				and tor.sign_time < #{endtime}
+				group by tor.customer_id 
+			) cusline
+			left join t_customer tc on ( cusline.customer_id = tc.id )
+		]]>
+	</select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DfUserProfileMapper">
+
+	<insert id="addDfUserProfile" parameterType="java.util.Map" >
+		<![CDATA[
+			insert into df_user_profile(
+				customer_id,trading_price_sum,order_count,trading_price_max,first_order_time,first_order_sn,
+				last_order_time,customer_name,customer_phone,regist_time,area_code,tiny_village_code,user_model
+			) 
+			values (
+				#{customer_id},#{trading_price_sum},#{order_count},#{trading_price_max},#{first_order_time},#{first_order_sn},
+				#{last_order_time},#{customer_name},#{customer_phone},#{regist_time},#{area_code},#{tiny_village_code},#{user_model}
+			)on duplicate key update trading_price_sum = trading_price_sum + values(trading_price_sum),
+				order_count = order_count + values(order_count),
+				last_order_time = values(last_order_time),
+				update_time = now(),
+				trading_price_max = if(trading_price_max > values(trading_price_max),trading_price_max,values(trading_price_max))
+        ]]>
+	</insert>
+	
+	<select id="isExistCusDraw" parameterType="java.lang.String" resultType="java.lang.Integer">
+		<![CDATA[
+			select count(1) from df_user_tag where mobilephone =#{customer_phone}
+		]]>
+	</select>
+
+</mapper>

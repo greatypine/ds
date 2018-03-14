@@ -95,5 +95,9 @@ public class DfMassOrderService {
 	public String queryOrersnByOrderId(Map<String, String> paraMap){
 		return dfMassOrderDao.queryOrersnByOrderId(paraMap);
 	}
+	
+	public Map<String, String> queryVillageAreaCodeByOrdersn(String orderSn){
+		return dfMassOrderDao.queryVillageAreaCodeByOrdersn(orderSn);
+	}
 
 }
