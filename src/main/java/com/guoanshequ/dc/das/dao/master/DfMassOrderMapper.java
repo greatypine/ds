@@ -53,4 +53,15 @@ public interface DfMassOrderMapper {
 	
 	Map<String, String> queryVillageAreaCodeByOrdersn (String orderSn);
 	
+	List<Map<String, String>> queryXBorderBySignTime (Map<String, String> paraMap);
+	
+	Integer updateXBorderTagDailyById(Map<String, String> paraMap);
+	
+	Integer updateXBorderTagMonthlyById(Map<String, String> paraMap);
+	
+	Integer updateXBorderTagTotalById(Map<String, String> paraMap);
+	
+	List<Map<String, String>> queryXBCustomerBySignTime (Map<String, String> paraMap);
+	
+	Integer addXBUserTag(Map<String, String> paraMap);
 }

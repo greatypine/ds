@@ -14,4 +14,6 @@ public interface DfUserProfileMapper {
 	
 	public Integer isExistCusDraw(String mobilephone);
 	
+	public void addName(Map<String,String> paraMap);
+	
 }

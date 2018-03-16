@@ -353,4 +353,73 @@ public class MassOrderScheduleTask {
 			logger.info("获取订单信息异常：",e);
 		}
     }
+    
+	/**
+	 * 定时用于更新mass_order表中ordertag1标签
+	 * 调度规则：每天凌晨1点50分
+	 */
+	@Scheduled(cron ="0 50 1 * * ?")
+	public void xbOrderTagTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********massorder打小B端订单标签任务调度开始**********");
+					
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					//开始时间
+					String begintime = DateUtils.getPreDateTime(new Date());
+					//结束时间
+					String endtime = DateUtils.getCurDateTime(new Date());
+					paraMap.put("begintime", begintime);
+					paraMap.put("endtime", endtime);
+					
+					List<Map<String, String>> list =dfMassOrderService.queryXBorderBySignTime(paraMap);
+					for (Map<String, String> map : list) {
+						dfMassOrderService.updateXBorderTagDailyById(map);
+						dfMassOrderService.updateXBorderTagMonthlyById(map);
+						dfMassOrderService.updateXBorderTagTotalById(map);
+					}
+					logger.info("**********massorder打小B端订单标签任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("massorder打小B端订单标签任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+    
+	/**
+	 * 定时用于更新df_userprofile_tag打用户标签 
+	 * 调度规则：每天凌晨2点20分
+	 */
+	@Scheduled(cron ="0 20 2 * * ?")
+	public void xbUserProfileTagTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********df_userprofile_tag打小B端订单标签任务调度开始**********");
+					
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					//开始时间
+					String begintime = DateUtils.getPreDateTime(new Date());
+					//结束时间
+					String endtime = DateUtils.getCurDateTime(new Date());
+					paraMap.put("begintime", begintime);
+					paraMap.put("endtime", endtime);
+					
+					List<Map<String, String>> list =dfMassOrderService.queryXBCustomerBySignTime(paraMap);
+					for (Map<String, String> map : list) {
+						dfMassOrderService.addXBUserTag(map);
+					}
+					logger.info("**********df_userprofile_tag打小B端订单标签任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("df_user_profile打小B端订单标签任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
 }

@@ -49,7 +49,7 @@ public class UserProfileScheduleTask {
 	 * @return void 返回类型
 	 * @throws
 	 */
-	@Scheduled(cron = "0 30 02 * * ?")
+	@Scheduled(cron = "0 05 02 * * ?")
 	public void userProfileTask() {
 		new Thread() {
 			public void run() {
@@ -114,4 +114,23 @@ public class UserProfileScheduleTask {
 			}
 		}.start();
 	}
+	
+	public void addCusName() {
+		String cus_id ="";
+		try {
+			logger.info("==============插入用户名称任务开始===============");
+			List<Map<String, String>> cuslist = userProfileService.queryCusName();
+			if (!cuslist.isEmpty()) {
+				for (Map<String, String> cusobj : cuslist) {
+					cus_id = cusobj.get("id");
+					dfUserProfileService.addName(cusobj);
+				}
+			}
+		} catch (Exception e) {
+			logger.info("插入用户名称任务开始，任务执行哈哈失败，请查看！:"+cus_id);
+			logger.info(e.toString());
+			e.printStackTrace();
+		}
+	}
+
 }

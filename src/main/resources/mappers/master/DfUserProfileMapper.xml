@@ -24,5 +24,9 @@
 			select count(1) from df_user_tag where mobilephone =#{customer_phone}
 		]]>
 	</select>
+	
+	<insert id="addName" parameterType="java.util.Map">
+		insert into tmp_cusname(id,name) values (#{id},#{name})
+	</insert>
 
 </mapper>

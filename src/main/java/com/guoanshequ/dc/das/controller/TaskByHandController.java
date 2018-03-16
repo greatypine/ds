@@ -943,4 +943,52 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     } 
+    
+    
+    /**
+     * 给订单打小B端订单
+     */
+    @RequestMapping(value = "rest/xbOrderTagTaskRun",method = RequestMethod.POST)
+    public RestResponse xbOrderTagTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.xbOrderTagTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
+    
+    /**
+     * 给用户打小b标签
+     */
+    @RequestMapping(value = "rest/xbUserProfileTagTaskRun",method = RequestMethod.POST)
+    public RestResponse xbUserProfileTagTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.xbUserProfileTagTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
+    /**
+     * 测试插入用户名是否存在问题
+     */
+    @RequestMapping(value = "rest/addNameTaskRun",method = RequestMethod.POST)
+    public RestResponse addNameTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		userProfileScheduleTask.addCusName();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
 }

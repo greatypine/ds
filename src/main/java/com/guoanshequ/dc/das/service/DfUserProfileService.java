@@ -22,5 +22,8 @@ public class DfUserProfileService {
 	public Integer isExistCusDraw(String mobilephone){
 		return dfUserProfileDao.isExistCusDraw(mobilephone);
 	}
-
+	
+	public void addName(Map<String, String> paraMap){
+		dfUserProfileDao.addName(paraMap);
+	}
 }

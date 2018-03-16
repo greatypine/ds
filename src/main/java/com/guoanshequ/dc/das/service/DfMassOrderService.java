@@ -100,4 +100,28 @@ public class DfMassOrderService {
 		return dfMassOrderDao.queryVillageAreaCodeByOrdersn(orderSn);
 	}
 
+	public List<Map<String, String>> queryXBorderBySignTime (Map<String, String> paraMap){
+		return dfMassOrderDao.queryXBorderBySignTime(paraMap);
+	}
+	
+	public Integer updateXBorderTagDailyById(Map<String, String> paraMap){
+		return dfMassOrderDao.updateXBorderTagDailyById(paraMap);
+	}
+	
+	public Integer updateXBorderTagMonthlyById(Map<String, String> paraMap){
+		return dfMassOrderDao.updateXBorderTagMonthlyById(paraMap);
+	}
+	
+	public Integer updateXBorderTagTotalById(Map<String, String> paraMap){
+		return dfMassOrderDao.updateXBorderTagTotalById(paraMap);
+	}
+	
+	public List<Map<String, String>> queryXBCustomerBySignTime (Map<String, String> paraMap){
+		return dfMassOrderDao.queryXBCustomerBySignTime(paraMap);
+	}
+	
+	public 	Integer addXBUserTag(Map<String, String> paraMap){
+		return dfMassOrderDao.addXBUserTag(paraMap);
+	}
+
 }

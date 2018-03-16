@@ -12,4 +12,6 @@ import com.guoanshequ.dc.das.datasource.DataSource;
 public interface UserProfileMapper{
 	
 	List<Map<String, String>> queryCustomerInfoBySignTime(Map<String, String> paraMap);
+	
+	List<Map<String, String>> queryCusName();
 }

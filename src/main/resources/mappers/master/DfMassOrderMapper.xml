@@ -292,4 +292,113 @@
 		]]>
 	</select>
 	
+	<select id="queryXBorderBySignTime" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			select tor.id as order_id,'B1' as ordertag
+			from df_mass_order_daily tor 
+			where customer_id in (
+				select customer_id from df_mass_order_daily tor 
+				where tor.trading_price <=100
+				and tor.sign_time >=#{begintime} and tor.sign_time< #{endtime}
+				and tor.customer_id not like 'fakecustomer%'
+				group by tor.customer_id 
+				having sum(tor.trading_price) >=3000
+			)
+			and tor.trading_price <=100
+			and tor.sign_time >=#{begintime} and tor.sign_time< #{endtime}
+		UNION
+			select tor.id as order_id,'B2' as ordertag
+			from df_mass_order_daily tor 
+			where customer_id in (
+				select customer_id from df_mass_order_daily tor 
+				where tor.trading_price >100 and tor.trading_price<1000
+				and tor.sign_time >=#{begintime} and tor.sign_time< #{endtime}
+				and tor.customer_id not like 'fakecustomer%'
+				group by tor.customer_id 
+				having sum(tor.trading_price) >=10000
+			)
+			and tor.trading_price >100 and tor.trading_price<1000
+			and tor.sign_time >=#{begintime} and tor.sign_time< #{endtime} 
+		UNION 
+			select tor.id as order_id,'B3' as ordertag
+			from df_mass_order_daily tor 
+			where customer_id in (
+				select customer_id from df_mass_order_daily tor 
+				where tor.trading_price >=1000 and tor.trading_price<10000
+				and tor.sign_time >=#{begintime} and tor.sign_time< #{endtime} 
+				and tor.customer_id not like 'fakecustomer%'
+				group by tor.customer_id 
+				having sum(tor.trading_price) >=30000
+			)
+			and tor.trading_price >=1000 and tor.trading_price<10000
+			and tor.sign_time >=#{begintime} and tor.sign_time< #{endtime} 
+		UNION 
+			select tor.id as order_id,'B4' as ordertag
+			from df_mass_order_daily tor 
+			where customer_id in (
+				select customer_id from df_mass_order_daily tor 
+				where tor.trading_price >=10000
+				and tor.sign_time >=#{begintime} and tor.sign_time< #{endtime} 
+				and tor.customer_id not like 'fakecustomer%'
+				group by tor.customer_id 
+				having sum(tor.trading_price) >=100000
+			)
+			and tor.trading_price >=10000
+			and tor.sign_time >=#{begintime} and tor.sign_time< #{endtime}  
+		]]>
+	</select>
+	
+  <update id="updateXBorderTagDailyById" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_daily set order_tag1 = #{ordertag} where id = #{order_id}
+		]]>
+  </update>
+  
+  <update id="updateXBorderTagMonthlyById" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_monthly set order_tag1 = #{ordertag} where id = #{order_id}
+		]]>
+  </update>
+  
+  <update id="updateXBorderTagTotalById" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_total set order_tag1 = #{ordertag} where id = #{order_id}
+		]]>
+  </update>    
+
+  <select id="queryXBCustomerBySignTime" parameterType="java.util.Map" resultType="java.util.Map">
+ 	<![CDATA[
+		select customer_id,'B' as usertag from df_mass_order_daily tor 
+		where tor.trading_price <=100
+		and sign_time >=#{begintime} and sign_time< #{endtime}
+		group by customer_id 
+		having sum(tor.trading_price) >=3000
+	UNION
+		select customer_id,'B' as usertag from df_mass_order_daily tor 
+		where tor.trading_price >100 and tor.trading_price <1000
+		and sign_time >=#{begintime} and sign_time< #{endtime}
+		group by customer_id 
+		having sum(tor.trading_price) >=10000
+	UNION 
+		select customer_id,'B' as usertag from df_mass_order_daily tor 
+		where tor.trading_price >=1000 and tor.trading_price<10000
+		and sign_time >=#{begintime} and sign_time< #{endtime}
+		group by customer_id 
+		having sum(tor.trading_price) >=30000
+	UNION 
+		select customer_id,'B' as usertag from df_mass_order_daily tor 
+		where tor.trading_price >=10000
+		and sign_time >=#{begintime} and sign_time< #{endtime}
+		group by customer_id 
+		having sum(tor.trading_price) >=100000
+	]]>
+  </select>
+  
+  <insert id="addXBUserTag" parameterType="java.util.Map" >
+  	<![CDATA[
+  	 	insert ignore into df_userprofile_tag (customer_id,usertag) values (#{customer_id},#{usertag})
+  	 ]]>
+  </insert>
+  
+	
 </mapper>
