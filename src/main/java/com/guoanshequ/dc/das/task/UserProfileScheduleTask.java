@@ -1,5 +1,6 @@
 package com.guoanshequ.dc.das.task;
 
+import com.guoanshequ.dc.das.model.Customer;
 import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
 
@@ -44,7 +45,7 @@ public class UserProfileScheduleTask {
 	/**
 	 * 
 	 * @Title: UserProfileScheduleTask 
-	 * @Description: 用户档案一天一次，每天凌晨02点30分，采用多线程 
+	 * @Description: 用户档案一天一次，每天凌晨02点05分，采用多线程 
 	 * @param 设定文件 
 	 * @return void 返回类型
 	 * @throws
@@ -119,10 +120,10 @@ public class UserProfileScheduleTask {
 		String cus_id ="";
 		try {
 			logger.info("==============插入用户名称任务开始===============");
-			List<Map<String, String>> cuslist = userProfileService.queryCusName();
+			List<Customer> cuslist = userProfileService.queryCusName();
 			if (!cuslist.isEmpty()) {
-				for (Map<String, String> cusobj : cuslist) {
-					cus_id = cusobj.get("id");
+				for (Customer cusobj : cuslist) {
+					cus_id = cusobj.getId();
 					dfUserProfileService.addName(cusobj);
 				}
 			}

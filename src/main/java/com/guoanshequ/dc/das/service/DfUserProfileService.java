@@ -1,6 +1,7 @@
 package com.guoanshequ.dc.das.service;
 
 import com.guoanshequ.dc.das.dao.master.DfUserProfileMapper;
+import com.guoanshequ.dc.das.model.Customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class DfUserProfileService {
 		return dfUserProfileDao.isExistCusDraw(mobilephone);
 	}
 	
-	public void addName(Map<String, String> paraMap){
+	public void addName(Customer paraMap){
 		dfUserProfileDao.addName(paraMap);
 	}
 }

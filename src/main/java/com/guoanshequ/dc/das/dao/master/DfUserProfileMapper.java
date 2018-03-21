@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.guoanshequ.dc.das.datasource.DataSource;
+import com.guoanshequ.dc.das.model.Customer;
 
 @Repository
 @DataSource("master")
@@ -14,6 +15,6 @@ public interface DfUserProfileMapper {
 	
 	public Integer isExistCusDraw(String mobilephone);
 	
-	public void addName(Map<String,String> paraMap);
+	public void addName(Customer paraMap);
 	
 }

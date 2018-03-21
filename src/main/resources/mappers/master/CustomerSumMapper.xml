@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.CustomerSumMapper">
+
+	<insert id="addCusumMonth" parameterType="java.util.Map">
+		<![CDATA[
+			insert ignore into ds_cusum_month (
+				city_id,province_id,platformid,storeno,store_name,order_ym,pay_count,new_count
+			)
+			select 
+				tdc.id as city_id,
+				ts.province_id as province_id,
+				dfcus.store_id as platformid,
+				ts.storeno as storeno,
+				ts.name store_name,
+				dfcus.order_ym,
+				dfcus.pay_count,
+				dfcus.new_count
+			from (
+				select
+				dcomtn.store_id,
+				dcomtn.order_ym,
+				count(1) pay_count,
+				sum(case when dcomtn.order_month_count = 1 then 1 else 0 end) new_count
+				from df_customer_order_month_trade_new dcomtn
+				where dcomtn.order_ym =#{order_ym}
+				group by store_id, order_ym
+			) dfcus
+			 join t_store ts on (dfcus.store_id = ts.platformid)
+			 join t_dist_citycode tdc on (tdc.cityname = ts.city_name)
+		]]>
+	</insert>
+
+	<delete id="deleteCusumMonthByMonth" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_cusum_month where order_ym =#{order_ym}
+		]]>
+	</delete>
+
+
+	<insert id="addCusumDay" parameterType="java.util.Map">
+		<![CDATA[
+			insert ignore into ds_cusum_day (
+				city_id,province_id,platformid,storeno,store_name,sign_date,pay_count,new_count
+			)
+			select 
+				tdc.id as city_id,
+				ts.province_id as province_id,
+				daycus.store_id as platformid,
+				ts.storeno as storeno,
+				ts.name as store_name,
+				daycus.sign_date,
+				daycus.pay_count,
+				daycus.new_count
+			from (
+				select 
+				tor.store_id,
+				count(distinct customer_id) pay_count,
+				count(distinct case when customer_isnew_flag !='-1' then customer_id end ) new_count,
+				date(tor.sign_time) as sign_date
+				from df_mass_order_monthly tor
+				where tor.sign_time >=#{begintime} 
+				and tor.sign_time < #{endtime}
+				group by date(tor.sign_time),tor.store_id
+			) daycus
+			join t_store ts on (daycus.store_id = ts.platformid)
+			join t_dist_citycode tdc on (tdc.cityname = ts.city_name) 
+		]]>
+	</insert>
+	
+	
+</mapper>

@@ -25,7 +25,7 @@
 		]]>
 	</select>
 	
-	<insert id="addName" parameterType="java.util.Map">
+	<insert id="addName" parameterType="com.guoanshequ.dc.das.model.Customer">
 		insert into tmp_cusname(id,name) values (#{id},#{name})
 	</insert>
 

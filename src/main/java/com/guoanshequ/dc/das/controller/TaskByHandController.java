@@ -56,6 +56,8 @@ public class TaskByHandController {
     CustomerOrderMonthTradeScheduleTask customerOrderMonthTradeScheduleTask;
     @Autowired
     UserProfileScheduleTask userProfileScheduleTask;
+    @Autowired
+    CustomerSumScheduleTask customerSumScheduleTask;
 
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
@@ -983,6 +985,22 @@ public class TaskByHandController {
     public RestResponse addNameTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		userProfileScheduleTask.addCusName();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
+    /**
+     * 每天用户量统计与历史用户量统计
+     */
+    @RequestMapping(value = "rest/CustomerSumScheduleTaskRun",method = RequestMethod.POST)
+    public RestResponse CustomerSumScheduleTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		customerSumScheduleTask.customerSumMonthTask();
+    		customerSumScheduleTask.customerSumDayTask();
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());

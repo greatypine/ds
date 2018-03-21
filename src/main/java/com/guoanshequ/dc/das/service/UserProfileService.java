@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.guoanshequ.dc.das.dao.slave.OrderMapper;
 import com.guoanshequ.dc.das.dao.slave.UserProfileMapper;
+import com.guoanshequ.dc.das.model.Customer;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class UserProfileService {
     	return userProfileDao.queryCustomerInfoBySignTime(paraMap);
     }
     
-    public List<Map<String, String>> queryCusName(){
+    public List<Customer> queryCusName(){
     	return userProfileDao.queryCusName();
     }
 }

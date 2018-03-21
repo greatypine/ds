@@ -34,7 +34,7 @@
 		]]>
 	</select>
 	
-	<select id="queryCusName" resultType="java.util.Map">
+	<select id="queryCusName" resultType="com.guoanshequ.dc.das.model.Customer">
 		select id,name from t_customer where name is not null and name !='' and name not like '%士%' 
 		and name not like '%生%' and name not like '%姨%' and name !='MTDD' and name !='活动' 
 	</select>
