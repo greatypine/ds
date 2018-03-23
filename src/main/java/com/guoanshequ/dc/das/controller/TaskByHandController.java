@@ -994,12 +994,27 @@ public class TaskByHandController {
     } 
     
     /**
-     * 每天用户量统计与历史用户量统计
+     * 历史用户量计算（按门店）
+     * 
      */
-    @RequestMapping(value = "rest/CustomerSumScheduleTaskRun",method = RequestMethod.POST)
-    public RestResponse CustomerSumScheduleTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    @RequestMapping(value = "rest/customerSumMonthTaskRun",method = RequestMethod.POST)
+    public RestResponse customerSumMonthTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		customerSumScheduleTask.customerSumMonthTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    /**
+     * 每天用户量统计（按门店）
+     * 
+     */
+    @RequestMapping(value = "rest/customerSumDayTaskRun",method = RequestMethod.POST)
+    public RestResponse customerSumDayTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
     		customerSumScheduleTask.customerSumDayTask();
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
@@ -1008,5 +1023,35 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     } 
+    /**
+     * 历史用户量统计（按城市）
+     * 
+     */
+    @RequestMapping(value = "rest/customerSumMonthCityTaskRun",method = RequestMethod.POST)
+    public RestResponse customerSumMonthCityTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		customerSumScheduleTask.customerSumMonthCityTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
     
+    /**
+     * 每天用户量统计(按城市)
+     * 
+     */
+    @RequestMapping(value = "rest/customerSumDayCityTaskRun",method = RequestMethod.POST)
+    public RestResponse customerSumDayCityTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		customerSumScheduleTask.customerSumDayCityTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
 }

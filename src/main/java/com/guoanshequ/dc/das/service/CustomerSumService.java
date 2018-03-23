@@ -35,4 +35,15 @@ public class CustomerSumService {
     	return customerSumDao.deleteCusumMonthByMonth(paraMap);
     }
     
+    public Integer addCusumMonthCity(Map<String, String> paraMap) throws Exception{
+        return customerSumDao.addCusumMonthCity(paraMap);
+    }
+    
+    public Integer addCusumDayCity(Map<String, String> paraMap) throws Exception{
+        return customerSumDao.addCusumDayCity(paraMap);
+    }
+    
+    public Integer deleteCusumMonthCityByMonth(Map<String, String> paraMap) throws Exception{
+    	return customerSumDao.deleteCusumMonthCityByMonth(paraMap);
+    }
 }

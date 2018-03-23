@@ -15,4 +15,10 @@ public interface CustomerSumMapper {
 	Integer addCusumDay(Map<String, String> paraMap);
 	
 	Integer deleteCusumMonthByMonth(Map<String, String> paraMap);
+	
+	Integer addCusumMonthCity(Map<String, String> paraMap);
+	
+	Integer addCusumDayCity(Map<String, String> paraMap);
+	
+	Integer deleteCusumMonthCityByMonth(Map<String, String> paraMap);
 }
