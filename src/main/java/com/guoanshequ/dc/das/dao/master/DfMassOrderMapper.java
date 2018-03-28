@@ -64,4 +64,6 @@ public interface DfMassOrderMapper {
 	List<Map<String, String>> queryXBCustomerBySignTime (Map<String, String> paraMap);
 	
 	Integer addXBUserTag(Map<String, String> paraMap);
+	
+	List<Map<String, String>> queryOrderIdBySignTime (Map<String, String> paraMap);
 }

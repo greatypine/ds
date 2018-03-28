@@ -1054,4 +1054,21 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     } 
+    
+    
+    /**
+     * 根据签收时间段内的订单，刷新对应的小区片区A侠
+     * 
+     */
+    @RequestMapping(value = "rest/tinyAreaPatchByOrderidTaskRun",method = RequestMethod.POST)
+    public RestResponse tinyAreaPatchByOrderidTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.tinyAreaPatchByOrderidTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }     
 }

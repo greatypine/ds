@@ -175,6 +175,12 @@ public class CustomerOrderMonthTradeScheduleTask {
 				
 				int addnum = dfCustomerOrderMonthTradeService.customerTradePatch(paraMap);
 				
+				//插入完毕将状态设置为'DONE'
+				Map<String, String> doneMap = new HashMap<String,String>();
+				doneMap.put("id", "3");
+				doneMap.put("task_status", "DONE");
+				dsCronTaskService.updateTaskStatusById(doneMap);
+				
 				logger.info("***清洗用户打补丁任务调度结束******,开始时间："+maxSignedTime+",结束时间："+endSignedTime+"，共插入记录条数："+addnum);
 			}
     		logger.info("************清洗用户打补丁任务调度结束***********************");

@@ -422,4 +422,75 @@ public class MassOrderScheduleTask {
 		}.start();
 	}
 	
+	/**
+	 * 
+	* @Title: tinyAreaPatchByOrderidTask 
+	* @Description: 给签收时间段的订单重新从mongo中获取小区code\员工编号employee_a_no\片区code
+	* @param     设定文件 
+	* @return void    返回类型 
+	* @throws
+	 */
+	public void tinyAreaPatchByOrderidTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********根据指定签收时间内的订单号刷新对应的小区片区号调度开始**********");
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(7);
+					String isrun = taskMap.get("isrun");
+					if("ON".equals(isrun)){
+						logger.info("**********订单打补丁任务调度开始**********");
+						String runtype = taskMap.get("runtype");
+						String begintime = null;
+						String endtime = null;
+						//获取上次调度时的最大签收时间开始时间与结束时间
+						if("MANUAL".equals(runtype)){
+							begintime = taskMap.get("begintime");
+							endtime = taskMap.get("endtime");
+						}else{
+							begintime = DateUtils.getPreDate(new Date());
+							endtime = DateUtils.getCurTime(new Date());
+						}
+						//给后台接口构建参数
+						Map<String, String> paraMap=new HashMap<String, String>();
+						paraMap.put("begintime", begintime);
+						paraMap.put("endtime", endtime);
+						List<Map<String, String>> orderList= dfMassOrderService.queryOrderIdBySignTime(paraMap);
+						if(!orderList.isEmpty()){
+				    		Map<String, String> runMap = new HashMap<String,String>();
+				    		runMap.put("id", "7");
+				    		runMap.put("task_status", "RUNNING");
+				    		dsCronTaskService.updateTaskStatusById(runMap);
+							TinyDispatch tinyDispatch;
+							String order_id ="";
+							for (Map<String, String> orderMap : orderList) {
+								order_id = orderMap.get("id");
+								tinyDispatch = tinyDispatchService.queryTinyDispatchByOrderId(order_id);
+	    						if(tinyDispatch!=null){
+	    							Map<String, String> params=new HashMap<String, String>();
+	        						params.put("order_id", order_id);
+	        						params.put("villagecode", tinyDispatch.getCode());
+	        						params.put("employee_a_no", tinyDispatch.getEmployee_a_no());
+	        						params.put("areacode", areaInfoService.queryAreaNoByTinyNo(tinyDispatch.getCode()));
+	        						dfMassOrderService.updateOrderVillageCodeDaily(params);
+	        						dfMassOrderService.updateOrderVillageCodeMonthly(params);
+	        						dfMassOrderService.updateOrderVillageCodeTotal(params);
+	    						}
+							}
+							
+				    		//设置任务为完成状态
+				    		Map<String, String> doneMap = new HashMap<String,String>();
+				    		doneMap.put("id", "7");
+				    		doneMap.put("task_status", "DONE");
+				    		dsCronTaskService.updateTaskStatusById(doneMap);
+							
+						}
+					}
+					logger.info("**********根据指定签收时间内的订单号刷新对应的小区片区号调度结束**********");
+				} catch (Exception e) {
+					logger.info("根据指定签收时间内的订单号刷新对应的小区片区号调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+		}
 }

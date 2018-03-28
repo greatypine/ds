@@ -270,19 +270,25 @@
   
   <update id="updateOrderVillageCodeDaily" parameterType="java.util.Map">
   		<![CDATA[
-			update df_mass_order_daily set info_village_code = #{villageCode} where id = #{order_id}
+			update df_mass_order_daily 
+			set info_village_code = #{villagecode} ,area_code =#{areacode}, info_employee_a_no =#{employee_a_no}
+			where id = #{order_id}
 		]]>
   </update>
   
   <update id="updateOrderVillageCodeMonthly" parameterType="java.util.Map">
   		<![CDATA[
-			update df_mass_order_monthly set info_village_code = #{villageCode} where id = #{order_id}
+			update df_mass_order_monthly 
+			set info_village_code = #{villagecode} ,area_code =#{areacode}, info_employee_a_no =#{employee_a_no}
+			where id = #{order_id}
 		]]>
   </update>
   
   <update id="updateOrderVillageCodeTotal" parameterType="java.util.Map">
   		<![CDATA[
-			update df_mass_order_total set info_village_code = #{villageCode} where id = #{order_id}
+			update df_mass_order_total 
+			set info_village_code = #{villagecode} ,area_code =#{areacode}, info_employee_a_no =#{employee_a_no}
+			where id = #{order_id}
 		]]>
   </update>
 
@@ -400,5 +406,12 @@
   	 ]]>
   </insert>
   
+	<select id="queryOrderIdBySignTime" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			select id from df_mass_order_monthly 
+			where sign_time >= #{begintime} and sign_time <= #{endtime} 
+			and info_village_code is NULL
+		]]>
+	</select>
 	
 </mapper>

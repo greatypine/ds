@@ -123,5 +123,9 @@ public class DfMassOrderService {
 	public 	Integer addXBUserTag(Map<String, String> paraMap){
 		return dfMassOrderDao.addXBUserTag(paraMap);
 	}
+	
+	public List<Map<String, String>> queryOrderIdBySignTime (Map<String, String> paraMap){
+		return dfMassOrderDao.queryOrderIdBySignTime(paraMap);
+	}
 
 }
