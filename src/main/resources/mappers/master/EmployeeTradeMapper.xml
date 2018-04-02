@@ -59,7 +59,7 @@
             AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
             AND tor.sign_time >=#{begindate}
             AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-            group by employee_no,store_id
+            group by employee_no
             ) sendemp  on (tman.employee_no = sendemp.employee_no )
             left join (
             select
@@ -73,7 +73,7 @@
             AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
             AND tor.return_time >=#{begindate}
             and tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-            group by employee_no ,store_id
+            group by employee_no
             ) sendempth on (tman.employee_no = sendempth.employee_no )
             left join (
             select
@@ -87,7 +87,7 @@
             AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
             AND tor.sign_time >=#{begindate}
             AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-            group by info_employee_a_no,store_id
+            group by info_employee_a_no
             ) areaemp on (tman.employee_no = areaemp.info_employee_a_no )
             left join (
             select
@@ -101,7 +101,7 @@
             AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
             AND tor.return_time >=#{begindate}
             AND tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-            group by info_employee_a_no,store_id
+            group by info_employee_a_no
             ) areaempth on (tman.employee_no = areaempth.info_employee_a_no )
             left join (
             select
@@ -256,7 +256,7 @@
 			AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
 			AND tor.sign_time >=#{begindate}
 			AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-			group by employee_no,store_id
+			group by employee_no
 			) sendemp  on (tman.employeeno = sendemp.employee_no )
 			left join (
 			select
@@ -270,7 +270,7 @@
 			AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
 			AND tor.return_time >=#{begindate}
 			and tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-			group by employee_no ,store_id
+			group by employee_no
 			) sendempth on (tman.employeeno = sendempth.employee_no )
 			left join (
 			select
@@ -284,7 +284,7 @@
 			AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
 			AND tor.sign_time >=#{begindate}
 			AND tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-			group by info_employee_a_no,store_id
+			group by info_employee_a_no
 			) areaemp on (tman.employeeno = areaemp.info_employee_a_no )
 			left join (
 			select
@@ -298,7 +298,7 @@
 			AND (tor.abnormal_label ='0' AND tor.pubseas_label ='0')
 			AND tor.return_time >=#{begindate}
 			AND tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-			group by info_employee_a_no,store_id
+			group by info_employee_a_no
 			) areaempth on (tman.employeeno = areaempth.info_employee_a_no )
 			left join (
 			select

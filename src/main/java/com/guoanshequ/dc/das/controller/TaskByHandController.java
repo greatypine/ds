@@ -67,7 +67,7 @@ public class TaskByHandController {
     @RequestMapping(value = "rest/portConnStatusTaskRun",method = RequestMethod.POST)
     public RestResponse portConnStatusTask() throws Exception {
 	    try {
-	    	return new RestResponse("OK","接口连接成功！！！");
+	    	return new RestResponse("OK","接口连接成功！！！，版本号：20180402");
 		} catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();
