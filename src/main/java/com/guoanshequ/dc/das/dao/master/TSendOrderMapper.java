@@ -18,4 +18,6 @@ public interface TSendOrderMapper{
 	int deleteByYearMonth(Map<String, String> paraMap);
 	
 	List<Map<String, Object>> queryTSendOrdersChannelByMonth(Map<String, String> paraMap);
+	
+	int addTSendOrdersByMassOrder(Map<String, String> paraMap);
 }
