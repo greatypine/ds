@@ -201,7 +201,7 @@
     -->
     <select id="queryEmployeePesgmvByEmp" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-			select pesgmv,0 ,pes_areagmv,pes_assigngmv,pes_pergmv
+			select pesgmv,0 as pes_sendgmv ,pes_areagmv,pes_assigngmv,pes_pergmv
 			from ds_emptrade aa
 			where aa.year =#{year} and aa.month =#{month} and aa.employee_no =#{employee_no}
 		]]>
