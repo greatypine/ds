@@ -42,4 +42,9 @@ public class TSendOrderService {
         
     	return tsendOrderDao.queryTSendOrdersChannelByMonth(paraMap);
     }
+    
+    public int addTSendOrdersByMassOrder(Map<String, String> paraMap) {
+    	return tsendOrderDao.addTSendOrdersByMassOrder(paraMap);
+    }
+    
 }

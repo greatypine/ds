@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * <p>
- * PerformanceInterceptor 性能统计接口：接口耗时统计
+ * PerformanceInterceptor 性能统计接口：接口方法耗时统计
  * <p>*/
 @Aspect
 @Component

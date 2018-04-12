@@ -67,7 +67,7 @@ public class TaskByHandController {
     @RequestMapping(value = "rest/portConnStatusTaskRun",method = RequestMethod.POST)
     public RestResponse portConnStatusTask() throws Exception {
 	    try {
-	    	return new RestResponse("OK","接口连接成功！！！");
+	    	return new RestResponse("OK","接口连接成功！！！，版本号：20180402");
 		} catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();
@@ -290,12 +290,13 @@ public class TaskByHandController {
 
 
     /**
-     * 平台数据接口手动调度：上门送单量
+     * 平台数据接口手动调度：上门送单量（按频道）
      */
     @RequestMapping(value = "rest/sendOrdersTaskRun",method = RequestMethod.POST)
     public RestResponse sendOrdersTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
-    		platformScheduleTask.sendOrdersTask();
+//    		platformScheduleTask.sendOrdersTask();
+    		pesNewScheduleTask.empSendOrdersByMassOrderTask();
     		return new RestResponse(EnumRespStatus.TASK_SENDORDERSOK);
     	}catch (Exception e) {
             logger.error(e.toString());
@@ -1064,6 +1065,38 @@ public class TaskByHandController {
     public RestResponse tinyAreaPatchByOrderidTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		massOrderScheduleTask.tinyAreaPatchByOrderidTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
+    
+    /**
+     * 事业群gmv调度
+     */
+    @RequestMapping(value = "rest/deptGmvTaskRun",method = RequestMethod.POST)
+    public RestResponse deptGmvTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		pesNewScheduleTask.DeptGmvTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
+    
+    /**
+     * 事业群消费用户数调度
+     */
+    @RequestMapping(value = "rest/deptCusTaskRun",method = RequestMethod.POST)
+    public RestResponse deptCusTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		pesNewScheduleTask.DeptCusTask();
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());

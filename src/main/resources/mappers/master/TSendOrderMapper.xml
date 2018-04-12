@@ -72,5 +72,53 @@
 				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
 			from ds_sendorders where year =#{year} and month =#{month} and storeno IN (${storeids})) sendorderChanline
 		]]>
-	</select>	
+	</select>
+	
+	<insert id="addTSendOrdersByMassOrder" parameterType="java.util.Map">
+		<![CDATA[
+			insert into ds_sendorders(
+				storeno,platformid,cityname,storename,employee_no,username,deptchannelid,deptname,channelname,datanum,
+				year,month,createtime
+			) 
+			select 
+				empline.storeno,
+				empline.platformid,
+				empline.cityname,
+				empline.storename,
+				empline.employee_no,
+				thuman.`name` as username,
+				empline.deptchannelid,
+				empline.deptname,
+				empline.channelname,
+				empline.datanum,
+				YEAR(date_sub(now(),interval 1 day)),
+				MONTH(date_sub(now(),interval 1 day)),
+				NOW()
+			from (
+				select 
+					tor.store_city_name as cityname,
+					tor.store_id as platformid,
+					IFNULL(tor.store_code,'') as storeno,
+					tor.store_name as storename,
+					tor.employee_no as employee_no,
+					tor.channel_id as deptchannelid,
+					tor.department_name as deptname,
+					tor.channel_name as channelname,
+					count(tor.id) as datanum
+				from df_mass_order_monthly tor
+				where tor.sign_time >=#{begindate} 
+				and tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+				and tor.store_name not like '%测试%' 
+				and tor.eshop_name not like '%测试%'
+				and tor.store_white !='QA'
+				and tor.eshop_white !='QA'
+				and tor.business_model_id !='fakemodelforexpress0000000000001' 
+				group by tor.store_id,tor.employee_id,tor.channel_id
+			) empline
+			left join t_humanresources thuman on (empline.employee_no = thuman.employee_no)
+		]]>
+	</insert>	
+	
+	
+		
 </mapper>
