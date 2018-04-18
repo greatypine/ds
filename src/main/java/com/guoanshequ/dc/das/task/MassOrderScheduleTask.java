@@ -149,9 +149,9 @@ public class MassOrderScheduleTask {
     }
     
     /**
-     * 每月1号中午12点40删数据，保留最近2个月
+     * 每月1号中午12点40删数据，只保留最近当月与上月数据
      */
-//    @Scheduled(cron ="0 40 12 1 * ?")
+    @Scheduled(cron ="0 40 12 1 * ?")
     public void deleteMonthlyMassOrderTask(){
     	new Thread(){
     		public void run() {

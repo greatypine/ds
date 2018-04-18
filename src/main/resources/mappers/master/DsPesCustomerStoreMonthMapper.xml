@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DsPesCustomerStoreMonthMapper">
+ 
+ 
+    <delete id="deleteDsPesCustomer" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_pes_customer_store_month where year =#{year} and month =#{month}
+		]]>
+	</delete>	
+ 
+
+	<insert id="addDsPesCustomer" parameterType="java.util.Map">
+        <![CDATA[
+			INSERT INTO ds_pes_customer_store_month(storeno,storename,platformid,cityname,new_cusnum_ten,cusnum,cusnum_ten,year,month) 
+				SELECT ifnull(c.store_code,'') as store_code,c.store_name,c.store_id,c.store_city_name,ifnull(c.new_10_count,0) as new_10_count,ifnull(c.total,0) as total,ifnull(b.total_ten,0) as total_ten,YEAR(date_sub(now(),interval 1 day)),MONTH(date_sub(now(),interval 1 day))
+				    FROM 
+					    (select  tor.store_code,tor.store_id,tor.store_name,tor.store_city_name,sum(case when customer_isnew_flag >='10' and customer_isnew_flag !='-1' then 1 else 0 end) as new_10_count ,count(DISTINCT(tor.customer_id)) as total
+						    from df_mass_order_monthly tor where  tor.customer_id not like 'fakecustomer%' 
+						    and tor.sign_time >=#{begindate}  and tor.sign_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+						    and tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA' 
+						    and tor.store_name NOT LIKE '%测试%' and tor.store_white!='QA' AND tor.store_status =0 group by store_code) c
+		            LEFT JOIN 
+		                (select a.store_code,a.store_id,sum(case when a.monetary>10 then 1 else 0 end ) as total_ten from (select  tor.store_code,tor.store_id,sum(IFNULL(tor.gmv_price,0)) as monetary
+						    from df_mass_order_monthly tor where  tor.customer_id not like 'fakecustomer%' 
+						    and tor.sign_time >=#{begindate}  and tor.sign_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+						    and tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA' 
+						    and tor.store_name NOT LIKE '%测试%' and tor.store_white!='QA' AND tor.store_status =0 group by store_code,customer_id order by monetary desc) a group by store_id) b on c.store_id = b.store_id
+		]]>
+	</insert>
+</mapper>

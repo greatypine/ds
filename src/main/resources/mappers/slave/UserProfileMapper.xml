@@ -19,15 +19,17 @@
 			from (
 				select 
 				tor.customer_id,
-				sum(trading_price) as trading_price_sum,
+				sum(tor.trading_price) as trading_price_sum,
 				count(1) as order_count,
-				max(trading_price) as trading_price_max,
-				min(create_time) as first_order_time,
-				min(order_sn) as first_order_sn,
-				max(create_time) as last_order_time
+				max(tor.trading_price) as trading_price_max,
+				min(tor.create_time) as first_order_time,
+				min(tor.order_sn) as first_order_sn,
+				max(tor.create_time) as last_order_time
 				from t_order tor
+				join t_eshop te on (tor.eshop_id = te.id)
 				where tor.sign_time >= #{begintime} 
 				and tor.sign_time < #{endtime}
+				and te.`name` NOT LIKE '%测试%' AND te.white!='QA'
 				group by tor.customer_id 
 			) cusline
 			left join t_customer tc on ( cusline.customer_id = tc.id )
@@ -35,8 +37,40 @@
 	</select>
 	
 	<select id="queryCusName" resultType="com.guoanshequ.dc.das.model.Customer">
+		<![CDATA[
 		select id,name from t_customer where name is not null and name !='' and name not like '%士%' 
-		and name not like '%生%' and name not like '%姨%' and name !='MTDD' and name !='活动' 
+		and name not like '%生%' and name not like '%姨%' and name !='MTDD' and name !='活动'
+		and id ='8ad89f8261f420f301620fa144006f94' 
+		]]>
 	</select>
+	
+	<select id="queryCustomerStoreBySignTime" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			select 
+			tmpcusline.customer_id,
+			tmpcusline.store_id,
+			tc.mobilephone as customer_phone,
+			tmpcusline.order_sn,
+			tmpcusline.first_order_time,
+			ts.`code` as storeno,
+			a.`name` as city_name
+			from (
+				select
+				tor.customer_id ,
+				tor.store_id ,
+				min(tor.order_sn) as order_sn ,
+				min(tor.create_time) as first_order_time
+				from t_order tor
+				join t_eshop te on (tor.eshop_id = te.id)
+				where tor.sign_time >= #{begintime}
+				and tor.sign_time < #{endtime}
+				and te.`name` NOT LIKE '%测试%' AND te.white!='QA'
+				group by tor.customer_id ,tor.store_id 
+			) tmpcusline
+			join t_store ts on (tmpcusline.store_id = ts.id)
+			left join t_sys_area a on (ts.city_code = a.code and a.level = 2)
+			left join t_customer tc on (tmpcusline.customer_id = tc.id)
+		]]>
+	</select>	
 
 </mapper>

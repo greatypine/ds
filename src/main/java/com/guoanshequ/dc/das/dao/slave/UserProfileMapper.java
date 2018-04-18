@@ -15,4 +15,6 @@ public interface UserProfileMapper{
 	List<Map<String, String>> queryCustomerInfoBySignTime(Map<String, String> paraMap);
 	
 	List<Customer> queryCusName();
+	
+	List<Map<String, String>> queryCustomerStoreBySignTime(Map<String, String> paraMap);
 }

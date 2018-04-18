@@ -294,7 +294,7 @@
 
 	<select id="queryVillageAreaCodeByOrdersn" parameterType="java.lang.String" resultType="java.util.Map">
 		<![CDATA[
-			select info_village_code,area_code from df_mass_order_monthly where order_sn =#{order_sn} limit 1 
+			select info_village_code,area_code,info_employee_a_no from df_mass_order_monthly where order_sn =#{order_sn} limit 1 
 		]]>
 	</select>
 	
@@ -413,5 +413,20 @@
 			and info_village_code is NULL
 		]]>
 	</select>
+	
+	<!-- 查询MassOrder订单列表 -->
+	<select id="queryMassOrder" parameterType="java.util.Map" resultType="MassOrderEntity">
+		<![CDATA[
+			 select * from df_mass_order_monthly tor 
+		]]>
+		<where>
+			<if test="first_order_sn != null and '' != first_order_sn">
+		       <![CDATA[                   
+	 	          tor.order_sn = #{first_order_sn} 
+		       ]]> 
+			</if>
+		</where>
+  	</select>
+	
 	
 </mapper>

@@ -6,11 +6,13 @@
 		<![CDATA[
 			insert into df_user_profile(
 				customer_id,trading_price_sum,order_count,trading_price_max,first_order_time,first_order_sn,
-				last_order_time,customer_name,customer_phone,regist_time,area_code,tiny_village_code,user_model
+				last_order_time,customer_name,customer_phone,regist_time,area_code,tiny_village_code,storeno,
+				dep_name,channel_name,user_model
 			) 
 			values (
 				#{customer_id},#{trading_price_sum},#{order_count},#{trading_price_max},#{first_order_time},#{first_order_sn},
-				#{last_order_time},#{customer_name},#{customer_phone},#{regist_time},#{area_code},#{tiny_village_code},#{user_model}
+				#{last_order_time},#{customer_name},#{customer_phone},#{regist_time},#{area_code},#{tiny_village_code},#{storeno},
+				#{dep_name},#{channel_name},#{user_model}
 			)on duplicate key update trading_price_sum = trading_price_sum + values(trading_price_sum),
 				order_count = order_count + values(order_count),
 				last_order_time = values(last_order_time),
@@ -28,5 +30,18 @@
 	<insert id="addName" parameterType="com.guoanshequ.dc.das.model.Customer">
 		insert into tmp_cusname(id,name) values (#{id},#{name})
 	</insert>
+	
+	<insert id="addDfUserStore" parameterType="java.util.Map" >
+		<![CDATA[
+			insert ignore into df_user_store(
+				customer_id,store_id,city_name,storeno,customer_phone,order_sn,area_code,tiny_village_code,
+				employee_a_no,latitude,longitude,first_order_time
+			) 
+			values (
+				#{customer_id},#{store_id},#{city_name},#{storeno},#{customer_phone},#{order_sn},#{area_code},#{tiny_village_code},
+				#{employee_a_no},#{latitude},#{longitude},#{first_order_time}
+			)
+        ]]>
+	</insert>	
 
 </mapper>

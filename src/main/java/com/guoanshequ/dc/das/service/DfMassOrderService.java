@@ -128,4 +128,8 @@ public class DfMassOrderService {
 		return dfMassOrderDao.queryOrderIdBySignTime(paraMap);
 	}
 
+	public DfMassOrder queryMassOrder (Map<String, String> paraMap) {
+		return dfMassOrderDao.queryMassOrder(paraMap);
+	}
+	
 }

@@ -19,12 +19,13 @@ import java.util.Map;
 /**
 * @author CaoPs
 * @date 2017年6月16日
-* @version 1.0
+* @version 2.0
 * 说明: 手动调度topDataScheduleTask与ScheduleTask；
 * 1、人员、店长、拜访记录、单体画像、绩效分数的调度；
 * 2、平台上新增用户、复购用户、上门送单量、上门送单量按总数、门店交易额、门店交易额按门店、国安侠好评次数的调度；
 * 3、异常订单、异常订单下载基库的调度；
 * 4、片区绩效的调度；
+* 5、增加新绩效gmv及用户调度;
 */ 
 @RestController
 @ResponseBody
@@ -1103,5 +1104,54 @@ public class TaskByHandController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
-    }     
+    }  
+    
+    
+    /**
+     * 清洗用户门店明细
+     */
+    @RequestMapping(value = "rest/userStoreTaskRun",method = RequestMethod.POST)
+    public RestResponse userStoreTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		userProfileScheduleTask.userStoreTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }  
+    
+    
+    /**
+     * 绩效：门店用户统计
+     */
+    @RequestMapping(value = "rest/storeCustomerTaskRun",method = RequestMethod.POST)
+    public RestResponse storeCustomerTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		pesNewScheduleTask.storeCustomerTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }  
+    
+    /**
+     * 绩效：国安侠用户统计
+     */
+    @RequestMapping(value = "rest/employeeCustomerTaskRun",method = RequestMethod.POST)
+    public RestResponse employeeCustomerTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		pesNewScheduleTask.employeeCustomerTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    
 }

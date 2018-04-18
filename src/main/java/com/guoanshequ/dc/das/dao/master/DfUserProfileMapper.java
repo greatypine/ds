@@ -17,4 +17,6 @@ public interface DfUserProfileMapper {
 	
 	public void addName(Customer paraMap);
 	
+	public Integer addDfUserStore(Map<String,String> paraMap);
+	
 }

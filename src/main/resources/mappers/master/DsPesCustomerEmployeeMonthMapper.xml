@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DsPesCustomerEmployeeMonthMapper">
+ 
+ 
+    <delete id="deleteDsPesCustomer" parameterType="java.util.Map">
+		<![CDATA[
+			delete from ds_pes_customer_employee_month where year =#{year} and month =#{month}
+		]]>
+	</delete>	
+ 
+
+	<insert id="addDsPesCustomer" parameterType="java.util.Map">
+        <![CDATA[
+			INSERT INTO ds_pes_customer_employee_month(storeno,storename,platformid,cityname,employeeNo,new_cusnum_ten,cusnum,cusnum_ten,year,month) 
+				SELECT c.store_code,c.store_name,c.store_id,c.store_city_name,c.info_employee_a_no,c.new_10_count,c.total,ifnull(b.total_ten,0) as total_ten,YEAR(date_sub(now(),interval 1 day)),MONTH(date_sub(now(),interval 1 day))
+				    FROM 
+					    (select  tor.store_code,tor.store_id,tor.store_name,tor.store_city_name,tor.info_employee_a_no,sum(case when customer_isnew_flag >='10' and customer_isnew_flag !='-1' then 1 else 0 end) as new_10_count ,count(DISTINCT(tor.customer_id)) as total
+						    from df_mass_order_monthly tor where  tor.customer_id not like 'fakecustomer%' 
+						     and tor.sign_time >=#{begindate}  and tor.sign_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+						    and tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA' 
+						    and tor.store_name NOT LIKE '%测试%' and tor.store_white!='QA' AND tor.store_status =0 group by info_employee_a_no) c
+		            LEFT JOIN 
+		                (select a.info_employee_a_no,sum(case when a.monetary > 10 then 1 else 0 end ) as total_ten from (select  tor.info_employee_a_no,sum(IFNULL(tor.gmv_price,0)) as monetary
+						    from df_mass_order_monthly tor where  tor.customer_id not like 'fakecustomer%' 
+						    and tor.sign_time >=#{begindate}  and tor.sign_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+						    and tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA' 
+						    and tor.store_name NOT LIKE '%测试%' and tor.store_white!='QA' AND tor.store_status =0 group by info_employee_a_no,customer_id ) a group by a.info_employee_a_no) b on c.info_employee_a_no = b.info_employee_a_no
+             
+		]]>
+	</insert>
+</mapper>

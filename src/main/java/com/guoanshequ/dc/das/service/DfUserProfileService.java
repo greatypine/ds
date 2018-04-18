@@ -27,4 +27,8 @@ public class DfUserProfileService {
 	public void addName(Customer paraMap){
 		dfUserProfileDao.addName(paraMap);
 	}
+	
+	public Integer addDfUserStore(Map<String, String> paraMap) {
+		return dfUserProfileDao.addDfUserStore(paraMap);
+	}	
 }

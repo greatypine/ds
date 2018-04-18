@@ -33,4 +33,9 @@ public class UserProfileService {
     public List<Customer> queryCusName(){
     	return userProfileDao.queryCusName();
     }
+    
+    public List<Map<String, String>> queryCustomerStoreBySignTime(Map<String, String> paraMap){
+    	
+    	return userProfileDao.queryCustomerStoreBySignTime(paraMap);
+    }    
 }

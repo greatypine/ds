@@ -31,7 +31,10 @@ public class PesNewScheduleTask {
 	TSendOrderService tSendOrderService;
 	@Autowired
 	DepartmentBizService departmentBizService; 
-
+	@Autowired
+	DsPesCustomerStoreMonthService dsPesCustomerMonthService;
+	@Autowired
+	DsPesCustomerEmployeeMonthService dsPesCustomerEmployeeMonthService;
     
     private static final Logger logger = LogManager.getLogger(PesNewScheduleTask.class);
     
@@ -288,6 +291,91 @@ public class PesNewScheduleTask {
 					departmentBizService.deleteDeptCusByYearMonth(paraMap);
 					int num = departmentBizService.addDeptCusByMassOrder(paraMap);
 					logger.info("**********事业群消费用户数任务调度结束**********");
+					logger.info("共调度数据记录行数："+num);
+				} catch (Exception e) {
+					logger.info(e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
+	
+	/**
+	 * 
+	* @Title: storeCustomerTask  
+	* @Description: TODO 门店用户调度任务
+	* 2018年4月16日
+	* @param       
+	* @return void 
+	* @throws
+	* @author gbl
+	 */
+	@Scheduled(cron ="0 25 02 * * ?")
+	public void storeCustomerTask() {
+		new Thread(){
+			public void run(){
+				try {
+					logger.info("**********门店消费用户数任务调度开始**********");
+					//前一天日期所在月份的1号
+					String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+					//前一天日期
+					String enddate = DateUtils.getPreDate(new Date());
+					//取得年份
+					String year = begindate.substring(0, 4);
+					//取得月份
+					String month = begindate.substring(5, 7);
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					paraMap.put("year", year);
+					paraMap.put("month", month);
+					paraMap.put("begindate", begindate);
+					paraMap.put("enddate", enddate);
+					dsPesCustomerMonthService.deleteDsPesCustomer(paraMap);
+					int num = dsPesCustomerMonthService.addDsPesCustomer(paraMap);
+					logger.info("**********门店消费用户数任务调度结束**********");
+					logger.info("共调度数据记录行数："+num);
+				} catch (Exception e) {
+					logger.info(e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
+	
+	/**
+	 * 
+	* @Title: employeeCustomerTask  
+	* @Description: TODO 国安侠用户调度任务
+	* 2018年4月16日
+	* @param       
+	* @return void 
+	* @throws
+	 */
+	@Scheduled(cron ="0 25 02 * * ?")
+	public void employeeCustomerTask() {
+		new Thread(){
+			public void run(){
+				try {
+					logger.info("**********国安侠消费用户数任务调度开始**********");
+					//前一天日期所在月份的1号
+					String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+					//前一天日期
+					String enddate = DateUtils.getPreDate(new Date());
+					//取得年份
+					String year = begindate.substring(0, 4);
+					//取得月份
+					String month = begindate.substring(5, 7);
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					paraMap.put("year", year);
+					paraMap.put("month", month);
+					paraMap.put("begindate", begindate);
+					paraMap.put("enddate", enddate);
+					dsPesCustomerEmployeeMonthService.deleteDsPesCustomer(paraMap);
+					int num = dsPesCustomerEmployeeMonthService.addDsPesCustomer(paraMap);
+					logger.info("**********国安侠消费用户数任务调度结束**********");
 					logger.info("共调度数据记录行数："+num);
 				} catch (Exception e) {
 					logger.info(e.toString());
