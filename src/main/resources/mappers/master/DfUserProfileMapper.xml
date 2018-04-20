@@ -28,7 +28,7 @@
 	</select>
 	
 	<insert id="addName" parameterType="com.guoanshequ.dc.das.model.Customer">
-		insert into tmp_cusname(id,name) values (#{id},#{name})
+		insert into tmp_cusname(id,name) values (#{id},#{name}) 
 	</insert>
 	
 	<insert id="addDfUserStore" parameterType="java.util.Map" >

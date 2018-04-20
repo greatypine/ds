@@ -25,7 +25,7 @@
 						    from df_mass_order_monthly tor where  tor.customer_id not like 'fakecustomer%' 
 						    and tor.sign_time >=#{begindate}  and tor.sign_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 						    and tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA' 
-						    and tor.store_name NOT LIKE '%测试%' and tor.store_white!='QA' AND tor.store_status =0 group by store_code,customer_id order by monetary desc) a group by store_id) b on c.store_id = b.store_id
+						    and tor.store_name NOT LIKE '%测试%' and tor.store_white!='QA' AND tor.store_status =0 group by store_id,customer_id order by monetary desc) a group by store_id) b on c.store_id = b.store_id
 		]]>
 	</insert>
 </mapper>
