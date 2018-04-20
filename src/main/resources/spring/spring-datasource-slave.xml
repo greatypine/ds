@@ -32,6 +32,7 @@
         <!-- 开启Druid的监控统计功能   -->
         <beans:property name="filters" value="stat" />
 
+		<beans:property name="connectionInitSqls" value="set names utf8mb4;"/>
     </beans:bean>
 
 
