@@ -63,8 +63,8 @@
                 <redis.host>10.10.0.16</redis.host>
                 <redis.port>7000</redis.port>
                 <!--<redis.password></redis.password>-->
-                <mongodb.hosts>10.0.6.11,10.0.6.12,10.0.6.13</mongodb.hosts>
-                <mongodb.ports>27017,27017,27017</mongodb.ports>
+                <mongodb.hosts>115.182.249.132</mongodb.hosts>
+                <mongodb.ports>27017</mongodb.ports>
                 <mongodb.database>gemini</mongodb.database>
                 <mongodb.username>zxgasq</mongodb.username>
                 <mongodb.password>zxgasq2018341</mongodb.password>

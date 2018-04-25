@@ -59,7 +59,11 @@ public class TaskByHandController {
     UserProfileScheduleTask userProfileScheduleTask;
     @Autowired
     CustomerSumScheduleTask customerSumScheduleTask;
-
+    @Autowired
+    OpeDataScheduleTask opeDataScheduleTask;
+    @Autowired
+    TestTask testTask;
+    
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
     /**
@@ -69,6 +73,18 @@ public class TaskByHandController {
     public RestResponse portConnStatusTask() throws Exception {
 	    try {
 	    	return new RestResponse("OK","接口连接成功！！！，版本号：20180402");
+		} catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "rest/testMongoRun",method = RequestMethod.POST)
+    public RestResponse testMongoRun() throws Exception {
+	    try {
+	    	testTask.testMongoConn();
+	    	return new RestResponse("OK","mongo连接成功!");
 		} catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();
@@ -1145,6 +1161,40 @@ public class TaskByHandController {
     public RestResponse employeeCustomerTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		pesNewScheduleTask.employeeCustomerTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+   
+    
+     // =========================================运营数据手动调度配置===================================================================
+     
+    
+    /**
+     * 运营数据：门店交易额
+     */
+    @RequestMapping(value = "rest/opeGmvStoreMonthTaskRun",method = RequestMethod.POST)
+    public RestResponse opeGmvStoreMonthTaskTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		opeDataScheduleTask.opeGmvStoreMonthByMassOrderTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 运营数据：门店交易额按频道
+     */
+    @RequestMapping(value = "rest/opeGmvStoreChannelMonthTaskRun",method = RequestMethod.POST)
+    public RestResponse opeGmvStoreChannelMonthTaskTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		opeDataScheduleTask.opeGmvStoreChannelMonthByMassOrderTask(); 
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());

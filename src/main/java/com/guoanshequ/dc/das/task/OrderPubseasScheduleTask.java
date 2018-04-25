@@ -2,6 +2,7 @@ package com.guoanshequ.dc.das.task;
 
 import com.guoanshequ.dc.das.model.DfOrderPubseas;
 import com.guoanshequ.dc.das.service.DfOrderPubseasService;
+import com.guoanshequ.dc.das.service.DsCronTaskService;
 import com.guoanshequ.dc.das.service.OrderPubseasService;
 import com.guoanshequ.dc.das.service.StoreNumberService;
 import com.guoanshequ.dc.das.utils.DateUtils;
@@ -32,6 +33,8 @@ public class OrderPubseasScheduleTask {
     OrderPubseasService orderPubseasService;
     @Autowired
     DfOrderPubseasService dfOrderPubseasService;
+	@Autowired
+	DsCronTaskService dsCronTaskService;
     
     private static final Logger logger = LogManager.getLogger(OrderPubseasScheduleTask.class);
     
@@ -93,15 +96,19 @@ public class OrderPubseasScheduleTask {
 		new Thread(){
 			public void run() {
 				try {
-					logger.info("**********指定人员公海订单分配调度开始**********");
-					//取得公海表中最大签收时间
-					String maxSignedTime = dfOrderPubseasService.queryMaxSignedTime();
-					//给后台接口构建参数
-					Map<String, String> paraMap=new HashMap<String, String>();
-					paraMap.put("maxSignedTime", maxSignedTime);
-					int updatenum  = dfOrderPubseasService.addDfOrderPubseasByMassOrder(paraMap);
-					logger.info("**********指定人员公海订单分配调度结束**********");
-					logger.info("共插入记录行数："+updatenum);
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(1);
+					String isrun = taskMap.get("isrun");
+					if("ON".equals(isrun)){
+						logger.info("**********指定人员公海订单分配调度开始**********");
+						//取得公海表中最大签收时间
+						String maxSignedTime = dfOrderPubseasService.queryMaxSignedTime();
+						//给后台接口构建参数
+						Map<String, String> paraMap=new HashMap<String, String>();
+						paraMap.put("maxSignedTime", maxSignedTime);
+						int updatenum  = dfOrderPubseasService.addDfOrderPubseasByMassOrder(paraMap);
+						logger.info("**********指定人员公海订单分配调度结束**********");
+						logger.info("共插入记录行数："+updatenum);
+					}
 				} catch (Exception e) {
 					logger.error(e.toString());
 					e.printStackTrace();

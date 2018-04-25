@@ -47,23 +47,27 @@ public class MassOrderScheduleTask {
     @Scheduled(cron ="0 */1 * * * ?")
 	public void massOrderTask() {
 			try {
-				long taskStartTime = System.currentTimeMillis();    //获取开始时间
-				logger.info("**********自动清洗海量订单任务调度开始**********");
-				//获取上次调度时的最大签收时间
-				String maxSignedTime = dfMassOrderService.queryMaxSignedTime()==null?DateUtils.getDateFirstOfMonth(new Date()):dfMassOrderService.queryMaxSignedTime();
-				String endSignedTime = DateUtils.getCurTime(new Date());
-				//给后台接口构建参数
-				Map<String, String> paraMap=new HashMap<String, String>();
-				paraMap.put("maxSignedTime", maxSignedTime);
-				paraMap.put("endSignedTime", endSignedTime);
-				List<DfMassOrder> massOrderList =massOrderService.queryMassOrderByDate(paraMap);
-
-				if(!massOrderList.isEmpty()){
-					paramsPackage(massOrderList);
-				}
-				long taskEndTime = System.currentTimeMillis();    //获取结束时间
-				logger.info("自动清洗海量订单共调度数据记录行数："+massOrderList.size()+",maxSignedTime："+maxSignedTime+",endSignedTime:"+endSignedTime);
-				logger.info("**********自动清洗海量订单任务调度结束:"+(taskEndTime - taskStartTime) + "ms**********");
+				Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(1);
+				String isrun = taskMap.get("isrun");
+				if("ON".equals(isrun)){
+						long taskStartTime = System.currentTimeMillis();    //获取开始时间
+						logger.info("**********自动清洗海量订单任务调度开始**********");
+						//获取上次调度时的最大签收时间
+						String maxSignedTime = dfMassOrderService.queryMaxSignedTime()==null?DateUtils.getDateFirstOfMonth(new Date()):dfMassOrderService.queryMaxSignedTime();
+						String endSignedTime = DateUtils.getCurTime(new Date());
+						//给后台接口构建参数
+						Map<String, String> paraMap=new HashMap<String, String>();
+						paraMap.put("maxSignedTime", maxSignedTime);
+						paraMap.put("endSignedTime", endSignedTime);
+						List<DfMassOrder> massOrderList =massOrderService.queryMassOrderByDate(paraMap);
+		
+						if(!massOrderList.isEmpty()){
+							paramsPackage(massOrderList);
+						}
+						long taskEndTime = System.currentTimeMillis();    //获取结束时间
+						logger.info("自动清洗海量订单共调度数据记录行数："+massOrderList.size()+",maxSignedTime："+maxSignedTime+",endSignedTime:"+endSignedTime);
+						logger.info("**********自动清洗海量订单任务调度结束:"+(taskEndTime - taskStartTime) + "ms**********");
+					}
 				} catch (Exception e) {
 					logger.info(e.toString());
 					e.printStackTrace();

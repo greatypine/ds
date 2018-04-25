@@ -1,6 +1,12 @@
 package com.guoanshequ.dc.das.task;
 
+import com.guoanshequ.dc.das.model.TinyDispatch;
+import com.guoanshequ.dc.das.service.TinyDispatchService;
 import com.guoanshequ.dc.das.utils.DateUtils;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
@@ -19,6 +25,12 @@ import java.util.Map;
 @Component
 public class TestTask {
 
+	@Autowired
+	TinyDispatchService tinyDispatchService; 
+	
+	
+	 private static final Logger logger = LogManager.getLogger(TestTask.class);
+	
 //    @Scheduled(cron = "0/5 * *  * * ? ")
     public void schTest1() {
         Date date = new Date();
@@ -29,5 +41,14 @@ public class TestTask {
     	String begindate = datemap.get("first");
     	String enddate = datemap.get("last");
     	System.out.println(begindate+"===="+enddate);
+    }
+    
+    public void testMongoConn() {
+    	try {
+			String tinyCode = tinyDispatchService.queryCodeByOrderId("47753df937764e8e9b93fbcec5e30e42");
+			logger.info("mongo连接成功,订单号对应的小区号为："+tinyCode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 }

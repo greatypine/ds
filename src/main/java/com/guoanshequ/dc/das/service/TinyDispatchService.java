@@ -25,7 +25,9 @@ public class TinyDispatchService {
         String code ="";
         TinyDispatch tinyDispatch =mongoTemplate.findOne(new Query(new Criteria(
                 "orderId").is(orderid)), TinyDispatch.class);
-        code = tinyDispatch.getCode();
+        if(tinyDispatch!=null) {
+            code = tinyDispatch.getCode();
+        }
         return code;
     }
 
