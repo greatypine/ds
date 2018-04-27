@@ -220,7 +220,7 @@ public class MassOrderScheduleTask {
 		new Thread(){
 			public void run() {
 				try{
-					logger.info("**********massorder打退货标签任务调度开始**********");
+					logger.info("**********massorder打退货标签任务调度开始 **********");
 					//获取上次调度时的最大退货时间
 					String maxReturnTime = dfMassOrderService.queryMaxReturnTime()==null?DateUtils.getPreDate(new Date()):dfMassOrderService.queryMaxReturnTime();
 					//给后台接口构建参数
