@@ -105,6 +105,11 @@ public class MassOrderScheduleTask {
 				List<DfMassOrder> massOrderList =massOrderService.queryMassOrderByDate(paraMap);
 
 				if(!massOrderList.isEmpty()){
+		    		//设置任务为运行中状态
+		    		Map<String, String> runMap = new HashMap<String,String>();
+		    		runMap.put("id", "2");
+		    		runMap.put("task_status", "RUNNING");
+		    		dsCronTaskService.updateTaskStatusById(runMap);
 					//根据结果去清洗表mass_order中查找不存在的订单
 					List<DfMassOrder> massOrderPatchList = new ArrayList<DfMassOrder>();
 					StringBuilder sb = new StringBuilder();
@@ -120,9 +125,13 @@ public class MassOrderScheduleTask {
 					if(!massOrderPatchList.isEmpty()){
 						paramsPackage(massOrderPatchList);
 					}
-					logger.info("订单打补丁共调度数据记录行数："+massOrderPatchList.size() +" 行,所补订单号为："+sb.toString()
-					);
+					logger.info("订单打补丁共调度数据记录行数："+massOrderPatchList.size() +" 行,所补订单号为："+sb.toString());
 				}
+				//插入完毕将状态设置为'DONE'
+				Map<String, String> doneMap = new HashMap<String,String>();
+				doneMap.put("id", "2");
+				doneMap.put("task_status", "DONE");
+				dsCronTaskService.updateTaskStatusById(doneMap);
 				long taskEndTime = System.currentTimeMillis();    //获取结束时间
 				logger.info("**********订单打补丁任务调度结束:"+(taskEndTime - taskStartTime) + "ms**********");
 			}
