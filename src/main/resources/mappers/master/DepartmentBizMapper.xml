@@ -6,19 +6,19 @@
 	
 	<delete id="deleteDeptGmvByYearMonth" parameterType="java.util.Map">
 		<![CDATA[
-			delete from ds_deptgmv where year =#{year} and month =#{month}
+			delete from ds_pes_gmv_storedept_month where year =#{year} and month =#{month}
 		]]>
 	</delete>
 	
 	<delete id="deleteDeptCusByYearMonth" parameterType="java.util.Map">
 		<![CDATA[
-			delete from ds_deptcus where year =#{year} and month =#{month}
+			delete from ds_pes_customer_storedept_month where year =#{year} and month =#{month}
 		]]>
 	</delete>	
 	
 	<insert id="addDeptGmvByMassOrder" parameterType="java.util.Map">
 		<![CDATA[
-			insert into ds_deptgmv (
+			insert into ds_pes_gmv_storedept_month (
 			 cityname,platformid,storeno,storename,deptid,deptname,pesgmv,deptgmv,thgmv,year,month
 			)
 			select 
@@ -96,7 +96,7 @@
 	
 		<insert id="addDeptCusByMassOrder" parameterType="java.util.Map">
 		<![CDATA[
-			insert into ds_deptcus (
+			insert into ds_pes_customer_storedept_month (
 				cityname,platformid,storeno,storename,deptid,deptname,cusnum,cusnum_ten,year,month
 			)
 			SELECT c.cityname,c.platformid,c.storeno,c.storename,c.deptid,c.deptname,c.cusnum,b.total_ten,c.cur_year,c.cur_month FROM 

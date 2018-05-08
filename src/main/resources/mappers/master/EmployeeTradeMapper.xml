@@ -8,14 +8,14 @@
             select
               store_name, employee_no,employee_name,pesgmv,pes_sendgmv,
               pes_areagmv,pes_assigngmv,pes_pergmv
-             from ds_emptrade
+             from ds_pes_gmv_emp_month
             where year=#{year} and month=#{month}
 		]]>
     </select>
 
     <insert id="addEmployeeTradeByMassOrder" parameterType="java.util.Map">
         <![CDATA[
-            insert into ds_emptrade (
+            insert into ds_pes_gmv_emp_month (
               city_name,storeno,store_name,employee_no,employee_name,pesgmv,pes_sendgmv,
               pes_areagmv,pes_assigngmv,pes_pergmv,sendgmv,sendthgmv,areagmv,areathgmv,
               assigngmv,assignthgmv,pergmv,perthgmv,year,month
@@ -133,55 +133,62 @@
             group by dopm.employee_no
             ) assginth on (tman.employee_no = assginth.employee_no)
             left join (
-            select aa.store_id,(persum/pernum) as pergmv from (
-            select ts.platformid,ts.store_id ,count(1) as pernum
-            from t_humanresources thuman ,t_store ts
-            where thuman.store_id = ts.store_id
-            and thuman.zw ='国安侠'
-            and thuman.humanstatus =1
-            group by ts.platformid
-            ) aa ,
-            (select store_id,
-            sum(gmv_price) persum
-            from df_mass_order_monthly tor
-            where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
-            AND tor.store_white !='QA' and tor.store_status = 0
-            AND customer_id like 'fakecustomer%'
-            AND tor.sign_time >=#{begindate}
-            and tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-            group by store_id
-            ) bb
-                where aa.platformid = bb.store_id
-            ) percap on (tman.store_id = percap.store_id)
+				select thuman1.employee_no,pergmv from t_humanresources thuman1 
+				 join (
+					select aa.store_id,(persum/pernum) as pergmv 
+					from (
+					select ts.platformid,ts.store_id ,count(1) as pernum
+					from t_humanresources thuman ,t_store ts
+					where thuman.store_id = ts.store_id
+					and thuman.zw ='国安侠'
+					and thuman.humanstatus =1
+					group by ts.platformid
+					) aa ,
+					(select store_id,
+					sum(gmv_price) persum
+					from df_mass_order_monthly tor
+					where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+					AND tor.store_white !='QA' and tor.store_status = 0
+					AND customer_id like 'fakecustomer%'
+					AND tor.sign_time >=#{begindate}
+					and tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					group by store_id
+					) bb
+					where aa.platformid = bb.store_id
+				) cc on (thuman1.store_id = cc.store_id and thuman1.zw ='国安侠' and thuman1.humanstatus =1 )
+            ) percap on (tman.employee_no = percap.employee_no )
             left join (
-            select aa.store_id,(persum/pernum) as perthgmv from (
-            select ts.platformid,ts.store_id ,count(1) as pernum
-            from t_humanresources thuman ,t_store ts
-            where thuman.store_id = ts.store_id
-            and thuman.zw ='国安侠'
-            and thuman.humanstatus =1
-            group by ts.platformid
-            ) aa ,
-            (select
-            store_id,
-            sum(returned_amount) persum
-            from df_mass_order_monthly tor
-            where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
-            AND tor.store_white !='QA' and tor.store_status = 0
-            AND customer_id like 'fakecustomer%'
-            AND tor.return_time >=#{begindate}
-            and tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-            group by store_id) bb
-            where aa.platformid = bb.store_id
-            ) percapth on (tman.store_id = percapth.store_id)
-            where tman.humanstatus = 1 and zw ='国安侠'
+					select thuman2.employee_no,perthgmv from t_humanresources thuman2 
+					join (            
+					select aa.store_id,(persum/pernum) as perthgmv from (
+					select ts.platformid,ts.store_id ,count(1) as pernum
+					from t_humanresources thuman ,t_store ts
+					where thuman.store_id = ts.store_id
+					and thuman.zw ='国安侠'
+					and thuman.humanstatus =1
+					group by ts.platformid
+					) aa ,
+					(select
+					store_id,
+					sum(returned_amount) persum
+					from df_mass_order_monthly tor
+					where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+					AND tor.store_white !='QA' and tor.store_status = 0
+					AND customer_id like 'fakecustomer%'
+					AND tor.return_time >=#{begindate}
+					and tor.return_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					group by store_id) bb
+					where aa.platformid = bb.store_id
+					) cc on (thuman2.store_id = cc.store_id and thuman2.zw ='国安侠' and thuman2.humanstatus =1 )
+            ) percapth on (tman.employee_no = percapth.employee_no)
+            where (tman.humanstatus = 1 or ( humanstatus =2 and leavedate like '%/%' and leavedate >=DATE(#{begindate}) and leavedate < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY) )) and zw ='国安侠'
             order by tman.store_id
 		]]>
     </insert>
 
     <delete id="deleteByYearMonth" parameterType="java.util.Map">
         <![CDATA[
-			delete from ds_emptrade where year =#{year} and month =#{month}
+			delete from ds_pes_gmv_emp_month where year =#{year} and month =#{month}
 		]]>
     </delete>
 
@@ -191,7 +198,7 @@
     <select id="queryEmployeeTradeByEmp" parameterType="java.util.Map" resultType="String">
         <![CDATA[
 			select pesgmv as totalsum
-			from ds_emptrade aa
+			from ds_pes_gmv_emp_month aa
 			where aa.year =#{year} and aa.month =#{month} and aa.employee_no =#{employee_no}
 		]]>
     </select>
@@ -202,7 +209,7 @@
     <select id="queryEmployeePesgmvByEmp" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 			select pesgmv,0 as pes_sendgmv ,pes_areagmv,pes_assigngmv,pes_pergmv 
-			from ds_emptrade aa
+			from ds_pes_gmv_emp_month aa
 			where aa.year =#{year} and aa.month =#{month} and aa.employee_no =#{employee_no}
 		]]>
     </select>
@@ -210,7 +217,7 @@
     
         <insert id="addPreEmployeeTradeByMassOrder" parameterType="java.util.Map">
         <![CDATA[
-            insert into ds_emptrade (
+            insert into ds_pes_gmv_emp_month (
               city_name,storeno,store_name,employee_no,employee_name,pesgmv,pes_sendgmv,
               pes_areagmv,pes_assigngmv,pes_pergmv,sendgmv,sendthgmv,areagmv,areathgmv,
               assigngmv,assignthgmv,pergmv,perthgmv,year,month

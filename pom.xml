@@ -83,8 +83,8 @@
                 <redis.host>10.16.31.82</redis.host>
                 <redis.port>6379</redis.port>
                 <!--<redis.password></redis.password>-->
-                <mongodb.hosts>10.16.31.216,10.16.31.216,10.16.31.216</mongodb.hosts>
-                <mongodb.ports>27017,27027,27037</mongodb.ports>
+                <mongodb.hosts>10.16.31.216</mongodb.hosts>
+                <mongodb.ports>27017</mongodb.ports>
                 <mongodb.database>gemini</mongodb.database>
                 <mongodb.username>mongo</mongodb.username>
                 <mongodb.password>abc123</mongodb.password>
@@ -103,8 +103,8 @@
                 <redis.host>10.16.31.82</redis.host>
                 <redis.port>6379</redis.port>
                 <!--<redis.password></redis.password>-->
-                <mongodb.hosts>10.16.31.216,10.16.31.216,10.16.31.216</mongodb.hosts>
-                <mongodb.ports>27017,27027,27037</mongodb.ports>
+                <mongodb.hosts>10.16.31.216</mongodb.hosts>
+                <mongodb.ports>27017</mongodb.ports>
                 <mongodb.database>gemini</mongodb.database>
                 <mongodb.username>mongo</mongodb.username>
                 <mongodb.password>abc123</mongodb.password>

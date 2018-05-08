@@ -90,4 +90,66 @@
 			tor.channel_id 
 		]]>
 	</insert>	
+	
+	<insert id="addDsPesGmvStoreChannelMonth" parameterType="java.util.Map">
+		<![CDATA[
+			insert into ds_pes_gmv_storechannel_month (
+				storeno,platformid,store_name,city_name,dep_name,channel_id,channel_name,pesgmv,
+				gmv_amount,returned_amount,order_count,returned_count,year,month
+			)
+			select 
+				ts.storeno as storeno ,
+				ts.platformid as platformid,
+				ts.name as store_name,
+				ts.city_name as city_name,
+				ordergmv.dep_name as dep_name,
+				ordergmv.channel_id as channel_id,
+				ordergmv.channel_name as channel_name,
+				(IFNULL(ordergmv.gmv_price,0) - IFNULL(orderthgmv.returned_amount,0)) as pesgmv,
+				IFNULL(ordergmv.gmv_price,0) as gmv_amount,
+				IFNULL(orderthgmv.returned_amount,0) as returned_amount,
+				IFNULL(order_count,0) as order_count,
+				IFNULL(returned_count,0) as returned_count,
+				YEAR(date_sub(now(),interval 1 day)) as year ,
+				MONTH(date_sub(now(),interval 1 day)) as month
+			from (
+					select
+					tor.store_id,
+					tor.store_code,
+					tor.store_name,
+					tor.department_name as dep_name,
+					tor.channel_id ,
+					tor.channel_name,
+					sum(tor.gmv_price) as gmv_price,
+					count(tor.id) as order_count,
+					sum(case when tor.loan_label ='4' then 0 else tor.gmv_price end) as other_order_amount,
+					sum(case when tor.loan_label ='4' then 0 else 1 end) as other_order_count
+					from df_mass_order_monthly tor
+					where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+					AND tor.store_white !='QA' and tor.store_status = 0
+					AND (tor.loan_label ='0' or tor.loan_label ='3' or tor.loan_label = '4' or tor.loan_label = '5')
+					AND (tor.abnormal_label ='0')
+					AND tor.sign_time >='2018-01-01'
+					AND tor.sign_time <DATE_ADD(DATE('2018-01-03'), INTERVAL 1 DAY)
+					group by store_id,channel_id	
+			) ordergmv left join (
+					select
+					store_id ,
+					channel_id,
+					sum(returned_amount) as returned_amount,
+					count(tor.id) as returned_count
+					from df_mass_order_total tor
+					where tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
+					AND tor.store_white !='QA' and tor.store_status = 0
+					AND (tor.loan_label ='0' or tor.loan_label ='3' or tor.loan_label = '4' or tor.loan_label = '5')
+					AND (tor.abnormal_label ='0')
+					AND tor.return_time >= '2018-01-01'
+					AND tor.return_time < DATE_ADD(DATE('2018-01-31'), INTERVAL 1 DAY)
+					group by store_id,channel_id
+			) orderthgmv on (ordergmv.store_id = orderthgmv.store_id and ordergmv.channel_id = orderthgmv.channel_id)
+			left join t_store ts on (ts.platformid = ordergmv.store_id)
+			where ts.`name` not like '%测试%'  and ts.platformid is not null ;
+		]]>
+	</insert>	
+	
 </mapper>

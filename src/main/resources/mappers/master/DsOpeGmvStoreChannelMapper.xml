@@ -12,7 +12,7 @@
 	<insert id="addDsOpeGmvStoreChannelMonthByMassOrder" parameterType="java.util.Map">
 		<![CDATA[
 			insert into ds_ope_gmv_storechannel_month (
-				storeno,platformid,store_name,city_name,dep_name,channel_id,channel_name,order_amount,
+				storeno,platformid,store_name,city_name,cityno,dep_name,channel_id,channel_name,order_amount,
 				gmv_amount,returned_amount,order_count,returned_count,year,month
 			)			
 			select 
@@ -20,6 +20,7 @@
 				ts.platformid as platformid,
 				ts.name as store_name,
 				ts.city_name as city_name,
+				ts.cityno as cityno,
 				ordergmv.dep_name as dep_name,
 				ordergmv.channel_id as channel_id,
 				ordergmv.channel_name as channel_name,

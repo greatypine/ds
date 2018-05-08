@@ -17,7 +17,7 @@
 				IFNULL(channelname,'') as channelname,
 				datanum,
 				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
-			from ds_sendorders where year =#{year} and month =#{month}
+			from ds_pes_order_empchannel_month where year =#{year} and month =#{month}
 		]]>
 		 <if test="null != platformid and '' != platformid">
               <![CDATA[                   
@@ -38,7 +38,7 @@
 	
 	<insert id="addTSendOrders" parameterType="java.util.Map">
 		<![CDATA[
-			insert into ds_sendorders(
+			insert into ds_pes_order_empchannel_month(
 				cityname,platformid,storeno,storename,username,deptchannelid,deptname,channelname,datanum,
 				year,month,createtime) 
 			values(
@@ -51,7 +51,7 @@
 	
 	<delete id="deleteByYearMonth" parameterType="java.util.Map">
 		<![CDATA[
-			delete from ds_sendorders where year =#{year} and month =#{month}
+			delete from ds_pes_order_empchannel_month where year =#{year} and month =#{month}
 		]]>
 	</delete>
 	
@@ -70,13 +70,13 @@
 				IFNULL(channelname,'') as channelname,
 				datanum,
 				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
-			from ds_sendorders where year =#{year} and month =#{month} and storeno IN (${storeids})) sendorderChanline
+			from ds_pes_order_empchannel_month where year =#{year} and month =#{month} and storeno IN (${storeids})) sendorderChanline
 		]]>
 	</select>
 	
 	<insert id="addTSendOrdersByMassOrder" parameterType="java.util.Map">
 		<![CDATA[
-			insert into ds_sendorders(
+			insert into ds_pes_order_empchannel_month(
 				storeno,platformid,cityname,storename,employee_no,username,deptchannelid,deptname,channelname,datanum,
 				year,month,createtime
 			) 
@@ -113,6 +113,7 @@
 				and tor.store_white !='QA'
 				and tor.eshop_white !='QA'
 				and tor.business_model_id !='fakemodelforexpress0000000000001' 
+				and tor.bussiness_group_id !='8ad8ef90610bf1ff01610c3830a605e6'
 				group by tor.store_id,tor.employee_id,tor.channel_id
 			) empline
 			left join t_humanresources thuman on (empline.employee_no = thuman.employee_no)

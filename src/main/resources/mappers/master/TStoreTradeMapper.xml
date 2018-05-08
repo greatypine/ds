@@ -11,7 +11,7 @@
  				returned_amount, other_returned_amount, order_count,
  				other_order_count, returned_count, other_returned_count,
  				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
- 			from ds_storetrade where year=#{year} and month=#{month}
+ 			from ds_pes_gmv_store_month where year=#{year} and month=#{month}
 		]]>
 	   <if test="null != storeids and null != storeids">
            <![CDATA[                   
@@ -27,7 +27,7 @@
 	
 	<insert id="addTStoreTrades" parameterType="java.util.Map">
 		<![CDATA[
-			INSERT INTO ds_storetrade (
+			INSERT INTO ds_pes_gmv_store_month (
 				city_name, platformid,storeno,store_name, pesgmv,order_amount, other_order_amount,
 				returned_amount, other_returned_amount,	order_count,
 				other_order_count, returned_count, other_returned_count,
@@ -43,7 +43,7 @@
 	
 	<delete id="deleteByYearMonth" parameterType="java.util.Map">
 		<![CDATA[
-			delete from ds_storetrade where year =#{year} and month =#{month}
+			delete from ds_pes_gmv_store_month where year =#{year} and month =#{month}
 		]]>
 	</delete>
 	
@@ -56,13 +56,13 @@
  				returned_amount, other_returned_amount, order_count,
  				other_order_count, returned_count, other_returned_count,
  				date_format(createtime,'%Y-%m-%d %h:%i') as createtime
- 			from ds_storetrade where year=#{year} and month=#{month} and storeno IN (${storeids})) storetradesumline
+ 			from ds_pes_gmv_store_month where year=#{year} and month=#{month} and storeno IN (${storeids})) storetradesumline
 		]]>
 	</select>
 
 	<insert id="addTStoreTradesByMassOrder" parameterType="java.util.Map">
 		<![CDATA[
-			INSERT INTO ds_storetrade (
+			INSERT INTO ds_pes_gmv_store_month (
 				storeno,platformid,city_name, store_name, pesgmv,order_amount, other_order_amount,
 				returned_amount, other_returned_amount,	order_count,
 				other_order_count, returned_count, other_returned_count,
@@ -146,7 +146,7 @@
 
 		<insert id="addPreTStoreTradesByMassOrder" parameterType="java.util.Map">
 		<![CDATA[
-			INSERT INTO ds_storetrade (
+			INSERT INTO ds_pes_gmv_store_month (
 				storeno,platformid,city_name, store_name, pesgmv,order_amount, other_order_amount,
 				returned_amount, other_returned_amount,	order_count,
 				other_order_count, returned_count, other_returned_count,
