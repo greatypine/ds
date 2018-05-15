@@ -25,5 +25,24 @@
 			delete from ds_product_city
 		]]>
 	</delete>
+	
+	<insert id="addTProductCityDay" parameterType="java.util.Map">
+		<![CDATA[
+			INSERT INTO ds_ope_product_city_day (
+				cityno,city_name,product_id,product_name,product_count,recdate
+			) VALUES(
+				#{cityno},#{city_name},#{product_id},#{product_name},#{product_count},date(now())
+			) on duplicate key update   
+			product_count = product_count + values(product_count),
+			updatetime = now()
+		]]>
+	</insert>
+	
+	<delete id="deleteTProductCityDay">
+		<![CDATA[
+			truncate table ds_ope_product_city_day
+		]]>
+	</delete>
+	
 
 </mapper>

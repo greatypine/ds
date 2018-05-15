@@ -13,4 +13,6 @@ public interface OrderMapper{
 	String queryIdByOrderSn(Map<String, String> paraMap);
 	
 	Map<String, Object> queryOrderAddressByOrderSn(Map<String, String> paraMap);
+	
+	String queryMaxSigntime(Map<String, String> paraMap);
 }

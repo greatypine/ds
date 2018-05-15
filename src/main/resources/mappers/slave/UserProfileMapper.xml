@@ -53,6 +53,7 @@
 			tmpcusline.order_sn,
 			tmpcusline.first_order_time,
 			ts.`code` as storeno,
+			ts.city_code as cityno,
 			a.`name` as city_name
 			from (
 				select

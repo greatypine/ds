@@ -15,4 +15,8 @@ public interface TProductCityMapper {
 	int addTProductCity(Map<String, String> paraMap);
 	
 	int deleteByYearMonth();
+	
+	int addTProductCityDay(Map<String, String> paraMap);
+	
+	int deleteTProductCityDay();
 }

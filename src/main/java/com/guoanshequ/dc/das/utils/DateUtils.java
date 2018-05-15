@@ -19,6 +19,17 @@ public class DateUtils {
     	SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");  
         return dateformat.parse(date);  
     } 
+    
+    /** 
+     * 将日期字符串转化为日期时间。失败返回null。 
+     * @param date 日期时间字符串 
+     * @return 日期时间
+     * @throws Exception 
+     */  
+    public static Date StringToDateTime(String date) throws Exception {  
+    	SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateformat.parse(date);  
+    } 
 	
 	/** 
      * 获取两个日期相差的天数 

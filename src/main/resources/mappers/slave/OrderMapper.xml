@@ -17,4 +17,11 @@
 		where tor.order_sn =#{order_sn}
 		limit 1
 	</select>
+	
+   <select id="queryMaxSigntime" resultType="java.lang.String">
+ 		<![CDATA[
+ 			select max(df_signed_time) from  df_order_signed_daily
+ 		]]>
+   </select>
+   	
 </mapper>

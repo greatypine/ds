@@ -38,4 +38,14 @@ public class TProductCityService {
     	return tProductCityDao.deleteByYearMonth();
     }
     
+    public int addTProductCityDay(Map<String, String> paraMap){
+
+    	return tProductCityDao.addTProductCityDay(paraMap);
+    }
+    
+    public int deleteTProductCityDay(){
+
+    	return tProductCityDao.deleteTProductCityDay();
+    }
+    
 }

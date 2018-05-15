@@ -24,4 +24,11 @@
 		]]>
 	</update>
 	
+		<!-- 更新开始时间 -->
+	<update id="updateNextBeginTimeById" parameterType="java.lang.String">
+		<![CDATA[
+			update ds_crontask set begintime = #{begintime} where id = #{id};
+		]]>
+	</update>
+	
 </mapper>

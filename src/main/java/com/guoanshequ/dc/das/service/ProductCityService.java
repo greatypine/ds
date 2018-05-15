@@ -27,4 +27,10 @@ public class ProductCityService {
 
     	return productCityDao.queryByProductCity(paraMap);
     }
+    
+    public List<Map<String, String>> queryByProductCityDay(Map<String, String> paraMap){
+
+    	return productCityDao.queryByProductCityDay(paraMap);
+    }    
+    
 }

@@ -12,5 +12,28 @@
 			group by tsa.`name`,product_id
 		]]>
 	</select>
-
+	
+	
+	<select id="queryByProductCityDay" resultType="java.util.Map">
+		<![CDATA[
+			SELECT
+				ts.city_code as cityno,
+				tsa.`name` as city_name,
+				tp.id AS product_id,
+				tp.content_name AS product_name,
+				count(1) as product_count,
+				date(now()) as recdate  
+			FROM
+				df_order_signed_daily dosm
+			JOIN t_order_item toi ON (dosm.id = toi.order_id)
+			JOIN t_product tp ON (tp.id = toi.eshop_pro_id)
+			JOIN t_store ts ON (ts.id = dosm.store_id)
+			LEFT JOIN  t_sys_area tsa on (ts.city_code = tsa.code and tsa.level = 2)
+			WHERE
+				dosm.df_signed_time >= #{begintime}
+			AND dosm.df_signed_time < #{endtime}
+			group by ts.city_code,tp.id 
+		]]>
+	</select>
+	
 </mapper>

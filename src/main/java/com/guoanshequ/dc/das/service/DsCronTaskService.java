@@ -35,4 +35,9 @@ public class DsCronTaskService {
     	return dsCronTaskDao.updateTaskStatusById(paraMap);
     }
     
+    public Integer updateNextBeginTimeById(Map<String, String> paraMap) throws Exception{
+    	return dsCronTaskDao.updateNextBeginTimeById(paraMap);
+    }
+    
+    
 }

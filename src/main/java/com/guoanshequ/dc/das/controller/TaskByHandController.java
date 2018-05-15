@@ -709,6 +709,18 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    @RequestMapping(value = "rest/productCityDayTaskRun",method = RequestMethod.POST)
+    public RestResponse productCityDayTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            productCityTask.productCityDayTask();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 
 
     /**

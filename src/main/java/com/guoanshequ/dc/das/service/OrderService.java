@@ -34,4 +34,9 @@ public class OrderService {
     	
     	return orderDao.queryOrderAddressByOrderSn(paraMap);
     }
+    
+    public String queryMaxSigntime(Map<String, String> paraMap){
+    	
+    	return orderDao.queryMaxSigntime(paraMap);
+    }
 }

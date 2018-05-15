@@ -12,4 +12,5 @@ public interface ProductCityMapper {
 	
 	 List<Map<String, String>> queryByProductCity(Map<String, String> paraMap);
 	
+	 List<Map<String, String>> queryByProductCityDay(Map<String, String> paraMap);
 }

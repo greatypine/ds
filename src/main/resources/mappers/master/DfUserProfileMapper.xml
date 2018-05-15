@@ -34,11 +34,11 @@
 	<insert id="addDfUserStore" parameterType="java.util.Map" >
 		<![CDATA[
 			insert ignore into df_user_store(
-				customer_id,store_id,city_name,storeno,customer_phone,order_sn,area_code,tiny_village_code,
+				customer_id,store_id,city_name,cityno,storeno,customer_phone,order_sn,area_code,tiny_village_code,
 				employee_a_no,latitude,longitude,first_order_time
 			) 
 			values (
-				#{customer_id},#{store_id},#{city_name},#{storeno},#{customer_phone},#{order_sn},#{area_code},#{tiny_village_code},
+				#{customer_id},#{store_id},#{city_name},#{cityno},#{storeno},#{customer_phone},#{order_sn},#{area_code},#{tiny_village_code},
 				#{employee_a_no},#{latitude},#{longitude},#{first_order_time}
 			)
         ]]>

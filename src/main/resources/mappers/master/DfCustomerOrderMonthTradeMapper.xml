@@ -10,11 +10,11 @@
     </select>
 
 	<!-- 更新开始时间 -->
-	<select id="updateNextBeginTime" parameterType="java.lang.String">
+	<update id="updateNextBeginTime" parameterType="java.lang.String">
 		<![CDATA[
 			update ds_crontask set begintime = #{begintime} where id = 3;
 		]]>
-	</select>
+	</update>
 	
 	<!-- 以人店月查询用户最大消费次数 -->
 	<select id="queryCustomerMaxCount" parameterType="java.util.Map" resultType="java.lang.Integer">
