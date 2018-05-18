@@ -68,7 +68,16 @@ public class ProductCityTask {
     	}.start();
     }
     
-    @Scheduled(cron ="0 * * 15-18 5 ?")
+    /**
+     * 
+    * @Title: productCityDayTask
+    * @Description: 518购物节产品销售量，5月15号-5月18号每1分钟执行一次
+    * @param     设定文件
+    * @return void    返回类型
+    * @throws
+     */
+//    @Scheduled(cron ="0 * * 15-18 5 ?")
+    @Scheduled(cron ="0 */1 * * * ?")
     public void productCityDayTask() {
 //    	new Thread(){
 //    		public void run() {
@@ -106,7 +115,16 @@ public class ProductCityTask {
 //    	}.start();
     	}
     
-    @Scheduled(cron ="30 0 0 15-18 5 ?")
+    /**
+     * 
+    * @Title: deleProductCityDayTask
+    * @Description: 518购物节商品销量计算，调度时间5月15号-5月18号凌晨30分钟清除
+    * @param     设定文件
+    * @return void    返回类型
+    * @throws
+     */
+//    @Scheduled(cron ="30 0 0 15-18 5 ?")
+    @Scheduled(cron ="30 0 0 * * ?")
     public void deleProductCityDayTask() {
 //    	new Thread(){
 //    		public void run() {
