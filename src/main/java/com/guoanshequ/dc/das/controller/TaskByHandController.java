@@ -63,6 +63,9 @@ public class TaskByHandController {
     OpeDataScheduleTask opeDataScheduleTask;
     @Autowired
     TestTask testTask;
+    @Autowired
+    UserMemberScheduleTask userMemberScheduleTask;
+
     
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
@@ -83,7 +86,8 @@ public class TaskByHandController {
     @RequestMapping(value = "rest/testMongoRun",method = RequestMethod.POST)
     public RestResponse testMongoRun() throws Exception {
 	    try {
-	    	testTask.testMongoConn();
+//	    	testTask.testMongoConn();
+	    	userMemberScheduleTask.testMongo1();
 	    	return new RestResponse("OK","mongo连接成功!");
 		} catch (Exception e) {
             logger.error(e.toString());
@@ -709,7 +713,12 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
-    
+    /**
+     * 特殊节日商口每天销售量，手动调度商品按城市排名任务
+     * @param paraMap
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "rest/productCityDayTaskRun",method = RequestMethod.POST)
     public RestResponse productCityDayTask(@RequestBody Map<String, String> paraMap) throws Exception {
         try{
@@ -1204,7 +1213,7 @@ public class TaskByHandController {
      * 运营数据：门店交易额按频道
      */
     @RequestMapping(value = "rest/opeGmvStoreChannelMonthTaskRun",method = RequestMethod.POST)
-    public RestResponse opeGmvStoreChannelMonthTaskTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    public RestResponse opeGmvStoreChannelMonthTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		opeDataScheduleTask.opeGmvStoreChannelMonthByMassOrderTask(); 
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
@@ -1214,6 +1223,19 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
-    
+    /**
+     * 社员信息调度
+     */
+    @RequestMapping(value = "rest/userMemberTaskRun",method = RequestMethod.POST)
+    public RestResponse userMemberTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		userMemberScheduleTask.userMemberTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
     
 }

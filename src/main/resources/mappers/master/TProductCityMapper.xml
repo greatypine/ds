@@ -13,9 +13,9 @@
 	<insert id="addTProductCity" parameterType="java.util.Map">
 		<![CDATA[
 			INSERT INTO ds_product_city (
-				province_name,city_name, product_name,product_count,create_time
+				province_name,cityno,city_name, product_id,product_name,product_count,create_time
 			) VALUES(
-				#{province_name},#{city_name},#{product_name},#{product_count},now()
+				#{province_name},#{cityno},#{city_name},#{product_id},#{product_name},#{product_count},now()
 			)
 		]]>
 	</insert>	

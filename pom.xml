@@ -83,11 +83,11 @@
                 <redis.host>10.16.31.82</redis.host>
                 <redis.port>6379</redis.port>
                 <!--<redis.password></redis.password>-->
-                <mongodb.hosts>10.16.31.216</mongodb.hosts>
+                <mongodb.hosts>115.182.249.132</mongodb.hosts>
                 <mongodb.ports>27017</mongodb.ports>
                 <mongodb.database>gemini</mongodb.database>
-                <mongodb.username>mongo</mongodb.username>
-                <mongodb.password>abc123</mongodb.password>
+                <mongodb.username>zxgasq</mongodb.username>
+                <mongodb.password>zxgasq2018341</mongodb.password>
             </properties>
         </profile>
         <profile>

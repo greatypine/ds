@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.UserMemberMapper">
+
+	<!-- 根据创建时间从收款表中获取社员信息 -->
+	<select id="queryUserMemberByCreateTime" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select 
+			tc.id as customer_id,
+			tc.mobilephone as mobilephone,
+			tc.create_time as regist_time,
+			tc.associator_level as associator_level,
+			tc.associator_expiry_date as associator_expiry_date
+		from t_customer tc
+		where ((tc.create_time >=#{begintime} and tc.create_time <=#{endtime} ) 
+		or ( tc.update_time >=#{begintime} and tc.update_time <=#{endtime} ))
+		and tc.associator_level = 2 
+		]]>
+	</select>
+	
+</mapper>

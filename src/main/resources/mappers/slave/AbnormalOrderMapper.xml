@@ -18,15 +18,13 @@
 			'企业购' as abnortype,
 			'auto' as datatype,
 			0 as status,
-			tof.create_time as signedtime,
+			tor.sign_time as signedtime,
 			YEAR(date_sub(now(),interval 1 day)) as year ,
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
-			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa
-			where tor.id = tof.order_id
-			and tof.order_status ='signed'
-			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			from t_order tor,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa
+			where tor.sign_time >=#{begindate} and tor.sign_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			and tor.store_id = ts.id
 			and tor.eshop_id = te.id
 			and te.id in (${eshopids})
@@ -37,7 +35,7 @@
 		]]>
 	</select>
 	
-	<!--自动： 营销费用异常B 优惠力度大于50%的（优惠券力度大于总金额50%）-->
+	<!--自动： 营销费用异常B 优惠力度大于50%的（优惠券力度大于总金额50%），且 E店名 不是 国安社区会员开卡礼，国安社区会员试用礼 开头-->
 	<select id="queryAbnorOrderB" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 			select
@@ -53,15 +51,13 @@
 			'营销费用异常' as abnortype,
 			'auto' as datatype,
 			0 as status,
-			tof.create_time as signedtime,
+			tor.sign_time as signedtime,
 			YEAR(date_sub(now(),interval 1 day)) as year ,
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
-			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_order_receipts trp
-			where tor.id = tof.order_id
-			and tof.order_status ='signed'
-			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			from t_order tor,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_order_receipts trp
+			where tor.sign_time >=#{begindate} and tor.sign_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			and tor.store_id = ts.id
 			and tor.eshop_id = te.id
 			and tesr.id = te.department_id and tesr.role_name like '%洗衣%'
@@ -75,6 +71,7 @@
 			and	 trp.pay_status= 'payed'  
 			and	 (trp.pay_platform !='prepay' or trp.pay_platform is null)			
 			and tor.payable_price/tor.trading_price < 0.5
+			and (te.name not like '国安社区会员开卡礼%' and te.name not like '国安社区会员试用礼%')
 			UNION
 			select
 			tor.order_sn as ordersn,
@@ -89,15 +86,13 @@
 			'营销费用异常' as abnortype,
 			'auto' as datatype,
 			0 as status,
-			tof.create_time as signedtime,
+			tor.sign_time as signedtime,
 			YEAR(date_sub(now(),interval 1 day)) as year ,
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
-			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa
-			where tor.id = tof.order_id
-			and tof.order_status ='signed'
-			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			from t_order tor,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa
+			where  tor.sign_time >=#{begindate} and tor.sign_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			and tor.store_id = ts.id
 			and tor.eshop_id = te.id
 			and tesr.id = te.department_id and tesr.role_name not like '%洗衣%'
@@ -105,6 +100,7 @@
 			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
 			and ts.city_code = tsa.code and tsa.level = 2
 			and tor.payable_price/tor.trading_price < 0.5
+			and (te.name not like '国安社区会员开卡礼%' and te.name not like '国安社区会员试用礼%')
 		]]>
 	</select>
 	
@@ -128,25 +124,21 @@
 			'连续购买型' as abnortype,
 			'manual' as datatype,
 			0 as status,
-			tof.create_time as signedtime,
+			tor.sign_time as signedtime,
 			YEAR(date_sub(now(),interval 1 day)) as year ,
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
-			from t_order tor,t_order_flow tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc,(
+			from t_order tor,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc,(
 					select
 					customer_id,tor.store_id
-					from t_order tor,t_order_flow tof
-					where tor.id = tof.order_id
-					and tof.order_status ='signed'
-					and tof.create_time >=#{prenbegindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					from t_order tor
+					where tor.sign_time >=#{prenbegindate} and tor.sign_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 					and tor.trading_price >=1000
 					group by customer_id,tor.store_id
 					having count(*)>=10 
 			) cusline
-			where tor.id = tof.order_id
-			and tof.order_status ='signed'
-			and tof.create_time >=#{prenbegindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			where  tor.sign_time >=#{prenbegindate} and tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			and tor.store_id = ts.id
 			and tor.eshop_id = te.id
 			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
@@ -181,16 +173,14 @@
 			'代客下单异常' as abnortype,
 			'manual' as datatype,
 			0 as status,
-			tof.create_time as signedtime,
+			tor.sign_time as signedtime,
 			YEAR(date_sub(now(),interval 1 day)) as year ,
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
-			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc
-			where tor.id = tof.order_id
-			and tor.order_source ='store'
-			and tof.order_status ='signed'
-			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			from t_order tor,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc
+			where tor.order_source ='store'
+			and tor.sign_time >=#{begindate} and tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			and tor.store_id = ts.id
 			and tor.eshop_id = te.id
 			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
@@ -222,15 +212,13 @@
 			'大额订单' as abnortype,
 			'manual' as datatype,
 			0 as status,
-			tof.create_time as signedtime,
+			tor.sign_time as signedtime,
 			YEAR(date_sub(now(),interval 1 day)) as year ,
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
-			from t_order tor,df_order_flow_monthly tof,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc
-			where tor.id = tof.order_id
-			and tof.order_status ='signed'
-			and tof.create_time >=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+			from t_order tor,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa,t_customer tc
+			where tor.sign_time >=#{begindate} and tor.sign_time <DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
 			and tor.store_id = ts.id
 			and tor.eshop_id = te.id
 			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
