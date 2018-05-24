@@ -5,11 +5,11 @@
 	<insert id="addDfUserMember" parameterType="java.util.Map" >
 		<![CDATA[
 			insert ignore into df_user_member (
-				customer_id,mobilephone,idcard,birthplace,born_province,born_city,birthday,sex,
-				regist_cityno,regist_time,opencard_time,isnew_member,associator_level,associator_expiry_date
+				customer_id,mobilephone,idcard,birthplace,born_province,born_city,birthday,sex,regist_storeid,
+				regist_cityno,regist_time,opencard_time,isnew_member,member_type,associator_level,associator_expiry_date
 			) values (
-				#{customer_id},#{mobilephone},#{idcard},#{birthplace},#{born_province},#{born_city},#{birthday},#{sex},
-				#{regist_cityno},#{regist_time},#{opencard_time},#{isnew_member},#{associator_level},#{associator_expiry_date}
+				#{customer_id},#{mobilephone},#{idcard},#{birthplace},#{born_province},#{born_city},#{birthday},#{sex},#{regist_storeid},
+				#{regist_cityno},#{regist_time},#{opencard_time},#{isnew_member},#{member_type},#{associator_level},#{associator_expiry_date}
 			)
         ]]>
 	</insert>

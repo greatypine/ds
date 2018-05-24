@@ -11,8 +11,8 @@
 			ts.code as storeno,
 			ts.`name` as storename,
 			te.name as eshopname,
-			LEFT(tesr.role_name,POSITION('_' IN tesr.role_name)-1) AS channelname,
-			SUBSTRING(tesr.role_name,POSITION('_' IN tesr.role_name)+1) AS deptname,
+			tdc1.`name` AS channelname,
+			tdc2.`name` AS deptname,
 			tor.trading_price as tradingprice,
 			tor.payable_price as payableprice,
 			'企业购' as abnortype,
@@ -23,15 +23,16 @@
 			MONTH(date_sub(now(),interval 1 day)) as month ,
 			NOW() as createtime,
 			NOW() as updatetime
-			from t_order tor,t_store ts,t_eshop te,t_ed_sys_role tesr,t_sys_area tsa
+			from t_order tor
+			join t_store ts on (tor.store_id = ts.id)
+			join t_eshop te on (tor.eshop_id = te.id)
+			join t_sys_area tsa on (ts.city_code = tsa.code and tsa.level = 2)
+			left join t_department_channel tdc1 on (te.channel_id = tdc1.id)
+			left join t_department_channel tdc2 on (te.bussiness_group_id = tdc2.id)
 			where tor.sign_time >=#{begindate} and tor.sign_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-			and tor.store_id = ts.id
-			and tor.eshop_id = te.id
 			and te.id in (${eshopids})
-			and tesr.id = te.department_id and tesr.role_name LIKE '%\_%'
 			and te.name NOT LIKE '%测试%' and te.white!='QA'
 			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
-			and ts.city_code = tsa.code and tsa.level = 2
 		]]>
 	</select>
 	

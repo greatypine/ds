@@ -45,7 +45,7 @@ public class UserMemberScheduleTask {
 	 * @return void 返回类型
 	 * @throws
 	 */
-	@Scheduled(cron = "0 0 1 * * ?")
+	@Scheduled(cron = "0 0 */1 * * ?")
 	public void userMemberTask() {
 		new Thread() {
 			public void run() {
@@ -83,31 +83,30 @@ public class UserMemberScheduleTask {
 				    		IdCard idcard =null;
 				    		String openCardTime ="";
 				    		String regitTime="";
+				    		String isnew_member="";
 							for (Map<String, Object> userMember : userMemberList) {
+								isnew_member="0";
 								customerInfoRecord = mongoService.queryCusInfoByCusId(userMember.get("customer_id").toString());
-								
 								if(customerInfoRecord!=null) {
-									
 									idcardStr = customerInfoRecord.getIdCard();
 									openCardTime = customerInfoRecord.getCreateTime();
+									userMember.put("opencard_time", openCardTime);
 									regitTime = userMember.get("regist_time").toString();
+									if(DateUtils.StringToDate(openCardTime).equals(DateUtils.StringToDate(regitTime))) {
+										isnew_member = "1";
+									}
 									if(!"".equals(idcardStr)) {
 										userMember.put("idcard", idcardStr);
-										userMember.put("opencard_time", openCardTime);
-										if(DateUtils.StringToDate(openCardTime).equals(DateUtils.StringToDate(regitTime))) {
-											userMember.put("isnew_member", "1");
-										}else {
-											userMember.put("isnew_member", "0");
-										}
-										userMember.put("regist_cityno", customerInfoRecord.getCityCode());
 										idcard = IdCardUtil.getIdCardInfo(idcardStr);
 										userMember.put("birthplace",idcard.getBirthplace());
 										userMember.put("born_province", idcard.getProvince());
 										userMember.put("born_city", idcard.getCity());
 										userMember.put("birthday",idcard.getBirthday());
 										userMember.put("sex",idcard.getGender());
+										userMember.put("regist_cityno", customerInfoRecord.getCityCode());
 									}
 								}
+								userMember.put("isnew_member", isnew_member);
 								dfUserMemberService.addDfUserMember(userMember);
 							}
 				    		//设置任务为运行完成状态
