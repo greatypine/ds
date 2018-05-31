@@ -88,10 +88,10 @@ public class OrderPubseasScheduleTask {
     }
 	/**
 	 * 公海订单清单,数据计算来源：df_mass_order
-	 * 调度规则：每2分钟调度一次
+	 * 调度规则：每2个小时调度一次
 	 * 参数：begindate  enddate
 	 */
-	@Scheduled(cron ="0 */2 * * * ? ")
+	@Scheduled(cron ="0 0 */2 * * ? ")
 	public void orderPubseasTaskByMassOrder() {
 		new Thread(){
 			public void run() {

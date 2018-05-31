@@ -155,6 +155,7 @@
 			dosm.customer_id,
 			dosm.store_id,
 			DATE_FORMAT(dosm.sign_time,'%Y%m')
+		ON duplicate key UPDATE trading_price = VALUES(trading_price), `update_time` = CURRENT_TIMESTAMP()
 		]]>
   </insert>
 	

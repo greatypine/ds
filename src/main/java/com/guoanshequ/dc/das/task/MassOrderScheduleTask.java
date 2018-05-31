@@ -180,7 +180,7 @@ public class MassOrderScheduleTask {
     }
    
     /**
-     * 将数据写入到退货order_returned表中
+     * 将数据写入到退货df_order_returned表中
 	 * 调度规则：每天凌晨1点40分
 	 * 根据表中最大退货时间顺序增量添加
      */

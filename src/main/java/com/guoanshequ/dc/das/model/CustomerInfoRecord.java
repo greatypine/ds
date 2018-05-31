@@ -16,7 +16,14 @@ public class CustomerInfoRecord {
     private String cityCode;
     private String idCard;
     private String createTime;
+    private String inviteCode;
     
+	public String getInviteCode() {
+		return inviteCode;
+	}
+	public void setInviteCode(String inviteCode) {
+		this.inviteCode = inviteCode;
+	}
 	public String getCreateTime() {
 		return createTime;
 	}

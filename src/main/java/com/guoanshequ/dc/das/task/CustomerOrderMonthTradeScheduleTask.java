@@ -51,12 +51,12 @@ public class CustomerOrderMonthTradeScheduleTask {
     /**
      * 
     * @Title: CustomerOrderMonthTradeTask 
-    * @Description: 清洗用户数据，每分钟执行一次
+    * @Description: 清洗用户数据，每小时执行一次
     * @param     设定文件 
     * @return void    返回类型 
     * @throws
      */
-	@Scheduled(cron ="0 */1 * * * ?")
+//	@Scheduled(cron ="0 0 */1 * * ?")
     public void CustomerOrderMonthTradeTask(){
     	try{
     		logger.info("************清洗用户数据开始***********************");
@@ -177,7 +177,7 @@ public class CustomerOrderMonthTradeScheduleTask {
 				
 				//插入完毕将状态设置为'DONE'
 				Map<String, String> doneMap = new HashMap<String,String>();
-				doneMap.put("id", "3");
+				doneMap.put("id", "5");
 				doneMap.put("task_status", "DONE");
 				dsCronTaskService.updateTaskStatusById(doneMap);
 				

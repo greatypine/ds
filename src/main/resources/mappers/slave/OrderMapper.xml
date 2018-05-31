@@ -5,14 +5,14 @@
 	<!-- 根据order_sn获取order_id -->
 	<select id="queryIdByOrderSn" parameterType="java.util.Map" resultType="java.lang.String">
         <![CDATA[
-			select id from df_order_signed_monthly where order_sn =#{order_sn} limit 1
+			select id from t_order where order_sn =#{order_sn} limit 1
 		]]>
 	</select>
 
 	<!-- 根据order_sn获取address表中区块、坐标 -->	
 	<select id="queryOrderAddressByOrderSn" parameterType="java.util.Map" resultType="java.util.Map">
 		select taddr.latitude,taddr.longitude,taddr.placename
-		from df_order_signed_monthly tor
+		from t_order tor
 		join t_order_address taddr on (tor.order_address_id = taddr.id)
 		where tor.order_sn =#{order_sn}
 		limit 1
@@ -20,7 +20,7 @@
 	
    <select id="queryMaxSigntime" resultType="java.lang.String">
  		<![CDATA[
- 			select max(df_signed_time) from  df_order_signed_daily
+ 			select max(sign_time) from t_order
  		]]>
    </select>
    	

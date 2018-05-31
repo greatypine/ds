@@ -1237,5 +1237,18 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
-    
+    /**
+     * 社员信息调度,刷新人员对应邀请码
+     */
+    @RequestMapping(value = "rest/updateInviteCodeByCusIdTaskRun",method = RequestMethod.POST)
+    public RestResponse updateInviteCodeByCusIdTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		userMemberScheduleTask.updateInviteCodeByCusIdTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 }

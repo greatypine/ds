@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 @Service("DfUserMemberService")
@@ -17,6 +18,14 @@ public class DfUserMemberService {
 	
 	public Integer addDfUserMember(Map<String, Object> paraMap) {
 		return dfUserMemberDao.addDfUserMember(paraMap);
+	}
+	
+	public List<Map<String, String>> queryDfUserMember(Map<String, String> paraMap) {
+		return dfUserMemberDao.queryDfUserMembers(paraMap);
+	}
+	
+	public Integer updateInviteCodeByCusId (Map<String, String> paraMap) {
+		return dfUserMemberDao.updateInviteCodeByCusId(paraMap);
 	}
 	
 }

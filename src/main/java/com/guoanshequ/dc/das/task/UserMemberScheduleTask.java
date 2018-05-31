@@ -104,6 +104,7 @@ public class UserMemberScheduleTask {
 										userMember.put("birthday",idcard.getBirthday());
 										userMember.put("sex",idcard.getGender());
 										userMember.put("regist_cityno", customerInfoRecord.getCityCode());
+										userMember.put("inviteCode", customerInfoRecord.getInviteCode());
 									}
 								}
 								userMember.put("isnew_member", isnew_member);
@@ -137,5 +138,38 @@ public class UserMemberScheduleTask {
 		}
 	}
 	
-
+	/**
+	* @Title: updateMemberInviteCodeByCusIdTask
+	* @Description: 根据社员customer_id从mongo中找到对应的一条不为空的inviteCode
+	* @param     设定文件
+	* @return void    返回类型
+	* @throws
+	 */
+	public void updateInviteCodeByCusIdTask() {
+		new Thread() {
+			public void run() {
+				try {
+					logger.info("************社员信息刷新邀请码inviteCode数据***********************");
+					Map<String, String> paraMap = new HashMap<String, String>();
+					List<Map<String, String>> userMemberList = dfUserMemberService.queryDfUserMember(paraMap);
+					if (!userMemberList.isEmpty()) {
+						int updatenum = 0;
+						for (Map<String, String> userMemberMap : userMemberList) {
+							CustomerInfoRecord customerInfoRecord = mongoService
+									.queryCusInviteCodeByCusId(userMemberMap.get("customer_id"));
+							if (customerInfoRecord != null) {
+								userMemberMap.put("inviteCode", customerInfoRecord.getInviteCode());
+								updatenum += dfUserMemberService.updateInviteCodeByCusId(userMemberMap);
+							}
+						}
+						logger.info("************社员信息刷新邀請碼inviteCode数据，共更新数据："+updatenum+"***********************");
+					}
+				} catch (Exception e) {
+					logger.info("社员信息刷新邀請碼inviteCode数据，任务执行失败，请查看！");
+					logger.info(e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
 }
