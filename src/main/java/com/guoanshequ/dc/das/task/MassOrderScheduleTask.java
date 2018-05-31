@@ -41,7 +41,7 @@ public class MassOrderScheduleTask {
 	private static final Logger logger = LogManager.getLogger(MassOrderScheduleTask.class);
 	
 	/**
-	 * 调度规则：根据情况1分钟调度一次
+	 * 调度规则：根据情况1分钟调度一次 
 	 * 参数：maxSignTime
 	 */
     @Scheduled(cron ="0 */1 * * * ?")
