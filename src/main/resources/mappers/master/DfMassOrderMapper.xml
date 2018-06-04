@@ -356,19 +356,19 @@
 	
   <update id="updateXBorderTagDailyById" parameterType="java.util.Map">
   		<![CDATA[
-			update df_mass_order_daily set order_tag1 = #{ordertag} where id = #{order_id}
+			update df_mass_order_daily set order_tag1 = CASE WHEN locate(#{ordertag},order_tag1)>0 THEN order_tag1 ELSE CONCAT(IFNULL(order_tag1,''),',',#{ordertag}) END where id = #{order_id}
 		]]>
   </update>
   
   <update id="updateXBorderTagMonthlyById" parameterType="java.util.Map">
   		<![CDATA[
-			update df_mass_order_monthly set order_tag1 = #{ordertag} where id = #{order_id}
+			update df_mass_order_monthly set order_tag1 = CASE WHEN locate(#{ordertag},order_tag1)>0 THEN order_tag1 ELSE CONCAT(IFNULL(order_tag1,''),',',#{ordertag}) END where id = #{order_id}
 		]]>
   </update>
   
   <update id="updateXBorderTagTotalById" parameterType="java.util.Map">
   		<![CDATA[
-			update df_mass_order_total set order_tag1 = #{ordertag} where id = #{order_id}
+			update df_mass_order_total set order_tag1 = CASE WHEN locate(#{ordertag},order_tag1)>0 THEN order_tag1 ELSE CONCAT(IFNULL(order_tag1,''),',',#{ordertag}) END where id = #{order_id}
 		]]>
   </update>    
 
@@ -428,5 +428,22 @@
 		</where>
   	</select>
 	
-	
+	<!-- 更新MassOrder订单标签 开卡礼及试用礼 -->
+	<update id="updateKSorderTagDailyByEshopId" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_daily set order_tag1 = CASE WHEN locate(#{order_tag},order_tag1)>0 THEN order_tag1 ELSE CONCAT(IFNULL(order_tag1,''),',',#{order_tag}) END where eshop_id = #{eshop_id} and sign_time >= #{begintime} and sign_time <= #{endtime} 
+		]]>
+  	</update>
+  
+  	<update id="updateKSorderTagMonthlyByEshopId" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_monthly set order_tag1 = CASE WHEN locate(#{order_tag},order_tag1)>0 THEN order_tag1 ELSE CONCAT(IFNULL(order_tag1,''),',',#{order_tag}) END where eshop_id = #{eshop_id} and sign_time >= #{begintime} and sign_time <= #{endtime} 
+		]]>
+  	</update>
+  
+  	<update id="updateKSorderTagTotalByEshopId" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_total set order_tag1 = CASE WHEN locate(#{order_tag},order_tag1)>0 THEN order_tag1 ELSE CONCAT(IFNULL(order_tag1,''),',',#{order_tag}) END where eshop_id = #{eshop_id} and sign_time >= #{begintime} and sign_time <= #{endtime} 
+		]]>
+  	</update> 
 </mapper>

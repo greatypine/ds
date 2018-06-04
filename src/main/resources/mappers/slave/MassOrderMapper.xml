@@ -284,4 +284,11 @@
   		]]>
   </select>
   
+  <!-- 查询开卡礼、试用礼门店 -->
+  <select id="queryKSeshopByName" resultType="java.util.Map">
+  	<![CDATA[
+  		SELECT t.emall_name,te.eshop_id,CASE WHEN t.emall_name = '安心合作社开卡礼' THEN 'K' ELSE	'S' END AS tag FROM t_emall_eshop te,t_emall t WHERE te.emall_id=t.id AND t.`status`=0 AND (t.emall_name='安心合作社开卡礼' OR t.emall_name='安心合作社试用礼') 
+  	]]>
+  </select>
+  
 </mapper>

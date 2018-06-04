@@ -1268,4 +1268,16 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    @RequestMapping(value = "rest/updateKSorderTaskRun",method = RequestMethod.POST)
+    public RestResponse updateKSorderTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.ksOrderTagTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 }

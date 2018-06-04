@@ -68,4 +68,11 @@ public interface DfMassOrderMapper {
 	List<Map<String, String>> queryOrderIdBySignTime (Map<String, String> paraMap);
 	
 	DfMassOrder queryMassOrder (Map<String, String> paraMap);
+	
+	Integer updateKSorderTagDailyByEshopId(Map<String, String> paraMap);
+	
+	Integer updateKSorderTagMonthlyByEshopId(Map<String, String> paraMap);
+	
+	Integer updateKSorderTagTotalByEshopId(Map<String, String> paraMap);
+	
 }
