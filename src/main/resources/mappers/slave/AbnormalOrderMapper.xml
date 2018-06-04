@@ -36,7 +36,9 @@
 		]]>
 	</select>
 	
-	<!--自动： 营销费用异常B 优惠力度大于50%的（优惠券力度大于总金额50%），且 E店名 不是 国安社区会员开卡礼，国安社区会员试用礼 开头-->
+	<!--自动：1 营销费用异常B 优惠力度大于50%的（优惠券力度大于总金额50%），
+			2E店名 不是 国安社区会员开卡礼，国安社区会员试用礼 开头
+			3用了优惠券的-->
 	<select id="queryAbnorOrderB" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 			select
@@ -73,6 +75,7 @@
 			and	 (trp.pay_platform !='prepay' or trp.pay_platform is null)			
 			and tor.payable_price/tor.trading_price < 0.5
 			and (te.name not like '国安社区会员开卡礼%' and te.name not like '国安社区会员试用礼%')
+			and tor.id not in (select order_id from t_order_item_extra toie where toie.create_time >=#{begindate} and toie.create_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY) and apportion_rebate >0)
 			UNION
 			select
 			tor.order_sn as ordersn,
@@ -102,6 +105,7 @@
 			and ts.city_code = tsa.code and tsa.level = 2
 			and tor.payable_price/tor.trading_price < 0.5
 			and (te.name not like '国安社区会员开卡礼%' and te.name not like '国安社区会员试用礼%')
+			and tor.id not in (select order_id from t_order_item_extra toie where toie.create_time >=#{begindate} and toie.create_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY) and apportion_rebate >0)
 		]]>
 	</select>
 	

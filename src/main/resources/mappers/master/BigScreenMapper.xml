@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.BigScreenMapper">
+
+	<!-- 获取右上角区域中，本月用户量-->
+    <select id="queryCusnumMonthForHQ" parameterType="java.util.Map" resultType="java.lang.Integer">
+        <![CDATA[
+			select count(distinct customer_id) as cusnum_month from df_customer_order_month_trade_new where order_ym =#{order_ym} ;
+		]]>
+    </select>
+
+	<!-- 获取右上角区域中，历史总用户量 -->
+	<select id="queryCusnumHistoryForHQ" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<![CDATA[
+			select count(1) as cusnum_history from df_user_profile ;
+		]]>
+	</select>
+
+	<!-- 更新右上角区域中，本月用户量和历史总用户量 -->
+	<update id="updateCusnumForHQ" parameterType="java.util.Map">
+		<![CDATA[
+			update ds_ope_gmvorcus_all_total set cusnum_month = #{cusnum_month} ,cusnum_history = #{cusnum_history} where id = 1;
+		]]>
+	</update>
+	
+</mapper>

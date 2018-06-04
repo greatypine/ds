@@ -65,6 +65,8 @@ public class TaskByHandController {
     TestTask testTask;
     @Autowired
     UserMemberScheduleTask userMemberScheduleTask;
+    @Autowired
+    BigScreenScheduleTask bigScreenScheduleTask;
 
     
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
@@ -1244,6 +1246,21 @@ public class TaskByHandController {
     public RestResponse updateInviteCodeByCusIdTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
     		userMemberScheduleTask.updateInviteCodeByCusIdTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    /**
+     * 大屏数据：左上角用户总数任务调度
+     */
+    @RequestMapping(value = "rest/bigScreenCusForHQTaskRun",method = RequestMethod.POST)
+    public RestResponse bigScreenCusForHQTaskTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		bigScreenScheduleTask.bigScreenCusForHQTask();
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());
