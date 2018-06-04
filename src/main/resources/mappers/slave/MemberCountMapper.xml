@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.slave.MemberCountMapper">
+
+	<!-- 查询社员成交量 -->
+	<select id="queryMemberCount" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select
+			count(1) as cou
+		from
+			t_order tor,t_customer tcu,t_eshop te
+		where 
+		 	tor.create_time>'2018-05-18' 
+		and	tor.eshop_id = te.id 
+		and te.super_member = 'yes' 
+		and tor.customer_id=tcu.id 
+		and tcu.associator_level='2'
+		]]>
+	</select>
+		<!-- 查询社员成交额 -->
+	<select id="queryMemberSum" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select
+			ifnull(sum(tor.trading_price),0) as cou
+		from
+			t_order tor,t_customer tcu,t_eshop te
+		where 
+		 	tor.sign_time>'2018-05-18' 
+		and	tor.eshop_id = te.id 
+		and te.super_member = 'yes' 
+		and tor.customer_id=tcu.id 
+		and tcu.associator_level='2'
+		]]>
+	</select>
+		<!-- 查询最受欢迎商品 -->
+	<select id="queryhotProduct" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select
+			tpo.create_time createtime,
+			toi.eshop_pro_name pname,
+			sum(toi.quantity) pcount
+		from
+			t_order_item toi,
+			t_order tor,
+			t_customer tcu,
+			t_product tpo
+		where
+			tcu.associator_level = '2'
+		and tor.customer_id = tcu.id
+		and toi.order_id = tor.id
+		and toi.eshop_pro_id=tpo.id
+		group by
+			toi.eshop_pro_id
+		order by
+			pcount desc 
+			limit 100
+		]]>
+	</select>
+		<!-- 查询无人问津商品 -->
+	<select id="querycoolProduct" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select
+			p.create_time createtime,
+			p.content_name pname
+		from
+			t_product p,
+			t_eshop te,
+			t_order_item toi
+		where
+			te.super_member = 'yes'
+		and p.eshop_id = te.id
+		and p.id != toi.id
+		limit 100
+		]]>
+	</select>
+	<!-- 查询动销商品量 -->
+	<select id="queryMovingPin" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select
+			count(1) cou 
+		from
+			(
+				select distinct 
+					toi.eshop_pro_id 
+				from
+					t_product p,
+					t_order_item toi, 
+					t_eshop te 
+				where 
+					te.super_member = 'yes' 
+				and p.eshop_id = te.id 
+				and toi.eshop_pro_id = p.id 
+			) cce
+		]]>
+	</select>
+	<!-- 查询e店订单量、成交额 -->
+	<select id="queryEshopCount" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select
+				count(1) cou,
+				sum(tor.trading_price) sumprice,
+				te.name ename 
+			from
+				t_order tor,
+				t_eshop te 
+			where
+				tor.sign_time > '2017-05-17'
+			 and te.name not like '%测试%' 
+			and te.super_member = 'yes' 
+			and tor.eshop_id = te.id 
+			group by 
+				tor.eshop_id 
+			order by 
+				sumprice desc
+		]]>
+	</select>
+	<!-- 查询e店社员、非社员总销量 -->
+	<select id="queryAllEshopSum" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select
+			ifnull(sum(tor.trading_price),0) as cou 
+		from
+			t_order tor,t_customer tcu,t_eshop te
+		where 
+			tor.sign_time>'2017-05-17' 
+		and	tor.eshop_id = te.id 
+		and te.super_member = 'yes' 
+		and tor.customer_id=tcu.id
+		]]>
+	</select>
+	<!-- 查询e店社员总销量 -->
+	<select id="queryYesEshopSum" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select
+			ifnull(sum(tor.trading_price),0) as cou 
+		from
+			t_order tor,t_customer tcu,t_eshop te
+		where 
+			tor.sign_time>'2017-05-17' 
+		and	tor.eshop_id = te.id 
+		and te.super_member = 'yes' 
+		and tor.customer_id=tcu.id 
+		and tcu.associator_level='2' 
+		]]>
+	</select>
+	<!-- 查询e店非社员总销量 -->
+	<select id="queryNoEshopSum" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select
+			ifnull(sum(tor.trading_price),0) as cou 
+		from
+			t_order tor,t_customer tcu,t_eshop te
+		where 
+			tor.sign_time>'2018-05-17' 
+		and	tor.eshop_id = te.id 
+		and te.super_member = 'yes' 
+		and tor.customer_id=tcu.id 
+		and tcu.associator_level!='2'
+		]]>
+	</select>
+	
+</mapper>
