@@ -506,4 +506,53 @@ public class MassOrderScheduleTask {
 			}
 		}.start();
 		}
+	
+	
+	/**
+	 * 定时用于更新mass_order表中ordertag1标签(K-开卡礼，S-试用礼)
+	 * 调度规则：每天凌晨2点40分
+	 */
+	@Scheduled(cron ="0 40 2 * * ?")
+	public void ksOrderTagTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********massorder开卡礼试用礼订单标签任务调度开始**********");
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(11);
+					String isrun = taskMap.get("isrun");
+					if("ON".equals(isrun)){
+						String runtype = taskMap.get("runtype");
+						String begintime = null;
+						String endtime = null;
+						//获取上次调度时的最大签收时间开始时间与结束时间
+						if("MANUAL".equals(runtype)){
+							begintime = taskMap.get("begintime");
+							endtime = taskMap.get("endtime");
+						}else{
+							begintime = DateUtils.getPreDate(new Date());
+							endtime = DateUtils.getCurDateTime(new Date());
+						}
+						
+						//给后台接口构建参数
+						Map<String, String> paraMap=new HashMap<String, String>();
+						paraMap.put("begintime", begintime);
+						paraMap.put("endtime", endtime);
+						
+						List<Map<String, String>> list =massOrderService.queryKSeshopByName();
+						for (Map<String, String> map : list) {
+							paraMap.put("order_tag", map.get("tag"));
+							paraMap.put("eshop_id", map.get("eshop_id"));
+							dfMassOrderService.updateKSorderTagDailyByEshopId(paraMap);
+							dfMassOrderService.updateKSorderTagMonthlyByEshopId(paraMap);
+							dfMassOrderService.updateKSorderTagTotalByEshopId(paraMap);
+						}
+					}
+					logger.info("**********massorder开卡礼试用礼订单标签任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("massorder开卡礼试用礼订单标签任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
 }

@@ -40,4 +40,8 @@ public class MassOrderService {
 	public List<Map<String, String>> queryReturnOrders(Map<String, String> paraMap){
 		return massOrderDao.queryReturnOrders(paraMap);
 	}
+	
+	public List<Map<String, String>> queryKSeshopByName(){
+		return massOrderDao.queryKSeshopByName();
+	}
 }

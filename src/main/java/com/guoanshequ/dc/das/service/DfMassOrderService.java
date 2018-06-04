@@ -132,4 +132,15 @@ public class DfMassOrderService {
 		return dfMassOrderDao.queryMassOrder(paraMap);
 	}
 	
+	public Integer updateKSorderTagDailyByEshopId(Map<String, String> paraMap){
+		return dfMassOrderDao.updateKSorderTagDailyByEshopId(paraMap);
+	}
+	
+	public Integer updateKSorderTagMonthlyByEshopId(Map<String, String> paraMap){
+		return dfMassOrderDao.updateKSorderTagMonthlyByEshopId(paraMap);
+	}
+	
+	public Integer updateKSorderTagTotalByEshopId(Map<String, String> paraMap){
+		return dfMassOrderDao.updateKSorderTagTotalByEshopId(paraMap);
+	}
 }
