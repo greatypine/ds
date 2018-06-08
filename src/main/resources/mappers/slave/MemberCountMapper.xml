@@ -8,11 +8,9 @@
 		select
 			count(1) as cou
 		from
-			t_order tor,t_customer tcu,t_eshop te
+			t_order tor,t_customer tcu 
 		where 
 		 	tor.create_time>'2018-05-17' 
-		and	tor.eshop_id = te.id 
-		and te.super_member = 'yes' 
 		and tor.customer_id=tcu.id 
 		and tcu.associator_level='2'
 		]]>
@@ -23,11 +21,9 @@
 		select
 			ifnull(sum(tor.trading_price),0) as cou
 		from
-			t_order tor,t_customer tcu,t_eshop te
+			t_order tor,t_customer tcu
 		where 
 		 	tor.sign_time>'2018-05-17' 
-		and	tor.eshop_id = te.id 
-		and te.super_member = 'yes' 
 		and tor.customer_id=tcu.id 
 		and tcu.associator_level='2'
 		]]>
@@ -46,6 +42,8 @@
 			t_product tpo
 		where
 			tcu.associator_level = '2'
+		and tor.sign_time > '2018-05-17' 
+		and tpo.content_name not like '%测试%' 
 		and tor.customer_id = tcu.id
 		and toi.order_id = tor.id
 		and toi.eshop_pro_id=tpo.id
@@ -68,6 +66,7 @@
 			t_order_item toi
 		where
 			te.super_member = 'yes'
+		and p.content_name not like '%测试%' 
 		and p.eshop_id = te.id
 		and p.id != toi.id
 		limit 100
@@ -88,6 +87,7 @@
 					t_eshop te 
 				where 
 					te.super_member = 'yes' 
+				and te.name not like '%测试%'  
 				and p.eshop_id = te.id 
 				and toi.eshop_pro_id = p.id 
 			) cce
@@ -104,7 +104,7 @@
 				t_order tor,
 				t_eshop te 
 			where
-				tor.sign_time > '2018-05-17'
+				tor.sign_time > '2018-05-17' 
 			 and te.name not like '%测试%' 
 			and te.super_member = 'yes' 
 			and tor.eshop_id = te.id 
@@ -122,9 +122,11 @@
 		from
 			t_order tor,t_customer tcu,t_eshop te
 		where 
-			tor.sign_time>'2018-05-17' 
-		and	tor.eshop_id = te.id 
+			tor.sign_time>'2018-05-17'
+		and tor.sign_time<curdate() 
 		and te.super_member = 'yes' 
+		and te.name not like '%测试%' 
+		and	tor.eshop_id = te.id 
 		and tor.customer_id=tcu.id
 		]]>
 	</select>
@@ -136,9 +138,11 @@
 		from
 			t_order tor,t_customer tcu,t_eshop te
 		where 
-			tor.sign_time>'2018-05-17' 
-		and	tor.eshop_id = te.id 
+			tor.sign_time>'2018-05-17'
+		and tor.sign_time<curdate() 
 		and te.super_member = 'yes' 
+		and te.name not like '%测试%' 
+		and	tor.eshop_id = te.id 
 		and tor.customer_id=tcu.id 
 		and tcu.associator_level='2' 
 		]]>
@@ -151,9 +155,11 @@
 		from
 			t_order tor,t_customer tcu,t_eshop te
 		where 
-			tor.sign_time>'2018-05-17' 
+			tor.sign_time>'2018-05-17'
+		and tor.sign_time<curdate()  
 		and	tor.eshop_id = te.id 
-		and te.super_member = 'yes' 
+		and te.super_member = 'yes'
+		and te.name not like '%测试%'  
 		and tor.customer_id=tcu.id 
 		and tcu.associator_level!='2'
 		]]>

@@ -409,8 +409,7 @@
 	<select id="queryOrderIdBySignTime" parameterType="java.util.Map" resultType="java.util.Map">
 		<![CDATA[
 			select id from df_mass_order_monthly 
-			where sign_time >= #{begintime} and sign_time <= #{endtime} 
-			and info_village_code is NULL
+			where id in (select order_id from tmp_nomalstore)
 		]]>
 	</select>
 	

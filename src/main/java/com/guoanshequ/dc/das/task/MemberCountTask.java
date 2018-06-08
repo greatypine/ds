@@ -38,7 +38,7 @@ public class MemberCountTask {
 	 * @Title: UserMemberScheduleTask @Description: 社员信息表，每小时一次，采用多线程 @param
 	 * 设定文件 @return void 返回类型 @throws
 	 */
-	//@Scheduled(cron = "0 */1 * * * ?")
+	//@Scheduled(cron = "30 * * * * ?")
 	@Scheduled(cron ="0 58 2 * * ?")
 	public void memberCountTask() {
 		new Thread() {
@@ -174,11 +174,7 @@ public class MemberCountTask {
 							hotMap.put("member_count", memberhot.get("pcount").toString());
 							String createTime = memberhot.get("createtime").toString();
 							int sellDuration = getMargin(nowDate, createTime);
-							if (sellDuration > 100) {
-								hotMap.put("sell_duration", sellDuration / 30 + "个月+");
-							} else {
-								hotMap.put("sell_duration", sellDuration + "");
-							}
+							hotMap.put("sell_duration", sellDuration + "");
 							hotMap.put("remark", "最受欢迎商品");
 							// 入库
 							dfMemberCountService.addDfMemberCount(hotMap);
@@ -194,11 +190,6 @@ public class MemberCountTask {
 							coolMap.put("member_count", "0");
 							String createTime = membercool.get("createtime").toString();
 							int sellDuration = getMargin(nowDate, createTime);
-							if (sellDuration > 100) {
-								coolMap.put("sell_duration", sellDuration / 30 + "个月+");
-							} else {
-								coolMap.put("sell_duration", sellDuration + "");
-							}
 							coolMap.put("sell_duration", sellDuration + "");
 							coolMap.put("remark", "无人问津商品");
 							// 入库
