@@ -143,4 +143,8 @@ public class DfMassOrderService {
 	public Integer updateKSorderTagTotalByEshopId(Map<String, String> paraMap){
 		return dfMassOrderDao.updateKSorderTagTotalByEshopId(paraMap);
 	}
+	
+	public List<Map<String, String>> queryMemberCustomerBySignTime (Map<String, String> paraMap){
+		return dfMassOrderDao.queryMemberCustomerBySignTime(paraMap);
+	}
 }

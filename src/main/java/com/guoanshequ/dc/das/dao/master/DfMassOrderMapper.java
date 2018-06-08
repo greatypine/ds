@@ -75,4 +75,6 @@ public interface DfMassOrderMapper {
 	
 	Integer updateKSorderTagTotalByEshopId(Map<String, String> paraMap);
 	
+	List<Map<String, String>> queryMemberCustomerBySignTime (Map<String, String> paraMap);
+	
 }

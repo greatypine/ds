@@ -555,4 +555,37 @@ public class MassOrderScheduleTask {
 			}
 		}.start();
 	}
+	
+	/**
+	 * 定时用于更新df_userprofile_tag打社员标签 
+	 * 调度规则：每天凌晨2点55分
+	 */
+	@Scheduled(cron ="0 55 2 * * ?")
+	public void memberUserProfileTagTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********df_userprofile_tag打合作社社员标签任务调度开始**********");
+					
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					//开始时间
+					String begintime = DateUtils.getPreDateTime(new Date());
+					//结束时间
+					String endtime = DateUtils.getCurDateTime(new Date());
+					paraMap.put("begintime", begintime);
+					paraMap.put("endtime", endtime);
+					
+					List<Map<String, String>> list =dfMassOrderService.queryMemberCustomerBySignTime(paraMap);
+					for (Map<String, String> map : list) {
+						dfMassOrderService.addXBUserTag(map);
+					}
+					logger.info("**********df_userprofile_tag打合作社社员标签任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("df_user_profile打合作社社员标签任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
 }

@@ -445,5 +445,11 @@
   		<![CDATA[
 			update df_mass_order_total set order_tag1 = CASE WHEN locate(#{order_tag},order_tag1)>0 THEN order_tag1 ELSE CONCAT(IFNULL(order_tag1,''),',',#{order_tag}) END where eshop_id = #{eshop_id} and sign_time >= #{begintime} and sign_time <= #{endtime} 
 		]]>
-  	</update> 
+  	</update>
+  	
+  	<select id="queryMemberCustomerBySignTime" parameterType="java.util.Map" resultType="java.util.Map">
+ 	<![CDATA[
+		 select customer_id,'V' as usertag from df_user_member where create_time >=#{begintime} and create_time< #{endtime}  
+	]]>
+  </select>
 </mapper>
