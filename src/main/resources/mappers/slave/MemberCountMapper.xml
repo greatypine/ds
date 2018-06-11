@@ -39,9 +39,12 @@
 			t_order_item toi,
 			t_order tor,
 			t_customer tcu,
-			t_product tpo
+			t_product tpo,
+			t_eshop te
 		where
-			tcu.associator_level = '2'
+		tcu.associator_level = '2'
+		te.super_member = 'yes'
+		and p.eshop_id = te.id  
 		and tor.sign_time > '2018-05-17' 
 		and tpo.content_name not like '%测试%' 
 		and tor.customer_id = tcu.id
@@ -65,7 +68,7 @@
 			t_eshop te,
 			t_order_item toi
 		where
-			te.super_member = 'yes'
+		te.super_member = 'yes'
 		and p.content_name not like '%测试%' 
 		and p.eshop_id = te.id
 		and p.id != toi.id
