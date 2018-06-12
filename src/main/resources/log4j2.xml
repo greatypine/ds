@@ -27,7 +27,7 @@
         </File> -->
     </Appenders>
     <Loggers>
-    <logger name="org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor" level="DEBUG"/>
+    <logger name="org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor" level="INFO"/>
         <!-- <Logger name="org.springframework" level="debug" additivity="false">
             <AppenderRef ref="Spring-Appender"/>
             <AppenderRef ref="Console-Appender"/>
@@ -37,7 +37,7 @@
             <AppenderRef ref="App-Appender"/>
             <AppenderRef ref="Console-Appender"/>
         </Logger> -->
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="Console-Appender"/>
             <AppenderRef ref="App-Appender"/>
         </Root>
