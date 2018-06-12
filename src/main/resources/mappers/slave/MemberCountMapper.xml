@@ -43,8 +43,8 @@
 			t_eshop te
 		where
 		tcu.associator_level = '2'
-		te.super_member = 'yes'
-		and p.eshop_id = te.id  
+		and te.super_member = 'yes'
+		and tpo.eshop_id = te.id  
 		and tor.sign_time > '2018-05-17' 
 		and tpo.content_name not like '%测试%' 
 		and tor.customer_id = tcu.id
