@@ -77,4 +77,8 @@ public interface DfMassOrderMapper {
 	
 	List<Map<String, String>> queryMemberCustomerBySignTime (Map<String, String> paraMap);
 	
+	List<Map<String, String>> queryMemberOrderBySignTime (Map<String, String> paraMap);
+	
+	Integer updateMemberCityDay(Map<String, String> paraMap);
+	
 }

@@ -44,4 +44,8 @@ public class MassOrderService {
 	public List<Map<String, String>> queryKSeshopByName(){
 		return massOrderDao.queryKSeshopByName();
 	}
+	
+	public List<Map<String, String>> queryCooperativeEshop(){
+		return massOrderDao.queryCooperativeEshop();
+	}
 }

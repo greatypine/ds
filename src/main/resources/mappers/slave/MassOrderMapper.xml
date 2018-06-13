@@ -291,4 +291,11 @@
   	]]>
   </select>
   
+  <!-- 查询合作社E店 -->
+  <select id="queryCooperativeEshop" resultType="java.util.Map">
+  	<![CDATA[
+  		select id as eshop_id,'E' as tag from t_eshop e where e.super_member = 'yes' 
+  	]]>
+  </select>
+  
 </mapper>

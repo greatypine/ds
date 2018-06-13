@@ -451,4 +451,27 @@
 		 select customer_id,'V' as usertag from df_user_member where create_time >=#{begintime} and create_time< #{endtime}  
 	]]>
   </select>
+  
+  <select id="queryMemberOrderBySignTime" parameterType="java.util.Map" resultType="java.util.Map">
+  	<![CDATA[
+		 select id as order_id,'M' as ordertag from df_mass_order_monthly dod ,df_user_member dum where dod.customer_id=dum.customer_id and dod.sign_time >= dum.opencard_time and dod.sign_time >= #{begintime} and dod.sign_time < #{endtime} 
+	]]>
+  </select>
+  
+  <!-- 更新 每日城市会员统计数据 -->
+  <update id="updateMemberCityDay" parameterType="java.util.Map">
+  	<![CDATA[
+		INSERT IGNORE INTO ds_ope_member_city_day (date,city_code,city_name,mem_count,mem_gmv,non_mem_count,non_mem_gmv,eshop_count,eshop_gmv,non_eshop_count,non_eshop_gmv) 
+		SELECT IFNULL(DATE_FORMAT(sign_time,'%Y-%m-%d'),#{begintime}) as date,store_city_code as city_code,store_city_name as city_name,
+		IFNULL(SUM(CASE WHEN order_tag1 like '%M%' AND  order_tag1 like '%E%' THEN 1  ELSE 0 END),0) AS mem_count, 
+		IFNULL(SUM(CASE WHEN order_tag1 like '%M%' AND  order_tag1 like '%E%'  THEN trading_price  ELSE 0 END),0) as mem_gmv,
+		IFNULL(SUM(CASE WHEN (order_tag1 not like '%M%' OR  order_tag1 not like '%E%')  THEN 1  ELSE 0 END),0) AS non_mem_count,
+		IFNULL(SUM(CASE WHEN (order_tag1 not like '%M%' OR  order_tag1 not like '%E%') THEN trading_price  ELSE 0 END),0) as non_mem_gmv,
+		IFNULL(SUM(CASE WHEN order_tag1 like '%E%' AND order_tag1 like '%M%' THEN 1  ELSE 0 END),0) AS eshop_count, 
+		IFNULL(SUM(CASE WHEN order_tag1 like '%E%' AND order_tag1 like '%M%' THEN trading_price  ELSE 0 END),0) as eshop_gmv,
+		IFNULL(SUM(CASE WHEN (order_tag1 not like '%E%' OR  order_tag1 not like '%M%') THEN 1  ELSE 0 END),0) AS non_eshop_count,
+		IFNULL(SUM(CASE WHEN (order_tag1 not like '%E%' OR order_tag1 not like '%M%') THEN trading_price  ELSE 0 END),0) as non_eshop_gmv
+		FROM df_mass_order_monthly WHERE sign_time >= #{begintime} AND sign_time < #{endtime} group by store_city_code;	 
+	]]>
+  </update>
 </mapper>

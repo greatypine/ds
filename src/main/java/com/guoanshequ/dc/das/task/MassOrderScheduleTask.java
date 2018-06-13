@@ -588,4 +588,107 @@ public class MassOrderScheduleTask {
 			}
 		}.start();
 	}
+	
+	/**
+	 * 定时用于更新mass_order表中order_tag会员订单标签
+	 * 调度规则：每天凌晨3点05分
+	 */
+	@Scheduled(cron ="0 05 3 * * ?")
+	public void memberOrderTagTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********mass_order表中order_tag会员订单标签任务调度开始**********");
+					
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					//开始时间
+					String begintime = DateUtils.getPreDateTime(new Date());
+					//结束时间
+					String endtime = DateUtils.getCurDateTime(new Date());
+					paraMap.put("begintime", begintime);
+					paraMap.put("endtime", endtime);
+					
+					List<Map<String, String>> list =dfMassOrderService.queryMemberOrderBySignTime(paraMap);
+					for (Map<String, String> map : list) {
+						dfMassOrderService.updateXBorderTagDailyById(map);
+						dfMassOrderService.updateXBorderTagMonthlyById(map);
+						dfMassOrderService.updateXBorderTagTotalById(map);
+					}
+					logger.info("**********mass_order表中order_tag会员订单标签任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("mass_order表中order_tag会员订单标签任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+
+	/**
+	 * 定时用于更新mass_order表中order_tag合作社E店订单标签
+	 * 调度规则：每天凌晨3点05分
+	 */
+	@Scheduled(cron ="0 05 3 * * ?")
+	public void eshopOrderTagTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********mass_order表中order_tag合作社E店订单标签任务调度开始**********");
+					
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					//开始时间
+					String begintime = DateUtils.getPreDateTime(new Date());
+					//结束时间
+					String endtime = DateUtils.getCurDateTime(new Date());
+					paraMap.put("begintime", begintime);
+					paraMap.put("endtime", endtime);
+					
+					List<Map<String, String>> list =massOrderService.queryCooperativeEshop();
+					for (Map<String, String> map : list) {
+						paraMap.put("order_tag", map.get("tag"));
+						paraMap.put("eshop_id", map.get("eshop_id"));
+						dfMassOrderService.updateKSorderTagDailyByEshopId(paraMap);
+						dfMassOrderService.updateKSorderTagMonthlyByEshopId(paraMap);
+						dfMassOrderService.updateKSorderTagTotalByEshopId(paraMap);
+					}
+					logger.info("**********mass_order表中order_tag合作社E店订单标签任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("mass_order表中order_tag合作社E店订单标签任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
+	/**
+	 * 每日城市会员统计数据 ds_ope_member_city_day
+	 * 调度规则：每天凌晨3点20分
+	 */
+	@Scheduled(cron ="0 20 3 * * ?")
+	public void memberCityDayTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********ds_ope_member_city_day每日城市会员统计数据任务调度开始**********");
+					
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					//开始时间
+					String begintime = DateUtils.getPreDateTime(new Date());
+					//结束时间
+					String endtime = DateUtils.getCurDateTime(new Date());
+					paraMap.put("begintime", begintime);
+					paraMap.put("endtime", endtime);
+					
+					dfMassOrderService.updateMemberCityDay(paraMap);
+					logger.info("**********ds_ope_member_city_day每日城市会员统计数据任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("ds_ope_member_city_day每日城市会员统计数据任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
 }
