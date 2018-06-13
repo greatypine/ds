@@ -465,12 +465,12 @@
 		SELECT IFNULL(DATE_FORMAT(sign_time,'%Y-%m-%d'),#{begintime}) as date,store_city_code as city_code,store_city_name as city_name,
 		IFNULL(SUM(CASE WHEN order_tag1 like '%M%' AND  order_tag1 like '%E%' THEN 1  ELSE 0 END),0) AS mem_count, 
 		IFNULL(SUM(CASE WHEN order_tag1 like '%M%' AND  order_tag1 like '%E%'  THEN trading_price  ELSE 0 END),0) as mem_gmv,
-		IFNULL(SUM(CASE WHEN (order_tag1 not like '%M%' OR  order_tag1 not like '%E%')  THEN 1  ELSE 0 END),0) AS non_mem_count,
-		IFNULL(SUM(CASE WHEN (order_tag1 not like '%M%' OR  order_tag1 not like '%E%') THEN trading_price  ELSE 0 END),0) as non_mem_gmv,
-		IFNULL(SUM(CASE WHEN order_tag1 like '%E%' AND order_tag1 like '%M%' THEN 1  ELSE 0 END),0) AS eshop_count, 
-		IFNULL(SUM(CASE WHEN order_tag1 like '%E%' AND order_tag1 like '%M%' THEN trading_price  ELSE 0 END),0) as eshop_gmv,
-		IFNULL(SUM(CASE WHEN (order_tag1 not like '%E%' OR  order_tag1 not like '%M%') THEN 1  ELSE 0 END),0) AS non_eshop_count,
-		IFNULL(SUM(CASE WHEN (order_tag1 not like '%E%' OR order_tag1 not like '%M%') THEN trading_price  ELSE 0 END),0) as non_eshop_gmv
+		IFNULL(SUM(CASE WHEN (order_tag1 not like '%M%' AND  order_tag1 like '%E%')  THEN 1  ELSE 0 END),0) AS non_mem_count,
+		IFNULL(SUM(CASE WHEN (order_tag1 not like '%M%' AND  order_tag1 like '%E%') THEN trading_price  ELSE 0 END),0) as non_mem_gmv,
+		IFNULL(SUM(CASE WHEN order_tag1 like '%E%' THEN 1  ELSE 0 END),0) AS eshop_count, 
+		IFNULL(SUM(CASE WHEN order_tag1 like '%E%' THEN trading_price  ELSE 0 END),0) as eshop_gmv,
+		IFNULL(SUM(CASE WHEN order_tag1 not like '%E%' THEN 1  ELSE 0 END),0) AS non_eshop_count,
+		IFNULL(SUM(CASE WHEN order_tag1 not like '%E%' THEN trading_price  ELSE 0 END),0) as non_eshop_gmv
 		FROM df_mass_order_monthly WHERE sign_time >= #{begintime} AND sign_time < #{endtime} group by store_city_code;	 
 	]]>
   </update>
