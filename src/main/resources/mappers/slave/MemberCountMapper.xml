@@ -75,7 +75,7 @@
 		te.super_member = 'yes'
 		and p.content_name not like '%测试%' 
 		and p.eshop_id = te.id
-		and p.id != toi.id
+		and p.id != toi.eshop_pro_id
 		limit 100
 		]]>
 	</select>
