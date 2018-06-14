@@ -8,9 +8,11 @@
 		select
 			count(1) as cou
 		from
-			t_order tor,t_customer tcu 
+			t_order tor,t_customer tcu,t_eshop te
 		where 
-		 	tor.create_time>'2018-05-17' 
+		 	tor.create_time>'2018-05-17'
+		and	tor.eshop_id = te.id 
+		and te.super_member = 'yes' 
 		and tor.customer_id=tcu.id 
 		and tcu.associator_level='2'
 		]]>
@@ -21,9 +23,11 @@
 		select
 			ifnull(sum(tor.trading_price),0) as cou
 		from
-			t_order tor,t_customer tcu
+			t_order tor,t_customer tcu,t_eshop te
 		where 
-		 	tor.sign_time>'2018-05-17' 
+		 	tor.sign_time>'2018-05-17'
+		and	tor.eshop_id = te.id 
+		and te.super_member = 'yes'  
 		and tor.customer_id=tcu.id 
 		and tcu.associator_level='2'
 		]]>
