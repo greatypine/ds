@@ -21,4 +21,31 @@
 		]]>
 	</select>
 	
+	<!-- 统计时间段内  -->
+	<select id="queryCancelOrderCityByCreateTime" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select 
+				tmpaa.canceldate,
+				tmpaa.city_code,
+				a.name as city_name,
+				tmpaa.cancelcount
+			from (        
+				select 
+					date(tof.create_time) canceldate,
+					ts.city_code as city_code,
+					count(order_id) cancelcount 
+				from t_order_flow tof
+				join t_order tor on (tor.id = tof.order_id)
+				join t_eshop te on (te.id = tor.eshop_id)
+				join t_store ts on (tor.store_id = ts.id and ts.white!='QA' AND ts.`status`=0)
+				where tof.create_time >=#{begintime} and tof.create_time <=#{endtime} 
+					and tof.order_status ='cancel'
+					and te.super_member = 'yes'
+				group by date(tof.create_time),ts.city_code
+			) tmpaa
+			left join t_sys_area a on (tmpaa.city_code = a.code and a.level = 2)
+		]]>
+	</select>
+	
+	
 </mapper>

@@ -28,4 +28,8 @@ public class DfUserMemberService {
 		return dfUserMemberDao.updateInviteCodeByCusId(paraMap);
 	}
 	
+	public Integer addDsOpeMemberCancelCityDay(Map<String, String> paraMap) {
+		return dfUserMemberDao.addDsOpeMemberCancelCityDay(paraMap);
+	}	
+	
 }

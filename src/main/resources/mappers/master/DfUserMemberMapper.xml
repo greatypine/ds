@@ -27,5 +27,20 @@
 			update df_user_member set inviteCode = #{inviteCode} where customer_id = #{customer_id}
 		]]>
 	</update>
+	
+	<insert id="addDsOpeMemberCancelCityDay" parameterType="java.util.Map" >
+		<![CDATA[
+			insert into ds_ope_member_cancel_city_day(
+				canceldate, city_code, city_name, cancelcount
+			) 
+			values(
+				#{canceldate},#{city_code},#{city_name},#{cancelcount}
+			)
+			on duplicate key update   
+			cancelcount = values(cancelcount),
+			update_time = now()
+        ]]>
+	</insert>
+	
 
 </mapper>

@@ -17,4 +17,6 @@ public interface DfUserMemberMapper {
 	
 	public Integer updateInviteCodeByCusId(Map<String,String> paraMap);
 	
+	public Integer addDsOpeMemberCancelCityDay(Map<String,String> paraMap);
+	
 }

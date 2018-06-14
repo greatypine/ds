@@ -172,4 +172,43 @@ public class UserMemberScheduleTask {
 			}
 		}.start();
 	}
+	
+
+	
+	/**
+	 * 
+	* @Title: memberCancelOrderCityDayTask
+	* @Description:统计安心合作社会相应E店下所取消的订单
+	* @param     设定文件
+	* @return void    返回类型
+	* @throws
+	 */
+	@Scheduled(cron = "0 0 */1 * * ?")
+	public void memberCancelOrderCityDayTask() {
+		new Thread() {
+			public void run() {
+				try {
+					logger.info("************安心合作社按天城市统计取消订单信息调度开始***********************");
+					String begintime = DateUtils.getCurDateTime(new Date());
+					String endtime = DateUtils.getCurTime(new Date());
+					Map<String, String> paraMap = new HashMap<String, String>();
+					paraMap.put("begintime", begintime);
+					paraMap.put("endtime", endtime);
+					List<Map<String, String>> cancelOrderList = userMemberService.queryCancelOrderCityByCreateTime(paraMap);
+					if (!cancelOrderList.isEmpty()) {
+						int addnum = 0;
+						for (Map<String, String> cancelOrderMap : cancelOrderList) {
+							addnum += dfUserMemberService.addDsOpeMemberCancelCityDay(cancelOrderMap);
+						}
+						logger.info("************安心合作社按天城市统计取消订单信息调度结束，共影响数据："+addnum+"***********************");
+					}
+				} catch (Exception e) {
+					logger.info("安心合作社按天城市统计取消订单信息调度，任务执行失败，请查看！");
+					logger.info(e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
 }

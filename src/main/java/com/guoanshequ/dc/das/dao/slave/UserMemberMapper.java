@@ -13,4 +13,6 @@ public interface UserMemberMapper{
 	
 	List<Map<String, Object>> queryUserMemberByCreateTime(Map<String, String> paraMap);
 	
+	List<Map<String, String>> queryCancelOrderCityByCreateTime(Map<String, String> paraMap);
+	
 }

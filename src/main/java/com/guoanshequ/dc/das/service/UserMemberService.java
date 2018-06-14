@@ -29,4 +29,8 @@ public class UserMemberService {
     	return userMemberDao.queryUserMemberByCreateTime(paraMap);
     }
     
+    public List<Map<String, String>> queryCancelOrderCityByCreateTime(Map<String, String> paraMap){
+    	
+    	return userMemberDao.queryCancelOrderCityByCreateTime(paraMap);
+    }
 }

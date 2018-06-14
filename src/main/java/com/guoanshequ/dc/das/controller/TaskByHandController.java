@@ -1328,4 +1328,16 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    @RequestMapping(value = "rest/memberCancelOrderCityDayTaskRun",method = RequestMethod.POST)
+    public RestResponse memberCancelOrderCityDayTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		userMemberScheduleTask.memberCancelOrderCityDayTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }    
 }
