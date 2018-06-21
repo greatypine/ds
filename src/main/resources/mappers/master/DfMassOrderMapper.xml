@@ -474,4 +474,32 @@
 		FROM df_mass_order_monthly WHERE sign_time >= #{begintime} AND sign_time < #{endtime} group by store_city_code;	 
 	]]>
   </update>
+  
+  <!-- 更新 每日时效分配统计数据 -->
+  <update id="updateOrderDistribution" parameterType="java.util.Map">
+	  <![CDATA[
+	  	INSERT INTO ds_ope_order_distribution (
+			order_count,
+			order_times,
+			order_date
+		)
+		SELECT
+			count(1) AS order_count,
+			round(
+				(
+					UNIX_TIMESTAMP(dmot.sign_time) - UNIX_TIMESTAMP(dmot.create_time)
+				) / 60 / 30
+			) AS order_times,
+		DATE_FORMAT(sign_time,'%Y-%m-%d') as order_date
+		FROM
+			df_mass_order_monthly dmot
+		WHERE
+			dmot.sign_time >= #{begintime} and dmot.sign_time < #{endtime}
+		AND dmot.order_tag1 LIKE '%E%' AND employee_id is not null 
+		GROUP BY
+			order_date,order_times
+		ORDER BY
+			order_date,order_times;
+	  ]]>
+  </update>
 </mapper>

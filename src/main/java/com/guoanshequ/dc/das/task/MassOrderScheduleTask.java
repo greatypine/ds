@@ -691,4 +691,34 @@ public class MassOrderScheduleTask {
 		}.start();
 	}
 	
+	/**
+	 * 每日时效分配数据 ds_ope_order_distribution
+	 * 调度规则：每天凌晨3点20分 
+	 */
+	@Scheduled(cron ="0 20 3 * * ?")
+	public void orderDistribution(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********ds_ope_order_distribution每日时效分配数据统计任务调度开始**********");
+					
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					//开始时间
+					String begintime = DateUtils.getPreDateTime(new Date());
+					//结束时间
+					String endtime = DateUtils.getCurDateTime(new Date());
+					paraMap.put("begintime", begintime);
+					paraMap.put("endtime", endtime);
+					
+					dfMassOrderService.updateOrderDistribution(paraMap);
+					logger.info("**********ds_ope_order_distribution每日时效分配数据统计任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("ds_ope_order_distribution每日时效分配数据统计任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
 }

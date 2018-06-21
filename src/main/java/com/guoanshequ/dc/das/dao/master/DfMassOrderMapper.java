@@ -81,4 +81,6 @@ public interface DfMassOrderMapper {
 	
 	Integer updateMemberCityDay(Map<String, String> paraMap);
 	
+	Integer updateOrderDistribution(Map<String, String> paraMap);
+	
 }
