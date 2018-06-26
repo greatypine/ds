@@ -310,7 +310,7 @@ public class MemberCountTask {
 	 * @author wuxinxin
 	 */
 	
-	@Scheduled(cron ="30 * * * * ?")
+	@Scheduled(cron ="0 25 3 15 * ?")
 	public void eshopInfoTask() {
 		new Thread() {
 			public void run() {
