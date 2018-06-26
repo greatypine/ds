@@ -40,5 +40,31 @@ public class DfMemberCountService {
 	public void deletMembers(List<String> fileIdList) {
 		dfMemberCountDao.deleteDfMemberCount(fileIdList);
 	}
+	/**
+	 * 添加订单产品分类统计
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	public void addProductCount(Map<String, String> countMap) {
+		
+		dfMemberCountDao.addProductCount(countMap);
+	}
+	/**
+	 * 添加安心合作社
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	public void addEshopInfo(Map<String, String> eshopMap) {
+		dfMemberCountDao.addEshopInfo(eshopMap);
+	}
+	/**
+	 * 删除安心合作社
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	public void delEshopInfo(Map<String, String> eshopMap) {
+		dfMemberCountDao.delEshopInfo(eshopMap);
+		
+	}
 	
 }

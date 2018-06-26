@@ -11,6 +11,15 @@
 			)
         ]]>
 	</insert>
+	<insert id="addProductCount" parameterType="java.util.Map" >
+		<![CDATA[
+			insert ignore into ds_ope_memberproduct_all_day (
+				ordercount,data_date,ordertype,remark
+			) values (
+				#{ordercount},#{data_date},#{ordertype},#{remark}
+			)
+        ]]>
+	</insert>
 	
 	<update id="updateDfMemberCount" parameterType="java.util.Map">
 		<![CDATA[
@@ -23,7 +32,17 @@
   			<foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
        		 #{item}   
     		</foreach> 
-   <!--  		<![CDATA[
-		]]> -->
+	</delete>
+	<insert id="addEshopInfo" parameterType="java.util.Map">
+		<![CDATA[
+			insert ignore into ds_member_eshop (
+				eshop_id,eshop_name,city_code
+			) values (
+				#{eshop_id},#{eshop_name},#{city_code}
+			)
+        ]]>
+	</insert>
+	<delete  id="delEshopInfo" parameterType="java.util.List" >
+			delete from ds_member_eshop
 	</delete>
 </mapper>
