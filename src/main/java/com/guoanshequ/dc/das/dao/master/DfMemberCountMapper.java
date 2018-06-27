@@ -28,5 +28,11 @@ public interface DfMemberCountMapper {
 	 * @author wuxinxin
 	 */
 	public void deleteDfMemberCount(List<String> fileIdList);
+
+	public void addProductCount(Map<String, String> countMap);
+
+	public void addEshopInfo(Map<String, String> eshopMap);
+
+	public void delEshopInfo(Map<String, String> eshopMap);
 	
 }

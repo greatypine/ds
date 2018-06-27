@@ -155,4 +155,8 @@ public class DfMassOrderService {
 	public Integer updateMemberCityDay(Map<String, String> paraMap){
 		return dfMassOrderDao.updateMemberCityDay(paraMap);
 	}
+	
+	public Integer updateOrderDistribution(Map<String, String> paraMap){
+		return dfMassOrderDao.updateOrderDistribution(paraMap);
+	}
 }

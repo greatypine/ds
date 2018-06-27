@@ -38,7 +38,7 @@ public class MemberCountTask {
 	 * @Title: UserMemberScheduleTask @Description: 社员信息表，每小时一次，采用多线程 @param
 	 * 设定文件 @return void 返回类型 @throws
 	 */
-	//@Scheduled(cron = "30 * * * * ?")
+	//@Scheduled(cron = "0 */1 * * * ?")
 	@Scheduled(cron ="0 58 2 * * ?")
 	public void memberCountTask() {
 		new Thread() {
@@ -145,10 +145,9 @@ public class MemberCountTask {
 
 	/**
 	 * 
-	 * @Title: memberProductTask @Description: 社员最受欢迎商品、无人问津商品，按照每天1点15执行一次 @param
+	 * @Title: memberProductTask @Description: 社员最受欢迎商品、无人问津商品，按照每天2点50执行一次 @param
 	 * 设定文件 @return void 返回类型 @throws
 	 */
-	//@Scheduled(cron = "0 */1 * * * ?")
 	@Scheduled(cron ="0 50 2 * * ?")
 	public void memberProductTask() {
 		new Thread() {
@@ -160,26 +159,48 @@ public class MemberCountTask {
 					fileIdList.add("3");
 					fileIdList.add("4");
 					fileIdList.add("5");
-					dfMemberCountService.deletMembers(fileIdList);
+ 					dfMemberCountService.deletMembers(fileIdList);
 					// 查询最受欢迎商品
+					//1.查询e店城市
 					String nowDate = getDateTime();
 					Map<String, String> paraMap = new HashMap<String, String>();
-					// 从gemini中查询最受欢迎商品
-					List<Map<String, Object>> memberHotProList = memberCountService.queryhotProduct(paraMap);
-					if (!memberHotProList.isEmpty()) {
-						Map<String, String> hotMap = new HashMap<String, String>();
-						hotMap.put("member_type", "3");
-						for (Map<String, Object> memberhot : memberHotProList) {
-							hotMap.put("member_name", memberhot.get("pname").toString());
-							hotMap.put("member_count", memberhot.get("pcount").toString());
-							String createTime = memberhot.get("createtime").toString();
-							int sellDuration = getMargin(nowDate, createTime);
-							hotMap.put("sell_duration", sellDuration + "");
-							hotMap.put("remark", "最受欢迎商品");
-							// 入库
-							dfMemberCountService.addDfMemberCount(hotMap);
+					
+					List<Map<String, Object>> eshopCityList = memberCountService.queryEshopCity(paraMap);
+					if (!eshopCityList.isEmpty()) {
+						for (Map<String, Object> ecMap : eshopCityList) {
+							//2.查询对应的城市的E店商品
+							Map<String, String> citycodeMap = new HashMap<String, String>();
+							citycodeMap.put("city_code", ecMap.get("citycode").toString());
+							List<Map<String, Object>> memberHotProList = memberCountService.queryhotProduct(citycodeMap);
+							if (!memberHotProList.isEmpty()) {
+								Map<String, String> hotMap = new HashMap<String, String>();
+								hotMap.put("member_type", "3");
+								for (Map<String, Object> memberhot : memberHotProList) {
+									hotMap.put("member_name", memberhot.get("pname").toString());
+									hotMap.put("member_count", memberhot.get("pcount").toString());
+									String createTime = memberhot.get("createtime").toString();
+									int sellDuration = getMargin(nowDate, createTime);
+									hotMap.put("sell_duration", sellDuration + "");
+									hotMap.put("remark", ecMap.get("citycode").toString());
+									// 入库
+									dfMemberCountService.addDfMemberCount(hotMap);
+								}
+							}
+							
 						}
+						
 					}
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+
 					// 查询无人问津商品
 					List<Map<String, Object>> membercoolProList = memberCountService.querycoolProduct(paraMap);
 					if (!membercoolProList.isEmpty()) {
@@ -191,7 +212,9 @@ public class MemberCountTask {
 							String createTime = membercool.get("createtime").toString();
 							int sellDuration = getMargin(nowDate, createTime);
 							coolMap.put("sell_duration", sellDuration + "");
-							coolMap.put("remark", "无人问津商品");
+							if(membercool.get("citycode")!=null) {
+								coolMap.put("remark", membercool.get("citycode").toString());//城市id
+							}
 							// 入库
 							dfMemberCountService.addDfMemberCount(coolMap);
 						}
@@ -225,7 +248,97 @@ public class MemberCountTask {
 			}
 		}.start();
 	}
+	
+	
+	/**
+	 * 2018-06-21
+	 * 更新合作社每日商品分类订单数据
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	
+	@Scheduled(cron ="0 25 3 * * ?")
+	public void productCountTask() {
+		new Thread() {
+			public void run() {
+				try {
+					logger.info("************更新商品分类订单数据任务开始***********************");
 
+					
+
+					List<String> fileIdList= new ArrayList<String>();
+					//商品分类
+					fileIdList.add("生鲜果蔬");
+					fileIdList.add("幸福厨房");
+					fileIdList.add("精致卫浴");
+					fileIdList.add("全家健康");
+					fileIdList.add("家居优品");
+					fileIdList.add("宠物乐园");
+					fileIdList.add("好酒好食");
+					for (String protype : fileIdList) {
+						Map<String, String> paraMap = new HashMap<String, String>();
+						paraMap.put("content_tag", "'%"+protype+"%'");
+						//查询e店社员成交额
+						List<Map<String, Object>> productTypeList = memberCountService.queryProductCount(paraMap);
+						if (productTypeList!=null&&!productTypeList.isEmpty()) {
+							Map<String, String> protypeSumMap = new HashMap<String, String>();
+							for (Map<String, Object> ordercount : productTypeList) {
+								protypeSumMap.put("ordertype", protype);
+								protypeSumMap.put("ordercount", ordercount.get("cou").toString());
+								protypeSumMap.put("data_date", ordercount.get("data_date").toString());
+								protypeSumMap.put("remark", protype);
+								// 入库
+								dfMemberCountService.addProductCount(protypeSumMap);
+							}
+						}
+					}
+					logger.info("************商品分类订单数据结束***********************");
+				} catch (Exception e) {
+					logger.info("商品分类订单数据出现问题，任务执行失败，请查看！");
+					logger.info(e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+	
+
+	/**
+	 * 2018-06-21
+	 * 更新安心合作社信息
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	
+	@Scheduled(cron ="0 25 3 15 * ?")
+	public void eshopInfoTask() {
+		new Thread() {
+			public void run() {
+				try {
+					logger.info("************更新安心合作社开始***********************");
+					Map<String, String> paraMap = new HashMap<String, String>();
+						//查询安心合作社
+						List<Map<String, Object>> eshopInfoList = memberCountService.queryEshopInfo(paraMap);
+						if (eshopInfoList!=null&&!eshopInfoList.isEmpty()) {
+							dfMemberCountService.delEshopInfo(null);
+							Map<String, String> protypeSumMap = new HashMap<String, String>();
+							for (Map<String, Object> eshopInfo : eshopInfoList) {
+								protypeSumMap.put("eshop_id", eshopInfo.get("eid").toString());
+								protypeSumMap.put("eshop_name", eshopInfo.get("ename").toString());
+								protypeSumMap.put("city_code", eshopInfo.get("citycode").toString());
+								// 入库
+								dfMemberCountService.addEshopInfo(protypeSumMap);
+							}
+						}
+					logger.info("************更新安心合作社结束***********************");
+				} catch (Exception e) {
+					logger.info("商品分类订单数据出现问题，任务执行失败，请查看！");
+					logger.info(e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
 	/**
 	 * 比较两个日期相差的天数
 	 * 

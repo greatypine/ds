@@ -104,5 +104,31 @@ public class MemberCountService {
     	
     	return memberCountDao.queryNoEshopSum(paraMap);
     }
+    /**
+	 * 查询E店所属城市
+	 * TODO 
+	 * @author wuxinxin
+	 */
+    public List<Map<String, Object>> queryEshopCity(Map<String, String> paraMap){
+		return memberCountDao.queryEshopCity(paraMap);
+	}
     
+    /**
+     * 查询 商品分类对应的订单量
+     * TODO 
+     * @author wuxinxin
+     */
+	public List<Map<String, Object>> queryProductCount(Map<String, String> paraMap) {
+		return memberCountDao.queryProductCount(paraMap);
+		
+	}
+	/**
+	 * 查询安心合作社
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	public List<Map<String, Object>> queryEshopInfo(Map<String, String> paraMap) {
+		return memberCountDao.queryEshopInfo(paraMap);
+		
+	}
 }

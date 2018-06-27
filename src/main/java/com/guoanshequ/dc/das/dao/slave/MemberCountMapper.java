@@ -67,5 +67,25 @@ public interface MemberCountMapper{
 	 * @author wuxinxin
 	 */
 	List<Map<String, Object>> queryNoEshopSum(Map<String, String> paraMap);
+	/**
+	 * 查询E店所属城市
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	List<Map<String, Object>> queryEshopCity(Map<String, String> paraMap);
+	/**
+	 * 查询商品订单分类
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	List<Map<String, Object>> queryProductCount(Map<String, String> paraMap);
+	
+	
+	/**
+	 * 查询安心合作社
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	List<Map<String, Object>> queryEshopInfo(Map<String, String> paraMap);
 	
 }
