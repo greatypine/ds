@@ -17,7 +17,14 @@ public class CustomerInfoRecord {
     private String idCard;
     private String createTime;
     private String inviteCode;
+    private String birthday;
     
+	public String getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
 	public String getInviteCode() {
 		return inviteCode;
 	}
