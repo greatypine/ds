@@ -6,6 +6,7 @@ import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
 import com.guoanshequ.dc.das.utils.IdCardUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,18 +85,23 @@ public class UserMemberScheduleTask {
 				    		String openCardTime ="";
 				    		String regitTime="";
 				    		String isnew_member="";
+				    		String birthday ="";
 							for (Map<String, Object> userMember : userMemberList) {
 								isnew_member="0";
 								customerInfoRecord = mongoService.queryCusInfoByCusId(userMember.get("customer_id").toString());
 								if(customerInfoRecord!=null) {
 									idcardStr = customerInfoRecord.getIdCard();
 									openCardTime = customerInfoRecord.getCreateTime();
+									birthday = customerInfoRecord.getBirthday();
+									if(!StringUtils.isBlank(birthday)) {
+										userMember.put("birthday",birthday.replace("-", ""));
+									}
 									userMember.put("opencard_time", openCardTime);
 									regitTime = userMember.get("regist_time").toString();
 									if(DateUtils.StringToDate(openCardTime).equals(DateUtils.StringToDate(regitTime))) {
 										isnew_member = "1";
 									}
-									if(!"".equals(idcardStr)) {
+									if(idcardStr!=null && !"".equals(idcardStr)) {
 										userMember.put("idcard", idcardStr);
 										idcard = IdCardUtil.getIdCardInfo(idcardStr);
 										userMember.put("birthplace",idcard.getBirthplace());
