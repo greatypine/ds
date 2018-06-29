@@ -109,10 +109,10 @@ public class UserMemberScheduleTask {
 										userMember.put("born_city", idcard.getCity());
 										userMember.put("birthday",idcard.getBirthday());
 										userMember.put("sex",idcard.getGender());
-										userMember.put("regist_cityno", customerInfoRecord.getCityCode());
-										userMember.put("inviteCode", customerInfoRecord.getInviteCode());
 									}
 								}
+								userMember.put("regist_cityno", customerInfoRecord.getCityCode());
+								userMember.put("inviteCode", customerInfoRecord.getInviteCode());
 								userMember.put("isnew_member", isnew_member);
 								dfUserMemberService.addDfUserMember(userMember);
 							}
