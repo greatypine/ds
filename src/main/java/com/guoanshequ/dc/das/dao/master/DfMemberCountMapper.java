@@ -34,5 +34,9 @@ public interface DfMemberCountMapper {
 	public void addEshopInfo(Map<String, String> eshopMap);
 
 	public void delEshopInfo(Map<String, String> eshopMap);
+
+	public List<Map<String, Object>> queryOrderHourCount(Map<String, String> paraMap);
+
+	public Integer addOrderHourCount(Map<String, String> paraMap);
 	
 }

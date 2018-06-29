@@ -67,4 +67,22 @@ public class DfMemberCountService {
 		
 	}
 	
+	/**
+	 * 查询安心合作社每天每小时订单量
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	public List<Map<String, Object>> queryOrderHourCount(Map<String, String> paraMap) {
+		return dfMemberCountDao.queryOrderHourCount(paraMap);
+	}
+	/**
+	 * 添加数据到按小时订单量表中
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	public void addOrderHourCount(Map<String, String> paraMap) {
+		 dfMemberCountDao.addOrderHourCount(paraMap);
+		
+	}
+	
 }

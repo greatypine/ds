@@ -302,6 +302,47 @@ public class MemberCountTask {
 		}.start();
 	}
 	
+	
+	/**
+	 * 2018-06-28
+	 * 更新合作社每日按小时订单量
+	 * TODO 
+	 * @author wuxinxin
+	 */
+	
+	@Scheduled(cron ="0 29 3 * * ?")
+	public void orderToHourCountTask() {
+		new Thread() {
+			public void run() {
+				try {
+					logger.info("************更新按小时统计订单量任务开始***********************");
+
+					
+					Map<String, String> paraMap = new HashMap<String, String>();
+						//查询当日按小时成交量
+						List<Map<String, Object>> orderHourCountList = dfMemberCountService.queryOrderHourCount(paraMap);
+						if (orderHourCountList!=null&&!orderHourCountList.isEmpty()) {
+							Map<String, String> protypeSumMap = new HashMap<String, String>();
+							for (Map<String, Object> ordercount : orderHourCountList) {
+								protypeSumMap.put("seltime", ordercount.get("seltime").toString());
+								protypeSumMap.put("prisum", ordercount.get("prisum").toString());
+								protypeSumMap.put("city_code", ordercount.get("city_code").toString());
+								protypeSumMap.put("city_name", ordercount.get("city_name").toString());
+								protypeSumMap.put("dorder_date", ordercount.get("dorder_date").toString());
+								protypeSumMap.put("remark", ordercount.get("city_name").toString());
+								// 入库
+								dfMemberCountService.addOrderHourCount(protypeSumMap);
+							}
+						}
+					logger.info("************按小时统计订单量结束***********************");
+				} catch (Exception e) {
+					logger.info("按小时统计订单量统计出现问题，任务执行失败，请查看！");
+					logger.info(e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
 
 	/**
 	 * 2018-06-21

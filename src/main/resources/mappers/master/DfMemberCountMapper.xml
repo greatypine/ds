@@ -45,4 +45,36 @@
 	<delete  id="delEshopInfo" parameterType="java.util.List" >
 			delete from ds_member_eshop
 	</delete>
+	<insert id="addOrderHourCount" parameterType="java.util.Map" >
+		<![CDATA[
+			insert ignore into ds_member_ordercount (
+				seltime,prisum,city_code,city_name,dorder_date,remark
+			) values (
+				#{seltime},#{prisum},#{city_code},#{city_name},#{dorder_date},#{remark}
+			)
+        ]]>
+	</insert>
+			<!-- 查询社员成交额 -->
+	<select id="queryOrderHourCount" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+		select
+			date_format(dmom.sign_time, '%H时') seltime,
+			count(1) prisum,
+			dmom.store_city_code city_code,
+			dmom.store_city_name city_name,
+			DATE_SUB(CURDATE(), INTERVAL 1 DAY) dorder_date
+		from
+			df_mass_order_monthly dmom
+		where
+			dmom.sign_time >= DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+		and dmom.sign_time < CURDATE()
+		and dmom.order_tag1 like '%E%'
+		group by
+			date_format(dmom.sign_time, '%H'),
+			dmom.store_city_code
+		order by
+			date_format(dmom.sign_time, '%H')
+		]]>
+	</select>
+	
 </mapper>
