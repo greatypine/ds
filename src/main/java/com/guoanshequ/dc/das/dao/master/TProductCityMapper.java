@@ -19,4 +19,12 @@ public interface TProductCityMapper {
 	int addTProductCityDay(Map<String, String> paraMap);
 	
 	int deleteTProductCityDay();
+	
+	Map<String, String> queryTProductIsExist(Map<String, String> paraMap);
+	
+	int addTProductSales(Map<String, String> paraMap);
+	
+	int updateTProductSalesCount(Map<String, String> paraMap);
+	
+	int updateTProductSalesNames(Map<String, String> paraMap);
 }

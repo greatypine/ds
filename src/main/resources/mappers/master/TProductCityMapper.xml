@@ -44,5 +44,55 @@
 		]]>
 	</delete>
 	
+	<select id="queryTProductIsExist" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from ds_ope_product_store_day dod where dod.recdate=#{recdate} and dod.product_id=#{product_id} and dod.store_id=#{store_id}
+	</select>
 
+	<insert id="addTProductSales" parameterType="java.util.Map">
+		<![CDATA[
+			INSERT ds_ope_product_store_day (
+				product_id,
+				product_name,
+				product_type,
+				recdate,
+				store_id,
+				store_name,
+				eshop_id,
+				store_no,
+				city_no,
+				department_id,
+				channel_id,
+				product_count,
+				product_quantity
+			) VALUES(#{product_id},#{product_name},#{product_type},#{recdate},#{store_id},#{store_name},
+			#{eshop_id},#{store_code},#{city_code},#{department_id},#{channel_id},#{pcount},#{pquantity})
+		]]>
+	</insert>
+	
+	<update id="updateTProductSalesCount" parameterType="java.util.Map">
+		<![CDATA[
+			UPDATE ds_ope_product_store_day dod
+			SET dod.product_count = product_count + #{pcount},
+			 	dod.product_quantity = product_quantity + #{pquantity}
+			WHERE
+				dod.recdate = #{recdate}
+			AND dod.product_id = #{product_id}
+			AND dod.store_id = #{store_id}
+		]]>
+	</update>
+	
+	<update id="updateTProductSalesNames" parameterType="java.util.Map">
+		<![CDATA[
+			UPDATE ds_ope_product_store_day dod
+			SET dod.city_name = #{city_name},
+			 	dod.eshop_name = #{eshop_name},
+			 	dod.channel_name = #{channel_name},
+			 	dod.department_name = #{dept_name}
+			WHERE
+				dod.recdate = #{recdate}
+			AND dod.product_id = #{product_id}
+			AND dod.store_id = #{store_id}
+		]]>
+	</update>
+	
 </mapper>

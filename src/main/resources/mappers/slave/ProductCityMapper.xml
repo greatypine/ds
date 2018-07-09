@@ -42,4 +42,96 @@
 		]]>
 	</select>
 	
+	<select id="queryProductDay" resultType="java.util.Map">
+		<![CDATA[
+			SELECT
+				tpo.id AS product_id,
+				tpo.content_name AS product_name,
+				tpo.content_type AS product_type,
+				DATE_FORMAT(tor.sign_time, '%Y-%m-%d') AS recdate,
+				tor.store_id,
+				tor.eshop_id,
+				count(1) AS pcount,
+				sum(toi.quantity) pquantity,
+				tpo.ims_master_id
+			FROM
+				t_order tor,
+				t_order_item toi,
+				t_product tpo
+			WHERE
+				tor.sign_time >= #{begintime}
+			AND tor.sign_time < #{endtime}
+			AND toi.order_id = tor.id
+			AND toi.eshop_pro_id = tpo.id
+			AND tpo.content_name NOT LIKE '%测试%'
+			GROUP BY
+				tpo.id,
+				tor.store_id
+		]]>
+	</select>
+	
+	<select id="queryProductStore" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			SELECT
+				ts.CODE AS store_code,
+				ts.NAME as store_name,
+				ts.city_code
+			FROM
+				t_store ts
+			WHERE
+				ts.id = #{store_id}
+		]]>
+	</select>
+	
+	<select id="queryProductMapping" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			SELECT				
+				tdc.department_id,
+				tdc.channel_id
+			FROM
+				t_ims_pro_mapping tdc
+			WHERE
+				tdc.pro_id = #{ims_master_id}
+		]]>
+	</select>
+	
+	<select id="queryProductEshopName" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			SELECT
+				te.NAME AS eshop_name
+			FROM
+				t_eshop te
+			WHERE
+				te.id = #{eshop_id}
+		]]>
+	</select>
+	
+	<select id="queryProductCityName" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			SELECT
+				ta.NAME AS city_name
+			FROM
+				t_sys_area ta
+			WHERE
+				ta. CODE = #{city_code} AND ta.LEVEL = 2
+		]]>
+	</select>
+	
+	<select id="queryProductDeptChannelName" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			SELECT
+				MAX(channel_name) AS channel_name,
+				MAX(dept_name) AS dept_name
+			FROM
+				(
+					SELECT
+						CASE WHEN td.LEVEL = 2 THEN	td.NAME END AS channel_name,
+						CASE WHEN td.LEVEL = 1 THEN td.NAME END AS dept_name
+					FROM
+						t_department_channel td
+					WHERE
+						td.id = #{department_id} OR td.id = #{channel_id}
+				) aa
+		]]>
+	</select>
 </mapper>
