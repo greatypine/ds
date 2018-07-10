@@ -110,10 +110,12 @@ public class UserMemberScheduleTask {
 										userMember.put("birthday",idcard.getBirthday());
 										userMember.put("sex",idcard.getGender());
 									}
+									userMember.put("regist_cityno", customerInfoRecord.getCityCode());
+									userMember.put("inviteCode", customerInfoRecord.getInviteCode());
+									userMember.put("isnew_member", isnew_member);
+								}else {
+									System.out.println("mongo中未存在的customer_id:"+userMember.get("customer_id").toString());
 								}
-								userMember.put("regist_cityno", customerInfoRecord.getCityCode());
-								userMember.put("inviteCode", customerInfoRecord.getInviteCode());
-								userMember.put("isnew_member", isnew_member);
 								dfUserMemberService.addDfUserMember(userMember);
 							}
 				    		//设置任务为运行完成状态
