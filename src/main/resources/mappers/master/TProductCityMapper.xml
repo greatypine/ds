@@ -60,12 +60,10 @@
 				eshop_id,
 				store_no,
 				city_no,
-				department_id,
-				channel_id,
 				product_count,
 				product_quantity
 			) VALUES(#{product_id},#{product_name},#{product_type},#{recdate},#{store_id},#{store_name},
-			#{eshop_id},#{store_code},#{city_code},#{department_id},#{channel_id},#{pcount},#{pquantity})
+			#{eshop_id},#{store_code},#{city_code},#{pcount},#{pquantity})
 		]]>
 	</insert>
 	
@@ -86,6 +84,8 @@
 			UPDATE ds_ope_product_store_day dod
 			SET dod.city_name = #{city_name},
 			 	dod.eshop_name = #{eshop_name},
+			 	dod.channel_id = #{channel_id},
+			 	dod.department_id = #{department_id},
 			 	dod.channel_name = #{channel_name},
 			 	dod.department_name = #{dept_name}
 			WHERE

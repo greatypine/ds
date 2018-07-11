@@ -29,10 +29,6 @@ public class ProductSalesService {
     public Map<String, String> queryProductStore(Map<String, String> paraMap){
     	return productCityDao.queryProductStore(paraMap);
     }
-    
-    public Map<String, String> queryProductMapping(Map<String, String> paraMap){
-    	return productCityDao.queryProductMapping(paraMap);
-    }
    
     public Map<String, String> queryProductEshopName(Map<String, String> paraMap){
     	return productCityDao.queryProductEshopName(paraMap);

@@ -18,8 +18,6 @@ public interface ProductCityMapper {
 	 
 	 Map<String, String> queryProductStore(Map<String, String> paraMap);
 	 
-	 Map<String, String> queryProductMapping(Map<String, String> paraMap);
-	 
 	 Map<String, String> queryProductEshopName(Map<String, String> paraMap);
 	 
 	 Map<String, String> queryProductCityName(Map<String, String> paraMap);

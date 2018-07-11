@@ -83,22 +83,12 @@
 		]]>
 	</select>
 	
-	<select id="queryProductMapping" parameterType="java.util.Map" resultType="java.util.Map">
-		<![CDATA[
-			SELECT				
-				tdc.department_id,
-				tdc.channel_id
-			FROM
-				t_ims_pro_mapping tdc
-			WHERE
-				tdc.pro_id = #{ims_master_id}
-		]]>
-	</select>
-	
 	<select id="queryProductEshopName" parameterType="java.util.Map" resultType="java.util.Map">
 		<![CDATA[
 			SELECT
-				te.NAME AS eshop_name
+				te.NAME AS eshop_name,
+				te.bussiness_group_id AS department_id,
+				te.channel_id AS channel_id
 			FROM
 				t_eshop te
 			WHERE

@@ -63,13 +63,15 @@ public class ProductSalesTask {
 						}
 						
 						//给后台接口构建参数
-						Map<String, String> paraMap=new HashMap<String, String>();
-						paraMap.put("begintime", begintime);
-						paraMap.put("endtime", endtime);
+						Map<String, String> queryParaMap=new HashMap<String, String>();
+						queryParaMap.put("begintime", begintime);
+						queryParaMap.put("endtime", endtime);
 						
-						Map<String, String> tempMap=new HashMap<String, String>();
-						List<Map<String, String>> list =productSalesService.queryProductDay(paraMap);
+						List<Map<String, String>> list =productSalesService.queryProductDay(queryParaMap);
 						for (Map<String, String> map : list) {
+							
+							Map<String, String> tempMap=new HashMap<String, String>();
+							Map<String, String> paraMap=new HashMap<String, String>();
 							
 							paraMap.put("recdate", map.get("recdate"));
 							paraMap.put("store_id", map.get("store_id"));
@@ -89,12 +91,6 @@ public class ProductSalesTask {
 								paraMap.put("store_name", productStore.get("store_name"));
 								paraMap.put("city_code", productStore.get("city_code"));
 								
-								Map<String, String> productMapping = productSalesService.queryProductMapping(paraMap);
-								if(productMapping!=null){
-									paraMap.put("channel_id", productMapping.get("channel_id"));
-									paraMap.put("department_id", productMapping.get("department_id"));
-								}
-								
 								tProductSalesService.addTProductSales(paraMap);
 							}else{
 								tProductSalesService.updateTProductSalesCount(paraMap);
@@ -104,20 +100,22 @@ public class ProductSalesTask {
 							
 							tempMap.put("eshop_id", tProductSale.get("eshop_id"));
 							tempMap.put("city_code", tProductSale.get("city_no"));
-							tempMap.put("channel_id", tProductSale.get("channel_id"));
-							tempMap.put("department_id", tProductSale.get("department_id"));
 							
 							Map<String, String> productEshopName = productSalesService.queryProductEshopName(tempMap);
 							
 							if(productEshopName!=null){
 								paraMap.put("eshop_name", productEshopName.get("eshop_name"));
+								paraMap.put("channel_id", productEshopName.get("channel_id"));
+								paraMap.put("department_id", productEshopName.get("department_id"));
+								tempMap.put("channel_id", productEshopName.get("channel_id"));
+								tempMap.put("department_id", productEshopName.get("department_id"));
 							}
 							
 							Map<String, String> productCityName = productSalesService.queryProductCityName(tempMap);
 							if(productCityName!=null){
 								paraMap.put("city_name", productCityName.get("city_name"));
 							}
-							
+								
 							Map<String, String> productDeptChannelName = productSalesService.queryProductDeptChannelName(tempMap);
 							if(productDeptChannelName!=null){
 								paraMap.put("channel_name", productDeptChannelName.get("channel_name"));
