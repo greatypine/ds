@@ -192,7 +192,7 @@
 		join t_order_item toi on (tor.id = toi.order_id)
 		join t_product tpr on (toi.eshop_pro_id = tpr.id)
 		where
-			date_sub(curdate(), INTERVAL 34 DAY) <= tor.sign_time
+			date_sub(curdate(), INTERVAL 1 DAY) <= tor.sign_time
 		and curdate()>tor.sign_time
 		and te.super_member='yes' 
 		and tpr.content_tag like #{content_tag}
