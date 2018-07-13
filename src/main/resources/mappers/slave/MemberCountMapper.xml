@@ -6,7 +6,7 @@
 	<select id="queryMemberCount" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 		select
-			count(1) as cou
+			count(1) as cou,te.city_code city_code
 		from
 			t_order tor,t_customer tcu,t_eshop te
 		where 
@@ -14,14 +14,14 @@
 		and	tor.eshop_id = te.id 
 		and te.super_member = 'yes' 
 		and tor.customer_id=tcu.id 
-		and tcu.associator_level='2'
+		and tcu.associator_level='2' group by te.city_code
 		]]>
 	</select>
 		<!-- 查询社员成交额 -->
 	<select id="queryMemberSum" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 		select
-			ifnull(sum(tor.trading_price),0) as cou
+			ifnull(sum(tor.trading_price),0) as cou,te.city_code city_code
 		from
 			t_order tor,t_customer tcu,t_eshop te
 		where 
@@ -29,7 +29,7 @@
 		and	tor.eshop_id = te.id 
 		and te.super_member = 'yes'  
 		and tor.customer_id=tcu.id 
-		and tcu.associator_level='2'
+		and tcu.associator_level='2' group by te.city_code
 		]]>
 	</select>
 		<!-- 查询E店存在的城市 -->
@@ -97,22 +97,17 @@
 	<!-- 查询动销商品量 -->
 	<select id="queryMovingPin" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-		select
-			count(1) cou 
+		select  
+			count(distinct toi.eshop_pro_id) cou,te.city_code city_code
 		from
-			(
-				select distinct 
-					toi.eshop_pro_id 
-				from
-					t_product p,
-					t_order_item toi, 
-					t_eshop te 
-				where 
-					te.super_member = 'yes' 
-				and te.name not like '%测试%'  
-				and p.eshop_id = te.id 
-				and toi.eshop_pro_id = p.id 
-			) cce
+			t_product p,
+			t_order_item toi, 
+			t_eshop te 
+		where 
+			te.super_member = 'yes' 
+		and te.name not like '%测试%'  
+		and p.eshop_id = te.id 
+		and toi.eshop_pro_id = p.id GROUP BY te.city_code
 		]]>
 	</select>
 	<!-- 查询e店订单量、成交额 -->
@@ -140,7 +135,7 @@
 	<select id="queryAllEshopSum" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 		select
-			ifnull(sum(tor.trading_price),0) as cou 
+			ifnull(sum(tor.trading_price),0) as cou,te.city_code  city_code
 		from
 			t_order tor,t_customer tcu,t_eshop te
 		where 
@@ -149,14 +144,14 @@
 		and te.super_member = 'yes' 
 		and te.name not like '%测试%' 
 		and	tor.eshop_id = te.id 
-		and tor.customer_id=tcu.id
+		and tor.customer_id=tcu.id group by te.city_code
 		]]>
 	</select>
 	<!-- 查询e店社员总销量 -->
 	<select id="queryYesEshopSum" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 		select
-			ifnull(sum(tor.trading_price),0) as cou 
+			ifnull(sum(tor.trading_price),0) as cou,te.city_code  city_code
 		from
 			t_order tor,t_customer tcu,t_eshop te
 		where 
@@ -166,14 +161,14 @@
 		and te.name not like '%测试%' 
 		and	tor.eshop_id = te.id 
 		and tor.customer_id=tcu.id 
-		and tcu.associator_level='2' 
+		and tcu.associator_level='2'  group by te.city_code
 		]]>
 	</select>
 	<!-- 查询e店非社员总销量 -->
 	<select id="queryNoEshopSum" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 		select
-			ifnull(sum(tor.trading_price),0) as cou 
+			ifnull(sum(tor.trading_price),0) as cou,te.city_code  city_code
 		from
 			t_order tor,t_customer tcu,t_eshop te
 		where 
@@ -183,14 +178,14 @@
 		and te.super_member = 'yes'
 		and te.name not like '%测试%'  
 		and tor.customer_id=tcu.id 
-		and tcu.associator_level!='2'
+		and tcu.associator_level!='2'  group by te.city_code
 		]]>
 	</select>
 	<!-- 查询商品订单分类-->
 	<select id="queryProductCount" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 		select
-			count(1) cou,date_sub(curdate(), INTERVAL 1 DAY) data_date
+			count(1) cou,date_sub(curdate(), INTERVAL 1 DAY) data_date,te.city_code  city_code
 		from
 			t_order tor 
 		left join t_eshop te on (tor.eshop_id=te.id) 
@@ -201,7 +196,7 @@
 		and curdate()>tor.sign_time
 		and te.super_member='yes' 
 		and tpr.content_tag like #{content_tag}
-			
+		group by te.city_code	
 		]]>
 	</select>
 	<!-- 查询安心合作社店铺-->

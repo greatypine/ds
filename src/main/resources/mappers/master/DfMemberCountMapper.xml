@@ -5,18 +5,18 @@
 	<insert id="addDfMemberCount" parameterType="java.util.Map" >
 		<![CDATA[
 			insert ignore into ds_member_statistics (
-				member_name,member_count,member_type,sell_duration,remark
+				member_name,member_count,city_code,member_type,sell_duration,remark
 			) values (
-				#{member_name},#{member_count},#{member_type},#{sell_duration},#{remark}
+				#{member_name},#{member_count},#{city_code},#{member_type},#{sell_duration},#{remark}
 			)
         ]]>
 	</insert>
 	<insert id="addProductCount" parameterType="java.util.Map" >
 		<![CDATA[
 			insert ignore into ds_ope_memberproduct_all_day (
-				ordercount,data_date,ordertype,remark
+				ordercount,data_date,city_code,ordertype,remark
 			) values (
-				#{ordercount},#{data_date},#{ordertype},#{remark}
+				#{ordercount},#{data_date},#{city_code},#{ordertype},#{remark}
 			)
         ]]>
 	</insert>
