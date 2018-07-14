@@ -83,4 +83,22 @@ public interface DfMassOrderMapper {
 	
 	Integer updateOrderDistribution(Map<String, String> paraMap);
 	
+	Integer updateActivityProductForDaily(Map<String, String> paraMap);
+	
+	Integer updateActivityProductForMonthly(Map<String, String> paraMap);
+	
+	Integer updateActivityProductForTotal(Map<String, String> paraMap);
+	
+	Integer updateActivityServiceForDaily(Map<String, String> paraMap);
+	
+	Integer updateActivityServiceForMonthly(Map<String, String> paraMap);
+	
+	Integer updateActivityServiceForTotal(Map<String, String> paraMap);
+	
+	Integer updateActivityGroupOnForDaily(Map<String, String> paraMap);
+	
+	Integer updateActivityGroupOnForMonthly(Map<String, String> paraMap);
+	
+	Integer updateActivityGroupOnForTotal(Map<String, String> paraMap);
+	
 }

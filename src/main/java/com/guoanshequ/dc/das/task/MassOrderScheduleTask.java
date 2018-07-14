@@ -721,4 +721,48 @@ public class MassOrderScheduleTask {
 		}.start();
 	}
 	
+	/**
+	 * 221订单标签order2_tag：商品类、服务类、团购类订单打标签
+	 * 调度规则：每天凌晨2点01分 
+	 */
+	@Scheduled(cron ="0 01 2 * * ?")
+	public void activityOrder2TagTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********221订单标签order2_tag：商品类、服务类、团购类订单打标签任务调度开始**********");
+					
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					//开始时间
+					String begintime = DateUtils.getPreDateTime(new Date());
+					//结束时间
+					String endtime = DateUtils.getCurDateTime(new Date());
+					//打标签统计
+					int productNum =0;
+					int sericeNum =0;
+					int grouponNum =0;
+					paraMap.put("begintime", begintime);
+					paraMap.put("endtime", endtime);
+					
+					dfMassOrderService.updateActivityProductForDaily(paraMap);
+					productNum += dfMassOrderService.updateActivityProductForMonthly(paraMap);
+					dfMassOrderService.updateActivityProductForTotal(paraMap);
+					dfMassOrderService.updateActivityServiceForDaily(paraMap);
+					sericeNum += dfMassOrderService.updateActivityServiceForMonthly(paraMap);
+					dfMassOrderService.updateActivityServiceForTotal(paraMap);
+					dfMassOrderService.updateActivityGroupOnForDaily(paraMap);
+					grouponNum += dfMassOrderService.updateActivityGroupOnForMonthly(paraMap);
+					dfMassOrderService.updateActivityGroupOnForTotal(paraMap);
+					
+					logger.info("**********221订单标签order2_tag：商品类、服务类、团购类订单打标签任务调度结束,商品类："+productNum+
+							",服务类："+sericeNum+",团购类："+grouponNum+"**********");
+				} catch (Exception e) {
+					logger.info("221订单标签order2_tag：商品类、服务类、团购类订单打标签任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}	
+	
 }

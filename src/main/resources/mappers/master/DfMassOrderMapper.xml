@@ -502,4 +502,95 @@
 			order_date,order_times;
 	  ]]>
   </update>
+  
+	<!-- 更新MassOrderDaily订单标签order_tag2:221订单商品类 -->
+	<update id="updateActivityProductForDaily" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_daily tor , df_activity_bussiness_scope dabs
+			set tor.order_tag2 ='1'
+			where tor.channel_id = dabs.id and dabs.`level` = 2 
+			and dabs.type ='product' and tor.sign_time>= #{begintime} and tor.sign_time< #{endtime} ;
+		]]>
+  	</update> 
+  	
+  	<!-- 更新MassOrderMonthly订单标签order_tag2:221订单商品类 -->
+	<update id="updateActivityProductForMonthly" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_monthly tor , df_activity_bussiness_scope dabs
+			set tor.order_tag2 ='1'
+			where tor.channel_id = dabs.id and dabs.`level` = 2 
+			and dabs.type ='product' and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
+		]]>
+  	</update> 
+  	
+  	<!-- 更新MassOrderTotal订单标签order_tag2:221订单商品类 -->
+	<update id="updateActivityProductForTotal" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_total tor , df_activity_bussiness_scope dabs
+			set tor.order_tag2 ='1'
+			where tor.channel_id = dabs.id and dabs.`level` = 2 
+			and dabs.type ='product' and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
+		]]>
+  	</update> 
+  	
+  	<!-- 更新MassOrderDaily订单标签order_tag2:221订单服务类 -->
+	<update id="updateActivityServiceForDaily" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_daily tor , df_activity_bussiness_scope dabs
+			set tor.order_tag2 ='2'
+			where tor.channel_id = dabs.id and dabs.`level` = 2 
+			and dabs.type ='service' and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
+		]]>
+  	</update> 
+  	
+  	<!-- 更新MassOrderMonthly订单标签order_tag2:221订单商品类 -->
+	<update id="updateActivityServiceForMonthly" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_monthly tor , df_activity_bussiness_scope dabs
+			set tor.order_tag2 ='2'
+			where tor.channel_id = dabs.id and dabs.`level` = 2 
+			and dabs.type ='service' and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
+		]]>
+  	</update> 
+  	
+  	<!-- 更新MassOrderTotal订单标签order_tag2:221订单商品类 -->
+	<update id="updateActivityServiceForTotal" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_total tor , df_activity_bussiness_scope dabs
+			set tor.order_tag2 ='2'
+			where tor.channel_id = dabs.id and dabs.`level` = 2 
+			and dabs.type ='service' and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
+		]]>
+  	</update>
+  	
+  	<!-- 更新MassOrderDaily订单标签order_tag2:221订单团购类 -->
+	<update id="updateActivityGroupOnForDaily" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_daily tor , df_activity_bussiness_scope dabs
+			set tor.order_tag2 ='3'
+			where tor.bussiness_group_id = dabs.id and dabs.`level` =1 and dabs.is_groupon = 1 
+			and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
+		]]>
+  	</update> 
+  	
+  	<!-- 更新MassOrderMonthly订单标签order_tag2:221订单团购类 -->
+	<update id="updateActivityGroupOnForMonthly" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_monthly tor , df_activity_bussiness_scope dabs
+			set tor.order_tag2 ='3'
+			where tor.bussiness_group_id = dabs.id and dabs.`level` =1 and dabs.is_groupon = 1 
+			and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
+		]]>
+  	</update> 
+  	
+  	<!-- 更新MassOrderTotal订单标签order_tag2:221订单团购类 -->
+	<update id="updateActivityGroupOnForTotal" parameterType="java.util.Map">
+  		<![CDATA[
+			update df_mass_order_total tor , df_activity_bussiness_scope dabs
+			set tor.order_tag2 ='3'
+			where tor.bussiness_group_id = dabs.id and dabs.`level` =1 and dabs.is_groupon = 1 
+			and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
+		]]>
+  	</update>
+  	 
 </mapper>

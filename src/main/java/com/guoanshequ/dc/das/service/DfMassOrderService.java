@@ -159,4 +159,40 @@ public class DfMassOrderService {
 	public Integer updateOrderDistribution(Map<String, String> paraMap){
 		return dfMassOrderDao.updateOrderDistribution(paraMap);
 	}
+	
+	public Integer updateActivityProductForDaily(Map<String, String> paraMap) {
+		return dfMassOrderDao.updateActivityProductForDaily(paraMap);
+	}
+	
+	public Integer updateActivityProductForMonthly(Map<String, String> paraMap) {
+		return dfMassOrderDao.updateActivityProductForMonthly(paraMap);
+	}
+	
+	public Integer updateActivityProductForTotal(Map<String, String> paraMap) {
+		return dfMassOrderDao.updateActivityProductForTotal(paraMap);
+	}
+	
+	public Integer updateActivityServiceForDaily(Map<String, String> paraMap) {
+		return dfMassOrderDao.updateActivityServiceForDaily(paraMap);
+	}
+	
+	public Integer updateActivityServiceForMonthly(Map<String, String> paraMap) {
+		return dfMassOrderDao.updateActivityServiceForMonthly(paraMap);
+	}
+	
+	public Integer updateActivityServiceForTotal(Map<String, String> paraMap) {
+		return dfMassOrderDao.updateActivityServiceForTotal(paraMap);
+	}
+	
+	public Integer updateActivityGroupOnForDaily(Map<String, String> paraMap) {
+		return dfMassOrderDao.updateActivityGroupOnForDaily(paraMap);
+	}
+	
+	public Integer updateActivityGroupOnForMonthly(Map<String, String> paraMap) {
+		return dfMassOrderDao.updateActivityGroupOnForMonthly(paraMap);
+	}
+	
+	public Integer updateActivityGroupOnForTotal(Map<String, String> paraMap) {
+		return dfMassOrderDao.updateActivityGroupOnForTotal(paraMap);
+	}
 }
