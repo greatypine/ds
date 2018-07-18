@@ -74,7 +74,7 @@
 			and	 trp.pay_status= 'payed'  
 			and	 (trp.pay_platform !='prepay' or trp.pay_platform is null)			
 			and tor.payable_price/tor.trading_price < 0.5
-			and (te.name not like '国安社区会员开卡礼%' and te.name not like '国安社区会员试用礼%')
+			and tor.eshop_id not in (select eshop_id from t_emall_eshop where emall_id in ('c3edf6c77d483c6b67659f52e1f24990','edea35c2f1fb334184d53f4ca215f7a1'))
 			and tor.id not in (select order_id from t_order_item_extra toie where toie.create_time >=#{begindate} and toie.create_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY) and apportion_rebate >0)
 			UNION
 			select
@@ -104,7 +104,7 @@
 			and ts.name NOT LIKE '%测试%' and ts.status=0 and ts.white!='QA'
 			and ts.city_code = tsa.code and tsa.level = 2
 			and tor.payable_price/tor.trading_price < 0.5
-			and (te.name not like '国安社区会员开卡礼%' and te.name not like '国安社区会员试用礼%')
+			and tor.eshop_id not in (select eshop_id from t_emall_eshop where emall_id in ('c3edf6c77d483c6b67659f52e1f24990','edea35c2f1fb334184d53f4ca215f7a1'))
 			and tor.id not in (select order_id from t_order_item_extra toie where toie.create_time >=#{begindate} and toie.create_time < DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY) and apportion_rebate >0)
 		]]>
 	</select>
