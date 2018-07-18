@@ -279,7 +279,7 @@ public class MemberCountTask {
 					fileIdList.add("好酒好食");
 					for (String protype : fileIdList) {
 						Map<String, String> paraMap = new HashMap<String, String>();
-						paraMap.put("content_tag", "'%"+protype+"%'");
+						paraMap.put("content_tag", "%"+protype+"%");
 						//查询e店社员成交额
 						List<Map<String, Object>> productTypeList = memberCountService.queryProductCount(paraMap);
 						if (productTypeList!=null&&!productTypeList.isEmpty()) {
