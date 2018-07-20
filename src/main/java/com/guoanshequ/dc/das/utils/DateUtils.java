@@ -305,7 +305,22 @@ public class DateUtils {
         return preDateFirst;
     }
     
+    
+    /** 
+     * @param m 前m个小时
+     * @return 返回当前时间的前m小时的时间值
+     * 功能说明：
+     * 当前日期2018-01-01 10:10:00，前1小时：2018-01-01 09:10:00
+     */ 
+    public static String getPreNHoursTime(int m) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) - m); 
+        String pre_hour_begin = df.format(calendar.getTime());
+        return pre_hour_begin;
+    }
+    
     public static void main(String[] args) {
-    	System.out.println(getCurDateTime(new Date())); 
+    	System.out.println(getPreNHoursTime(1)); 
 	}
 }

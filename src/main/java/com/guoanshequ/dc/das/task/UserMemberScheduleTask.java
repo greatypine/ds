@@ -46,7 +46,7 @@ public class UserMemberScheduleTask {
 	 * @return void 返回类型
 	 * @throws
 	 */
-	@Scheduled(cron = "0 0 */1 * * ?")
+	@Scheduled(cron = "0 */10 * * * ?")
 	public void userMemberTask() {
 		new Thread() {
 			public void run() {
@@ -64,7 +64,7 @@ public class UserMemberScheduleTask {
 							begintime = taskMap.get("begintime");
 							endtime = taskMap.get("endtime");
 						} else {
-							begintime = DateUtils.getCurDateTime(new Date());
+							begintime = DateUtils.getPreNHoursTime(1);
 							endtime = DateUtils.getCurTime(new Date());
 						}
 
@@ -86,6 +86,7 @@ public class UserMemberScheduleTask {
 				    		String regitTime="";
 				    		String isnew_member="";
 				    		String birthday ="";
+				    		Object regist_cityno =null;
 							for (Map<String, Object> userMember : userMemberList) {
 								isnew_member="0";
 								customerInfoRecord = mongoService.queryCusInfoByCusId(userMember.get("customer_id").toString());
@@ -110,7 +111,12 @@ public class UserMemberScheduleTask {
 										userMember.put("birthday",idcard.getBirthday());
 										userMember.put("sex",idcard.getGender());
 									}
-									userMember.put("regist_cityno", customerInfoRecord.getCityCode());
+									regist_cityno =userMember.get("regist_cityno");
+									if(!"".equals(regist_cityno) && null!=regist_cityno) {
+										userMember.put("regist_cityno", regist_cityno);
+									}else {
+										userMember.put("regist_cityno", customerInfoRecord.getCityCode());
+									}
 									userMember.put("inviteCode", customerInfoRecord.getInviteCode());
 									userMember.put("isnew_member", isnew_member);
 								}else {
@@ -210,7 +216,7 @@ public class UserMemberScheduleTask {
 						}
 						logger.info("************安心合作社按天城市统计取消订单信息调度结束，共影响数据："+addnum+"***********************");
 					}
-				} catch (Exception e) {
+				} catch (Exception e) {     
 					logger.info("安心合作社按天城市统计取消订单信息调度，任务执行失败，请查看！");
 					logger.info(e.toString());
 					e.printStackTrace();

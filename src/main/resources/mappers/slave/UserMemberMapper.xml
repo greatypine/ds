@@ -12,9 +12,11 @@
 			tc.mobilephone as mobilephone,
 			tc.create_time as regist_time,
 			tc.associator_level as associator_level,
-			tc.associator_expiry_date as associator_expiry_date
+			tc.associator_expiry_date as associator_expiry_date,
+			ts.city_code as regist_cityno
 		from t_customer tc
 		left join t_order_receipts torp  on (torp.customer_id = tc.id and torp.pay_status ='payed' and (torp.type = 'associator_start_2' OR torp.type = 'associator_up_2' OR torp.type='plus'))
+		left join t_store ts on (torp.store_id = ts.id)
 		where ((tc.create_time >=#{begintime} and tc.create_time <=#{endtime} ) 
 		or ( tc.update_time >=#{begintime} and tc.update_time <=#{endtime} ))
 		and tc.associator_level = 2 
