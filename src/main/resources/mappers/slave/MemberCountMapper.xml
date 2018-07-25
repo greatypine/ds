@@ -185,7 +185,7 @@
 	<select id="queryProductCount" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 		select
-			count(1) cou,date_sub(curdate(), INTERVAL 1 DAY) data_date,te.city_code  city_code
+			ifnull(count(1),0) cou,date_sub(curdate(), INTERVAL 1 DAY) data_date,ifnull(te.city_code,'0000')  city_code
 		from
 			t_order tor 
 		left join t_eshop te on (tor.eshop_id=te.id) 
