@@ -1365,5 +1365,29 @@ public class TaskByHandController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
+    }
+    
+    @RequestMapping(value = "rest/pesGmvActivityStoreByMassOrderTaskRun",method = RequestMethod.POST)
+    public RestResponse pesGmvActivityStoreByMassOrderTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		pesNewScheduleTask.pesGmvActivityStoreByMassOrderTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    @RequestMapping(value = "rest/pesGmvActivityEmpByMassOrderTaskRun",method = RequestMethod.POST)
+    public RestResponse pesGmvActivityEmpByMassOrderTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		pesNewScheduleTask.pesGmvActivityEmpByMassOrderTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
     }    
 }

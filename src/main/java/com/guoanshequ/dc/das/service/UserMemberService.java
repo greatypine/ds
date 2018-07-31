@@ -33,4 +33,14 @@ public class UserMemberService {
     	
     	return userMemberDao.queryCancelOrderCityByCreateTime(paraMap);
     }
+    
+    public Map<String, String> queryStoreIdOfGroupByCusid(String customer_id){
+    	
+    	return userMemberDao.queryStoreIdOfGroupByCusid(customer_id);
+    }
+    
+    public String queryCityNoByStoreid(String store_id) {
+    	
+    	return userMemberDao.queryCityNoByStoreid(store_id);
+    }
 }

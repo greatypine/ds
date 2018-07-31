@@ -41,7 +41,7 @@ public class UserMemberScheduleTask {
 	/**
 	 * 
 	 * @Title: UserMemberScheduleTask 
-	 * @Description: 社员信息表，每小时一次，采用多线程 
+	 * @Description: 社员信息表，每10分钟跑一次，采用多线程，每10分钟中跑前1小时的数据
 	 * @param 设定文件 
 	 * @return void 返回类型
 	 * @throws
@@ -87,20 +87,59 @@ public class UserMemberScheduleTask {
 				    		String isnew_member="";
 				    		String birthday ="";
 				    		Object regist_cityno =null;
+				    		Object regist_storeid =null;
+				    		String customer_id ="";
+				    		String member_type = null;
+				    		Map<String, String> groupUserMember = new HashMap<String,String>(); 
 							for (Map<String, Object> userMember : userMemberList) {
 								isnew_member="0";
-								customerInfoRecord = mongoService.queryCusInfoByCusId(userMember.get("customer_id").toString());
+								customer_id = userMember.get("customer_id").toString();
+								customerInfoRecord = mongoService.queryCusInfoByCusId(customer_id);
+								groupUserMember = userMemberService.queryStoreIdOfGroupByCusid(customer_id);
+								//mongo中获取身份证数据
 								if(customerInfoRecord!=null) {
 									idcardStr = customerInfoRecord.getIdCard();
-									openCardTime = customerInfoRecord.getCreateTime();
+									//注册门店的获取顺序：付款表-集采表
+									regist_storeid = userMember.get("regist_storeid");
+									if(null==regist_storeid || "".equals(regist_storeid)){
+										if(groupUserMember!=null) {
+											regist_storeid = groupUserMember.get("store_id");
+											member_type = groupUserMember.get("type");
+											userMember.put("member_type", member_type);
+											regist_cityno = userMemberService.queryCityNoByStoreid(regist_storeid.toString());
+										}
+									}else {
+										//注册城市的获取顺序：付款表与集采表若无对应门店id,则无城市，再从mongo中获取
+										regist_cityno = userMemberService.queryCityNoByStoreid(regist_storeid.toString());
+									}
+									userMember.put("regist_storeid", regist_storeid);
+
+									if(null==regist_cityno || "".equals(regist_cityno)) {
+										regist_cityno = customerInfoRecord.getCityCode();
+									}
+									userMember.put("regist_cityno", regist_cityno);
+									//付款开卡时间获取顺序：付款表-mongo
+									if(userMember.get("opencard_time")!=null && !"".equals(userMember.get("opencard_time"))) {
+										openCardTime = userMember.get("opencard_time").toString();
+									}else {
+										openCardTime= customerInfoRecord.getCreateTime();
+									}
+									//获取社员注册时间
+									regitTime = userMember.get("regist_time").toString();
+									if(null!=openCardTime && !"".equals(openCardTime)) {
+										userMember.put("opencard_time", openCardTime);
+										//判断是否当天开卡新社员
+										if(DateUtils.StringToDate(openCardTime).equals(DateUtils.StringToDate(regitTime))) {
+											isnew_member = "1";
+										}
+									}
+									userMember.put("isnew_member", isnew_member);
+
+									//对身份证号的处理
+									idcardStr = customerInfoRecord.getIdCard();
 									birthday = customerInfoRecord.getBirthday();
 									if(!StringUtils.isBlank(birthday)) {
 										userMember.put("birthday",birthday.replace("-", ""));
-									}
-									userMember.put("opencard_time", openCardTime);
-									regitTime = userMember.get("regist_time").toString();
-									if(DateUtils.StringToDate(openCardTime).equals(DateUtils.StringToDate(regitTime))) {
-										isnew_member = "1";
 									}
 									if(idcardStr!=null && !"".equals(idcardStr)) {
 										userMember.put("idcard", idcardStr);
@@ -111,14 +150,9 @@ public class UserMemberScheduleTask {
 										userMember.put("birthday",idcard.getBirthday());
 										userMember.put("sex",idcard.getGender());
 									}
-									regist_cityno =userMember.get("regist_cityno");
-									if(!"".equals(regist_cityno) && null!=regist_cityno) {
-										userMember.put("regist_cityno", regist_cityno);
-									}else {
-										userMember.put("regist_cityno", customerInfoRecord.getCityCode());
-									}
+									
+									//社区邀请码
 									userMember.put("inviteCode", customerInfoRecord.getInviteCode());
-									userMember.put("isnew_member", isnew_member);
 								}else {
 									System.out.println("mongo中未存在的customer_id:"+userMember.get("customer_id").toString());
 								}

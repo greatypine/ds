@@ -80,7 +80,7 @@
 				count(distinct customer_id) pay_count,
 				count(distinct case when dcomtn.order_month_count = 1 then customer_id end) new_count
 			from df_customer_order_month_trade_new dcomtn
-			join t_store ts on (dcomtn.store_id = ts.platformid)
+			join t_store ts on (dcomtn.store_id = ts.platformid and province_id is not null)
 			join t_dist_citycode tdc on (tdc.cityname = ts.city_name)
 			where dcomtn.order_ym =#{order_ym}
 			group by tdc.id, order_ym ;

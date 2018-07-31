@@ -15,4 +15,7 @@ public interface UserMemberMapper{
 	
 	List<Map<String, String>> queryCancelOrderCityByCreateTime(Map<String, String> paraMap);
 	
+	Map<String,String> queryStoreIdOfGroupByCusid(String customer_id);
+	
+	String queryCityNoByStoreid(String store_id);
 }

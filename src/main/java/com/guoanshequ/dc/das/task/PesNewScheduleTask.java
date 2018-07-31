@@ -17,7 +17,6 @@ import java.util.Map;
 * @author CaoPs
 * @date 2018年01月23日
 * @version 1.0
-*
  */
 @Component
 public class PesNewScheduleTask {
@@ -35,6 +34,8 @@ public class PesNewScheduleTask {
 	DsPesCustomerStoreMonthService dsPesCustomerMonthService;
 	@Autowired
 	DsPesCustomerEmployeeMonthService dsPesCustomerEmployeeMonthService;
+	@Autowired
+	DsPesGmvActivityGmvService dsPesGmvActivityGmvService;
     
     private static final Logger logger = LogManager.getLogger(PesNewScheduleTask.class);
     
@@ -385,4 +386,78 @@ public class PesNewScheduleTask {
 		}.start();
 	}
 	
+	
+    /**
+     * 活动类221门店绩效GMV统计
+     * 参数：begindate  enddate  storename  storeids
+     */
+    @Scheduled(cron ="0 45 03 * * ?")
+    public void pesGmvActivityStoreByMassOrderTask() {
+    	new Thread(){
+    		public void run(){
+    	    	try {
+    	        	logger.info("**********活动类221门店绩效GMV统计任务调度开始**********");
+    	        	//前一天日期所在月份的1号
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+    	        	//前一天日期
+    	        	String enddate = DateUtils.getPreDate(new Date());
+    	    		//取得年份
+    	    		String year = begindate.substring(0, 4);
+    	    		//取得月份
+    	    		String month = begindate.substring(5, 7);
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	paraMap.put("year", year);
+    	        	paraMap.put("month", month);
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
+    	        	paraMap.put("tableName", "ds_pes_gmv_activity_store_month");
+					dsPesGmvActivityGmvService.deleteByYearMonth(paraMap);
+					int num = dsPesGmvActivityGmvService.addDsPesGmvActivityStoreMonthByMassOrder(paraMap);
+    	    		logger.info("**********活动类221门店绩效GMV统计任务调度结束**********");
+    	    		logger.info("共调度数据记录行数："+num);
+    	    		} catch (Exception e) {
+    	    			logger.info(e.toString());
+    	    			e.printStackTrace();
+    	    		}
+    		}
+    	}.start();
+    }	
+    
+    /**
+     * 活动类221国安侠绩效GMV统计
+     * 参数：begindate  enddate  storename  storeids
+     */
+    @Scheduled(cron ="0 50 03 * * ?")
+    public void pesGmvActivityEmpByMassOrderTask() {
+    	new Thread(){
+    		public void run(){
+    	    	try {
+    	        	logger.info("**********活动类221国安侠绩效GMV统计任务调度开始**********");
+    	        	//前一天日期所在月份的1号
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+    	        	//前一天日期
+    	        	String enddate = DateUtils.getPreDate(new Date());
+    	    		//取得年份
+    	    		String year = begindate.substring(0, 4);
+    	    		//取得月份
+    	    		String month = begindate.substring(5, 7);
+    	        	//给后台接口构建参数
+    	        	Map<String, String> paraMap=new HashMap<String, String>();
+    	        	paraMap.put("year", year);
+    	        	paraMap.put("month", month);
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
+    	        	paraMap.put("tableName", "ds_pes_gmv_activity_emp_month");
+					dsPesGmvActivityGmvService.deleteByYearMonth(paraMap);
+					int num = dsPesGmvActivityGmvService.addDsPesGmvActivityEmpMonthByMassOrder(paraMap);
+    	    		logger.info("**********活动类221国安侠绩效GMV统计任务调度结束**********");
+    	    		logger.info("共调度数据记录行数："+num);
+    	    		} catch (Exception e) {
+    	    			logger.info(e.toString());
+    	    			e.printStackTrace();
+    	    		}
+    		}
+    	}.start();
+    }	
 }
