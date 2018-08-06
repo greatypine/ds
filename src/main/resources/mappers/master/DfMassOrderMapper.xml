@@ -454,7 +454,7 @@
   
   <select id="queryMemberOrderBySignTime" parameterType="java.util.Map" resultType="java.util.Map">
   	<![CDATA[
-		 select id as order_id,'M' as ordertag from df_mass_order_monthly dod ,df_user_member dum where dod.customer_id=dum.customer_id and dod.sign_time >= dum.opencard_time and dod.sign_time >= #{begintime} and dod.sign_time < #{endtime} 
+		 select id as order_id,'M' as ordertag from df_mass_order_monthly dod ,df_user_member dum where dod.customer_id=dum.customer_id and dod.create_time >= dum.opencard_time AND dod.create_time <= dum.associator_expiry_date and dod.sign_time >= #{begintime} and dod.sign_time < #{endtime}
 	]]>
   </select>
   
