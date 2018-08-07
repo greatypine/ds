@@ -2,6 +2,7 @@ package com.guoanshequ.dc.das.task;
 
 import com.guoanshequ.dc.das.model.CustomerInfoRecord;
 import com.guoanshequ.dc.das.model.IdCard;
+import com.guoanshequ.dc.das.model.OrderReceipts;
 import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
 import com.guoanshequ.dc.das.utils.IdCardUtil;
@@ -71,8 +72,9 @@ public class UserMemberScheduleTask {
 						Map<String, String> paraMap = new HashMap<String, String>();
 						paraMap.put("begintime", begintime);
 						paraMap.put("endtime", endtime);
+						paraMap.put("level", "2");
 						// 1执行查询，从gemini中查询出时间段内的用户数据
-						List<Map<String, Object>> userMemberList = userMemberService.queryUserMemberByCreateTime(paraMap);
+						List<Map<String, Object>> userMemberList = userMemberService.queryUserMemberByLevelTime(paraMap);
 						if (!userMemberList.isEmpty()) {
 				    		//设置任务为运行中状态
 				    		Map<String, String> runMap = new HashMap<String,String>();
@@ -91,11 +93,19 @@ public class UserMemberScheduleTask {
 				    		String customer_id ="";
 				    		String member_type = null;
 				    		Map<String, String> groupUserMember = new HashMap<String,String>(); 
+				    		OrderReceipts receiptsMember = new OrderReceipts();
 							for (Map<String, Object> userMember : userMemberList) {
 								isnew_member="0";
 								customer_id = userMember.get("customer_id").toString();
 								customerInfoRecord = mongoService.queryCusInfoByCusId(customer_id);
 								groupUserMember = userMemberService.queryStoreIdOfGroupByCusid(customer_id);
+								receiptsMember = userMemberService.queryRegistInfoByCusIdOf2(customer_id);
+								//获取收款表中信息:付款门店、付款时间、付款类型
+								if(receiptsMember!=null) {
+									userMember.put("regist_storeid", receiptsMember.getStore_id());
+									userMember.put("member_type", receiptsMember.getType());
+									userMember.put("opencard_time", receiptsMember.getPay_time());
+								}
 								//mongo中获取身份证数据
 								if(customerInfoRecord!=null) {
 									idcardStr = customerInfoRecord.getIdCard();
@@ -175,6 +185,146 @@ public class UserMemberScheduleTask {
 			}
 		}.start();
 	}
+	
+	
+	/**
+	 * 
+	 * @Title: UserMemberScheduleTask 
+	 * @Description: 试用社员信息表，每小时跑一次，采用多线程，每小时跑前2小时的数据
+	 * @param 设定文件 
+	 * @return void 返回类型
+	 * @throws
+	 */
+	@Scheduled(cron = "0 0 */1 * * ?")
+	public void tryUserMemberTask() {
+		new Thread() {
+			public void run() {
+				try {
+					logger.info("************（试用）社员信息定时任务开始***********************");
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(10);
+					String isrun = taskMap.get("isrun");
+					// 判断任务是否开启
+					if ("ON".equals(isrun)) {
+						String runtype = taskMap.get("runtype");
+						String begintime = null;
+						String endtime = null;
+						// 获取上次调度时的最大签收时间开始时间与结束时间
+						if ("MANUAL".equals(runtype)) {
+							begintime = taskMap.get("begintime");
+							endtime = taskMap.get("endtime");
+						} else {
+							begintime = DateUtils.getPreNHoursTime(2);
+							endtime = DateUtils.getCurTime(new Date());
+						}
+
+						Map<String, String> paraMap = new HashMap<String, String>();
+						paraMap.put("begintime", begintime);
+						paraMap.put("endtime", endtime);
+						paraMap.put("level", "-2");
+						// 1执行查询，从gemini中查询出时间段内的用户数据
+						List<Map<String, Object>> userMemberList = userMemberService.queryUserMemberByLevelTime(paraMap);
+						if (!userMemberList.isEmpty()) {
+				    		CustomerInfoRecord customerInfoRecord =null ;
+				    		String idcardStr = null;
+				    		IdCard idcard =null;
+				    		String openCardTime ="";
+				    		String regitTime="";
+				    		String isnew_member="";
+				    		String birthday ="";
+				    		Object regist_cityno =null;
+				    		Object regist_storeid =null;
+				    		String customer_id ="";
+				    		String member_type = null;
+				    		Map<String, String> groupUserMember = new HashMap<String,String>(); 
+				    		OrderReceipts receiptsMember = new OrderReceipts(); 
+							for (Map<String, Object> userMember : userMemberList) {
+								isnew_member="0";
+								customer_id = userMember.get("customer_id").toString();
+								customerInfoRecord = mongoService.queryCusInfoByCusId(customer_id);
+								groupUserMember = userMemberService.queryStoreIdOfGroupByCusid(customer_id);
+								receiptsMember = userMemberService.queryRegistInfoByCusIdOftry2(customer_id);
+								//获取收款表中信息:付款门店、付款时间、付款类型
+								if(receiptsMember!=null) {
+									userMember.put("regist_storeid", receiptsMember.getStore_id());
+									userMember.put("member_type", receiptsMember.getType());
+									userMember.put("opencard_time", receiptsMember.getPay_time());
+								}
+								//获取mongo表中信息：身份证号、注册城市、邀请码
+								if(customerInfoRecord!=null) {
+									idcardStr = customerInfoRecord.getIdCard();
+									//注册门店的获取顺序：付款表-集采表
+									regist_storeid = userMember.get("regist_storeid");
+									if(null==regist_storeid || "".equals(regist_storeid)){
+										if(groupUserMember!=null) {
+											regist_storeid = groupUserMember.get("store_id");
+											member_type = groupUserMember.get("type");
+											userMember.put("member_type", member_type);
+											regist_cityno = userMemberService.queryCityNoByStoreid(regist_storeid.toString());
+										}
+									}else {
+										//注册城市的获取顺序：付款表与集采表若无对应门店id,则无城市，再从mongo中获取
+										regist_cityno = userMemberService.queryCityNoByStoreid(regist_storeid.toString());
+									}
+									userMember.put("regist_storeid", regist_storeid);
+
+									if(null==regist_cityno || "".equals(regist_cityno)) {
+										regist_cityno = customerInfoRecord.getCityCode();
+									}
+									userMember.put("regist_cityno", regist_cityno);
+									//付款开卡时间获取顺序：付款表-mongo
+									if(userMember.get("opencard_time")!=null && !"".equals(userMember.get("opencard_time"))) {
+										openCardTime = userMember.get("opencard_time").toString();
+									}else {
+										openCardTime= customerInfoRecord.getCreateTime();
+									}
+									//获取社员注册时间
+									regitTime = userMember.get("regist_time").toString();
+									if(null!=openCardTime && !"".equals(openCardTime)) {
+										userMember.put("opencard_time", openCardTime);
+										//判断是否当天开卡新社员
+										if(DateUtils.StringToDate(openCardTime).equals(DateUtils.StringToDate(regitTime))) {
+											isnew_member = "1";
+										}
+									}
+									userMember.put("isnew_member", isnew_member);
+
+									//对身份证号的处理
+									idcardStr = customerInfoRecord.getIdCard();
+									birthday = customerInfoRecord.getBirthday();
+									if(!StringUtils.isBlank(birthday)) {
+										userMember.put("birthday",birthday.replace("-", ""));
+									}
+									if(idcardStr!=null && !"".equals(idcardStr)) {
+										userMember.put("idcard", idcardStr);
+										idcard = IdCardUtil.getIdCardInfo(idcardStr);
+										userMember.put("birthplace",idcard.getBirthplace());
+										userMember.put("born_province", idcard.getProvince());
+										userMember.put("born_city", idcard.getCity());
+										userMember.put("birthday",idcard.getBirthday());
+										userMember.put("sex",idcard.getGender());
+									}
+									
+									//社区邀请码
+									userMember.put("inviteCode", customerInfoRecord.getInviteCode());
+								}else {
+									System.out.println("mongo中未存在的customer_id:"+userMember.get("customer_id").toString());
+								}
+								dfUserMemberService.addDfTryUserMember(userMember);
+							}
+						}
+						logger.info("（试用）社员信息任务执行结果为：开始时间：" + begintime + ",结束时间：" + endtime);
+						logger.info("************（试用）社员信息任务结束***********************");
+					}
+				} catch (Exception e) {
+					logger.info("（试用）社员信息任务出现问题，任务执行失败，请查看！");
+					logger.info(e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}	
+	
+	
 	
 	@RequestMapping(value = "rest/testMongo1Run",method = RequestMethod.POST)
 	public void testMongo1() {

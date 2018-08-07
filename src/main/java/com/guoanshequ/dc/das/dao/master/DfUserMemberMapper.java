@@ -19,4 +19,6 @@ public interface DfUserMemberMapper {
 	
 	public Integer addDsOpeMemberCancelCityDay(Map<String,String> paraMap);
 	
+	public Integer addDfTryUserMember(Map<String,Object> paraMap);
+	
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.guoanshequ.dc.das.dao.slave.UserMemberMapper;
+import com.guoanshequ.dc.das.model.OrderReceipts;
 
 import java.util.List;
 import java.util.Map;
@@ -43,4 +44,19 @@ public class UserMemberService {
     	
     	return userMemberDao.queryCityNoByStoreid(store_id);
     }
+    
+    public List<Map<String, Object>> queryUserMemberByLevelTime(Map<String, String> paraMap){
+    	
+    	return userMemberDao.queryUserMemberByLevelTime(paraMap);
+    }
+    
+    public OrderReceipts queryRegistInfoByCusIdOftry2(String customer_id){
+    	
+    	return userMemberDao.queryRegistInfoByCusIdOftry2(customer_id);
+    } 
+    
+    public OrderReceipts queryRegistInfoByCusIdOf2(String customer_id){
+    	
+    	return userMemberDao.queryRegistInfoByCusIdOf2(customer_id);
+    }    
 }

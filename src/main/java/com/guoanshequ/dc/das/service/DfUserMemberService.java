@@ -32,4 +32,7 @@ public class DfUserMemberService {
 		return dfUserMemberDao.addDsOpeMemberCancelCityDay(paraMap);
 	}	
 	
+	public Integer addDfTryUserMember(Map<String, Object> paraMap) {
+		return dfUserMemberDao.addDfTryUserMember(paraMap);
+	}	
 }
