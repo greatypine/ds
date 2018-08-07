@@ -1241,6 +1241,21 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    /**
+     * 试用社员信息调度
+     */
+    @RequestMapping(value = "rest/tryUserMemberTaskRun",method = RequestMethod.POST)
+    public RestResponse tryUserMemberTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		userMemberScheduleTask.tryUserMemberTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }    
     /**
      * 社员信息调度,刷新人员对应邀请码
      */

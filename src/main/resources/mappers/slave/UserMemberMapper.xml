@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoanshequ.dc.das.dao.slave.UserMemberMapper">
 
-	<!-- 根据创建时间从收款表中获取社员信息 -->
+	<!-- 根据创建时间从收款表中获取社员信息，黄金社员associator_level为2的数据 -->
 	<select id="queryUserMemberByCreateTime" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 		select 
@@ -21,6 +21,54 @@
 		and tc.associator_level = 2 
 		]]>
 	</select>
+	
+	
+	<!-- 根据创建时间从收款表中获取社员信息，试用黄金社员 associator_level为-2的数据-->
+	<select id="queryUserMemberByLevelTime" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select 
+				tc.id as customer_id,
+				tc.mobilephone as mobilephone,
+				tc.create_time as regist_time,
+				tc.associator_level as associator_level,
+				tc.associator_expiry_date as associator_expiry_date
+			from t_customer tc
+			where ((tc.create_time >=#{begintime} and tc.create_time <=#{endtime} ) 
+			or ( tc.update_time >=#{begintime} and tc.update_time <=#{endtime} ))
+			and tc.associator_level = #{level} 
+		]]>
+	</select>
+	
+	<!-- 根据custore_id从收款表中查询注册门店、支付时间，获取(试用)社员的最新信息-->
+	<select id="queryRegistInfoByCusIdOftry2" parameterType="String" resultType="OrderReceiptsEntity">
+        <![CDATA[
+			select 
+				torp.store_id ,
+				torp.type ,
+				torp.pay_time 
+			from  t_order_receipts torp
+			where torp.customer_id= #{customer_id}
+			and torp.pay_status ='payed' and torp.type = 'associator_start_-2'
+			order by torp.create_time desc 
+			limit 1 
+		]]>
+	</select>
+	
+	<!-- 根据custore_id从收款表中查询注册门店、支付时间，获取社员的最新信息-->
+	<select id="queryRegistInfoByCusIdOf2" parameterType="String" resultType="OrderReceiptsEntity">
+        <![CDATA[
+			select 
+				torp.store_id ,
+				torp.type ,
+				torp.pay_time 
+			from  t_order_receipts torp
+			where torp.customer_id= #{customer_id}
+			and torp.pay_status ='payed' and (torp.type = 'associator_start_2' OR torp.type = 'associator_up_2' OR torp.type='plus')
+			order by torp.create_time desc 
+			limit 1 
+		]]>
+	</select>
+	
 	
 	<!-- 统计时间段内每个城市取消的订单 -->
 	<select id="queryCancelOrderCityByCreateTime" parameterType="java.util.Map" resultType="java.util.Map">
@@ -64,5 +112,6 @@
 			select city_code as regist_cityno from t_store where id = #{store_id}
 		]]>
 	</select>
+	
 	
 </mapper>
