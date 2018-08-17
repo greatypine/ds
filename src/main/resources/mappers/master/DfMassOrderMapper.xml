@@ -569,6 +569,7 @@
 			update df_mass_order_daily tor , df_activity_bussiness_scope dabs
 			set tor.order_tag2 ='3'
 			where tor.bussiness_group_id = dabs.id and dabs.`level` =1 and dabs.is_groupon = 1 
+			and tor.groupon_instance_id is not null 
 			and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
 		]]>
   	</update> 
@@ -578,7 +579,8 @@
   		<![CDATA[
 			update df_mass_order_monthly tor , df_activity_bussiness_scope dabs
 			set tor.order_tag2 ='3'
-			where tor.bussiness_group_id = dabs.id and dabs.`level` =1 and dabs.is_groupon = 1 
+			where tor.bussiness_group_id = dabs.id and dabs.`level` =1 and dabs.is_groupon = 1
+			and tor.groupon_instance_id is not null 
 			and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
 		]]>
   	</update> 
@@ -589,6 +591,7 @@
 			update df_mass_order_total tor , df_activity_bussiness_scope dabs
 			set tor.order_tag2 ='3'
 			where tor.bussiness_group_id = dabs.id and dabs.`level` =1 and dabs.is_groupon = 1 
+			and tor.groupon_instance_id is not null 
 			and tor.sign_time>=#{begintime} and tor.sign_time< #{endtime} ;
 		]]>
   	</update>

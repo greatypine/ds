@@ -58,5 +58,10 @@ public class UserMemberService {
     public OrderReceipts queryRegistInfoByCusIdOf2(String customer_id){
     	
     	return userMemberDao.queryRegistInfoByCusIdOf2(customer_id);
-    }    
+    }  
+    
+    public List<Map<String, Object>> queryUserMemberByLeveFromOpRecord(Map<String, String> paraMap){
+    	
+    	return userMemberDao.queryUserMemberByLeveFromOpRecord(paraMap);
+    }
 }
