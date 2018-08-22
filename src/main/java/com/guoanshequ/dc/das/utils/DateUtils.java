@@ -320,7 +320,24 @@ public class DateUtils {
         return pre_hour_begin;
     }
     
+    /** 
+     * @param m 
+     * @return 返回当前日期的前n天的0时0分
+     * 功能说明：
+     * 当前日期2018-01-02，前1天：2018-01-01
+     */ 
+    public static String getPreNDays(int m) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date=new Date();
+        Calendar calendar = new GregorianCalendar();
+    	calendar.setTime(date);
+    	calendar.add(calendar.DATE,-m);//把日期往后增加一天.整数往后推,负数往前移动
+    	date=calendar.getTime(); //这个时间就是日期往后推一天的结果
+        String pre_hour_begin = df.format(date);
+        return pre_hour_begin;
+    }
+    
     public static void main(String[] args) {
-    	System.out.println(getPreNHoursTime(24)); 
+    	System.out.println(DateUtils.getPreNDays(1));
 	}
 }

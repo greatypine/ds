@@ -95,4 +95,23 @@
 		]]>
 	</update>
 	
+	<select id="queryProductCityByDaq" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			SELECT
+				tp.`name` as province_name,
+				tpc.city_no AS cityno,
+				tpc.city_name AS city_name,
+				tpc.product_id AS product_id,
+				tpc.product_name AS product_name,
+				SUM(tpc.product_quantity) AS product_count
+			FROM
+				ds_ope_product_store_day tpc
+			LEFT JOIN t_store ts ON (tpc.store_no = ts.storeno and ts.white!='QA' AND ts.`status`=0)
+			LEFT JOIN t_dist_citycode d ON (d.cityname = ts.city_name)
+			LEFT JOIN t_province tp on (tp.id = ts.province_id)
+			WHERE  tpc.recdate >=#{begindate} and tpc.recdate<=#{enddate}
+			GROUP BY product_id, cityno
+		]]>
+	</select>	
+	
 </mapper>

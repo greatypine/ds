@@ -48,4 +48,8 @@ public class TProductCityService {
     	return tProductCityDao.deleteTProductCityDay();
     }
     
+    public List<Map<String, String>> queryProductCityByDaq(Map<String, String> paraMap){
+
+    	return tProductCityDao.queryProductCityByDaq(paraMap);
+    }
 }

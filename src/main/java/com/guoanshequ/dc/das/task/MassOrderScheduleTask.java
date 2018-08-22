@@ -151,7 +151,7 @@ public class MassOrderScheduleTask {
     	new Thread(){
     		public void run() {
     			try {
-    				String dateTime = DateUtils.getDayTimeZero(new Date());
+    				String dateTime = DateUtils.getPreNDays(1);
     				dfMassOrderService.deleteDfMassOrderDaily(dateTime);
     	    		logger.info("**********自动删除Daily海量订单任务调度结束**********");
     			} catch (Exception e) {

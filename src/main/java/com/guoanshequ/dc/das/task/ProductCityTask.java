@@ -40,17 +40,23 @@ public class ProductCityTask {
 	
     private static final Logger logger = LogManager.getLogger(ProductCityTask.class);
     
-    @Scheduled(cron ="0 50 03 * * ?")
+    @Scheduled(cron ="0 20 04 * * ?")
     public void productCityTask() {
     	new Thread(){
     		public void run() {
     	    	try {
     	        	logger.info("**********商品按城市统计任务调度开始**********");
 					Map<String, String> paraMap=new HashMap<String, String>();
+    	        	//前一天日期所在月份的1号
+    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+    	        	//前一天日期
+    	        	String enddate = DateUtils.getPreDate(new Date());
 					paraMap.put("status","1");
+    	        	paraMap.put("begindate", begindate);
+    	        	paraMap.put("enddate", enddate);
     	        	int addnum =0;
     	        	//生成基表数据
-    	    		List<Map<String, String>> productCityList = productCityService.queryByProductCity(paraMap);
+    	    		List<Map<String, String>> productCityList = tProductCityService.queryProductCityByDaq(paraMap);
     	    		if(!productCityList.isEmpty()){
 						tProductCityService.deleteByYearMonth();
     	    			for (Map<String, String> productCityMap : productCityList) {

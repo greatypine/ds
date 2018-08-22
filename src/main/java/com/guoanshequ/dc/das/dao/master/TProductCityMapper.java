@@ -27,4 +27,6 @@ public interface TProductCityMapper {
 	int updateTProductSalesCount(Map<String, String> paraMap);
 	
 	int updateTProductSalesNames(Map<String, String> paraMap);
+	
+	List<Map<String, String>> queryProductCityByDaq(Map<String, String> paraMap);
 }
