@@ -1,7 +1,6 @@
 package com.guoanshequ.dc.das.config;
 
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,32 +22,23 @@ import java.util.List;
 @EnableMongoRepositories
 public class MongodbConfig extends AbstractMongoConfiguration {
 
-    private @Value("${mongodb.hosts}") String hosts;
-    private @Value("${mongodb.ports}") int ports;
+    private @Value("${mongodb.hosts}") String[] hosts;
+    private @Value("${mongodb.ports}") int[] ports;
     private @Value("${mongodb.database}") String database;
     private @Value("${mongodb.username}") String username;
     private @Value("${mongodb.password}") String password;
 
     @Override
     public MongoClient mongoClient() {
-//        int hostCnt = hosts.length;
-        ServerAddress serverAddresses = new ServerAddress(hosts, ports);
+        int hostCnt = hosts.length;
+        List<ServerAddress> serverAddresses = new ArrayList<>();
         List<MongoCredential> mongoCredentials = new ArrayList<>();
         mongoCredentials.add(MongoCredential.createCredential(username, database, password.toCharArray()));
-//        serverAddresses.add(new ServerAddress(hosts, ports));
-//        for(int i = 0; i < hostCnt; i++) {
-//            serverAddresses.add(new ServerAddress(hosts[i], ports[i]));
-//        }
+        for(int i = 0; i < hostCnt; i++) {
+            serverAddresses.add(new ServerAddress(hosts[i], ports[i]));
+        }
         return new MongoClient(serverAddresses, mongoCredentials);
     	
-    	
-//    	 StringBuilder urlSb = new StringBuilder("mongodb://");
-//		 if(username!=null&&!"".equals(username)&&password!=null&&!"".equals(password)){
-//			 urlSb.append(username).append(":").append(password).append("@");
-//		 }
-//		 
-//		urlSb.append(hosts).append(":").append(ports).append("/gemini?safe=true;socketTimeoutMS=150000");
-//    	return new MongoClient(new MongoClientURI(urlSb.toString()));
     }
 
     @Override

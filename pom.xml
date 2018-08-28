@@ -54,20 +54,19 @@
             <id>product</id>
             <properties>
                 <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:mysql://10.20.0.4:4006/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</jdbc.url>
+                <jdbc.url>jdbc:mysql://10.10.10.35:4006/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</jdbc.url>
                 <jdbc.username>dataaq</jdbc.username>
                 <jdbc.password>fcnXoXFGgz@^*n9#</jdbc.password>
-                <slave.jdbc.url>jdbc:mysql://10.20.0.4:4006/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
+                <slave.jdbc.url>jdbc:mysql://10.10.10.35:4006/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
                 <slave.jdbc.username>DataCollection</slave.jdbc.username>
                 <slave.jdbc.password>ZXgasjZx2016_dateanPlant@WSX@7d</slave.jdbc.password>
-                <redis.host>10.10.0.16</redis.host>
-                <redis.port>7000</redis.port>
-                <!--<redis.password></redis.password>-->
-                <mongodb.hosts>115.182.249.132</mongodb.hosts>
-                <mongodb.ports>27017</mongodb.ports>
+                <redis.host>cl01-redis01.guoanshequ.com:7000,cl01-redis02.guoanshequ.com:7000,cl01-redis03.guoanshequ.com:7000,ccl01-redis01.guoanshequ.com:8000,cl01-redis02.guoanshequ.com:8000,cl01-redis03.guoanshequ.com:8000</redis.host>
+                <redis.password>gaSqReDis321</redis.password>
+                <mongodb.hosts>cl01-mongo01.guoanshequ.com,cl01-mongo02.guoanshequ.com,cl01-mongo03.guoanshequ.com</mongodb.hosts>
+                <mongodb.ports>27017,27017,27017</mongodb.ports>
                 <mongodb.database>gemini</mongodb.database>
-                <mongodb.username>zxgasq</mongodb.username>
-                <mongodb.password>zxgasq2018341</mongodb.password>
+                <mongodb.username>gemini</mongodb.username>
+                <mongodb.password>zxgasq2018@!341%^</mongodb.password>
             </properties>
         </profile>
         <profile>
@@ -80,14 +79,13 @@
                 <slave.jdbc.url>jdbc:mysql://10.16.31.82:3306/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
                 <slave.jdbc.username>root</slave.jdbc.username>
                 <slave.jdbc.password>~UrDz5cZmFdt</slave.jdbc.password>
-                <redis.host>10.16.31.82</redis.host>
-                <redis.port>6379</redis.port>
-                <!--<redis.password></redis.password>-->
-                <mongodb.hosts>115.182.249.132</mongodb.hosts>
-                <mongodb.ports>27017</mongodb.ports>
+                <redis.host>10.16.31.29:7000,10.16.31.29:7001,10.16.31.29:7002,10.16.31.29:7003,10.16.31.29:7004,10.16.31.29:7005</redis.host>
+                <redis.password>abcqwe123</redis.password>
+                <mongodb.hosts>10.16.31.216,10.16.31.216,10.16.31.216</mongodb.hosts>
+                <mongodb.ports>27017,27027,27037</mongodb.ports>
                 <mongodb.database>gemini</mongodb.database>
-                <mongodb.username>zxgasq</mongodb.username>
-                <mongodb.password>zxgasq2018341</mongodb.password>
+                <mongodb.username>mongo</mongodb.username>
+                <mongodb.password>abc123</mongodb.password>
             </properties>
         </profile>
         <profile>
