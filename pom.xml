@@ -54,12 +54,12 @@
             <id>product</id>
             <properties>
                 <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:mysql://10.10.10.35:4006/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</jdbc.url>
-                <jdbc.username>dataaq</jdbc.username>
-                <jdbc.password>fcnXoXFGgz@^*n9#</jdbc.password>
-                <slave.jdbc.url>jdbc:mysql://10.10.10.35:4006/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
-                <slave.jdbc.username>DataCollection</slave.jdbc.username>
-                <slave.jdbc.password>ZXgasjZx2016_dateanPlant@WSX@7d</slave.jdbc.password>
+                <jdbc.url>jdbc:mysql://10.10.10.37:4006/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</jdbc.url>
+                <jdbc.username>daquer2</jdbc.username>
+                <jdbc.password>Rc7h0ijt95Amswipe10$G!X7gOrYI^*r</jdbc.password>
+                <slave.jdbc.url>jdbc:mysql://10.10.10.37:4006/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
+                <slave.jdbc.username>geminiuser2</slave.jdbc.username>
+                <slave.jdbc.password>^I*ibDTC#%4ha6xEuJ7Y!@sJzCGJzv^g</slave.jdbc.password>
                 <redis.host>cl01-redis01.guoanshequ.com:7000,cl01-redis02.guoanshequ.com:7000,cl01-redis03.guoanshequ.com:7000,ccl01-redis01.guoanshequ.com:8000,cl01-redis02.guoanshequ.com:8000,cl01-redis03.guoanshequ.com:8000</redis.host>
                 <redis.password>gaSqReDis321</redis.password>
                 <mongodb.hosts>cl01-mongo01.guoanshequ.com,cl01-mongo02.guoanshequ.com,cl01-mongo03.guoanshequ.com</mongodb.hosts>
