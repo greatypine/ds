@@ -258,7 +258,7 @@ public class ScheduleTask {
      * 国安侠好评次数任务调度
      * 参数：begindate  enddate  storeids
      */
-    @Scheduled(cron ="0 10 02 * * ?")
+//    @Scheduled(cron ="0 10 02 * * ?")
     public void rewardTimesTask() {
     	new Thread(){
     		public void run() {

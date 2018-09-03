@@ -135,22 +135,22 @@ public class AbnormalOrderScheduleTask {
     	        	paraMap.put("enddate", enddate);
     	        	paraMap.put("prenbegindate",prenbegindate);
     	        	paraMap.put("storeids", storeIds);
-    	    		List<Map<String, String>> abnormalOrderDownAList =abnormalOrderService.queryAbnorOrderDownA(paraMap);
+//    	    		List<Map<String, String>> abnormalOrderDownAList =abnormalOrderService.queryAbnorOrderDownA(paraMap);
     	    		List<Map<String, String>> abnormalOrderDownBList =abnormalOrderService.queryAbnorOrderDownB(paraMap);
     	    		List<Map<String, String>> abnormalOrderDownCList =abnormalOrderService.queryAbnorOrderDownC(paraMap);
 //    	    		List<Map<String, String>> abnormalOrderDownDList =abnormalOrderService.queryAbnorOrderDownD(paraMap);
     	    		
-    	    		if(!abnormalOrderDownAList.isEmpty()){
-    	    			for (Map<String, String> abnormalOrderDownAMap : abnormalOrderDownAList) {
-    	    				String ordersn = abnormalOrderDownAMap.get("ordersn");
-    	    				paraMap.put("ordersn", ordersn);
-    	    				String flag = tabnormalOrderService.queryTAbnorDownByOrdersn(paraMap);
-    	    				if("".equals(flag)||flag==null){
-    	    					tabnormalOrderService.addAbnorDown(abnormalOrderDownAMap);
-    	    				}
-    	    			}
-    	    			logger.info("手动下载类型A连续购买型异常订单共调度数据记录行数："+abnormalOrderDownAList.size());
-    	    		}
+//    	    		if(!abnormalOrderDownAList.isEmpty()){
+//    	    			for (Map<String, String> abnormalOrderDownAMap : abnormalOrderDownAList) {
+//    	    				String ordersn = abnormalOrderDownAMap.get("ordersn");
+//    	    				paraMap.put("ordersn", ordersn);
+//    	    				String flag = tabnormalOrderService.queryTAbnorDownByOrdersn(paraMap);
+//    	    				if("".equals(flag)||flag==null){
+//    	    					tabnormalOrderService.addAbnorDown(abnormalOrderDownAMap);
+//    	    				}
+//    	    			}
+//    	    			logger.info("手动下载类型A连续购买型异常订单共调度数据记录行数："+abnormalOrderDownAList.size());
+//    	    		}
     	    		
     	    		if(!abnormalOrderDownBList.isEmpty()){
     	    			List<Map<String,String>> phoneList = employeeKeeperInfoService.queryPhones();

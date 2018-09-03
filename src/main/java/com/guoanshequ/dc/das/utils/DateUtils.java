@@ -337,7 +337,27 @@ public class DateUtils {
         return pre_hour_begin;
     }
     
+    /** 
+     * @param m 
+     * @return 返回指定时间的前n天的时间
+     * 功能说明：
+     * 当前日期2018-01-02，前1天：2018-01-01
+     */ 
+    public static String getPreNHoursTimeByAssign(Date date,int m) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = new GregorianCalendar();
+    	calendar.setTime(date);
+    	calendar.add(calendar.HOUR,-m);//把日期往后增加一天.整数往后推,负数往前移动
+    	date=calendar.getTime(); //这个时间就是日期往后推一天的结果
+        String pre_hour_begin = df.format(date);
+        return pre_hour_begin;
+    }    
+    
     public static void main(String[] args) {
-    	System.out.println(DateUtils.getPreNDays(1));
+    	try {
+           System.out.println(getPreDateFirstOfMonth(new Date()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

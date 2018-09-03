@@ -13,7 +13,7 @@
 
 	<select id="queryDsCronTaskById"  resultType="java.util.Map">
 		<![CDATA[
-			select taskname,begintime,endtime,runtype,isrun,task_status
+			select taskname,begintime,endtime,flag_begintime,runtype,isrun,task_status
 			from ds_crontask where id = #{id}
 		]]>
 	</select>
@@ -24,10 +24,17 @@
 		]]>
 	</update>
 	
-		<!-- 更新开始时间 -->
+	<!-- 更新开始时间 -->
 	<update id="updateNextBeginTimeById" parameterType="java.lang.String">
 		<![CDATA[
 			update ds_crontask set begintime = #{begintime} where id = #{id};
+		]]>
+	</update>
+	
+	<!-- 更新标识开始时间 -->
+	<update id="updateFlagBeginTimeById" parameterType="java.lang.String">
+		<![CDATA[
+			update ds_crontask set flag_begintime = #{flag_begintime} where id = #{id};
 		]]>
 	</update>
 	

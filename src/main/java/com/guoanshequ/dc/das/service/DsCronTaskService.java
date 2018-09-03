@@ -39,5 +39,8 @@ public class DsCronTaskService {
     	return dsCronTaskDao.updateNextBeginTimeById(paraMap);
     }
     
+    public Integer updateFlagBeginTimeById(Map<String, String> paraMap) throws Exception{
+    	return dsCronTaskDao.updateFlagBeginTimeById(paraMap);
+    }
     
 }

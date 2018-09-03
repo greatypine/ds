@@ -39,15 +39,13 @@ FROM
 						tor.order_sn orderSn,
 						tor.group_id
 					from  t_order  tor
-					JOIN  df_order_flow_monthly tof on tof.order_id=tor.id
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
 					LEFT JOIN t_customer tcs on tcs.id=tor.customer_id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
 					LEFT JOIN t_store ts on ts.id=tor.store_id
                 	LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
-					where  tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-					and  tof.order_status='signed'  and tep.name not like '%测试%' and ts.name not like '%测试%'
-					and EXISTS (select 1 from t_store where id=tor.store_id  and number IN (${storeids}))
+					where  tor.sign_time>=#{begindate} and tor.sign_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					and tep.name not like '%测试%' and ts.name not like '%测试%'
 					GROUP BY  tor.group_id) _tor on _tor.group_id=trp.order_group_id
 			where trp.type='employee' and trp.price!=0 and trp.pay_status='payed'
 			GROUP BY  _tor.employeeId,_tor.orderSn,_tor.storeId              
@@ -96,14 +94,13 @@ FROM
 						tor.order_sn orderSn,
 						tor.group_id
 					from  t_order  tor
-					JOIN  df_order_flow_monthly tof on tof.order_id=tor.id
 					LEFT JOIN t_employee tem on tem.id=tor.employee_id
 					LEFT JOIN t_customer tcs on tcs.id=tor.customer_id
 					LEFT JOIN t_eshop tep on tep.id=tor.eshop_id
 					LEFT JOIN t_store ts on ts.id=tor.store_id
                 	LEFT JOIN  t_sys_area a on ts.city_code = a.code and a.level = 2
-					where  tof.create_time>=#{begindate} and tof.create_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
-					and  tof.order_status='signed'  and tep.name not like '%测试%' and ts.name not like '%测试%'
+					where  tor.sign_time>=#{begindate} and tor.sign_time<DATE_ADD(DATE(#{enddate}), INTERVAL 1 DAY)
+					and tep.name not like '%测试%' and ts.name not like '%测试%'
 					and EXISTS (select 1 from t_store where id=tor.store_id  and number IN (${storeids}))
 					GROUP BY  tor.group_id) _tor on _tor.group_id=trp.order_group_id
 			where trp.type='employee' and trp.price!=0 and trp.pay_status='payed'

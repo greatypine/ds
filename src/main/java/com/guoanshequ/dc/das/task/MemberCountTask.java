@@ -158,8 +158,8 @@ public class MemberCountTask {
 					logger.info("************每天更最受欢迎、无人问津商品任务开始***********************");
 					// 删除表中最受欢迎与无人问津商品
 					List<String> fileIdList= new ArrayList<String>();
-					fileIdList.add("3");
-					fileIdList.add("4");
+					//fileIdList.add("3");
+					//fileIdList.add("4");
 					fileIdList.add("5");
  					dfMemberCountService.deletMembers(fileIdList);
 					// 查询最受欢迎商品
@@ -167,31 +167,31 @@ public class MemberCountTask {
 					String nowDate = getDateTime();
 					Map<String, String> paraMap = new HashMap<String, String>();
 					
-					List<Map<String, Object>> eshopCityList = memberCountService.queryEshopCity(paraMap);
-					if (!eshopCityList.isEmpty()) {
-						for (Map<String, Object> ecMap : eshopCityList) {
-							//2.查询对应的城市的E店商品
-							Map<String, String> citycodeMap = new HashMap<String, String>();
-							citycodeMap.put("city_code", ecMap.get("citycode").toString());
-							List<Map<String, Object>> memberHotProList = memberCountService.queryhotProduct(citycodeMap);
-							if (!memberHotProList.isEmpty()) {
-								Map<String, String> hotMap = new HashMap<String, String>();
-								hotMap.put("member_type", "3");
-								for (Map<String, Object> memberhot : memberHotProList) {
-									hotMap.put("member_name", memberhot.get("pname").toString());
-									hotMap.put("member_count", memberhot.get("pcount").toString());
-									String createTime = memberhot.get("createtime").toString();
-									int sellDuration = getMargin(nowDate, createTime);
-									hotMap.put("sell_duration", sellDuration + "");
-									hotMap.put("remark", ecMap.get("citycode").toString());
-									// 入库
-									dfMemberCountService.addDfMemberCount(hotMap);
-								}
-							}
-							
-						}
-						
-					}
+//					List<Map<String, Object>> eshopCityList = memberCountService.queryEshopCity(paraMap);
+//					if (!eshopCityList.isEmpty()) {
+//						for (Map<String, Object> ecMap : eshopCityList) {
+//							//2.查询对应的城市的E店商品
+//							Map<String, String> citycodeMap = new HashMap<String, String>();
+//							citycodeMap.put("city_code", ecMap.get("citycode").toString());
+//							List<Map<String, Object>> memberHotProList = memberCountService.queryhotProduct(citycodeMap);
+//							if (!memberHotProList.isEmpty()) {
+//								Map<String, String> hotMap = new HashMap<String, String>();
+//								hotMap.put("member_type", "3");
+//								for (Map<String, Object> memberhot : memberHotProList) {
+//									hotMap.put("member_name", memberhot.get("pname").toString());
+//									hotMap.put("member_count", memberhot.get("pcount").toString());
+//									String createTime = memberhot.get("createtime").toString();
+//									int sellDuration = getMargin(nowDate, createTime);
+//									hotMap.put("sell_duration", sellDuration + "");
+//									hotMap.put("remark", ecMap.get("citycode").toString());
+//									// 入库
+//									dfMemberCountService.addDfMemberCount(hotMap);
+//								}
+//							}
+//							
+//						}
+//						
+//					}
 					
 					
 					
@@ -204,23 +204,23 @@ public class MemberCountTask {
 					
 
 					// 查询无人问津商品
-					List<Map<String, Object>> membercoolProList = memberCountService.querycoolProduct(paraMap);
-					if (!membercoolProList.isEmpty()) {
-						Map<String, String> coolMap = new HashMap<String, String>();
-						coolMap.put("member_type", "4");
-						for (Map<String, Object> membercool : membercoolProList) {
-							coolMap.put("member_name", membercool.get("pname").toString());
-							coolMap.put("member_count", "0");
-							String createTime = membercool.get("createtime").toString();
-							int sellDuration = getMargin(nowDate, createTime);
-							coolMap.put("sell_duration", sellDuration + "");
-							if(membercool.get("citycode")!=null) {
-								coolMap.put("city_code", membercool.get("citycode").toString());//城市id
-							}
-							// 入库
-							dfMemberCountService.addDfMemberCount(coolMap);
-						}
-					}
+//					List<Map<String, Object>> membercoolProList = memberCountService.querycoolProduct(paraMap);
+//					if (!membercoolProList.isEmpty()) {
+//						Map<String, String> coolMap = new HashMap<String, String>();
+//						coolMap.put("member_type", "4");
+//						for (Map<String, Object> membercool : membercoolProList) {
+//							coolMap.put("member_name", membercool.get("pname").toString());
+//							coolMap.put("member_count", "0");
+//							String createTime = membercool.get("createtime").toString();
+//							int sellDuration = getMargin(nowDate, createTime);
+//							coolMap.put("sell_duration", sellDuration + "");
+//							if(membercool.get("citycode")!=null) {
+//								coolMap.put("city_code", membercool.get("citycode").toString());//城市id
+//							}
+//							// 入库
+//							dfMemberCountService.addDfMemberCount(coolMap);
+//						}
+//					}
 					
 					//查询动销商品量
 					List<Map<String, Object>> movingPinList = memberCountService.queryMovingPin(paraMap);

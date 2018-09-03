@@ -20,5 +20,7 @@ public interface DsCronTaskMapper {
     Integer updateTaskStatusById(Map<String, String> paraMap);
     
     Integer updateNextBeginTimeById(Map<String, String> paraMap);
+    
+    Integer updateFlagBeginTimeById(Map<String, String> paraMap);
 
 }
