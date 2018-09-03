@@ -55,7 +55,7 @@
             <properties>
                 <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
                 <jdbc.url>jdbc:mysql://10.10.10.37:4006/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</jdbc.url>
-                <jdbc.username>daquer2</jdbc.username>
+                <jdbc.username>daquser2</jdbc.username>
                 <jdbc.password>Rc7h0ijt95Amswipe10$G!X7gOrYI^*r</jdbc.password>
                 <slave.jdbc.url>jdbc:mysql://10.10.10.37:4006/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
                 <slave.jdbc.username>geminiuser2</slave.jdbc.username>
