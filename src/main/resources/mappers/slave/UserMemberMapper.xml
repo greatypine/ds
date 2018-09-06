@@ -32,7 +32,8 @@
 				tc.mobilephone as mobilephone,
 				tc.create_time as regist_time,
 				tc.associator_level as associator_level,
-				tc.associator_expiry_date as associator_expiry_date
+				tc.associator_expiry_date as associator_expiry_date,
+				tc.customer_source as customer_source
 			from t_customer tc
 			where ((tc.create_time >=#{begintime} and tc.create_time <=#{endtime} ) 
 			or ( tc.update_time >=#{begintime} and tc.update_time <=#{endtime} ))

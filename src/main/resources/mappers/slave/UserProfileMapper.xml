@@ -15,7 +15,8 @@
 				cusline.last_order_time,
 				NUll as customer_name,
 				tc.mobilephone as customer_phone, 
-				tc.create_time as regist_time
+				tc.create_time as regist_time,
+				tc.customer_source as customer_source
 			from (
 				select 
 				tor.customer_id,

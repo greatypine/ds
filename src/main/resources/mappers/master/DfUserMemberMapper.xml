@@ -7,11 +7,11 @@
 			insert into df_user_member (
 				customer_id,mobilephone,idcard,birthplace,born_province,born_city,birthday,sex,regist_storeid,
 				regist_cityno,regist_time,opencard_time,isnew_member,member_type,associator_level,associator_expiry_date,
-				inviteCode
+				inviteCode,customer_source
 			) values (
 				#{customer_id},#{mobilephone},#{idcard},#{birthplace},#{born_province},#{born_city},#{birthday},#{sex},#{regist_storeid},
 				#{regist_cityno},#{regist_time},#{opencard_time},#{isnew_member},#{member_type},#{associator_level},#{associator_expiry_date},
-				#{inviteCode}
+				#{inviteCode},#{customer_source}
 			)
 			on duplicate key update
 			opencard_time = values(opencard_time),
@@ -26,11 +26,11 @@
 			insert into df_user_try_member (
 				customer_id,mobilephone,idcard,birthplace,born_province,born_city,birthday,sex,regist_storeid,
 				regist_cityno,regist_time,opencard_time,isnew_member,member_type,associator_level,associator_expiry_date,
-				inviteCode
+				inviteCode,customer_source
 			) values (
 				#{customer_id},#{mobilephone},#{idcard},#{birthplace},#{born_province},#{born_city},#{birthday},#{sex},#{regist_storeid},
 				#{regist_cityno},#{regist_time},#{opencard_time},#{isnew_member},#{member_type},#{associator_level},#{associator_expiry_date},
-				#{inviteCode}
+				#{inviteCode},#{customer_source}
 			)
 			on duplicate key update
 			opencard_time = values(opencard_time),
