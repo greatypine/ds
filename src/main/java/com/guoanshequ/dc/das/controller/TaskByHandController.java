@@ -1443,7 +1443,12 @@ public class TaskByHandController {
         }
     }
 
-    
+    /**
+     * @Description 计算员工工龄
+     * @author gbl
+     * @date 2018/9/10 16:05
+     **/
+
     @RequestMapping(value = "rest/analyzeEmployeeWorkingAgeTaskRun",method = RequestMethod.POST)
     public RestResponse analyzeEmployeeWorkingAgeTask(@RequestBody Map<String, String> paraMap) throws Exception {
         try{
