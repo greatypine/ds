@@ -69,7 +69,8 @@ public class TaskByHandController {
     BigScreenScheduleTask bigScreenScheduleTask;
     @Autowired
     ProductSalesTask productSalesTask;
-
+    @Autowired
+    EmployeeMoreInfoTask employeeMoveDistanceTask;
     
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
     
@@ -1404,5 +1405,56 @@ public class TaskByHandController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
-    }    
+    }
+
+    /**
+     * @Description 获取国安侠前天之前的移动里程
+     * @author gbl
+     * @date 2018/9/10 10:03
+     **/
+
+    @RequestMapping(value = "rest/employeeHistoryMoveDistanceTaskRun",method = RequestMethod.POST)
+    public RestResponse employeeHistoryMoveDistanceTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            employeeMoveDistanceTask.getHistoryMovementDistance();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+
+    /**
+     * @Description 获取国安侠昨天移动里程
+     * @author gbl
+     * @date 2018/9/10 10:03
+     **/
+
+    @RequestMapping(value = "rest/employeeMoveDistanceTaskRun",method = RequestMethod.POST)
+    public RestResponse employeeMoveDistanceTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            employeeMoveDistanceTask.getMovementDistance();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+
+    
+    @RequestMapping(value = "rest/analyzeEmployeeWorkingAgeTaskRun",method = RequestMethod.POST)
+    public RestResponse analyzeEmployeeWorkingAgeTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            employeeMoveDistanceTask.analyzeEmployeeWorkingAge();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+
+
 }
