@@ -10,5 +10,6 @@
         <typeAlias alias="DfValidCustomerEntity" type="com.guoanshequ.dc.das.model.DfValidCustomer"/>
         <typeAlias alias="DFOrderPubseasEntity"  type="com.guoanshequ.dc.das.model.DFOrderRealtime"/>
         <typeAlias alias="MassOrderEntity" type="com.guoanshequ.dc.das.model.DfMassOrder"/>
+        <typeAlias alias="EmployeeMoreInfo" type="com.guoanshequ.dc.das.model.EmployeeMoreInfo"/>
     </typeAliases>
 </configuration>

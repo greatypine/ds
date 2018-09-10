@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.EmployeeMoreInfoMapper">
+
+    <!-- 根据employeeNo查询更多员工信息 -->
+    <select id="queryEmployeeMoreInfoByEmployeeNo" parameterType="java.lang.String" resultType="java.util.Map">
+        <![CDATA[
+		select *  from t_employee_more_info  where employeeNo  =#{employeeNo}
+           ]]>
+
+    </select>
+
+    <!--  保存员工运营距离-->
+    <insert id="saveEmployeeMoveDistance" parameterType="EmployeeMoreInfo">
+        <![CDATA[
+			INSERT INTO t_employee_more_info(employeeNo,create_time,update_time,moveDistance)
+			VALUES(#{employeeNo},#{create_time},#{update_time},#{moveDistance})
+
+
+		]]>
+	</insert>
+
+    <!--  保存员工工龄-->
+    <insert id="saveEmployeeWorkingAge" parameterType="EmployeeMoreInfo">
+        <![CDATA[
+			INSERT INTO t_employee_more_info(employeeNo,create_time,update_time,workingAge_day,workingAge_month,workingAge_year,workingAge_year_precise)
+			VALUES(#{employeeNo},#{create_time},#{update_time},#{workingAge_day},#{workingAge_month},#{workingAge_year},#{workingAge_year_precise})
+
+		]]>
+	</insert>
+
+    <!--  更新员工工龄-->
+    <insert id="updateEmployeeWorkingAge" parameterType="EmployeeMoreInfo">
+        <![CDATA[
+			UPDATE t_employee_more_info
+			SET update_time=#{update_time},
+                workingAge_year = #{workingAge_year},
+                workingAge_month = #{workingAge_month},
+                workingAge_day = #{workingAge_day},
+                workingAge_year_precise = #{workingAge_year_precise}
+            WHERE employeeNo = #{employeeNo}
+		]]>
+	</insert>
+
+    <!--  更新员工运行里程-->
+    <insert id="updateEmployeeMoveDistance" parameterType="EmployeeMoreInfo">
+        <![CDATA[
+			UPDATE t_employee_more_info
+			SET update_time=#{update_time},
+                 moveDistance = #{moveDistance}
+            WHERE employeeNo = #{employeeNo}
+
+		]]>
+	</insert>
+    <!-- 查询国安侠员工信息 -->
+    <select id="queryValidHumanresource"  resultType="java.util.Map">
+        <![CDATA[
+		select employee_no,topostdate from t_humanresources where humanstatus=1
+           ]]>
+
+    </select>
+
+    <!-- 查询店长信息 -->
+    <select id="selectValidStoreKepeer"  resultType="java.util.Map">
+        <![CDATA[
+		select employee_no,topostdate from t_storekeeper where humanstatus=1
+           ]]>
+
+    </select>
+</mapper>
