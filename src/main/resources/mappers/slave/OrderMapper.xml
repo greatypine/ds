@@ -23,5 +23,50 @@
  			select max(sign_time) from t_order
  		]]>
    </select>
+   
+    <!--查询指定订单对应的优惠券和返利 -->
+  <select id="queryOrderRebateCouponById" parameterType="java.util.Map" resultType="java.util.Map">
+  	<![CDATA[
+  		select 
+			tor.id,
+			ifnull(sum(toie.apportion_rebate),0) as apportion_rebate,
+			ifnull(sum(toie.apportion_coupon),0) as apportion_coupon
+		from t_order tor 
+		join t_order_item toi on (tor.id = toi.order_id)
+		join t_order_item_extra toie on (tor.id = toie.order_id and toi.id = toie.order_item_id) 
+		where tor.id =#{order_id}
+		group by tor.id 
+  	]]>
+  </select>
+  
+  <!--查询指定订单对应的总成本价 -->
+  <select id="queryOrderCostPriceById" parameterType="java.util.Map" resultType="java.util.Map">
+  	<![CDATA[
+		select 
+			tor.id,
+			ifnull(sum(toi.quantity * toi.cost_price),0) as cost_price
+		from t_order tor 
+		join t_order_item toi on (tor.id = toi.order_id)
+		where tor.id =#{order_id}
+		group by tor.id 
+  	]]>
+  </select>
+  
+  <!--根据指定订单所在E店，且订单签收日期在E店对应合同start_date,end_date期间的合同Id,及合同 -->
+   <select id="queryOrderContractInfoById" parameterType="String" resultType="java.util.Map">
+  	<![CDATA[
+		select 
+			tor.id as order_id,
+			tcon.id as contract_id,
+			tcon.method as contract_method,
+			tcon.percent as contract_percent,
+			tcon.price as contract_price
+		from t_order tor
+		join t_contract tcon on (tor.eshop_id = tcon.eshop_id)
+		where tor.id =#{order_id}
+		order by end_date desc
+		limit 1 		
+  	]]>
+  </select>    
    	
 </mapper>

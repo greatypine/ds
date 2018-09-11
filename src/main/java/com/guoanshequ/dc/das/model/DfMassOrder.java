@@ -87,6 +87,15 @@ public class DfMassOrder {
 	private String addr_mobilephone;
 	private String addr_address;
 	private Date insert_time;
+	private String order_tag1;
+	private BigDecimal apportion_rebate;
+	private BigDecimal apportion_coupon;
+	private BigDecimal cost_price;
+	private BigDecimal order_profit;
+	private String business_type;
+	private String contract_id;
+	private String contract_method;
+	
 	
 	public enum PubseasLabel{
 		DEFAULT("0", "否"),

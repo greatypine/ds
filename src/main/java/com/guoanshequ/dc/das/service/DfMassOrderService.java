@@ -195,4 +195,21 @@ public class DfMassOrderService {
 	public Integer updateActivityGroupOnForTotal(Map<String, String> paraMap) {
 		return dfMassOrderDao.updateActivityGroupOnForTotal(paraMap);
 	}
+
+	public List<DfMassOrder> queryMassOrderListByDate(Map<String, String> paraMap) {
+		return dfMassOrderDao.queryMassOrderListByDate(paraMap);
+	}
+	
+	public Integer updateOrderProfitOfDaily(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updateOrderProfitOfDaily(dfMassOrder);
+	}
+	
+	public Integer updateOrderProfitOfMonthly(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updateOrderProfitOfMonthly(dfMassOrder);
+	}
+	
+	public Integer updateOrderProfitOfTotal(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updateOrderProfitOfTotal(dfMassOrder);
+	}	
+	
 }
