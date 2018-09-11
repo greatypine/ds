@@ -82,5 +82,13 @@ public interface DfMassOrderMapper {
 	Integer updateMemberCityDay(Map<String, String> paraMap);
 	
 	Integer updateOrderDistribution(Map<String, String> paraMap);
+
+	List<DfMassOrder> queryMassOrderListByDate(Map<String, String> paraMap);
+	
+	Integer updateOrderProfitOfDaily(DfMassOrder dfMassOrder);
+	
+	Integer updateOrderProfitOfMonthly(DfMassOrder dfMassOrder);
+	
+	Integer updateOrderProfitOfTotal(DfMassOrder dfMassOrder);
 	
 }

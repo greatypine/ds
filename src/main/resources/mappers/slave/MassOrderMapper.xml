@@ -160,7 +160,8 @@
 		  tepy.code AS employee_no,
 		  taddr.name AS addr_name,
 		  taddr.mobilephone AS addr_mobilephone,
-		  taddr.address AS  addr_address
+		  taddr.address AS  addr_address,
+		  te.business_type AS business_type
 		FROM
 			t_order tor
 		LEFT JOIN t_store ts ON  (tor.store_id = ts.id)

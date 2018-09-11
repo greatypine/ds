@@ -69,6 +69,8 @@ public class TaskByHandController {
     BigScreenScheduleTask bigScreenScheduleTask;
     @Autowired
     ProductSalesTask productSalesTask;
+    @Autowired
+    MemberCountTask memberCountTask;
 
     
     private static final Logger logger = LogManager.getLogger(CustomerService.class);
@@ -1354,4 +1356,28 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     } 
+    
+    @RequestMapping(value = "rest/updateOrderProfitTaskRun",method = RequestMethod.POST)
+    public RestResponse updateOrderProfitTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.updateOrderProfitTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    } 
+    
+    @RequestMapping(value = "rest/orderToHourCountTaskRun",method = RequestMethod.POST)
+    public RestResponse orderToHourCountTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		memberCountTask.orderToHourCountTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 }

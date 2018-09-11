@@ -15,4 +15,10 @@ public interface OrderMapper{
 	Map<String, Object> queryOrderAddressByOrderSn(Map<String, String> paraMap);
 	
 	String queryMaxSigntime(Map<String, String> paraMap);
+	
+	Map<String, Object> queryOrderRebateCouponById(Map<String, String> paraMap);
+	
+	Map<String, Object> queryOrderCostPriceById(Map<String, String> paraMap);
+	
+	Map<String, Object> queryOrderContractInfoById(String order_id);
 }
