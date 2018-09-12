@@ -13,8 +13,8 @@
     <!--  保存员工运营距离-->
     <insert id="saveEmployeeMoveDistance" parameterType="EmployeeMoreInfo">
         <![CDATA[
-			INSERT INTO t_employee_more_info(employeeNo,create_time,update_time,moveDistance)
-			VALUES(#{employeeNo},#{create_time},#{update_time},#{moveDistance})
+			INSERT INTO t_employee_more_info(employeeNo,create_time,update_time,moveDistance,oneDay_moveDistance)
+			VALUES(#{employeeNo},#{create_time},#{update_time},#{moveDistance},#{oneDyMoveDistance})
 
 
 		]]>
@@ -47,7 +47,8 @@
         <![CDATA[
 			UPDATE t_employee_more_info
 			SET update_time=#{update_time},
-                 moveDistance = #{moveDistance}
+                 moveDistance = #{moveDistance},
+                 oneDay_moveDistance = #{oneDyMoveDistance}
             WHERE employeeNo = #{employeeNo}
 
 		]]>

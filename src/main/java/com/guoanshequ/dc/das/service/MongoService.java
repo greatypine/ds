@@ -88,7 +88,7 @@ public class MongoService {
 
                 Aggregation.project("locations").and("employeeId").as("_id"),
                 Aggregation.unwind("locations"),
-                Aggregation.match(Criteria.where("locations.createTime").lte(new Date(curDate+" 00:00:00"))),
+                Aggregation.match(Criteria.where("locations.createTime").lt(new Date(curDate+" 00:00:00"))),
                 Aggregation.group("_id").push("locations.location").as("locations"),
                 Aggregation.skip(skipcount),
                 Aggregation.limit(50)
@@ -115,7 +115,7 @@ public class MongoService {
 
                 Aggregation.project("locations").and("employeeId").as("_id"),
                 Aggregation.unwind("locations"),
-                Aggregation.match(Criteria.where("locations.createTime").gt(new Date(curDate+" 00:00:00")).lte(new Date(curDate+" 23:59:59"))),
+                Aggregation.match(Criteria.where("locations.createTime").gte(new Date(curDate+" 00:00:00")).lte(new Date(curDate+" 23:59:59"))),
                 Aggregation.group("_id").push("locations.location").as("locations")
         ).withOptions(AggregationOptions.builder().allowDiskUse(true).build());
 

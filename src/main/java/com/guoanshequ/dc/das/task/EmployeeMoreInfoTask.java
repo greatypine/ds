@@ -46,7 +46,7 @@ public class EmployeeMoreInfoTask {
      * @date 2018/9/6 10:44
      **/
 
-    //@Scheduled(cron = "0 11 01 11 9 ?")
+    //@Scheduled(cron = "0 11 04 11 9 ?")
     public void getHistoryMovementDistance(){
         new Thread(){
             @Override
@@ -76,8 +76,8 @@ public class EmployeeMoreInfoTask {
                                         if(j != positions.size()-1){
                                             List object2 = (List)positions.get(j);
                                             List object3 = (List)positions.get(j+1);
-                                            double distance = Distance(Double.parseDouble(object2.get(0).toString()),Double.parseDouble(object2.get(1).toString()), Double.parseDouble(object3.get(0).toString()),Double.parseDouble(object3.get(1).toString()));
-                                            distance_sum += distance;
+                                            double temp_distance = Distance(Double.parseDouble(object2.get(0).toString()),Double.parseDouble(object2.get(1).toString()), Double.parseDouble(object3.get(0).toString()),Double.parseDouble(object3.get(1).toString()));
+                                            distance_sum += temp_distance;
                                         }
                                     }
                                     moveDistance= distance_sum == 0 ? 0 :Float.parseFloat(distance_sum+"");
@@ -123,7 +123,7 @@ public class EmployeeMoreInfoTask {
      * @author gbl
      * @date 2018/9/10 9:43
      **/
-    //@Scheduled(cron = "0 22 04 * * ?")
+    //@Scheduled(cron = "0 22 08 * * ?")
     public void getMovementDistance(){
         new Thread(){
             @Override
@@ -150,7 +150,7 @@ public class EmployeeMoreInfoTask {
                                             List object2 = (List)positions.get(j);
                                             List object3 = (List)positions.get(j+1);
                                             double distance = Distance(Double.parseDouble(object2.get(0).toString()),Double.parseDouble(object2.get(1).toString()), Double.parseDouble(object3.get(0).toString()),Double.parseDouble(object3.get(1).toString()));
-                                            distance_sum += distance;
+                                            distance_sum = distance_sum+distance;
                                         }
                                     }
                                     moveDistance= distance_sum == 0 ? 0 :Float.parseFloat(distance_sum+"");
@@ -167,6 +167,7 @@ public class EmployeeMoreInfoTask {
                                             employeeMoreInfo.setEmployeeNo(employeeNo);
                                             employeeMoreInfo.setMoveDistance(moveDistance+distance);
                                             employeeMoreInfo.setUpdate_time(new Date());
+                                            employeeMoreInfo.setOneDyMoveDistance(moveDistance);
                                             employeeMoreInfoService.updateEmployeeMoveDistance(employeeMoreInfo);
                                         }
                                     }else{
@@ -174,6 +175,7 @@ public class EmployeeMoreInfoTask {
                                         employeeMoreInfo.setMoveDistance(moveDistance);
                                         employeeMoreInfo.setUpdate_time(new Date());
                                         employeeMoreInfo.setCreate_time(new Date());
+                                        employeeMoreInfo.setOneDyMoveDistance(moveDistance);
                                         employeeMoreInfoService.saveEmployeeMoveDistance(employeeMoreInfo);
                                     }
                                 }
@@ -254,7 +256,7 @@ public class EmployeeMoreInfoTask {
      * @date 2018/9/10 14:49
      **/
 
-    //@Scheduled(cron = "0 32 06 * * ?")
+    //@Scheduled(cron = "0 0 09 * * ?")
     public void analyzeEmployeeWorkingAge() {
 
         List<Map<String,Object>> humanresources = null;
