@@ -21,7 +21,9 @@ public class EmployeeMoreInfo {
 
     private Integer workingAge_day;//工龄 按天
 
-    private float moveDistance;//移动距离 /公里
+    private float moveDistance;//总移动距离 /公里
+
+    private Float oneDyMoveDistance;//一天的移动距离
 
     private Date create_time;
 
@@ -91,5 +93,13 @@ public class EmployeeMoreInfo {
 
     public void setUpdate_time(Date update_time) {
         this.update_time = update_time;
+    }
+
+    public Float getOneDyMoveDistance() {
+        return oneDyMoveDistance;
+    }
+
+    public void setOneDyMoveDistance(Float oneDyMoveDistance) {
+        this.oneDyMoveDistance = oneDyMoveDistance;
     }
 }
