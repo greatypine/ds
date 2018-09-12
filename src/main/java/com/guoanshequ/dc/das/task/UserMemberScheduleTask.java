@@ -5,6 +5,7 @@ import com.guoanshequ.dc.das.model.IdCard;
 import com.guoanshequ.dc.das.model.OrderReceipts;
 import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
+import com.guoanshequ.dc.das.utils.HttpInterfaceUtils;
 import com.guoanshequ.dc.das.utils.IdCardUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -414,4 +415,31 @@ public class UserMemberScheduleTask {
 		}.start();
 	}
 	
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * @Title: syncOnlineMemberTask 
+	 * @Description: 同步线上人员信息。调用daqweb接口，每1分钟跑一次，采用多线程
+	 * @param 
+	 * @return void 返回类型
+	 * @throws
+	 */
+	@Scheduled(cron = "0 */1 * * * ?")
+	public void syncOnlineMemberTask() {
+		try {
+			   //调用daqweb同步线上人员接口。
+				String URL=HttpInterfaceUtils.DAQWEB_URL;
+		    	String param=String.format(HttpInterfaceUtils.PARAM, "InterManager", "syncOnLineHuman");
+				String ret = HttpInterfaceUtils.sendPost(URL,param);
+		    	logger.info(ret);
+			} catch (Exception e) {
+				logger.info("由于网络或其它原因，同步线上人员失败，请查看！");
+				logger.info(e.toString());
+				e.printStackTrace();
+			}
+	}
 }
