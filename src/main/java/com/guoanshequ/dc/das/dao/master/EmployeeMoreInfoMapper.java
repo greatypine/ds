@@ -42,6 +42,14 @@ public interface EmployeeMoreInfoMapper {
     public void updateEmployeeMoveDistance(EmployeeMoreInfo employeeMoreInfo);
 
     /**
+     * @Description 清空员工当天的里程
+     * @author gbl
+     * @date 2018/9/13 10:51
+     **/
+
+    public void updateEmployeeOneDayMoveDistanceZero(EmployeeMoreInfo employeeMoreInfo);
+
+    /**
      * @Description 保存员工工龄
      * @author gbl
      * @date 2018/9/6 16:32

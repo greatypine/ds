@@ -130,6 +130,9 @@ public class EmployeeMoreInfoTask {
             public void run() {
 
                 try {
+                    EmployeeMoreInfo clearEMI = new EmployeeMoreInfo();
+                    clearEMI.setUpdate_time(new Date());
+                    employeeMoreInfoService.updateEmployeeOneDayMoveDistanceZero(clearEMI);//先清空所有员工一天的运行里程
 
                     List<EmployeePosition> list = new ArrayList<EmployeePosition>();
                     List<Map<String,Object>> employeeList = new ArrayList<Map<String,Object>>();

@@ -30,7 +30,7 @@
 	</insert>
 
     <!--  更新员工工龄-->
-    <insert id="updateEmployeeWorkingAge" parameterType="EmployeeMoreInfo">
+    <update id="updateEmployeeWorkingAge" parameterType="EmployeeMoreInfo">
         <![CDATA[
 			UPDATE t_employee_more_info
 			SET update_time=#{update_time},
@@ -40,10 +40,10 @@
                 workingAge_year_precise = #{workingAge_year_precise}
             WHERE employeeNo = #{employeeNo}
 		]]>
-	</insert>
+	</update>
 
     <!--  更新员工运行里程-->
-    <insert id="updateEmployeeMoveDistance" parameterType="EmployeeMoreInfo">
+    <update id="updateEmployeeMoveDistance" parameterType="EmployeeMoreInfo">
         <![CDATA[
 			UPDATE t_employee_more_info
 			SET update_time=#{update_time},
@@ -52,7 +52,17 @@
             WHERE employeeNo = #{employeeNo}
 
 		]]>
-	</insert>
+	</update>
+
+    <!--  清空员工运行里程-->
+    <update id="updateEmployeeOneDayMoveDistanceZero" parameterType="EmployeeMoreInfo">
+        <![CDATA[
+			UPDATE t_employee_more_info
+			SET update_time=#{update_time},
+                oneDay_moveDistance = 0
+
+		]]>
+	</update>
     <!-- 查询国安侠员工信息 -->
     <select id="queryValidHumanresource"  resultType="java.util.Map">
         <![CDATA[

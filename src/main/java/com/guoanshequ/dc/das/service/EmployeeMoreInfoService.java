@@ -55,6 +55,15 @@ public class EmployeeMoreInfoService {
     }
 
 
+    /**
+     * @Description 清空员工一天的里程
+     * @author gbl
+     * @date 2018/9/13 10:52
+     **/
+
+    public void updateEmployeeOneDayMoveDistanceZero(EmployeeMoreInfo employeeMoreInfo){
+        employeeMoreInfoMapper.updateEmployeeOneDayMoveDistanceZero(employeeMoreInfo);
+    }
    /**
     * @Description 查询员工信息
     * @author gbl
