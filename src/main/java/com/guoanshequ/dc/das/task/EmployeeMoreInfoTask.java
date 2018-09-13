@@ -46,7 +46,7 @@ public class EmployeeMoreInfoTask {
      * @date 2018/9/6 10:44
      **/
 
-    //@Scheduled(cron = "0 11 04 11 9 ?")
+    @Scheduled(cron = "0 11 04 14 9 ?")
     public void getHistoryMovementDistance(){
         new Thread(){
             @Override
@@ -123,7 +123,7 @@ public class EmployeeMoreInfoTask {
      * @author gbl
      * @date 2018/9/10 9:43
      **/
-    //@Scheduled(cron = "0 22 08 * * ?")
+    @Scheduled(cron = "0 22 08 * * ?")
     public void getMovementDistance(){
         new Thread(){
             @Override
@@ -259,7 +259,7 @@ public class EmployeeMoreInfoTask {
      * @date 2018/9/10 14:49
      **/
 
-    //@Scheduled(cron = "0 0 09 * * ?")
+    @Scheduled(cron = "0 0 09 * * ?")
     public void analyzeEmployeeWorkingAge() {
 
         List<Map<String,Object>> humanresources = null;
