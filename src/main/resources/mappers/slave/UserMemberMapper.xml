@@ -38,7 +38,7 @@
 			where ((tc.create_time >=#{begintime} and tc.create_time <=#{endtime} ) 
 			or ( tc.update_time >=#{begintime} and tc.update_time <=#{endtime} ))
 			and tc.associator_level = #{level}
-			and tc.white!='QA' 
+			and tc.white!='QA'
 		]]>
 	</select>
 	
@@ -130,6 +130,17 @@
 	<select id="queryCityNoByStoreid" parameterType="String" resultType="String">
         <![CDATA[
 			select city_code as regist_cityno from t_store where id = #{store_id}
+		]]>
+	</select>
+	
+	<!-- 根据创建时间从t_member_operation_record表中获取手动导入为2的社员创建时间即为开卡时间-->
+	<select id="queryCreatetimeFromOpRecordByCusId" parameterType="String" resultType="String">
+        <![CDATA[
+			select 
+				create_time as opencard_time
+			from t_member_operation_record where mode ='adminDefined' and level =2 
+			and customer_id =#{customer_id}
+			limit 1;
 		]]>
 	</select>
 	

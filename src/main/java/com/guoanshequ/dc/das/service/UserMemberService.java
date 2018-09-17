@@ -64,4 +64,9 @@ public class UserMemberService {
     	
     	return userMemberDao.queryUserMemberByLeveFromOpRecord(paraMap);
     }
+    
+    public String queryCreatetimeFromOpRecordByCusId(String customer_id) {
+    	
+    	return userMemberDao.queryCreatetimeFromOpRecordByCusId(customer_id);
+    }
 }

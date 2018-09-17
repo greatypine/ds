@@ -131,23 +131,9 @@ public class UserMemberScheduleTask {
 											regist_cityno = customerInfoRecord.getCityCode();
 										}
 										userMember.put("regist_cityno", regist_cityno);
-										//付款开卡时间获取顺序：付款表-mongo
-										if(userMember.get("opencard_time")!=null && !"".equals(userMember.get("opencard_time"))) {
-											openCardTime = userMember.get("opencard_time").toString();
-										}else {
+										if(customerInfoRecord.getCreateTime()!=null && !"".equals(customerInfoRecord.getCreateTime())){
 											openCardTime= customerInfoRecord.getCreateTime();
 										}
-										//获取社员注册时间
-										regitTime = userMember.get("regist_time").toString();
-										if(null!=openCardTime && !"".equals(openCardTime)) {
-											userMember.put("opencard_time", openCardTime);
-											//判断是否当天开卡新社员
-											if(DateUtils.StringToDate(openCardTime).equals(DateUtils.StringToDate(regitTime))) {
-												isnew_member = "1";
-											}
-										}
-										userMember.put("isnew_member", isnew_member);
-	
 										//对身份证号的处理
 										idcardStr = customerInfoRecord.getIdCard();
 										birthday = customerInfoRecord.getBirthday();
@@ -169,6 +155,25 @@ public class UserMemberScheduleTask {
 									}else {
 										System.out.println("mongo中未存在的customer_id:"+userMember.get("customer_id").toString());
 									}
+									
+									//付款开卡时间获取顺序：付款表-mongo-手功导入(t_member_operation_recrod)
+									if(userMember.get("opencard_time")!=null && !"".equals(userMember.get("opencard_time"))) {
+										openCardTime = userMember.get("opencard_time").toString();
+									}else if(userMemberService.queryCreatetimeFromOpRecordByCusId(customer_id)!=null){
+										openCardTime= userMemberService.queryCreatetimeFromOpRecordByCusId(customer_id);
+										userMember.put("member_origin", "adminDefined2");
+									}
+									//获取社员注册时间
+									regitTime = userMember.get("regist_time").toString();
+									if(null!=openCardTime && !"".equals(openCardTime)) {
+										userMember.put("opencard_time", openCardTime);
+										//判断是否当天开卡新社员
+										if(DateUtils.StringToDate(openCardTime).equals(DateUtils.StringToDate(regitTime))) {
+											isnew_member = "1";
+										}
+									}
+									userMember.put("isnew_member", isnew_member);
+									
 									dfUserMemberService.addDfUserMember(userMember);
 								}
 					    		//设置任务为运行完成状态
@@ -179,9 +184,9 @@ public class UserMemberScheduleTask {
 					    		dsCronTaskService.updateTaskStatusById(doneMap);
 					    		dsCronTaskService.updateFlagBeginTimeById(doneMap);
 							}
-							logger.info("社员信息任务执行结果为：开始时间：" + begintime + ",结束时间：" + endtime);
-							logger.info("************社员信息定时任务结束***********************");
 						}
+						logger.info("社员信息任务执行结果为：开始时间：" + begintime + ",结束时间：" + endtime);
+						logger.info("************社员信息定时任务结束***********************");
 					}
 				} catch (Exception e) {
 					logger.info("社员信息任务出现问题，任务执行失败，请查看！");

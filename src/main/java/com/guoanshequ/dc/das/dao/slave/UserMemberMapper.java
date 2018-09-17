@@ -27,4 +27,6 @@ public interface UserMemberMapper{
 	OrderReceipts queryRegistInfoByCusIdOf2(String customer_id);
 	
 	List<Map<String, Object>> queryUserMemberByLeveFromOpRecord(Map<String, String> paraMap);
+	
+	String queryCreatetimeFromOpRecordByCusId(String customer_id);
 }
