@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.CityDataStatisticsMapper">
+    <resultMap type="CityDataStatisticsEntity" id="cityDataStatisticsResultMap">
+        <id property="id" column="ID"/>
+        <result property="city_id" column="city_id"/>
+        <result property="city_name" column="city_name"/>
+        <result property="city_tiny_village_count" column="city_tiny_village_count"/>
+        <result property="city_town_count" column="city_town_count"/>
+        <result property="city_building_count" column="city_building_count"/>
+        <result property="city_house_count" column="city_house_count"/>
+    </resultMap>
+    <select id="findCityDataStatisticsByCityId" parameterType="Long" resultMap="cityDataStatisticsResultMap">
+        SELECT * FROM t_city_data_statistics WHERE city_id=#{city_id}
+    </select>
+    <insert id="insertCityDataStatistics" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="CityDataStatisticsEntity" >
+        insert into t_city_data_statistics
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="city_id != null" >
+                city_id,
+            </if>
+            <if test="city_name != null" >
+                city_name,
+            </if>
+            <if test="city_tiny_village_count != null" >
+                city_tiny_village_count,
+            </if>
+            <if test="city_village_count != null" >
+                city_village_count,
+            </if>
+            <if test="city_town_count != null" >
+                city_town_count,
+            </if>
+            <if test="city_building_count != null" >
+                city_building_count,
+            </if>
+            <if test="city_house_count != null" >
+                city_house_count,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="city_id != null" >
+                #{city_id},
+            </if>
+            <if test="city_name != null" >
+                #{city_name},
+            </if>
+            <if test="city_tiny_village_count != null" >
+                #{city_tiny_village_count},
+            </if>
+            <if test="city_village_count != null" >
+                #{city_village_count},
+            </if>
+            <if test="city_town_count != null" >
+                #{city_town_count},
+            </if>
+            <if test="city_building_count != null" >
+                #{city_building_count},
+            </if>
+            <if test="city_house_count != null" >
+                #{city_house_count},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateCityDataStatistics" parameterType="CityDataStatisticsEntity">
+        update t_city_data_statistics
+        <set >
+            <if test="city_id != null" >
+                city_id = #{city_id},
+            </if>
+            <if test="city_name != null" >
+                city_name = #{city_name},
+            </if>
+            <if test="city_tiny_village_count != null" >
+                city_tiny_village_count = #{city_tiny_village_count},
+            </if>
+            <if test="city_village_count != null" >
+                city_village_count = #{city_village_count},
+            </if>
+            <if test="city_town_count != null" >
+                city_town_count = #{city_town_count},
+            </if>
+            <if test="city_building_count != null" >
+                city_building_count = #{city_building_count},
+            </if>
+            <if test="city_house_count != null" >
+                city_house_count = #{city_house_count},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="findHouseByCityName" parameterType="String" resultType="INTEGER">
+        SELECT count(id) FROM t_house WHERE tinyvillage_id in (SELECT id FROM t_tiny_village WHERE (town_id in (SELECT id FROM t_town  WHERE county_id in (SELECT id FROM t_county WHERE city_id in (SELECT id FROM t_city WHERE `name` LIKE concat('%',#{city_name},'%')))) or village_id in (SELECT id FROM t_village WHERE town_id in (SELECT id FROM t_town  WHERE county_id in (SELECT id FROM t_county WHERE city_id in (SELECT id FROM t_city WHERE `name` LIKE concat('%',#{city_name},'%')))))) AND status=0) AND `status`=0
+    </select>
+    <select id="findBuildingByCityName" parameterType="String" resultType="INTEGER">
+        SELECT count(id) FROM t_building WHERE tinyvillage_id in (SELECT id FROM t_tiny_village WHERE (town_id in (SELECT id FROM t_town  WHERE county_id in (SELECT id FROM t_county WHERE city_id in (SELECT id FROM t_city WHERE `name` LIKE concat('%',#{city_name},'%')))) or village_id in (SELECT id FROM t_village WHERE town_id in (SELECT id FROM t_town  WHERE county_id in (SELECT id FROM t_county WHERE city_id in (SELECT id FROM t_city WHERE `name` LIKE concat('%',#{city_name},'%')))))) AND status=0) AND type=1 AND `status`=0    </select>
+    <select id="findTinyVillageByCityName" parameterType="String" resultType="INTEGER">
+        SELECT COUNT(id) FROM t_tiny_village WHERE (town_id in (SELECT id FROM t_town  WHERE county_id in (SELECT id FROM t_county WHERE city_id in (SELECT id FROM t_city WHERE `name` LIKE concat('%',#{city_name},'%')))) or village_id in (SELECT id FROM t_village WHERE town_id in (SELECT id FROM t_town  WHERE county_id in (SELECT id FROM t_county WHERE city_id in (SELECT id FROM t_city WHERE `name` LIKE concat('%',#{city_name},'%')))))) AND status=0    </select>
+    <select id="findVillageByCityName" parameterType="String" resultType="INTEGER">
+        SELECT COUNT(id) FROM t_village WHERE town_id in (SELECT id FROM t_town  WHERE county_id in (SELECT id FROM t_county WHERE city_id in (SELECT id FROM t_city WHERE `name` LIKE concat('%',#{city_name},'%'))) AND id in (SELECT town_id FROM t_tiny_village WHERE `status`=0 AND town_id is not NULL GROUP BY town_id))    </select>
+    <select id="findTownCountByCityName" parameterType="String" resultType="INTEGER">
+        SELECT COUNT(id) FROM t_town  WHERE county_id in (SELECT id FROM t_county WHERE city_id in (SELECT id FROM t_city WHERE `name` LIKE concat('%',#{city_name},'%'))) AND id in (SELECT town_id FROM t_tiny_village WHERE `status`=0 AND town_id is not NULL GROUP BY town_id)    </select>
+
+    <!--查询当天所有的小区拆分楼房信息 -->
+    <select id="findSplitTinyVillageAfterBuilding" parameterType="java.util.Map" resultType="java.util.Map">
+      SELECT create_user,create_user_id,buildingid,tinyvillageId FROM t_house_building WHERE DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{endDate} and DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ > ]]> #{startDate}
+    </select>
+    <!--查询九月五号至今的小区拆分的数据 -->
+    <select id="findSplitTinyVillageAfterBuildingDateForFifthOfSeptember" resultType="java.util.Map">
+
+        SELECT create_user,create_user_id,buildingid,tinyvillageId FROM t_house_building WHERE DATE_FORMAT(create_time,'%Y-%m-%d')<![CDATA[ >= ]]>'2018-09-05'
+    </select>
+
+    <!-- 修改小区拆分后的房屋信息 -->
+    <update id="updateHousetinyvillage" parameterType="java.util.Map">
+        update t_house SET tinyvillage_id=#{tinyvillage_id},update_user=#{update_user} ,
+        update_user_id=#{update_user_id},update_time=NOW()
+        WHERE building_id in
+        <foreach collection="builds" index="index" item="item" open="(" separator="," close=")">
+                          #{item}
+                      </foreach>
+    </update>
+
+
+
+</mapper>

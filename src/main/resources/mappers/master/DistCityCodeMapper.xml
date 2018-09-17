@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DistCityCodeMapper">
+    <resultMap type="DistCityCodeEntity" id="distCityCodeResultMap">
+        <id property="id" column="ID"/>
+        <result property="citycode" column="CITYCODE"/>
+        <result property="cityname" column="CITYNAME"/>
+        <result property="cityno" column="CITYNO"/>
+    </resultMap>
+
+    <select id="getAllDistCityCode"  resultType="DistCityCodeEntity" resultMap="distCityCodeResultMap">
+        <![CDATA[
+			SELECT * FROM t_dist_citycode TC
+		]]>
+    </select>
+
+
+</mapper>

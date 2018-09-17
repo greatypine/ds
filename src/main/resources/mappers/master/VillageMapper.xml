@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.VillageMapper">
+    <resultMap type="VillageEntity" id="villageResultMap">
+        <id property="gb_code" column="gb_code"/>
+        <result property="name" column="name"/>
+        <result property="square_area" column="square_area"/>
+        <result property="household_number" column="household_number"/>
+        <result property="resident_population_number" column="resident_population_number"/>
+        <result property="committee_address" column="committee_address"/>
+        <result property="committee_phone" column="committee_phone"/>
+        <result property="town_id" column="town_id"/>
+        <result property="id" column="id"/>
+        <result property="create_user" column="create_user"/>
+        <result property="update_user" column="update_user"/>
+        <result property="update_time" column="update_time"/>
+        <result property="create_time" column="create_time"/>
+        <result property="create_user_id" column="create_user_id"/>
+        <result property="update_user_id" column="update_user_id"/>
+        <result property="status" column="status"/>
+        <result property="version" column="version"/>
+    </resultMap>
+
+    <!-- 根据社区GB_CODE查询社区信息 -->
+    <select id="findVillageByGB_CODE"  parameterType="String" resultMap="villageResultMap">
+        SELECT * FROM  t_village WHERE gb_code=#{gb_code}
+    </select>
+    <!-- 根据id查询社区信息 -->
+    <select id="findVillageByID"  parameterType="Long" resultMap="villageResultMap">
+        SELECT * FROM  t_village WHERE id=#{id}
+    </select>
+
+    <update id="updateVillage" parameterType="VillageEntity">
+      UPDATE t_village
+        <set >
+            <if test="square_area != null" >
+                square_area = #{square_area},
+            </if>
+            <if test="household_number != null" >
+                household_number = #{household_number},
+            </if>
+            <if test="resident_population_number != null" >
+                resident_population_number = #{resident_population_number},
+            </if>
+            <if test="introduction != null" >
+                introduction = #{introduction},
+            </if>
+            <if test="committee_address != null" >
+                committee_address = #{committee_address},
+            </if>
+            <if test="committee_phone != null" >
+                committee_phone = #{committee_phone},
+            </if>
+            <if test="update_time != null" >
+                update_time = #{update_time},
+            </if>
+            <if test="update_user_id != null" >
+                update_user_id = #{update_user_id},
+            </if>
+            <if test="update_user != null" >
+                update_user = #{update_user}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+</mapper>

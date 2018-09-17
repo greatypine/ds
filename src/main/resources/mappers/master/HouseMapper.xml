@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.HouseMapper">
+    <resultMap type="HouseEntity" id="houseResultMap">
+        <result property="house_type" column="house_type"/>
+        <result property="tinyvillage_id" column="tinyvillage_id"/>
+        <result property="building_id" column="building_id"/>
+        <result property="building_number" column="building_number"/>
+        <result property="building_unit_number" column="building_unit_number"/>
+        <result property="building_room_number" column="building_room_number"/>
+        <result property="bungalow_number" column="bungalow_number"/>
+        <result property="commercial_floor_number" column="commercial_floor_number"/>
+        <result property="commercial_room_number" column="commercial_room_number"/>
+        <result property="address" column="address"/>
+        <result property="attachment_id" column="attachment_id"/>
+        <result property="id" column="id"/>
+        <result property="building_unit_no" column="building_unit_no"/>
+        <result property="building_house_no" column="building_house_no"/>
+        <result property="house_no" column="house_no"/>
+        <result property="used_price" column="used_price"/>
+        <result property="rent" column="rent"/>
+        <result property="approve_status" column="approve_status"/>
+        <result property="create_user" column="create_user"/>
+        <result property="update_user" column="update_user"/>
+        <result property="update_time" column="update_time"/>
+        <result property="create_time" column="create_time"/>
+        <result property="create_user_id" column="create_user_id"/>
+        <result property="update_user_id" column="update_user_id"/>
+        <result property="status" column="status"/>
+        <result property="version" column="version"/>
+    </resultMap>
+    <delete id="deleteHouseDataByVillageID" parameterType="Long">
+        <![CDATA[
+        DELETE FROM t_house WHERE tinyvillage_id in (SELECT id FROM t_tiny_village WHERE
+         village_id=#{village_id}) AND status=0 AND (attachment_id IS NOT NULL AND attachment_id!= '') and id not in ( SELECT house_id  from t_house_style) AND id not in (SELECT house_id FROM t_house_customer )
+        ]]>
+    </delete>
+
+    <insert id="insertHouse" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="HouseEntity">
+        insert into t_house
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="house_type != null" >
+                house_type,
+            </if>
+            <if test="tinyvillage_id != null" >
+                tinyvillage_id,
+            </if>
+            <if test="building_id != null" >
+                building_id,
+            </if>
+            <if test="building_number != null" >
+                building_number,
+            </if>
+            <if test="building_unit_number != null" >
+                building_unit_number,
+            </if>
+            <if test="building_room_number != null" >
+                building_room_number,
+            </if>
+            <if test="commercial_floor_number != null" >
+                commercial_floor_number,
+            </if>
+            <if test="commercial_room_number != null" >
+                commercial_room_number,
+            </if>
+            <if test="address != null" >
+                address,
+            </if>
+            <if test="attachment_id != null" >
+                attachment_id,
+            </if>
+            <if test="building_unit_no != null" >
+                building_unit_no,
+            </if>
+            <if test="building_house_no != null" >
+                building_house_no,
+            </if>
+            <if test="house_no != null" >
+                house_no,
+            </if>
+            <if test="used_price != null" >
+                used_price,
+            </if>
+            <if test="rent != null" >
+                rent,
+            </if>
+            <if test="approve_status != null" >
+                approve_status,
+            </if>
+            <if test="create_time != null" >
+                create_time,
+            </if>
+            <if test="update_time != null" >
+                update_time,
+            </if>
+            <if test="create_user != null" >
+                create_user,
+            </if>
+            <if test="update_user != null" >
+                update_user,
+            </if>
+            <if test="create_user_id != null" >
+                create_user_id,
+            </if>
+            <if test="update_user_id != null" >
+                update_user_id,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="version != null" >
+                version
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="house_type != null" >
+                #{house_type},
+            </if>
+            <if test="tinyvillage_id != null" >
+                #{tinyvillage_id},
+            </if>
+            <if test="building_id != null" >
+                #{building_id},
+            </if>
+            <if test="building_number != null" >
+                #{building_number},
+            </if>
+            <if test="building_unit_number != null" >
+                #{building_unit_number},
+            </if>
+            <if test="building_room_number != null" >
+                #{building_room_number},
+            </if>
+            <if test="commercial_floor_number != null" >
+                #{commercial_floor_number},
+            </if>
+            <if test="commercial_room_number != null" >
+                #{commercial_room_number},
+            </if>
+            <if test="address != null" >
+                #{address},
+            </if>
+            <if test="attachment_id != null" >
+                #{attachment_id},
+            </if>
+            <if test="building_unit_no != null" >
+                #{building_unit_no},
+            </if>
+            <if test="building_house_no != null" >
+                #{building_house_no},
+            </if>
+            <if test="house_no != null" >
+                #{house_no},
+            </if>
+            <if test="used_price != null" >
+                #{used_price},
+            </if>
+            <if test="rent != null" >
+                #{rent},
+            </if>
+            <if test="approve_status != null" >
+                #{approve_status},
+            </if>
+            <if test="create_time != null" >
+                #{create_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="update_time != null" >
+                #{update_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="create_user != null" >
+                #{create_user,jdbcType=VARCHAR},
+            </if>
+            <if test="update_user != null" >
+                #{update_user,jdbcType=VARCHAR},
+            </if>
+            <if test="create_user_id != null" >
+                #{create_user_id,jdbcType=BIGINT},
+            </if>
+            <if test="update_user_id != null" >
+                #{update_user_id,jdbcType=BIGINT},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="version != null" >
+                #{version,jdbcType=INTEGER}
+            </if>
+        </trim>
+    </insert>
+
+
+
+
+
+
+
+
+</mapper>

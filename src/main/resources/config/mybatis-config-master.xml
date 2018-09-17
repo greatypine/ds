@@ -11,5 +11,13 @@
         <typeAlias alias="DFOrderPubseasEntity"  type="com.guoanshequ.dc.das.model.DFOrderRealtime"/>
         <typeAlias alias="MassOrderEntity" type="com.guoanshequ.dc.das.model.DfMassOrder"/>
         <typeAlias alias="EmployeeMoreInfo" type="com.guoanshequ.dc.das.model.EmployeeMoreInfo"/>
+        <typeAlias alias="DistCityCodeEntity" type="com.guoanshequ.dc.das.model.DistCityCode"/>
+        <typeAlias alias="StoreEntity" type="com.guoanshequ.dc.das.model.Store"/>
+        <typeAlias alias="CityDataStatisticsEntity" type="com.guoanshequ.dc.das.model.CityDataStatistics"/>
+        <typeAlias alias="VillageEntity" type="com.guoanshequ.dc.das.model.Village"/>
+        <typeAlias alias="TinyVillageEntity" type="com.guoanshequ.dc.das.model.TinyVillage"/>
+        <typeAlias alias="BuildingEntity" type="com.guoanshequ.dc.das.model.Building"/>
+        <typeAlias alias="HouseEntity" type="com.guoanshequ.dc.das.model.House"/>
+        <typeAlias alias="AttachmentEntity" type="com.guoanshequ.dc.das.model.Attachment"/>
     </typeAliases>
 </configuration>

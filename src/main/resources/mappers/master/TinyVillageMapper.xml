@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoanshequ.dc.das.dao.master.TinyVillageMapper">
-
+    <resultMap type="TinyVillageEntity" id="tinyVillageResultMap">
+        <result property="name" column="name"/>
+        <result property="othername" column="othername"/>
+        <result property="address" column="address"/>
+        <result property="village_id" column="village_id"/>
+        <result property="town_id" column="town_id"/>
+        <result property="store_code" column="store_code"/>
+        <result property="tinyvillage_type" column="tinyvillage_type"/>
+        <result property="store_id" column="store_id"/>
+        <result property="residents_number" column="residents_number"/>
+        <result property="attchment_id" column="attchment_id"/>
+        <result property="id" column="id"/>
+        <result property="create_user" column="create_user"/>
+        <result property="update_user" column="update_user"/>
+        <result property="update_time" column="update_time"/>
+        <result property="create_time" column="create_time"/>
+        <result property="create_user_id" column="create_user_id"/>
+        <result property="update_user_id" column="update_user_id"/>
+        <result property="status" column="status"/>
+        <result property="version" column="version"/>
+    </resultMap>
 
     <select id="queryTinyidByCode" parameterType="String" resultType="java.util.Map">
         <![CDATA[
@@ -10,5 +30,315 @@
 			where code = #{code}
 		]]>
     </select>
+
+    <select id="findTinyVillageByVillageId" parameterType="Long" resultMap="tinyVillageResultMap">
+        <![CDATA[
+			SELECT * FROM  t_tiny_village WHERE  village_id =#{village_id}
+		]]>
+    </select>
+
+    <select id="findTinyVillageByVillageIdAndName" parameterType="TinyVillageEntity" resultMap="tinyVillageResultMap">
+        <![CDATA[
+			SELECT * FROM  t_tiny_village WHERE  village_id =#{village_id} AND  name=#{name} and status=0
+		]]>
+    </select>
+
+    <insert id="insertTinyVillage" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="TinyVillageEntity">
+        insert into t_tiny_village
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="address != null" >
+                address,
+            </if>
+            <if test="store_id != null" >
+                store_id,
+            </if>
+            <if test="othername != null" >
+                othername,
+            </if>
+            <if test="village_id != null" >
+                village_id,
+            </if>
+            <if test="town_id != null" >
+                town_id,
+            </if>
+            <if test="residents_number != null" >
+                residents_number,
+            </if>
+            <if test="create_time != null" >
+                create_time,
+            </if>
+            <if test="update_time != null" >
+                update_time,
+            </if>
+            <if test="create_user != null" >
+                create_user,
+            </if>
+            <if test="update_user != null" >
+                update_user,
+            </if>
+            <if test="create_user_id != null" >
+                create_user_id,
+            </if>
+            <if test="update_user_id != null" >
+                update_user_id,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="version != null" >
+                version
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="name != null" >
+                #{name},
+            </if>
+            <if test="address != null" >
+                #{address},
+            </if>
+            <if test="store_id != null" >
+                #{store_id},
+            </if>
+            <if test="othername != null" >
+                #{othername},
+            </if>
+            <if test="village_id != null" >
+                #{village_id},
+            </if>
+            <if test="town_id != null" >
+                #{town_id},
+            </if>
+            <if test="residents_number != null" >
+                #{residents_number},
+            </if>
+            <if test="create_time != null" >
+                #{create_time},
+            </if>
+            <if test="update_time != null" >
+                #{update_time},
+            </if>
+            <if test="create_user != null" >
+                #{create_user},
+            </if>
+            <if test="update_user != null" >
+                #{update_user},
+            </if>
+            <if test="create_user_id != null" >
+                #{create_user_id},
+            </if>
+            <if test="update_user_id != null" >
+                #{update_user_id},
+            </if>
+            <if test="status != null" >
+                #{status},
+            </if>
+            <if test="version != null" >
+                #{version}
+            </if>
+        </trim>
+    </insert>
+    <update id="updateTinyVillage" parameterType="TinyVillageEntity">
+        UPDATE t_tiny_village
+          <set>
+              <if test="name != null" >
+                  name=#{name},
+              </if>
+              <if test="address != null" >
+                  address=#{address},
+              </if>
+              <if test="store_id != null" >
+                  store_id=#{store_id},
+              </if>
+              <if test="othername != null" >
+                  othername=#{othername},
+              </if>
+              <if test="village_id != null" >
+                  village_id= #{village_id},
+              </if>
+              <if test="town_id != null" >
+                  town_id=#{town_id},
+              </if>
+              <if test="residents_number != null" >
+                  residents_number=#{residents_number},
+              </if>
+              <if test="create_time != null" >
+                  create_time=#{create_time},
+              </if>
+              <if test="update_time != null" >
+                  update_time=#{update_time},
+              </if>
+              <if test="create_user != null" >
+                  create_user=#{create_user},
+              </if>
+              <if test="update_user != null" >
+                  update_user= #{update_user},
+              </if>
+              <if test="create_user_id != null" >
+                  create_user_id= #{create_user_id},
+              </if>
+              <if test="update_user_id != null" >
+                  update_user_id=#{update_user_id},
+              </if>
+              <if test="status != null" >
+                  status= #{status},
+              </if>
+              <if test="version != null" >
+                  version=#{version}
+              </if>
+          </set>
+        WHERE  id=#{id}
+    </update>
+
+    <!-- 根据小区id查询小区code -->
+    <select id="queryTinyCodeinfoBytinyId" parameterType="Long" resultType="java.util.Map">
+        <![CDATA[
+			select tiny_village_id,tiny_village_name,code
+			from tiny_village_code
+			where tiny_village_id = #{tiny_village_id}
+		]]>
+    </select>
+
+    <!-- 根据街道id查询街道 -->
+    <select id="queryTownById" parameterType="Long" resultType="java.util.Map">
+        <![CDATA[
+			select id,name,gb_code from t_town where id = #{id}
+		]]>
+    </select>
+
+    <insert id="insertTinyCode" parameterType="java.util.Map">
+        insert into tiny_village_code
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="code != null" >
+                code,
+            </if>
+            <if test="tiny_village_id != null" >
+                tiny_village_id,
+            </if>
+            <if test="tiny_village_name != null" >
+                tiny_village_name,
+            </if>
+            <if test="create_time != null" >
+                create_time,
+            </if>
+            <if test="update_time != null" >
+                update_time,
+            </if>
+            <if test="create_user != null" >
+                create_user,
+            </if>
+            <if test="update_user != null" >
+                update_user,
+            </if>
+            <if test="create_user_id != null" >
+                create_user_id,
+            </if>
+            <if test="update_user_id != null" >
+                update_user_id,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="version != null" >
+                version
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="code != null" >
+                #{code},
+            </if>
+            <if test="tiny_village_id != null" >
+                #{tiny_village_id},
+            </if>
+            <if test="tiny_village_name != null" >
+                #{tiny_village_name},
+            </if>
+            <if test="create_time != null" >
+                #{create_time},
+            </if>
+            <if test="update_time != null" >
+                #{update_time},
+            </if>
+            <if test="create_user != null" >
+                #{create_user},
+            </if>
+            <if test="update_user != null" >
+                #{update_user},
+            </if>
+            <if test="create_user_id != null" >
+                #{create_user_id},
+            </if>
+            <if test="update_user_id != null" >
+                #{update_user_id},
+            </if>
+            <if test="status != null" >
+                #{status},
+            </if>
+            <if test="version != null" >
+                #{version}
+            </if>
+        </trim>
+    </insert>
+    <update id="updateTinyCode" parameterType="java.util.Map">
+      UPDATE tiny_village_code
+      <set>
+          <if test="code != null" >
+              code= #{code},
+          </if>
+          <if test="tiny_village_id != null" >
+              tiny_village_id=#{tiny_village_id},
+          </if>
+          <if test="tiny_village_name != null" >
+              tiny_village_name=#{tiny_village_name},
+          </if>
+          <if test="create_time != null" >
+              create_time= #{create_time},
+          </if>
+          <if test="update_time != null" >
+              update_time=#{update_time},
+          </if>
+          <if test="create_user != null" >
+              create_user=#{create_user},
+          </if>
+          <if test="update_user != null" >
+              update_user= #{update_user},
+          </if>
+          <if test="create_user_id != null" >
+              create_user_id= #{create_user_id},
+          </if>
+          <if test="update_user_id != null" >
+              update_user_id=#{update_user_id},
+          </if>
+          <if test="status != null" >
+              status= #{status},
+          </if>
+          <if test="version != null" >
+              version = #{version}
+          </if>
+      </set>
+        WHERE `code`=#{code}
+    </update>
+
+    <select id="findMaxTinyVillageCode" parameterType="String" resultType="java.lang.Integer">
+        SELECT MAX(RIGHT(code,10)) as maxnum FROM tiny_village_code  WHERE LEFT(code,12)=#{gb_code}
+    </select>
+
+
+
+
+
+
+
+
+
+
 
 </mapper>

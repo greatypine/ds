@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoanshequ.dc.das.dao.master.StoreMapper">
+    <resultMap type="StoreEntity" id="storeResultMap">
+        <id property="store_id" column="STORE_ID"/>
+        <result property="name" column="NAME"/>
+        <result property="open_shop_time" column="OPEN_SHOP_TIME"/>
+        <result property="ordnumber" column="ORDNUMBER"/>
+        <result property="estate" column="ESTATE"/>
+        <result property="city_name" column="CITY_NAME"/>
+    </resultMap>
+
+    <select id="findStoreToCityNameAndOpenShopTime" parameterType="String" resultMap="storeResultMap">
+        SELECT *  FROM t_store WHERE open_shop_time is not NULL AND city_name=#{city_name}  ORDER BY open_shop_time
+    </select>
+    <select id="findStoreToCityNameAndOpenShopTimeIsNull" parameterType="String" resultMap="storeResultMap">
+        SELECT * FROM t_store WHERE open_shop_time is NULL and storeno is not null AND city_name=#{city_name}  ORDER BY create_time,update_time
+    </select>
 
 
     <select id="queryStores" parameterType="java.util.Map" resultType="java.util.Map">
@@ -49,5 +64,39 @@
 			select GROUP_CONCAT(number) from t_store 
 		]]>
     </select>
+
+    <update id="updateStore" parameterType="StoreEntity">
+        update t_store
+        <set >
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="estate != null" >
+                estate = #{estate,jdbcType=VARCHAR},
+            </if>
+            <if test="open_shop_time != null" >
+                open_shop_time = #{open_shop_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ordnumber != null" >
+                ordnumber = #{ordnumber,jdbcType=INTEGER},
+            </if>
+            <if test="city_name != null" >
+                city_name = #{city_name,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where store_id = #{store_id,jdbcType=BIGINT}
+    </update>
+
+    <select id="findStoreDateEstate" resultMap="storeResultMap">
+        SELECT * FROM t_store WHERE (estate not in ('闭店中','闭店','试运营','运营中','试营业') or estate is NULL) and open_shop_time is not NULL AND DATE_FORMAT(open_shop_time,'%Y-%m-%d')<![CDATA[<= ]]> DATE_FORMAT(NOW(),'%Y-%m-%d');
+    </select>
+
+    <select id="findStoreBycode" parameterType="String" resultMap="storeResultMap">
+        SELECT * FROM  t_store WHERE storeno=#{storeno}
+    </select>
+
+
+
+
 
 </mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.AttachmentMapper">
+    <resultMap type="AttachmentEntity" id="attachmentResultMap">
+        <id property="file_name" column="file_name"/>
+        <result property="file_path" column="file_path"/>
+        <result property="file_type" column="file_type"/>
+        <result property="file_type_name" column="file_type_name"/>
+        <result property="townName" column="townName"/>
+        <result property="store_name" column="store_name"/>
+        <result property="store_id" column="store_id"/>
+        <result property="message" column="message"/>
+        <result property="uploadType" column="uploadType"/>
+        <result property="id" column="id"/>
+        <result property="create_user" column="create_user"/>
+        <result property="update_user" column="update_user"/>
+        <result property="update_time" column="update_time"/>
+        <result property="create_time" column="create_time"/>
+        <result property="create_user_id" column="create_user_id"/>
+        <result property="update_user_id" column="update_user_id"/>
+        <result property="status" column="status"/>
+        <result property="version" column="version"/>
+    </resultMap>
+    <!-- 根据文件名和文件类型查找文件上传历史 -->
+    <select id="findAttachmentByFileNameAndFileType"  parameterType="java.util.HashMap" resultMap="attachmentResultMap">
+        SELECT * FROM  t_attachment WHERE uploadType='上传中' AND  file_name=#{file_name} AND file_type_name=#{file_type_name} limit 1
+    </select>
+    <!-- 查询所有正在上传中的文件 -->
+    <select id="findAllAttachmentByFileNameAndFileType"  parameterType="String" resultMap="attachmentResultMap">
+        SELECT * FROM  t_attachment WHERE uploadType='上传中' AND  file_name=#{file_name} AND file_type_name='地址文件'
+    </select>
+
+    <update id="updateAttachment" parameterType="AttachmentEntity">
+        update t_attachment
+        <set >
+            <if test="message != null" >
+                message = #{message},
+            </if>
+            <if test="uploadType != null" >
+                uploadType = #{uploadType},
+            </if>
+            <if test="update_time != null" >
+                update_time = #{update_time},
+            </if>
+            <if test="store_name != null" >
+                store_name = #{store_name},
+            </if>
+            <if test="townName != null" >
+                townName = #{townName}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+
+</mapper>
