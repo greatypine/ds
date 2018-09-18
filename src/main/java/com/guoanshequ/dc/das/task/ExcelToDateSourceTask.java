@@ -47,11 +47,11 @@ public class ExcelToDateSourceTask {
         try {
             //读取oss中house文件夹下的所有地采文件名
             List<String> file_names = OSSUploadUtil.queryOssListByPath("daqWeb/house/");
-            System.out.println("文件夹中地采数据个数："+file_names.size());
+            logger.info("文件夹中地采数据个数："+file_names.size());
             if(file_names==null||file_names.size()==0){System.out.println("没文件结束");return;}
             for(String file_name:file_names){
                 now_file=file_name;
-                System.out.println(file_name);
+                logger.info("正在上传的文件名:"+file_name);
                 String str=null;
                 //根据文件名查询是否有小区
                 String village = tinyVillageService.isExistTinyVillageBYFileName(file_name);
@@ -102,6 +102,7 @@ public class ExcelToDateSourceTask {
 
             }
         }catch (Exception e){
+            logger.info(e.getMessage());
             e.printStackTrace();
             if(now_file!=null){
                 attachmentService.updateAttachments(now_file.split("/")[2],e.getMessage().length()>=1000?e.getMessage().substring(0,1000):e.getMessage(),"上传失败",null);
