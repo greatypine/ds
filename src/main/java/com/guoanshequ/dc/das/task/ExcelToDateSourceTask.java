@@ -48,7 +48,7 @@ public class ExcelToDateSourceTask {
             //读取oss中house文件夹下的所有地采文件名
             List<String> file_names = OSSUploadUtil.queryOssListByPath("daqWeb/house/");
             logger.info("文件夹中地采数据个数："+file_names.size());
-            if(file_names==null||file_names.size()==0){System.out.println("没文件结束");return;}
+            if(file_names==null||file_names.size()==0){logger.info("没文件结束");return;}
             for(String file_name:file_names){
                 now_file=file_name;
                 logger.info("正在上传的文件名:"+file_name);
@@ -70,6 +70,7 @@ public class ExcelToDateSourceTask {
                     HttpsURLConnection httpsURLConnection = URLUtils.getHttpsURLConnection(file_name);
                     StringBuffer buffer =  VerifyExcelDataFormat
                             .verifyExcelFile(httpsURLConnection.getInputStream(),file_name.split("/")[2]);
+                    logger.info("可以正常发送请求");
                     if(buffer==null){
                         if("thod".equals(str)) {
                             String gb_code=file_name.split("/")[2].split("-")[0];
@@ -99,9 +100,9 @@ public class ExcelToDateSourceTask {
                     OSSUploadUtil.deleteObjectByUrl(now_file);
                     break;
                 }
-
             }
         }catch (Exception e){
+            logger.info("存在异常！");
             logger.info(e.getMessage());
             e.printStackTrace();
             if(now_file!=null){
