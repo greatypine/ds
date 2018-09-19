@@ -210,7 +210,9 @@
     <!-- 根据街道id查询街道 -->
     <select id="queryTownById" parameterType="Long" resultType="java.util.Map">
         <![CDATA[
-			select id,name,gb_code from t_town where id = #{id}
+			select id,`name`, gb_code
+			from t_town
+			where id = #{id}
 		]]>
     </select>
 

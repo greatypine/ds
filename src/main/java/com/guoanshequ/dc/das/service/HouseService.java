@@ -20,6 +20,8 @@ public class HouseService {
     HouseMapper houseDao;
 
     public void deleteHouseDataByVillageID(Long village_id){
+        /*Map<String, Object> map = new HashMap<>();
+        map.put("village_id",village_id);*/
         houseDao.deleteHouseDataByVillageID(village_id);
     }
 
