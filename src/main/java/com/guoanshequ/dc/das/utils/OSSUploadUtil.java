@@ -4,6 +4,8 @@ import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +19,7 @@ import java.util.UUID;
  * Created by sunning on 2018/9/10.
  */
 public class OSSUploadUtil {
+    private static final Logger logger = LogManager.getLogger(OSSUploadUtil.class);
     private static OSSConfig config = null;
 
     public static String uploadFile(File file,String fileType,String remotedir){
@@ -220,30 +223,41 @@ public class OSSUploadUtil {
     public static List<String> queryOssListByPath(String rootPath) {
         List<String> result = new ArrayList<String>();
         if(rootPath.indexOf("house")>-1&&rootPath.indexOf("house_type")==-1) {
-            OSSConfig ossConfig = new OSSConfig();
-            OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyId(), ossConfig.getAccessKeySecret());
-            // 构造ListObjectsRequest请求
+            config = config==null?new OSSConfig():config;
+            OSSClient ossClient =null;
+            try {
+                logger.info("开始请求OSS服务");
+                ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+                logger.info("获取OSSClient成功");
+                // 构造ListObjectsRequest请求
             ListObjectsRequest listObjectsRequest = new ListObjectsRequest("guoanshuju");
+                logger.info("构造ListObjectsRequest请求");
             // "/" 为文件夹的分隔符
             listObjectsRequest.setDelimiter("/");
             // 列出fun目录下的所有文件和文件夹
             listObjectsRequest.setPrefix(rootPath);
             ObjectListing listing = ossClient.listObjects(listObjectsRequest);
+                logger.info("列出fun目录下的所有文件和文件夹："+listing);
             // 遍历所有Object
-            //System.out.println("Objects:");
-            //OSSobjectSummary下包含目录下所有的文件，不包含子目录
             for (OSSObjectSummary objectSummary : listing.getObjectSummaries()) {
                 if(objectSummary.getKey()!=null&&!objectSummary.getKey().equals(rootPath)) {
                     result.add(objectSummary.getKey());
                 }
-                //System.out.println(objectSummary.getKey());
             }
-            // 遍历所有CommonPrefix
-        	/*System.out.println("\nCommonPrefixs:");
-        	for (String commonPrefix : listing.getCommonPrefixes()) {
-        	    System.out.println(commonPrefix);
-        	}*/
             return result;
+            } catch (OSSException oe) {
+                logger.info("OSSException："+oe.getMessage());
+                oe.printStackTrace();
+                return result;
+            } catch (ClientException ce) {
+                logger.info("ClientException："+ce.getMessage());
+                return result;
+            }catch (Exception e) {
+                logger.info("OtherException："+e.getMessage());
+                return result;
+            }finally {
+                ossClient.shutdown();
+            }
         }
         return result;
     }
