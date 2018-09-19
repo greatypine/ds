@@ -244,9 +244,6 @@
             <if test="update_user_id != null" >
                 update_user_id,
             </if>
-            <if test="status != null" >
-                status,
-            </if>
             <if test="version != null" >
                 version
             </if>
@@ -278,9 +275,6 @@
             </if>
             <if test="update_user_id != null" >
                 #{update_user_id},
-            </if>
-            <if test="status != null" >
-                #{status},
             </if>
             <if test="version != null" >
                 #{version}
@@ -316,9 +310,6 @@
           </if>
           <if test="update_user_id != null" >
               update_user_id=#{update_user_id},
-          </if>
-          <if test="status != null" >
-              status= #{status},
           </if>
           <if test="version != null" >
               version = #{version}

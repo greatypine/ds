@@ -114,7 +114,6 @@ public class TinyVillageService {
             tinycodeMap.put("create_time",new Date());
             tinycodeMap.put("update_user_id",user.getId());
             tinycodeMap.put("update_time",new Date());
-            tinycodeMap.put("status",0);
             tinycodeMap.put("version",0);
             tinyVillageDao.insertTinyCode(tinycodeMap);
         }
