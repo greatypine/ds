@@ -271,12 +271,26 @@ public class OSSUploadUtil {
     public static void deleteObjectByUrl(String url) {
         if(url.indexOf("house")>-1&&url.indexOf("house_type")==-1) {
             // 初始化OSSClient
-            OSSConfig ossConfig = new OSSConfig();
-            OSSClient ossClient = new OSSClient(ossConfig.getEndpoint(), ossConfig.getAccessKeyId(), ossConfig.getAccessKeySecret());
+            config = config==null?new OSSConfig():config;
+            OSSClient ossClient =null;
+            try {
+                logger.info("开始请求OSS服务");
+                ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
             // 删除Object
             if(url.indexOf(".")>-1) {
                 ossClient.deleteObject("guoanshuju", url);
             }
+            } catch (OSSException oe) {
+                logger.info("OSSException："+oe.getMessage());
+                oe.printStackTrace();
+            } catch (ClientException ce) {
+                logger.info("ClientException："+ce.getMessage());
+            }catch (Exception e) {
+                logger.info("OtherException："+e.getMessage());
+            }finally {
+                ossClient.shutdown();
+            }
+
         }
     }
 
