@@ -67,6 +67,9 @@
             <if test="town_id != null" >
                 town_id,
             </if>
+            <if test="tinyvillage_type != null" >
+                tinyvillage_type,
+            </if>
             <if test="residents_number != null" >
                 residents_number,
             </if>
@@ -117,6 +120,9 @@
             <if test="town_id != null" >
                 #{town_id},
             </if>
+            <if test="tinyvillage_type != null" >
+                #{tinyvillage_type},
+            </if>
             <if test="residents_number != null" >
                 #{residents_number},
             </if>
@@ -166,6 +172,9 @@
               </if>
               <if test="town_id != null" >
                   town_id=#{town_id},
+              </if>
+              <if test="tinyvillage_type != null" >
+                  tinyvillage_type={tinyvillage_type},
               </if>
               <if test="residents_number != null" >
                   residents_number=#{residents_number},

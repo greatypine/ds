@@ -13,6 +13,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.HttpsURLConnection;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +103,22 @@ public class ExcelToDateSourceTask {
                     break;
                 }
             }
+        }catch (RuntimeException esq){
+            logger.info("存在异常！");
+            logger.info(esq.getMessage());
+            esq.printStackTrace();
+            if(now_file!=null){
+                attachmentService.updateAttachments(now_file.split("/")[2],esq.getMessage().length()>=1000?esq.getMessage().substring(0,1000):esq.getMessage(),"上传失败",null);
+                OSSUploadUtil.deleteObjectByUrl(now_file);
+            }
+        }catch (FileNotFoundException ef){
+            logger.info("存在异常！");
+            logger.info(ef.getMessage());
+            ef.printStackTrace();
+            if(now_file!=null){
+                attachmentService.updateAttachments(now_file.split("/")[2],ef.getMessage().length()>=1000?ef.getMessage().substring(0,1000):ef.getMessage(),"上传失败",null);
+                OSSUploadUtil.deleteObjectByUrl(now_file);
+            }
         }catch (Exception e){
             logger.info("存在异常！");
             logger.info(e.getMessage());
@@ -117,64 +135,80 @@ public class ExcelToDateSourceTask {
 
 
     public String saveFileExcel( User user,InputStream inp, String fileName,
-                                Attachment attachment) throws Exception {
-        Long attachmentId = attachment.getId();
-        Map<String, Object> map = ExcelDataFormat.getMapDataFromExcel(inp);
-        // 社区
-        Village village = (Village) map.get("village");
-        // 小区+楼房+住宅
-        Map<TinyVillage, List<Map<Building, List<House>>>> buildMap = (Map<TinyVillage, List<Map<Building, List<House>>>>) map
-                .get("build");
-        // 小区+平房住宅
-        Map<TinyVillage, List<House>> bungalowMap = (Map<TinyVillage, List<House>>) map.get("bungalow");
-        // 小区+写字楼楼层
-        Map<TinyVillage, List<House>> shangYeMap = (Map<TinyVillage, List<House>>) map.get("shangye");
-        // 小区+广场
-        Map<TinyVillage, List<House>> guangChangMap = (Map<TinyVillage, List<House>>) map.get("guangchang");
-        // 小区+其他
-        Map<TinyVillage, List<House>> otherMap = (Map<TinyVillage, List<House>>) map.get("other");
-        // 获取门店名称和门店编码
-        String store_code = village.getStore_code();
-        Store store = storeService.findStoreBystoreno(store_code);
-        if (store == null) {
-            attachment.setMessage("门店编码不正确或门店不存在");
-            attachment.setUploadType("失败");
+                                Attachment attachment) {
+        String store_name=null;
+        try {
+            Long attachmentId = attachment.getId();
+            Map<String, Object> map = ExcelDataFormat.getMapDataFromExcel(inp);
+            // 社区
+            Village village = (Village) map.get("village");
+            // 小区+楼房+住宅
+            Map<TinyVillage, List<Map<Building, List<House>>>> buildMap = (Map<TinyVillage, List<Map<Building, List<House>>>>) map
+                    .get("build");
+            // 小区+平房住宅
+            Map<TinyVillage, List<House>> bungalowMap = (Map<TinyVillage, List<House>>) map.get("bungalow");
+            // 小区+写字楼楼层
+            Map<TinyVillage, List<House>> shangYeMap = (Map<TinyVillage, List<House>>) map.get("shangye");
+            // 小区+广场
+            Map<TinyVillage, List<House>> guangChangMap = (Map<TinyVillage, List<House>>) map.get("guangchang");
+            // 小区+其他
+            Map<TinyVillage, List<House>> otherMap = (Map<TinyVillage, List<House>>) map.get("other");
+            // 获取门店名称和门店编码
+            String store_code = village.getStore_code();
+            Store store = storeService.findStoreBystoreno(store_code);
+            if (store == null) {
+                attachment.setMessage("门店编码不正确或门店不存在");
+                attachment.setUploadType("失败");
+                attachment.setStore_name(store.getName());
+                attachmentService.updateAttachment(attachment);
+                throw new RuntimeException("门店编码不正确或门店不存在");
+            }
             attachment.setStore_name(store.getName());
-            attachmentService.updateAttachment(attachment);
-            throw new RuntimeException("门店编码不正确或门店不存在");
+
+            // 根据文件名里的gb_code取得社区
+            String gb_code = fileName.split("-")[0];// 国标
+            Village vlist = villageService.findVillageByFileName(fileName.split("-")[0]);
+            if (vlist == null) {
+                attachment.setMessage("社区国标码" + gb_code + "不存在");
+                attachment.setUploadType("失败");
+                attachment.setStore_name(store.getName());
+                attachmentService.updateAttachment(attachment);
+                throw new RuntimeException("社区国标码" + gb_code + "不存在");
+            }
+
+            Long villageId = vlist.getId();
+            // 保存社区
+            vlist.setAttachment_id(attachmentId);
+            vlist.setCommittee_address(village.getCommittee_address());
+            vlist.setSquare_area(village.getSquare_area());
+            vlist.setHousehold_number(village.getHousehold_number());
+            vlist.setResident_population_number(village.getResident_population_number());
+            vlist.setCommittee_phone(village.getCommittee_phone());
+            vlist.setIntroduction(village.getIntroduction());
+
+            // 更新社区
+            Village village1 = villageService.updateVillage(vlist, user);
+            // 保存小区，住宅楼，商业楼，平房
+            saveBuildData(buildMap, village1, user, attachmentId, store);
+            saveShangyeData(shangYeMap, village1, user, attachmentId, store);
+            saveBungalow(bungalowMap, village1, user, attachmentId, store);
+            saveGuangChang(guangChangMap, village1, user, attachmentId, store);
+            saveOther(otherMap, village1, user, attachmentId, store);
+            store_name=store.getName();
+            return store_name;
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }finally {
+            if(inp!=null){
+                try {
+                    inp.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+            return store_name;
         }
-        attachment.setStore_name(store.getName());
-
-        // 根据文件名里的gb_code取得社区
-        String gb_code = fileName.split("-")[0];// 国标
-        Village vlist = villageService.findVillageByFileName(fileName.split("-")[0]);
-        if (vlist == null) {
-            attachment.setMessage("社区国标码" + gb_code + "不存在");
-            attachment.setUploadType("失败");
-            attachment.setStore_name(store.getName());
-            attachmentService.updateAttachment(attachment);
-            throw new RuntimeException("社区国标码" + gb_code + "不存在");
-        }
-
-        Long villageId = vlist.getId();
-        // 保存社区
-        vlist.setAttachment_id(attachmentId);
-        vlist.setCommittee_address(village.getCommittee_address());
-        vlist.setSquare_area(village.getSquare_area());
-        vlist.setHousehold_number(village.getHousehold_number());
-        vlist.setResident_population_number(village.getResident_population_number());
-        vlist.setCommittee_phone(village.getCommittee_phone());
-        vlist.setIntroduction(village.getIntroduction());
-
-        // 更新社区
-        Village village1 = villageService.updateVillage(vlist, user);
-        // 保存小区，住宅楼，商业楼，平房
-        saveBuildData(buildMap, village1, user, attachmentId , store);
-        saveShangyeData(shangYeMap, village1, user, attachmentId, store);
-        saveBungalow(bungalowMap, village1, user, attachmentId, store);
-        saveGuangChang(guangChangMap, village1, user, attachmentId, store);
-        saveOther(otherMap, village1, user, attachmentId, store);
-        return store.getName();
     }
 
     /**
