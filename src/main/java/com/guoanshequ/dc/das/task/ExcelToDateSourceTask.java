@@ -163,6 +163,7 @@ public class ExcelToDateSourceTask {
                 attachmentService.updateAttachment(attachment);
                 throw new RuntimeException("门店编码不正确或门店不存在");
             }
+            store_name=store.getName();
             attachment.setStore_name(store.getName());
 
             // 根据文件名里的gb_code取得社区
@@ -194,7 +195,6 @@ public class ExcelToDateSourceTask {
             saveBungalow(bungalowMap, village1, user, attachmentId, store);
             saveGuangChang(guangChangMap, village1, user, attachmentId, store);
             saveOther(otherMap, village1, user, attachmentId, store);
-            store_name=store.getName();
             return store_name;
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
