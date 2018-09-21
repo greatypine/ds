@@ -146,12 +146,12 @@
 		 	   WHEN (tdc1.`name` like '%快周边%' OR tdc1.`name` like '%线下联盟%') THEN '4'
 		 	   WHEN (tccar.channel = 'wx_gift_card') THEN '5'
 		  	   ELSE '0' END AS loan_label,
-		  CASE WHEN tesr.role_name not like '%洗衣%' and tccar.channel !='wx_gift_card' THEN
+		  CASE WHEN (tesr.role_name not like '%洗衣%' and tccar.channel !='wx_gift_card') THEN
 		      	IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
 		       WHEN tccar.channel = 'wx_gift_card' THEN
 			  	IFNULL(twgcbr.price/tog.order_quantity,0.0) 
 		  ELSE
-		      CASE WHEN (trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay') THEN
+		      CASE WHEN (tesr.role_name like '%洗衣%' and trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay') THEN
 		            0
 		      ELSE
 		            IFNULL(IF(tor.is_split='yes',tor.trading_price/tog.order_quantity,tor.trading_price),0.0)
