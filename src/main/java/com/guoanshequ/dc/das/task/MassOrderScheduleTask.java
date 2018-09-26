@@ -47,7 +47,8 @@ public class MassOrderScheduleTask {
 	 * 调度规则：根据情况1分钟调度一次 
 	 * 参数：maxSignTime
 	 */
-    @Scheduled(cron ="0 */1 * * * ?")
+	@Scheduled(cron ="59 * 6-23 * * ?")
+//    @Scheduled(cron ="0 */1 * * * ?")
 	public void massOrderTask() {
 			try {
 				Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(1);
