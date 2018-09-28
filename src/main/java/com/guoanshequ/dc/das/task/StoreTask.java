@@ -27,7 +27,7 @@ public class StoreTask {
     /**
      * 根据城市获取每个城市下的门店(如果有开店时间按开店时间排序如果没有按创建时间排序)
      */
-    @Scheduled(cron ="0 */30 * * * ?")
+    @Scheduled(cron ="0 */47 * * * ?")
     public void renewalStoreOrdNumber(){
         new Thread(){
             public void run() {

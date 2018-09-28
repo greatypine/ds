@@ -52,7 +52,7 @@
 			from  t_order_receipts torp
 			where torp.customer_id= #{customer_id}
 			and torp.pay_status ='payed' and torp.type = 'associator_start_-2'
-			order by torp.create_time desc 
+			order by torp.create_time,torp.store_id desc 
 			limit 1 
 		]]>
 	</select>
@@ -67,7 +67,7 @@
 			from  t_order_receipts torp
 			where torp.customer_id= #{customer_id}
 			and torp.pay_status ='payed' and (torp.type = 'associator_start_2' OR torp.type = 'associator_up_2' OR torp.type='plus')
-			order by torp.create_time desc 
+			order by torp.create_time,torp.store_id desc 
 			limit 1 
 		]]>
 	</select>

@@ -30,12 +30,12 @@ public class CustomerSumScheduleTask {
  * 
 * @Title: customerSumMonthTask 
 * @Description: 1对于历史用户量的统计方法：数据以门店月为单位，先删除本月的数据，再插入新数据；
-* 				2调度时间：每天凌晨2点30分开线程执行，
+* 				2调度时间：每天凌晨2点31分开线程执行，
 * @param     设定文件 
 * @return void    返回类型 
 * @throws
  */
-	@Scheduled(cron = "0 30 02 * * ?")
+	@Scheduled(cron = "0 31 02 * * ?")
 	public void customerSumMonthTask() {
 		new Thread() {
 			public void run() {
@@ -66,12 +66,12 @@ public class CustomerSumScheduleTask {
 	 * 
 	* @Title: customerSumDayTask 
 	* @Description: 1对于每天用户量统计方法：从mass_order_monthly中把当天的用户量统计出来，插入到day表中
-	* 				2调度时间：每天凌晨2点30分开线程执行，
+	* 				2调度时间：每天凌晨2点32分开线程执行，
 	* @param     设定文件 
 	* @return void    返回类型 
 	* @throws
 	 */
-		@Scheduled(cron = "0 30 02 * * ?")
+		@Scheduled(cron = "0 32 02 * * ?")
 		public void customerSumDayTask() {
 			new Thread() {
 				public void run() {
@@ -99,12 +99,12 @@ public class CustomerSumScheduleTask {
 	 * 
 	* @Title: customerSumMonthCityTask 
 	* @Description: 1对于历史用户量(按城市)的统计方法：数据以门店月为单位，先删除本月的数据，再插入新数据；
-	* 				2调度时间：每天凌晨2点30分开线程执行，
+	* 				2调度时间：每天凌晨2点33分开线程执行，
 	* @param     设定文件 
 	* @return void    返回类型 
 	* @throws
 	 */
-		@Scheduled(cron = "0 30 02 * * ?")
+		@Scheduled(cron = "0 33 02 * * ?")
 		public void customerSumMonthCityTask() {
 			new Thread() {
 				public void run() {
@@ -135,12 +135,12 @@ public class CustomerSumScheduleTask {
 		 * 
 		* @Title: customerSumDayCityTask 
 		* @Description: 1对于每天用户量(按城市)统计方法：从mass_order_monthly中把当天的用户量统计出来，插入到day表中
-		* 				2调度时间：每天凌晨2点30分开线程执行，
+		* 				2调度时间：每天凌晨2点34分开线程执行，
 		* @param     设定文件 
 		* @return void    返回类型 
 		* @throws
 		 */
-			@Scheduled(cron = "0 30 02 * * ?")
+			@Scheduled(cron = "0 34 02 * * ?")
 			public void customerSumDayCityTask() {
 				new Thread() {
 					public void run() {

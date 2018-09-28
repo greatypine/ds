@@ -38,7 +38,7 @@ public class OpeDataScheduleTask {
 	* @return void    返回类型
 	* @throws
 	 */
-    @Scheduled(cron ="0 30 02 * * ?")
+    @Scheduled(cron ="0 35 02 * * ?")
     public void opeGmvStoreMonthByMassOrderTask() {
     	new Thread(){
     		public void run(){
@@ -80,7 +80,7 @@ public class OpeDataScheduleTask {
     * @return void    返回类型
     * @throws
      */
-    @Scheduled(cron ="0 30 02 * * ?")
+    @Scheduled(cron ="0 36 02 * * ?")
     public void opeGmvStoreChannelMonthByMassOrderTask() {
     	new Thread(){
     		public void run(){
