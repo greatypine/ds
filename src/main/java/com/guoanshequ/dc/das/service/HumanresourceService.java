@@ -31,4 +31,12 @@ public class HumanresourceService {
     public int queryStoreEmpCount(String storeno) throws Exception{
         return humanresourceDao.queryStoreEmpCount(storeno);
     }
+    
+    
+    public List<Map<String, String>> queryHumanresourcesList(Map<String, String> paraMap) throws Exception{
+    	return humanresourceDao.queryHumanresourcesList(paraMap);
+    }
+    public List<Map<String, String>> queryAllHumanresourcesList() throws Exception{
+    	return humanresourceDao.queryAllHumanresourcesList();
+    }
 }

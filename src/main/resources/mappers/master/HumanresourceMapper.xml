@@ -150,4 +150,21 @@
 		]]>
     </select>
     
+    
+    <select id="queryHumanresourcesList" parameterType="java.util.Map" resultType="java.util.Map">
+    	<![CDATA[
+    		select thuman.humanstatus,thuman.name,thuman.store_id,thuman.cardnumber,thuman.phone from t_humanresources thuman 
+			where thuman.humanstatus =1 
+			and thuman.zw ='国安侠' and thuman.update_time >= #{datetime}  
+		]]>
+    </select>
+    <select id="queryAllHumanresourcesList" resultType="java.util.Map">
+    	<![CDATA[
+    		select thuman.humanstatus,thuman.name,thuman.store_id,thuman.cardnumber,thuman.phone from t_humanresources thuman 
+			where thuman.humanstatus =1 
+			and thuman.zw ='国安侠' 
+		]]>
+    </select>
+    
+    
 </mapper>

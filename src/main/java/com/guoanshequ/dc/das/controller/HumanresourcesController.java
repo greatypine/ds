@@ -1,10 +1,8 @@
 package com.guoanshequ.dc.das.controller;
 
-import com.guoanshequ.dc.das.domain.EnumRespStatus;
-import com.guoanshequ.dc.das.dto.RestResponse;
-import com.guoanshequ.dc.das.service.HumanresourceService;
-import com.guoanshequ.dc.das.service.TopDataService;
-import com.guoanshequ.dc.das.utils.DateUtils;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -16,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import com.guoanshequ.dc.das.domain.EnumRespStatus;
+import com.guoanshequ.dc.das.dto.RestResponse;
+import com.guoanshequ.dc.das.service.HumanresourceService;
+import com.guoanshequ.dc.das.service.TopDataService;
+import com.guoanshequ.dc.das.utils.DateUtils;
 
 /**
 * @author CaoPs
@@ -67,4 +68,75 @@ public class HumanresourcesController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+    
+    
+    
+    
+    //查询员工基础数据（根据日期差量查询）
+    @RequestMapping(value = "rest/queryemployeelist",method = RequestMethod.POST,consumes="application/json")
+    public RestResponse queryHumanresourcesList(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		//获取参数 判断是否合法 
+    		String datetime = paraMap.get("datetime") != null ? paraMap.get("datetime").toString() : null;
+    		if(StringUtils.isBlank(datetime)){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATETIME);
+	        }
+    		//判断是否合法的日期 格式 
+    		if(!isValidDate(datetime)) {
+    			return new RestResponse(EnumRespStatus.DATA_ERRORDATETIMEFORMAT);
+    		}
+			List<Map<String, String>> list = null;
+			list = humanresourceService.queryHumanresourcesList(paraMap);
+			logger.info("--------------------------------------");
+			logger.info("数据结果长度为："+list.size());
+			logger.info("--------------------------------------");
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    
+    //查询全部人员信息方法 无参数 
+    @RequestMapping(value = "rest/queryallemployeelist",method = RequestMethod.POST,consumes="application/json")
+    public RestResponse queryAllHumanresourcesList() throws Exception {
+    	try{
+			List<Map<String, String>> list = null;
+			list = humanresourceService.queryAllHumanresourcesList();
+			logger.info("--------------------------------------");
+			logger.info("数据结果长度为："+list.size());
+			logger.info("--------------------------------------");
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        }
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+    
+    
+    
+    //验证日期格式 
+	public static boolean isValidDate(String str) {
+		boolean convertSuccess = true;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			format.setLenient(false);
+			format.parse(str);
+		} catch (Exception e) {
+			convertSuccess = false;
+		}
+		return convertSuccess;
+	}
+    
 }

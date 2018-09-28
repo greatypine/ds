@@ -72,7 +72,10 @@ public enum EnumRespStatus {
     REQUEST_ERROR("9000002", "请求错误"),
     REQUEST_TIMEOUT("9000003", "已过期的请求"),
     REQUEST_REPEATED("9000004", "无效的重复请求"),
-    REQUEST_TOKENNULL("9000005", "请求中需要token参数");
+    REQUEST_TOKENNULL("9000005", "请求中需要token参数"),
+    
+    DATA_NODATETIME("9000099", "请求参数必须包含datetime且不为空"),
+	DATA_ERRORDATETIMEFORMAT("9000098", "请求参数格式不正确");
 
     private String code;
     private String message;
