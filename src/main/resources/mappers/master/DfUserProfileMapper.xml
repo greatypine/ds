@@ -7,12 +7,12 @@
 			insert into df_user_profile(
 				customer_id,trading_price_sum,order_count,trading_price_max,first_order_time,first_order_sn,
 				last_order_time,customer_name,customer_phone,regist_time,area_code,tiny_village_code,storeno,
-				dep_name,channel_name,user_model,customer_source
+				dep_name,channel_name,user_model,customer_source,idcard
 			) 
 			values (
 				#{customer_id},#{trading_price_sum},#{order_count},#{trading_price_max},#{first_order_time},#{first_order_sn},
 				#{last_order_time},#{customer_name},#{customer_phone},#{regist_time},#{area_code},#{tiny_village_code},#{storeno},
-				#{dep_name},#{channel_name},#{user_model},#{customer_source}
+				#{dep_name},#{channel_name},#{user_model},#{customer_source},#{idcard}
 			)on duplicate key update trading_price_sum = trading_price_sum + values(trading_price_sum),
 				order_count = order_count + values(order_count),
 				last_order_time = values(last_order_time),
@@ -43,5 +43,11 @@
 			)
         ]]>
 	</insert>	
+	
+	<insert id="addUserTag" parameterType="java.util.Map" >
+		<![CDATA[
+			insert ignore into df_userprofile_tag (customer_id,usertag) values (#{customer_id},#{usertag})
+        ]]>
+	</insert>
 
 </mapper>

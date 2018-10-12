@@ -166,5 +166,10 @@
 		]]>
     </select>
     
+    <select id="queryIdCardOfonlineByPhone" resultType="java.lang.String" parameterType="java.lang.String">
+    	<![CDATA[
+    		select cardid from t_sync_record where phone =#{mobilephone} limit 1
+		]]>
+    </select>
     
 </mapper>

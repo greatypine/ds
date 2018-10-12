@@ -30,5 +30,9 @@ public class DfUserProfileService {
 	
 	public Integer addDfUserStore(Map<String, String> paraMap) {
 		return dfUserProfileDao.addDfUserStore(paraMap);
-	}	
+	}
+	
+	public Integer addInterStaffUserTag(Map<String, String> paraMap) {
+		return dfUserProfileDao.addUserTag(paraMap);
+	}
 }

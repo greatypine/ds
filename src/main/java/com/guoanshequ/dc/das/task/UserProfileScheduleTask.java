@@ -40,6 +40,8 @@ public class UserProfileScheduleTask {
 	DfUserProfileService dfUserProfileService;
 	@Autowired
 	DfMassOrderService dfMassOrderService;
+	@Autowired
+	HumanresourceService humanresourceService;
 
 
 	private static final Logger logger = LogManager.getLogger(UserProfileScheduleTask.class);
@@ -96,9 +98,18 @@ public class UserProfileScheduleTask {
 									cusMap.put("channel_name", dfMassOrder.getChannel_name());
 								}
 								// 根据用户电话查询是否存在用户画像
-								isExistCusDraw = dfUserProfileService.isExistCusDraw(cusMap.get("customer_phone")) > 0
-										? 1 : 0;
+								isExistCusDraw = dfUserProfileService.isExistCusDraw(cusMap.get("customer_phone")) > 0 ? 1 : 0;
+								String idcard = humanresourceService.queryIdCardOfonlineByPhone(cusMap.get("customer_phone"));
 								cusMap.put("user_model", String.valueOf(isExistCusDraw));
+
+								if(idcard!=null) {
+									cusMap.put("idcard",idcard);
+									Map<String, String> usertagMap = new HashMap<>();
+									usertagMap.put("customer_id", cusMap.get("customer_id"));
+									usertagMap.put("usertag", "N");
+									dfUserProfileService.addInterStaffUserTag(usertagMap);
+								}
+								
 								dfUserProfileService.addDfUserProfile(cusMap);
 							}
 				    		//设置任务为运行完成状态

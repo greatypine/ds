@@ -19,4 +19,6 @@ public interface DfUserProfileMapper {
 	
 	public Integer addDfUserStore(Map<String,String> paraMap);
 	
+	public Integer addUserTag(Map<String,String> paraMap);
+	
 }

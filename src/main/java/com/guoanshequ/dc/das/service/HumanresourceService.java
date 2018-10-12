@@ -39,4 +39,8 @@ public class HumanresourceService {
     public List<Map<String, String>> queryAllHumanresourcesList() throws Exception{
     	return humanresourceDao.queryAllHumanresourcesList();
     }
+    
+    public String queryIdCardOfonlineByPhone(String mobilephone) {
+    	return humanresourceDao.queryIdCardOfonlineByPhone(mobilephone);
+    }
 }

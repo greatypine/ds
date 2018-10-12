@@ -19,6 +19,8 @@ public interface HumanresourceMapper {
 	int queryStoreEmpCount(String storeno);
 	
 	List<Map<String, String>> queryHumanresourcesList(Map<String, String> paraMap);
+	
 	List<Map<String, String>> queryAllHumanresourcesList();
 	
+	String queryIdCardOfonlineByPhone(String mobilephone);
 }
