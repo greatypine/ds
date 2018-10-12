@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 @Service("DfUserProfileService")
@@ -35,4 +36,26 @@ public class DfUserProfileService {
 	public Integer addInterStaffUserTag(Map<String, String> paraMap) {
 		return dfUserProfileDao.addUserTag(paraMap);
 	}
+	
+	public void addYlcUser(Map<String, String> paraMap) {
+		 dfUserProfileDao.addYlcUser(paraMap);
+	}
+
+	public List<Map<String, Object>> isExistCustomer(Map<String, String> paraMap) {
+		/**
+		 * @author wuxinxin
+		 * 2018年10月10日
+		 */
+		return dfUserProfileDao.isExistCustomer(paraMap);
+		
+	}
+
+	public void updateYlcUser(Map<String, String> telMap) {
+		/**
+		 * @author wuxinxin
+		 * 2018年10月11日
+		 */
+		dfUserProfileDao.updateYlcUser(telMap);
+		
+	}	
 }

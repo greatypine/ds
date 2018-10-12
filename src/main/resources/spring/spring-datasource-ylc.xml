@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <beans:bean id="ylcdataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <!--  基本属性 url、user、password -->
+        <beans:property name="driverClassName" value="${ylc.connection.driver}" />
+        <beans:property name="url" value="${ylc.connection.url}" />
+        <beans:property name="username" value="${ylc.connection.username}" />
+        <beans:property name="password" value="${ylc.connection.password}" />
+        <!-- 配置初始化大小、最小、最大 -->
+        <beans:property name="maxActive" value="${connection.maxPoolSize}" />
+        <beans:property name="initialSize" value="${connection.initialPoolSize}" />
+        <beans:property name="minIdle" value="${connection.minIdle}" />
+        <!-- 配置获取连接等待超时的时间 -->
+        <beans:property name="maxWait" value="${connection.maxWait}" />
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <beans:property name="timeBetweenEvictionRunsMillis" value="3000" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <beans:property name="minEvictableIdleTimeMillis" value="300000" />
+        <beans:property name="validationQuery" value="SELECT id FROM account" />
+        <beans:property name="testWhileIdle" value="true" />
+        <beans:property name="testOnBorrow" value="false" />
+        <beans:property name="testOnReturn" value="false" />
+        <!-- mysql 不支持 poolPreparedStatements   -->
+        <beans:property name="poolPreparedStatements" value="true" />
+        <beans:property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+        <!-- 开启Druid的监控统计功能   -->
+        <beans:property name="filters" value="stat" />
+
+		<beans:property name="connectionInitSqls" value="set names utf8mb4;"/>
+    </beans:bean>
+
+
+    <beans:bean id="ylcSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <beans:property name="dataSource" ref="ylcdataSource" />
+        <beans:property name="configLocation" value="classpath:config/mybatis-config-ylc.xml"/>
+        <beans:property name="mapperLocations" value="classpath:mappers/ylc/*.xml"/>
+    </beans:bean>
+
+    <beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <beans:property name="sqlSessionFactoryBeanName" value="ylcSqlSessionFactory"/>
+        <beans:property name="basePackage" value="com.guoanshequ.dc.das.dao.ylc"/>
+    </beans:bean>
+
+    <beans:bean id="ylc"
+                class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <beans:property name="dataSource" ref="ylcdataSource" />
+    </beans:bean>
+
+
+</beans:beans>

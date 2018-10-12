@@ -97,17 +97,23 @@
 	<!-- 查询动销商品量 -->
 	<select id="queryMovingPin" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
-		select  
-			count(distinct toi.eshop_pro_id) cou,te.city_code city_code
+		select
+			count(toid.oid) cou,te.city_code city_code 
 		from
+			(
+				select distinct
+					eshop_pro_id as oid
+				from
+					t_order_item where create_time >  '2018-05-17 23:59:59' 
+			) as toid,
 			t_product p,
-			t_order_item toi, 
-			t_eshop te 
-		where 
-			te.super_member = 'yes' 
-		and te.name not like '%测试%'  
-		and p.eshop_id = te.id 
-		and toi.eshop_pro_id = p.id GROUP BY te.city_code
+			t_eshop te
+		where
+			te.super_member = 'yes'
+		and p.eshop_id = te.id
+		and toid.oid = p.id
+		GROUP BY
+			te.city_code
 		]]>
 	</select>
 	<!-- 查询e店订单量、成交额 -->

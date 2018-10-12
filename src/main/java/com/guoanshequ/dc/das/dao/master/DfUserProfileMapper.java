@@ -1,5 +1,6 @@
 package com.guoanshequ.dc.das.dao.master;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,11 @@ public interface DfUserProfileMapper {
 	public Integer addDfUserStore(Map<String,String> paraMap);
 	
 	public Integer addUserTag(Map<String,String> paraMap);
+	
+	public void addYlcUser(Map<String,String> paraMap);
+
+	public List<Map<String, Object>> isExistCustomer(Map<String,String> paraMap);
+
+	public void updateYlcUser(Map<String, String> telMap);
 	
 }

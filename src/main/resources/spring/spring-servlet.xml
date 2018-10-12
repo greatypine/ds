@@ -51,6 +51,7 @@
 	<!-- 引入配置多数据源-->
     <beans:import resource="spring-datasource-master.xml"/>
     <beans:import resource="spring-datasource-slave.xml"/>
+    <beans:import resource="spring-datasource-ylc.xml"/>
 
     <!-- 开启Aop注解扫描 -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>

@@ -49,5 +49,27 @@
 			insert ignore into df_userprofile_tag (customer_id,usertag) values (#{customer_id},#{usertag})
         ]]>
 	</insert>
+	
+	<select id="isExistCustomer" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[
+			select customer_phone,idcard from df_user_profile where customer_phone =#{customer_phone}
+		]]>
+	</select>
+	<insert id="addYlcUser" parameterType="java.util.Map" >
+		<![CDATA[
+			insert into df_user_profile(
+				customer_id,customer_name,customer_phone,regist_time,storeno,idcard,channel_name,system_flag
+			) 
+			values (
+				#{customer_id},#{customer_name},#{customer_phone},#{regist_time},#{storeno},
+				#{idcard},#{channel_name},#{system_flag}
+			)
+        ]]>
+	</insert>
+	<update id="updateYlcUser" parameterType="java.util.Map">
+	<![CDATA[
+		update df_user_profile set idcard=#{idcard} where customer_phone =#{customer_phone}
+	]]>
+	</update>
 
 </mapper>
