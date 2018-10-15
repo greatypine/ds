@@ -412,8 +412,8 @@ public class ExcelDataFormat {
                     house.setBuilding_number(cell3.toString().replaceAll("\\.0", ""));
                     house.setBuilding_unit_number(unitList.get(i).toString().replaceAll("\\.0", ""));
                     if (roomList.size() == 1 || room.indexOf("%") != -1) {
-                        /*System.out.printf("village:%s\tunit:%s\tfloor%s\troom%s\n", tinyVillage.getName(),
-                                unitList.get(i), floorList.get(j), roomList.get(k));*/
+                        System.out.printf("village:%s\tunit:%s\tfloor%s\troom%s\n", tinyVillage.getName(),
+                                unitList.get(i), floorList.get(j), roomList.get(k));
 						/*
 						 * if(roomTemp.replaceAll("\\.0", "").indexOf("-")>=0){
 						 * house.setBuilding_room_number(
@@ -446,7 +446,9 @@ public class ExcelDataFormat {
                             roomTemp = floorList.get(j).toString().replaceAll("\\.0", "") + "层" + roomTemp;
                         } else if (roomTemp.indexOf("栋3层别墅") != -1) {
                             roomTemp = roomTemp;
-                        } else if (roomTemp.indexOf("外复式") != -1) {
+                        }else if (roomTemp.indexOf("3层别墅") != -1) {
+                            roomTemp = roomTemp;
+                        }  else if (roomTemp.indexOf("外复式") != -1) {
                             roomTemp = floorList.get(j).toString().replaceAll("\\.0", "") + roomTemp;
                         } else if (roomTemp.indexOf("内复式") != -1) {
                             roomTemp = roomTemp;
@@ -457,8 +459,8 @@ public class ExcelDataFormat {
                         }
                         house.setBuilding_room_number(roomTemp.replaceAll("\\.0", ""));
                     } else {
-                        /*System.out.printf("village:%s\tunit:%s\tfloor%s\troom%s\n", tinyVillage.getName(),
-                                unitList.get(i), floorList.get(j), roomList.get(k));*/
+                        System.out.printf("village:%s\tunit:%s\tfloor%s\troom%s\n", tinyVillage.getName(),
+                                unitList.get(i), floorList.get(j), roomList.get(k));
                         if (roomTemp.indexOf("栋3层别墅") != -1) {
                             house.setBuilding_room_number(roomTemp.replaceAll("\\.0", ""));
                         }
@@ -1460,15 +1462,20 @@ public class ExcelDataFormat {
             } else if (split.length == 2) {
                 String[] strings = split[0].split(waveRegex);
                 if (strings != null && strings.length > 0) {
+                    if(strings.length==1){
+                        floorList.add(strings[0] + "-3层别墅");
+                        return floorList;
+                    }
                     int i, j;
                     i = getIntFromStr(strings[0]);
                     j = getIntFromStr(strings[1]);
-                    //System.out.println(i);
-                    //System.out.println(j);
+                    System.out.println(i);
+                    System.out.println(j);
                     while (i <= j) {
                         floorList.add(i + "-3层别墅");
                         i++;
                     }
+
                 }
             }
         }
