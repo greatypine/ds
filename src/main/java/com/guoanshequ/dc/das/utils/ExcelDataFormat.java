@@ -412,8 +412,8 @@ public class ExcelDataFormat {
                     house.setBuilding_number(cell3.toString().replaceAll("\\.0", ""));
                     house.setBuilding_unit_number(unitList.get(i).toString().replaceAll("\\.0", ""));
                     if (roomList.size() == 1 || room.indexOf("%") != -1) {
-                        System.out.printf("village:%s\tunit:%s\tfloor%s\troom%s\n", tinyVillage.getName(),
-                                unitList.get(i), floorList.get(j), roomList.get(k));
+                        /*System.out.printf("village:%s\tunit:%s\tfloor%s\troom%s\n", tinyVillage.getName(),
+                                unitList.get(i), floorList.get(j), roomList.get(k));*/
 						/*
 						 * if(roomTemp.replaceAll("\\.0", "").indexOf("-")>=0){
 						 * house.setBuilding_room_number(
@@ -459,8 +459,8 @@ public class ExcelDataFormat {
                         }
                         house.setBuilding_room_number(roomTemp.replaceAll("\\.0", ""));
                     } else {
-                        System.out.printf("village:%s\tunit:%s\tfloor%s\troom%s\n", tinyVillage.getName(),
-                                unitList.get(i), floorList.get(j), roomList.get(k));
+                        /*System.out.printf("village:%s\tunit:%s\tfloor%s\troom%s\n", tinyVillage.getName(),
+                                unitList.get(i), floorList.get(j), roomList.get(k));*/
                         if (roomTemp.indexOf("栋3层别墅") != -1) {
                             house.setBuilding_room_number(roomTemp.replaceAll("\\.0", ""));
                         }
@@ -1469,8 +1469,8 @@ public class ExcelDataFormat {
                     int i, j;
                     i = getIntFromStr(strings[0]);
                     j = getIntFromStr(strings[1]);
-                    System.out.println(i);
-                    System.out.println(j);
+                    //System.out.println(i);
+                    //System.out.println(j);
                     while (i <= j) {
                         floorList.add(i + "-3层别墅");
                         i++;
