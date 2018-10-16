@@ -97,20 +97,32 @@ public class UserProfileScheduleTask {
 									cusMap.put("dep_name", dfMassOrder.getDepartment_name());
 									cusMap.put("channel_name", dfMassOrder.getChannel_name());
 								}
+								String customer_phone = cusMap.get("customer_phone");
 								// 根据用户电话查询是否存在用户画像
-								isExistCusDraw = dfUserProfileService.isExistCusDraw(cusMap.get("customer_phone")) > 0 ? 1 : 0;
-								String idcard = humanresourceService.queryIdCardOfonlineByPhone(cusMap.get("customer_phone"));
+								isExistCusDraw = dfUserProfileService.isExistCusDraw(customer_phone) > 0 ? 1 : 0;
 								cusMap.put("user_model", String.valueOf(isExistCusDraw));
-
-								if(idcard!=null) {
-									cusMap.put("idcard",idcard);
+								
+								String idcard =null;
+								//根据用户电话获取内部员工身份证号
+								String nb_idcard = humanresourceService.queryIdCardOfonlineByPhone(customer_phone);
+								if(nb_idcard!=null) {
+									idcard = nb_idcard;
 									Map<String, String> usertagMap = new HashMap<>();
 									usertagMap.put("customer_id", cusMap.get("customer_id"));
 									usertagMap.put("usertag", "N");
 									dfUserProfileService.addInterStaffUserTag(usertagMap);
 								}
-								
-								dfUserProfileService.addDfUserProfile(cusMap);
+								//根据用户电话判断是否存在养老餐用户
+								String ylc_idcard = dfUserProfileService.queryYlcIdcardByPhone(customer_phone);
+								if(ylc_idcard!=null&&idcard==null) {
+									idcard = ylc_idcard;
+									cusMap.put("idcard",idcard);
+									dfUserProfileService.addDfUserProfile(cusMap);
+									dfUserProfileService.deleteYlcIdcardByPhone(customer_phone);
+								}else {
+									cusMap.put("idcard",idcard);
+									dfUserProfileService.addDfUserProfile(cusMap);
+								}
 							}
 				    		//设置任务为运行完成状态
 				    		Map<String, String> doneMap = new HashMap<String,String>();

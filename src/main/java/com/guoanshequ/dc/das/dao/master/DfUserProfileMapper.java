@@ -30,4 +30,8 @@ public interface DfUserProfileMapper {
 
 	public String queryYlcCustomer(Map<String, String> paraMap);
 	
+	public String queryYlcIdcardByPhone(String customer_phone);
+	
+	public void deleteYlcIdcardByPhone(String customer_phone);
+	
 }

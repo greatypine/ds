@@ -17,7 +17,8 @@
 				order_count = order_count + values(order_count),
 				last_order_time = values(last_order_time),
 				update_time = now(),
-				trading_price_max = if(trading_price_max > values(trading_price_max),trading_price_max,values(trading_price_max))
+				trading_price_max = if(trading_price_max > values(trading_price_max),trading_price_max,values(trading_price_max)),
+				idcard = values(idcard)
         ]]>
 	</insert>
 	
@@ -55,6 +56,7 @@
 			select customer_phone,idcard from df_user_profile where customer_phone =#{customer_phone}
 		]]>
 	</select>
+	
 	<insert id="addYlcUser" parameterType="java.util.Map" >
 		<![CDATA[
 			insert into df_user_profile(
@@ -66,6 +68,7 @@
 			)
         ]]>
 	</insert>
+	
 	<update id="updateYlcUser" parameterType="java.util.Map">
 	<![CDATA[
 		update df_user_profile set idcard=#{idcard} where customer_phone =#{customer_phone}
@@ -75,6 +78,18 @@
 	<select id="queryYlcCustomer" parameterType="java.util.Map" resultType="java.lang.String">
 		<![CDATA[
 			select max(regist_time) from df_user_profile where system_flag ='ylc'
+		]]>
+	</select>
+				
+	<select id="queryYlcIdcardByPhone" parameterType="java.lang.String" resultType="java.lang.String">
+		<![CDATA[
+			select idcard from df_user_profile where customer_phone =#{customer_phone} and system_flag='SYS002' limit 1 
+		]]>
+	</select>
+	
+	<select id="deleteYlcIdcardByPhone" >
+		<![CDATA[
+			delete from df_user_profile where customer_phone =#{customer_phone} and system_flag='SYS002' 
 		]]>
 	</select>
 
