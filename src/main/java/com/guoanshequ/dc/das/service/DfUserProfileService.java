@@ -57,5 +57,14 @@ public class DfUserProfileService {
 		 */
 		dfUserProfileDao.updateYlcUser(telMap);
 		
-	}	
+	}
+	
+	public String queryYlcIdcardByPhone(String customer_phone) {
+		return dfUserProfileDao.queryYlcIdcardByPhone(customer_phone);
+	}
+	
+	public void deleteYlcIdcardByPhone(String customer_phone) {
+		 dfUserProfileDao.deleteYlcIdcardByPhone(customer_phone);
+	}
+	
 }

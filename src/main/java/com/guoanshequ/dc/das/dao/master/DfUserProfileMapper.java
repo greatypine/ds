@@ -28,4 +28,8 @@ public interface DfUserProfileMapper {
 
 	public void updateYlcUser(Map<String, String> telMap);
 	
+	public String queryYlcIdcardByPhone(String customer_phone);
+	
+	public void deleteYlcIdcardByPhone(String customer_phone);
+	
 }
