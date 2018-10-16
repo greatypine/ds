@@ -57,5 +57,14 @@ public class DfUserProfileService {
 		 */
 		dfUserProfileDao.updateYlcUser(telMap);
 		
+	}
+
+	public String queryYlcCustomer(Map<String, String> paraMap) {
+		/**
+		 * @author wuxinxin
+		 * 2018年10月15日
+		 */
+		return dfUserProfileDao.queryYlcCustomer(paraMap);
+		
 	}	
 }

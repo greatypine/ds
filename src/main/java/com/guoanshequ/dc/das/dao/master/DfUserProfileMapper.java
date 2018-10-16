@@ -27,5 +27,7 @@ public interface DfUserProfileMapper {
 	public List<Map<String, Object>> isExistCustomer(Map<String,String> paraMap);
 
 	public void updateYlcUser(Map<String, String> telMap);
+
+	public String queryYlcCustomer(Map<String, String> paraMap);
 	
 }

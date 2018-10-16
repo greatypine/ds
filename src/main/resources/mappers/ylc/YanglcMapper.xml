@@ -11,7 +11,8 @@
 			from
 				c_customer ylu,c_store ylc
 			where
-				ylu.IDcard not in (select IDcard from c_customer where substring(IDcard, 7, 2) > '18' and substring(IDcard, 7, 2) < '21' group by IDcard HAVING count(IDcard) > 1)
+				ylu.create_time>#{maxTime} 
+			and ylu.IDcard not in (select IDcard from c_customer where substring(IDcard, 7, 2) > '18' and substring(IDcard, 7, 2) < '21' group by IDcard HAVING count(IDcard) > 1)
 			and ylu.tel not in (select tel from c_customer where substring(IDcard, 7, 2) > '18' and substring(IDcard, 7, 2) < '21' group by tel HAVING count(tel) > 1)
 			and substring(ylu.IDcard, 7, 2) > '18' and substring(ylu.IDcard, 7, 2) < '21' and length(ylu.tel)<30 and ylu.store_id = ylc.id 
 		]]>

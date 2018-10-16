@@ -71,5 +71,11 @@
 		update df_user_profile set idcard=#{idcard} where customer_phone =#{customer_phone}
 	]]>
 	</update>
+	
+	<select id="queryYlcCustomer" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[
+			select max(regist_time) from df_user_profile where system_flag ='ylc'
+		]]>
+	</select>
 
 </mapper>

@@ -5,6 +5,7 @@ import com.guoanshequ.dc.das.service.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.text.ParsePosition;
@@ -33,14 +34,17 @@ public class YlcInfoTask {
 	private static SimpleDateFormat sdf_datetime_format = new SimpleDateFormat(DATETIME_FORMAT);
 
 	//@Scheduled(cron ="0 58 2 * * ?")
-	//@Scheduled(cron ="0 38 13 * * ?")
+	@Scheduled(cron ="0 23 09 16 * ?")
 	public void memberCountTask() {
 		new Thread() {
 			public void run() {
 				try {
 					logger.info("************查询养老餐用户任务开始***********************");
 					Map<String, String> paraMap = new HashMap<String, String>();
+					//查询养老餐入库最大注册时间
+					String maxTime = dfUserProfileService.queryYlcCustomer(paraMap);
 					// 从guoanyanglaocan中查询养老餐用户
+					paraMap.put("maxTime", maxTime);
 					List<Map<String, Object>> ylcInfoList = ylcInfoService.queryYlcUser(paraMap);
 					if (!ylcInfoList.isEmpty()) {
 						
@@ -80,9 +84,9 @@ public class YlcInfoTask {
 						}
 					}
 					
-					logger.info("************社员信息任务结束***********************");
+					logger.info("************养老餐用户任务结束***********************");
 				} catch (Exception e) {
-					logger.info("社员信息任务执行失败，请查看！");
+					logger.info("养老餐用户任务执行失败，请查看！");
 					logger.info(e.toString());
 					e.printStackTrace();
 				}
