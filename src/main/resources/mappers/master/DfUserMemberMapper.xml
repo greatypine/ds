@@ -14,7 +14,6 @@
 				#{inviteCode},#{customer_source},#{member_origin}
 			)
 			on duplicate key update
-			opencard_time = values(opencard_time),
 			associator_expiry_date = values(associator_expiry_date),
 			member_type = values(member_type),
 			update_time = now()
