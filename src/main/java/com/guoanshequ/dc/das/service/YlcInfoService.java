@@ -43,4 +43,13 @@ public class YlcInfoService {
     	return ylcInfoDao.queryYlcOrder(paraMap);
     }
     
+    /**
+     * 查询养老餐订单明细
+     * TODO 
+     * @author wuxinxin
+     */
+    public List<Map<String, Object>> queryYlcOrderInfo(Map<String, String> paraMap){
+    	
+    	return ylcInfoDao.queryYlcOrderInfo(paraMap);
+    }
 }

@@ -17,6 +17,27 @@
 			and substring(ylu.IDcard, 7, 2) > '18' and substring(ylu.IDcard, 7, 2) < '21' and length(ylu.tel)<30 and ylu.store_id = ylc.id 
 		]]>
 	</select>
+	<select id="queryYlcOrder" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select
+				id,store_id,customer_id,booking_time,zzw,delivery,state,create_time,status,serial_number
+			from
+				c_orders
+			where
+				create_time>#{maxOrderTime} 
+			
+		]]>
+	</select>
+	<select id="queryYlcOrderInfo" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select
+				id,order_id,product_id,product_name,product_price,num,comment,create_time,status
+			from
+				c_order_item
+			where
+				create_time>#{maxOrderInfoTime} 
+		]]>
+	</select>
 		
 	
 </mapper>

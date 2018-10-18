@@ -22,6 +22,7 @@ public interface YanglcMapper{
 	 * @author wuxinxin
 	 */
 	List<Map<String, Object>> queryYlcUser(Map<String, String> paraMap);
+	List<Map<String, Object>> queryYlcOrderInfo(Map<String, String> paraMap);
 	
 	
 }

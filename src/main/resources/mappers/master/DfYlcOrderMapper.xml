@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DfYlcOrderMapper">
+
+	<insert id="addYlcOrder" parameterType="java.util.Map" >
+		<![CDATA[
+			insert into df_ylc_orders(
+				id,store_id,customer_id,booking_time,zzw,delivery,state,create_time,status,serial_number
+			) 
+			values (
+				#{id},#{store_id},#{customer_id},#{booking_time},#{zzw},#{delivery},#{state},
+				#{create_time},#{status},#{serial_number}
+			)
+        ]]>
+	</insert>
+	
+	<insert id="addYlcOrderInfo" parameterType="java.util.Map" >
+		<![CDATA[
+		insert into df_ylc_order_item(
+				id,order_id,product_id,product_name,product_price,num,comment,create_time,status
+			) 
+			values (
+				#{id},#{order_id},#{product_id},#{product_name},#{product_price},#{num},#{comment},#{create_time},#{status}
+			)
+		]]>
+	</insert>
+	
+	<select id="queryYlcOrder" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[
+			select max(create_time) from df_ylc_orders 
+		]]>
+	</select>
+	<select id="queryYlcOrderInfo" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[
+			select max(create_time) from df_ylc_order_item 
+		]]>
+	</select>	
+
+</mapper>
