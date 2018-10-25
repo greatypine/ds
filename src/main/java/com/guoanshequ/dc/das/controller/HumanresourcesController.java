@@ -1,6 +1,7 @@
 package com.guoanshequ.dc.das.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +73,7 @@ public class HumanresourcesController {
     
     
     
-    //查询员工基础数据（根据日期差量查询）
+  //查询员工基础数据（根据日期差量查询）
     @RequestMapping(value = "rest/queryemployeelist",method = RequestMethod.POST,consumes="application/json")
     public RestResponse queryHumanresourcesList(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
@@ -85,6 +86,12 @@ public class HumanresourcesController {
     		if(!isValidDate(datetime)) {
     			return new RestResponse(EnumRespStatus.DATA_ERRORDATETIMEFORMAT);
     		}
+    		
+    		//判断是否有效时间段的日期 格式 
+    		if(!isInDate(datetime)) {
+    			return new RestResponse(EnumRespStatus.DATA_ERRORINDATEFORMAT);
+    		}
+    		
 			List<Map<String, String>> list = null;
 			list = humanresourceService.queryHumanresourcesList(paraMap);
 			logger.info("--------------------------------------");
@@ -103,12 +110,12 @@ public class HumanresourcesController {
     }
     
     
-    //查询全部人员信息方法 无参数 
-    @RequestMapping(value = "rest/queryallemployeelist",method = RequestMethod.POST,consumes="application/json")
-    public RestResponse queryAllHumanresourcesList() throws Exception {
+    //查询所有的线下岗位职位  无参数
+    @RequestMapping(value = "rest/queryPostList",method = RequestMethod.POST,consumes="application/json")
+    public RestResponse queryPostList(){
     	try{
-			List<Map<String, String>> list = null;
-			list = humanresourceService.queryAllHumanresourcesList();
+    		List<Map<String, String>> list = null;
+			list = humanresourceService.queryPostList();
 			logger.info("--------------------------------------");
 			logger.info("数据结果长度为："+list.size());
 			logger.info("--------------------------------------");
@@ -118,25 +125,67 @@ public class HumanresourcesController {
 	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
 	        }
     	}catch (Exception e) {
-            logger.error(e.toString());
-            e.printStackTrace();
-            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
-        }
+    		 logger.error(e.toString());
+             e.printStackTrace();
+             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+		}
+    }
+    
+    
+    //查询所有的门店名称  无参数
+    @RequestMapping(value = "rest/queryStoreList",method = RequestMethod.POST,consumes="application/json")
+    public RestResponse queryStoreList(){
+    	try{
+    		List<Map<String, String>> list = null;
+			list = humanresourceService.queryStoreList();
+			logger.info("--------------------------------------");
+			logger.info("数据结果长度为："+list.size());
+			logger.info("--------------------------------------");
+	        if(null==list||list.isEmpty()){
+	        	return new RestResponse(EnumRespStatus.DATA_NODATA);
+	        }else{
+	        	return new RestResponse(EnumRespStatus.DATA_OK,list.size(),list);
+	        }
+    	}catch (Exception e) {
+    		 logger.error(e.toString());
+             e.printStackTrace();
+             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+		}
     }
     
     
     
-    //验证日期格式 
-	public static boolean isValidDate(String str) {
-		boolean convertSuccess = true;
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		try {
-			format.setLenient(false);
-			format.parse(str);
-		} catch (Exception e) {
-			convertSuccess = false;
-		}
-		return convertSuccess;
-	}
+    
+    
+    
+  //验证日期格式 
+  	public static boolean isValidDate(String str) {
+  		boolean convertSuccess = true;
+  		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  		try {
+  			format.setLenient(false);
+  			format.parse(str);
+  		} catch (Exception e) {
+  			convertSuccess = false;
+  		}
+  		return convertSuccess;
+  	}
+  	
+  	//判断日期是否大于7天。
+  	public static boolean isInDate(String str) {
+  		boolean convertSuccess = true;
+  		try {
+  			Date date2 = new Date();
+  			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  			Date date1 = format.parse(str);
+  			int days = (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));
+  			if(days>7) {
+  				convertSuccess = false;
+  			}
+  		} catch (Exception e) {
+  			convertSuccess = false;
+  		}
+  		return convertSuccess;
+  	}
     
 }

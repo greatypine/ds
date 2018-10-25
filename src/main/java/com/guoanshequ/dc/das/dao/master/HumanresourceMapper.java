@@ -22,5 +22,8 @@ public interface HumanresourceMapper {
 	
 	List<Map<String, String>> queryAllHumanresourcesList();
 	
+	List<Map<String, String>> queryPostList();
+	List<Map<String, String>> queryStoreList();
+
 	String queryIdCardOfonlineByPhone(String mobilephone);
 }

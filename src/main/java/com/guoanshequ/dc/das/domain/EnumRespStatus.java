@@ -75,7 +75,8 @@ public enum EnumRespStatus {
     REQUEST_TOKENNULL("9000005", "请求中需要token参数"),
     
     DATA_NODATETIME("9000099", "请求参数必须包含datetime且不为空"),
-	DATA_ERRORDATETIMEFORMAT("9000098", "请求参数格式不正确");
+   	DATA_ERRORDATETIMEFORMAT("9000098", "请求参数格式不正确"),
+   	DATA_ERRORINDATEFORMAT("9000097", "请求参数时间段无效");
 
     private String code;
     private String message;

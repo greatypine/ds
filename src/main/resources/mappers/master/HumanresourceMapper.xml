@@ -153,16 +153,25 @@
     
     <select id="queryHumanresourcesList" parameterType="java.util.Map" resultType="java.util.Map">
     	<![CDATA[
-    		select thuman.humanstatus,thuman.name,thuman.store_id,thuman.cardnumber,thuman.phone from t_humanresources thuman 
-			where thuman.humanstatus =1 
-			and thuman.zw ='国安侠' and thuman.update_time >= #{datetime}  
+    	    SELECT (select code from tb_bizbase_user where employeeId=t.employee_no limit 1) as Username,t.name as Full_name,t.employee_no as Emplid,(select storeno from t_store where t_store.store_id=t.store_id) as Groupcode,t.humanstatus as Hr_status,DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%S') as update_time FROM t_humanresources t WHERE t.humanstatus in(1,2) and t.update_time >= #{datetime}  
 		]]>
     </select>
+    
     <select id="queryAllHumanresourcesList" resultType="java.util.Map">
     	<![CDATA[
-    		select thuman.humanstatus,thuman.name,thuman.store_id,thuman.cardnumber,thuman.phone from t_humanresources thuman 
-			where thuman.humanstatus =1 
-			and thuman.zw ='国安侠' 
+    		SELECT (select code from tb_bizbase_user where employeeId=t.employee_no limit 1) as code,t.name,t.employee_no,(select storeno from t_store where t_store.store_id=t.store_id) as storeno,t.humanstatus FROM t_humanresources t WHERE t.humanstatus in(1,2) 
+		]]>
+    </select>
+    
+    <select id="queryPostList" resultType="java.util.Map">
+    	<![CDATA[
+    		SELECT zw as full_name,zw as short_name,code FROM t_data_human_zw 
+		]]>
+    </select>
+    
+    <select id="queryStoreList" resultType="java.util.Map">
+    	<![CDATA[
+    		SELECT s.name as Name,s.name as Shortname,s.storeno as Code,s.storeno as Deptid FROM t_store s WHERE s.estate NOT LIKE '%闭店%' 
 		]]>
     </select>
     

@@ -40,6 +40,14 @@ public class HumanresourceService {
     	return humanresourceDao.queryAllHumanresourcesList();
     }
     
+    public List<Map<String, String>> queryPostList() throws Exception{
+    	return humanresourceDao.queryPostList();
+    }
+    public List<Map<String, String>> queryStoreList() throws Exception{
+    	return humanresourceDao.queryStoreList();
+    }
+    
+    
     public String queryIdCardOfonlineByPhone(String mobilephone) {
     	return humanresourceDao.queryIdCardOfonlineByPhone(mobilephone);
     }
