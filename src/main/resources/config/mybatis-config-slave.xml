@@ -5,5 +5,7 @@
         <typeAlias alias="CountryEntity" type="com.guoanshequ.dc.das.model.Country"/>
         <typeAlias alias="MassOrderEntity" type="com.guoanshequ.dc.das.model.DfMassOrder"/>
         <typeAlias alias="OrderReceiptsEntity" type="com.guoanshequ.dc.das.model.OrderReceipts"/>
+        <typeAlias alias="OrderItemEntity" type="com.guoanshequ.dc.das.model.OrderItem"/>
+        <typeAlias alias="ContractEntity" type="com.guoanshequ.dc.das.model.Contract"/>
     </typeAliases>
 </configuration>

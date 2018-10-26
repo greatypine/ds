@@ -19,5 +19,8 @@
         <typeAlias alias="BuildingEntity" type="com.guoanshequ.dc.das.model.Building"/>
         <typeAlias alias="HouseEntity" type="com.guoanshequ.dc.das.model.House"/>
         <typeAlias alias="AttachmentEntity" type="com.guoanshequ.dc.das.model.Attachment"/>
+        <typeAlias alias="ImsTbsdgdsEntity" type="com.guoanshequ.dc.das.model.ImsTbsdgds"/>
+        <typeAlias alias="OrderItemEntity" type="com.guoanshequ.dc.das.model.OrderItem"/>
+        <typeAlias alias="ContractEntity" type="com.guoanshequ.dc.das.model.Contract"/>
     </typeAliases>
 </configuration>

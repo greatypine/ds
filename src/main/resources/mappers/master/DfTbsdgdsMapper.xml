@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DfTbsdgdsMapper">
+	
+	<insert id="addDfTbsdgdsDaily" parameterType="ImsTbsdgdsEntity">
+		<![CDATA[
+			INSERT IGNORE INTO df_ims_tbs_d_gds_daily (
+				c_guid,c_store_id,c_gcode,c_dt,c_adno,c_ccode,c_trademark,c_name,c_type,c_model,c_status,
+				c_pro_status,c_sale_status,c_store_status,c_sale_frequency,c_abc,c_number_sale,c_a_sale,
+				c_at_sale,cost_price,c_map_store_id
+			) VALUES(
+				#{c_guid},#{c_store_id},#{c_gcode},#{c_dt},#{c_adno},#{c_ccode},#{c_trademark},#{c_name},#{c_type},#{c_model},#{c_status},
+				#{c_pro_status},#{c_sale_status},#{c_store_status},#{c_sale_frequency},#{c_abc},#{c_number_sale},#{c_a_sale},
+				#{c_at_sale},#{cost_price},#{c_map_store_id}
+			)
+		]]>
+	</insert>
+	
+	<insert id="addDfTbsdgdsTotal" parameterType="ImsTbsdgdsEntity">
+		<![CDATA[
+			INSERT IGNORE INTO df_ims_tbs_d_gds_total (
+				c_guid,c_store_id,c_gcode,c_dt,c_adno,c_ccode,c_trademark,c_name,c_type,c_model,c_status,
+				c_pro_status,c_sale_status,c_store_status,c_sale_frequency,c_abc,c_number_sale,c_a_sale,
+				c_at_sale,cost_price,c_map_store_id
+			) VALUES(
+				#{c_guid},#{c_store_id},#{c_gcode},#{c_dt},#{c_adno},#{c_ccode},#{c_trademark},#{c_name},#{c_type},#{c_model},#{c_status},
+				#{c_pro_status},#{c_sale_status},#{c_store_status},#{c_sale_frequency},#{c_abc},#{c_number_sale},#{c_a_sale},
+				#{c_at_sale},#{cost_price},#{c_map_store_id}
+			)
+		]]>
+	</insert>
+	
+	<!-- 每天删除Daily前一天数据 -->
+	<delete  id="deleteDfTbsdgdsDaily" parameterType="java.lang.String">
+		<![CDATA[
+			delete from df_ims_tbs_d_gds_daily where c_dt < #{date_time}
+		]]>
+	</delete>
+	
+
+</mapper>

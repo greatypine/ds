@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.ims.TbsdgdsMapper">
+
+	<!-- 同步tbs_d_gds数据表 -->
+	<select id="queryTbsDGdsByTime" parameterType="java.util.Map" resultType="ImsTbsdgdsEntity">
+        <![CDATA[
+			select 	
+				tdg.c_guid,tdg.c_store_id,tdg.c_gcode,tdg.c_dt,tdg.c_adno,tdg.c_ccode,tdg.c_trademark,tdg.c_name,tdg.c_type,tdg.c_model,tdg.c_status,tdg.c_pro_status,
+				tdg.c_sale_status,tdg.c_store_status,tdg.c_sale_frequency,tdg.c_abc,tdg.c_number_sale,tdg.c_a_sale,tdg.c_at_sale,
+				case when tdg.c_number_sale > 0 then (tdg.c_at_sale/tdg.c_number_sale) else 0 end as cost_price,ts.c_map_store_id
+			from tbs_d_gds tdg
+			left join tb_store ts on (tdg.c_store_id = ts.c_id)
+			where tdg.c_dt>=#{begintime} and tdg.c_dt< #{endtime};
+		]]>
+	</select>
+		
+</mapper>

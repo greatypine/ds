@@ -160,6 +160,21 @@ public class DateUtils {
     }
     
     /** 
+     * @param date 当前日期 
+     * @return 返回指定时间的所在日期
+     * 功能说明：
+     * 日期2017-09-10，返回2017-09-09;
+     * 日期2017-09-01，返回2017-08-31;
+     */ 
+    public static String getStrDate(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        String preDate = df.format(calendar.getTime());
+        return preDate;
+    }
+    
+    /** 
      * @param date 当前日期
      * @return 返回当前日期的前一天0点0分0秒
      * 功能说明：
@@ -355,7 +370,7 @@ public class DateUtils {
     
     public static void main(String[] args) {
     	try {
-           System.out.println(getPreDateFirstOfMonth(new Date()));
+           System.out.println(getStrDate(StringToDate("2018-09-10")));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
