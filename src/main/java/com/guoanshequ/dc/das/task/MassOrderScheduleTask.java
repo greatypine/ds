@@ -944,7 +944,7 @@ public class MassOrderScheduleTask {
 	 * 计算每个订单所对应的优惠券、返利
 	 * 调度规则：每天凌晨3点30分
 	 */
-//	@Scheduled(cron ="0 30 4 * * ?")
+	@Scheduled(cron ="0 30 5 * * ?")
 	public void updateOrderCouponTask(){
 		new Thread(){
 			public void run() {
