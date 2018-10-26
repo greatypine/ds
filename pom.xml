@@ -70,15 +70,19 @@
                 <mongodb.database>gemini</mongodb.database>
                 <mongodb.username>gemini</mongodb.username>
                 <mongodb.password>zxgasq2018@!341%^</mongodb.password>
+                <ims.jdbc.driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</ims.jdbc.driverClassName>
+                <ims.jdbc.url>jdbc:sqlserver://39.107.69.242:1433;DatabaseName=Enjoy_Hq</ims.jdbc.url>
+                <ims.jdbc.username>test</ims.jdbc.username>
+                <ims.jdbc.password>gasq1qaz</ims.jdbc.password>                
             </properties>
         </profile>
         <profile>
             <id>test</id>
             <properties>
                 <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:mysql://10.16.31.228:53307/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true</jdbc.url>
+                <jdbc.url>jdbc:mysql://10.16.31.82:3306/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true</jdbc.url>
                 <jdbc.username>root</jdbc.username>
-                <jdbc.password>@I6Esj#yZb^iATyY</jdbc.password>
+                <jdbc.password>~UrDz5cZmFdt</jdbc.password>
                 <slave.jdbc.url>jdbc:mysql://10.16.31.82:3306/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
                 <slave.jdbc.username>root</slave.jdbc.username>
                 <slave.jdbc.password>~UrDz5cZmFdt</slave.jdbc.password>
@@ -92,6 +96,10 @@
                 <mongodb.database>gemini</mongodb.database>
                 <mongodb.username>mongo</mongodb.username>
                 <mongodb.password>abc123</mongodb.password>
+                <ims.jdbc.driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</ims.jdbc.driverClassName>
+                <ims.jdbc.url>jdbc:sqlserver://39.107.69.242:1433;DatabaseName=Enjoy_Hq</ims.jdbc.url>
+                <ims.jdbc.username>test</ims.jdbc.username>
+                <ims.jdbc.password>gasq1qaz</ims.jdbc.password>            
             </properties>
         </profile>
         <profile>
@@ -115,6 +123,10 @@
                 <mongodb.database>gemini</mongodb.database>
                 <mongodb.username>mongo</mongodb.username>
                 <mongodb.password>abc123</mongodb.password>
+                <ims.jdbc.driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</ims.jdbc.driverClassName>
+                <ims.jdbc.url>jdbc:sqlserver://39.107.69.242:1433;DatabaseName=Enjoy_Hq</ims.jdbc.url>
+                <ims.jdbc.username>test</ims.jdbc.username>
+                <ims.jdbc.password>gasq1qaz</ims.jdbc.password>            
             </properties>
         </profile>
     </profiles>
@@ -241,12 +253,17 @@
             <artifactId>poi</artifactId>
             <version>3.7</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>3.7</version>
         </dependency>
+		<dependency>
+		    <groupId>com.microsoft.sqlserver</groupId>
+		    <artifactId>sqljdbc4</artifactId>
+		    <version>4.0</version>
+		</dependency>
+        
     </dependencies>
 
     <properties>
