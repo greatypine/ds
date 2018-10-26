@@ -2,6 +2,8 @@ package com.guoanshequ.dc.das.dao.master;
 
 import com.guoanshequ.dc.das.datasource.DataSource;
 import com.guoanshequ.dc.das.model.DfMassOrder;
+import com.guoanshequ.dc.das.model.ImsTbsdgds;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -108,5 +110,15 @@ public interface DfMassOrderMapper {
 	Integer updateActivityGroupOnForMonthly(Map<String, String> paraMap);
 	
 	Integer updateActivityGroupOnForTotal(Map<String, String> paraMap);
+	
+	ImsTbsdgds queryCostPriceBySigndateCode(Map<String, String> paraMap);
+	
+	Integer queryIsSaleCardEshop(String eshop_id);
+	
+	Integer updateOrderCouponOfDaily(DfMassOrder dfMassOrder);
+	
+	Integer updateOrderCouponOfMonthly(DfMassOrder dfMassOrder);
+	
+	Integer updateOrderCouponOfTotal(DfMassOrder dfMassOrder);
 	
 }

@@ -95,6 +95,11 @@ public class DfMassOrder {
 	private String business_type;
 	private String contract_id;
 	private String contract_method;
+	private String eshop_joint_ims;
+	private Integer cct_proration_platform;
+	private Integer cct_proration_seller;
+	private BigDecimal contract_percent;
+	private BigDecimal contract_price;
 	
 	
 	public enum PubseasLabel{

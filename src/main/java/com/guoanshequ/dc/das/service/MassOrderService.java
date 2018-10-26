@@ -2,6 +2,8 @@ package com.guoanshequ.dc.das.service;
 
 import com.guoanshequ.dc.das.dao.slave.MassOrderMapper;
 import com.guoanshequ.dc.das.model.DfMassOrder;
+import com.guoanshequ.dc.das.model.OrderItem;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,4 +50,9 @@ public class MassOrderService {
 	public List<Map<String, String>> queryCooperativeEshop(){
 		return massOrderDao.queryCooperativeEshop();
 	}
+	
+	public List<OrderItem> queryOrderItemByOrderId(Map<String, String> paraMap){
+		return massOrderDao.queryOrderItemByOrderId(paraMap);
+	}
+	
 }

@@ -1,6 +1,9 @@
 package com.guoanshequ.dc.das.task;
 
+import com.guoanshequ.dc.das.model.Contract;
 import com.guoanshequ.dc.das.model.DfMassOrder;
+import com.guoanshequ.dc.das.model.ImsTbsdgds;
+import com.guoanshequ.dc.das.model.OrderItem;
 import com.guoanshequ.dc.das.model.TinyDispatch;
 import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
@@ -39,7 +42,9 @@ public class MassOrderScheduleTask {
 	DsCronTaskService dsCronTaskService;
 	@Autowired
 	OrderService orderService;
-
+	@Autowired
+	StoreNumberService storeNumberService;
+	
 
 	private static final Logger logger = LogManager.getLogger(MassOrderScheduleTask.class);
 	
@@ -725,7 +730,7 @@ public class MassOrderScheduleTask {
 		}.start();
 	}
 	/** 
-	 * 计算每个订单所对应的优惠券、返利、成本、利润信息
+	 * 计算每个订单所对应的成本、利润信息
 	 * 调度规则：每天凌晨3点30分
 	 */
 	@Scheduled(cron ="0 30 4 * * ?")
@@ -733,7 +738,7 @@ public class MassOrderScheduleTask {
 		new Thread(){
 			public void run() {
 				try{
-					logger.info("**********计算每个订单所对应的优惠券、返利、成本、利润信息任务调度开始**********");
+					logger.info("**********计算每个订单所对应的成本、利润信息任务调度开始**********");
 					Integer updatenum =0;
 					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(12);
 					String isrun = taskMap.get("isrun");
@@ -760,39 +765,80 @@ public class MassOrderScheduleTask {
 			    		runMap.put("id", "12");
 			    		runMap.put("task_status", "RUNNING");
 			    		dsCronTaskService.updateTaskStatusById(runMap);
-						String order_id ="";
-						Map<String,Object> cuponMap ;
-						Map<String,Object> costPriceMap ;
-						Map<String,Object> contractInfoMap;
 						
 						for (DfMassOrder dfMassOrder : massOrderList) {
-							order_id = dfMassOrder.getId();
+							String order_id = dfMassOrder.getId();
+							String eshop_joint_ims = dfMassOrder.getEshop_joint_ims();
+							Date sign_time = dfMassOrder.getSign_time();
+							String sign_date = DateUtils.getStrDate(sign_time);
+							String store_id = dfMassOrder.getStore_id();
+							String business_type = dfMassOrder.getBusiness_type();
+							
 							paraMap.put("order_id", order_id);
-							//1、根据订单号查询对应的优惠券、返利信息
-							cuponMap = orderService.queryOrderRebateCouponById(paraMap);
-							if(cuponMap!=null) {
-								dfMassOrder.setApportion_rebate((BigDecimal)cuponMap.get("apportion_rebate"));
-								dfMassOrder.setApportion_coupon((BigDecimal)cuponMap.get("apportion_coupon"));
+							paraMap.put("sign_date", sign_date);
+							
+							//1、关联进销存，计算订单在进销存中的总成本,自营商品无论是否有合同，一律从价
+							BigDecimal sum_cost_price = new BigDecimal("0.00");
+							BigDecimal order_profit = new BigDecimal("0.00");
+							if("yes".equals(eshop_joint_ims)) {
+								//获取订单明细
+								Integer store_number = storeNumberService.queryStoreNumberById(store_id);
+								List<OrderItem> orderItemList = massOrderService.queryOrderItemByOrderId(paraMap);
+								for (OrderItem orderItem : orderItemList) {
+									ImsTbsdgds imsTbsGds ;
+									String product_code = orderItem.getProduct_code();
+									 
+									//存在商品码，则根据商品码和签收日期，去查找商品销售表中计算相应的总成本价=成本价*数量
+									if(product_code!=null) {
+										paraMap.put("product_code",product_code);
+										paraMap.put("store_number",store_number.toString());
+										imsTbsGds = dfMassOrderService.queryCostPriceBySigndateCode(paraMap);
+										if(imsTbsGds!=null) {
+											BigDecimal ims_cost_price = imsTbsGds.getCost_price().multiply(new BigDecimal(orderItem.getQuantity()));
+											sum_cost_price = sum_cost_price.add(ims_cost_price);
+										}
+									}
+								}
+								dfMassOrder.setCost_price(sum_cost_price);
+								order_profit = calProfitByPrice(dfMassOrder);
+								dfMassOrder.setOrder_profit(order_profit);
+								
+							}else {//不在进销存系统，计算在国安平台中的总成本
+								//2、根据订单号查询对应的总成本价
+								String cost_price = orderService.queryOrderCostPriceById(paraMap);
+								if(cost_price!=null) {
+									sum_cost_price = new BigDecimal(cost_price);
+								}
+								dfMassOrder.setCost_price(sum_cost_price);
+								
+								//3、计算利润信息:通过订单号查询对应的e店合同，有合同则按合同计算方式，无合同则按自营方式（gmvprice-costprice）
+								Contract contractInfo = orderService.queryOrderContractInfoById(dfMassOrder.getId());
+								if(contractInfo!=null) {//有合同信息
+									dfMassOrder.setContract_id(contractInfo.getContract_id());
+									dfMassOrder.setContract_method(contractInfo.getContract_method());
+									dfMassOrder.setContract_percent(contractInfo.getContract_percent());
+									dfMassOrder.setContract_price(contractInfo.getContract_price());
+									//获取合同结算方式
+									String contract_method = contractInfo.getContract_method();
+									if("price".equals(contract_method)) {//从价
+										order_profit = calProfitByPrice(dfMassOrder);
+									}else if("volume".equals(contract_method)) {//从量
+										order_profit = calProfitByVolume(dfMassOrder,contractInfo);
+									}else if("percent".equals(contract_method)) {//从率
+										order_profit = calProfitByPercent(dfMassOrder,contractInfo);
+									}
+								}else {//无合同信息
+									//无合同自营为从价
+									if("self".equals(business_type)) {
+										order_profit = calProfitByPrice(dfMassOrder);
+									}else {//无合同联营利润为0
+										order_profit = new BigDecimal("0.00");
+									}
+								}
+								dfMassOrder.setOrder_profit(order_profit);
 							}
-							//2、根据订单号查询对应的成本价
-							costPriceMap = orderService.queryOrderCostPriceById(paraMap);
-							String cost_price = "0.00";
-							if(costPriceMap!=null) {
-								cost_price = costPriceMap.get("cost_price").toString();
-								paraMap.put("cost_price", cost_price);
-								dfMassOrder.setCost_price(new BigDecimal(costPriceMap.get("cost_price").toString()));
-							}
-							//3、计算利润信息:通过订单号查询对应的e店合同，有合同则按合同计算方式，无合同则按自营方式（gmvprice-costprice）
-							contractInfoMap = queryOrderContractInfoById(dfMassOrder);
-							if(contractInfoMap!=null) {
-								dfMassOrder.setContract_id(contractInfoMap.get("contract_id").toString());
-								dfMassOrder.setContract_method(contractInfoMap.get("contract_method").toString());
-								dfMassOrder.setOrder_profit((BigDecimal)contractInfoMap.get("order_profit"));
-							}else {
-								BigDecimal gmv_price = dfMassOrder.getGmv_price()==null?new BigDecimal("0.00"):new BigDecimal(dfMassOrder.getGmv_price().toString());
-								dfMassOrder.setOrder_profit(gmv_price.subtract(new BigDecimal(cost_price)));
-							}
-							System.out.println("dfMassOrdersn*****"+dfMassOrder.getOrder_sn()+",cost_price:"+dfMassOrder.getCost_price()+",gmvprice:"+dfMassOrder.getGmv_price()+",profit:"+dfMassOrder.getOrder_profit());
+
+							System.out.println("dfMassOrdersn*****"+dfMassOrder.getOrder_sn()+"contract_method:"+dfMassOrder.getContract_method()+",cost_price:"+dfMassOrder.getCost_price()+",gmvprice:"+dfMassOrder.getGmv_price()+",profit:"+dfMassOrder.getOrder_profit());
 							dfMassOrderService.updateOrderProfitOfDaily(dfMassOrder);
 							updatenum += dfMassOrderService.updateOrderProfitOfMonthly(dfMassOrder);
 							dfMassOrderService.updateOrderProfitOfTotal(dfMassOrder);
@@ -804,9 +850,9 @@ public class MassOrderScheduleTask {
 		    		doneMap.put("task_status", "DONE");
 		    		dsCronTaskService.updateTaskStatusById(doneMap);
 				}
-				logger.info("**********计算每个订单所对应的优惠券、返利、成本、利润信息数据任务调度结束,开始时间："+begintime+",结束时间："+endtime+",共更新记录数："+updatenum+"**********");
+				logger.info("**********计算每个订单所对应的成本、利润信息数据任务调度结束,开始时间："+begintime+",结束时间："+endtime+",共更新记录数："+updatenum+"**********");
 				} catch (Exception e) {
-					logger.info("计算每个订单所对应的优惠券、返利、成本、利润信息数据任务调度异常：",e.toString());
+					logger.info("计算每个订单所对应的成本、利润信息数据任务调度异常：",e.toString());
 					e.printStackTrace();
 				}
 			}
@@ -857,32 +903,108 @@ public class MassOrderScheduleTask {
 		}.start();
 	}	
 	
-	public Map<String,Object> queryOrderContractInfoById(DfMassOrder dfMassOrder){
-		//根据订单号查询所对应的合同信息
-		Map<String,Object> contractMap = orderService.queryOrderContractInfoById(dfMassOrder.getId());
-		if(contractMap!=null) {
-			BigDecimal order_profit = new BigDecimal(0);
-			BigDecimal trading_price =dfMassOrder.getGmv_price();
-			BigDecimal cost_price =dfMassOrder.getCost_price();
-			//合同id
-			String contract_id = contractMap.get("contract_id").toString();
-			//合同结算方式
-			String contract_method = contractMap.get("contract_method").toString();
-			//合同费率
-			BigDecimal contract_percent = (BigDecimal) contractMap.get("contract_percent");
-			//合同结算单价
-			BigDecimal contract_price = (BigDecimal) contractMap.get("contract_price");
-			//计算订单对应的利润
-			if("price".equals(contract_method) && trading_price!=null && cost_price!=null) {//结算方式从价
-				order_profit = trading_price.subtract(cost_price) ;
-			}else if("volume".equals(contract_method) && contract_price!=null){//结算方式从量
-				order_profit = new BigDecimal(dfMassOrder.getTotal_quantity()).multiply(contract_price);
-			}else if("percent".equals(contract_method) && trading_price!=null) {//结算方式从率
-				order_profit = trading_price.multiply(contract_percent);
-			}
-			contractMap.put("contract_id", contract_id);
-			contractMap.put("order_profit", order_profit);
+	
+	/**
+	 * 订单从价计算方法
+	 */
+	public BigDecimal calProfitByPrice(DfMassOrder dfMassOrder) {
+		BigDecimal order_profit ;
+		BigDecimal cost_price = dfMassOrder.getCost_price();
+		String eshop_id = dfMassOrder.getEshop_id();
+		Integer is_saleCard_eshop = dfMassOrderService.queryIsSaleCardEshop(eshop_id);
+		//成本为0
+		if(cost_price.compareTo(BigDecimal.ZERO)==0 && is_saleCard_eshop==0) {
+			order_profit = new BigDecimal("0.00");
+		}else {
+			order_profit = dfMassOrder.getGmv_price().subtract(dfMassOrder.getCost_price());
 		}
-		return contractMap;
+		return order_profit;
 	}
+	
+	/**
+	 * 订单从量计算方法
+	 */
+	public BigDecimal calProfitByVolume(DfMassOrder dfMassOrder,Contract contract) {
+		BigDecimal order_profit = new BigDecimal("0.00");
+		order_profit = new BigDecimal(dfMassOrder.getTotal_quantity()).multiply(contract.getContract_price());
+		return order_profit;
+	}
+	
+	/**
+	 * 订单从率计算方法
+	 */
+	public BigDecimal calProfitByPercent(DfMassOrder dfMassOrder,Contract contract) {
+		BigDecimal order_profit = new BigDecimal("0.00");
+		order_profit = dfMassOrder.getGmv_price().multiply(contract.getContract_percent());
+		return order_profit;
+	}	
+	
+	
+	/** 
+	 * 计算每个订单所对应的优惠券、返利
+	 * 调度规则：每天凌晨3点30分
+	 */
+//	@Scheduled(cron ="0 30 4 * * ?")
+	public void updateOrderCouponTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********计算每个订单所对应的优惠券、返利信息任务调度开始**********");
+					Integer updatenum =0;
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(15);
+					String isrun = taskMap.get("isrun");
+					String begintime = null;
+					String endtime = null;
+					if("ON".equals(isrun)){
+					String runtype = taskMap.get("runtype");
+					//获取上次调度时的最大签收时间开始时间与结束时间
+					if("MANUAL".equals(runtype)){
+						begintime = taskMap.get("begintime");
+						endtime = taskMap.get("endtime");
+					}else{
+						begintime = DateUtils.getPreDateTime(new Date());
+						endtime = DateUtils.getCurDateTime(new Date());
+					}	
+					//给后台接口构建参数
+					Map<String, String> paraMap=new HashMap<String, String>();
+					paraMap.put("begintime", begintime);
+					paraMap.put("endtime", endtime);
+					
+					List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByDate(paraMap);
+					if(!massOrderList.isEmpty()) {
+			    		Map<String, String> runMap = new HashMap<String,String>();
+			    		runMap.put("id", "15");
+			    		runMap.put("task_status", "RUNNING");
+			    		dsCronTaskService.updateTaskStatusById(runMap);
+						Map<String,Object> cuponMap ;
+						
+						for (DfMassOrder dfMassOrder : massOrderList) {
+							String order_id = dfMassOrder.getId();
+							
+							paraMap.put("order_id", order_id);
+							//1、根据订单号查询对应的优惠券、返利信息
+							cuponMap = orderService.queryOrderRebateCouponById(paraMap);
+							if(cuponMap!=null) {
+								dfMassOrder.setApportion_rebate((BigDecimal)cuponMap.get("apportion_rebate"));
+								dfMassOrder.setApportion_coupon((BigDecimal)cuponMap.get("apportion_coupon"));
+							}
+							dfMassOrderService.updateOrderCouponOfDaily(dfMassOrder);
+							updatenum += dfMassOrderService.updateOrderCouponOfMonthly(dfMassOrder);
+							dfMassOrderService.updateOrderCouponOfTotal(dfMassOrder);
+						}
+					}
+		    		//设置任务为完成状态
+		    		Map<String, String> doneMap = new HashMap<String,String>();
+		    		doneMap.put("id", "15");
+		    		doneMap.put("task_status", "DONE");
+		    		dsCronTaskService.updateTaskStatusById(doneMap);
+				}
+				logger.info("**********计算每个订单所对应的优惠券、返利信息数据任务调度结束,开始时间："+begintime+",结束时间："+endtime+",共更新记录数："+updatenum+"**********");
+				} catch (Exception e) {
+					logger.info("计算每个订单所对应的优惠券、返利信息数据任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}	
 }

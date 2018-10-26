@@ -2,6 +2,8 @@ package com.guoanshequ.dc.das.service;
 
 import com.guoanshequ.dc.das.dao.master.DfMassOrderMapper;
 import com.guoanshequ.dc.das.model.DfMassOrder;
+import com.guoanshequ.dc.das.model.ImsTbsdgds;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -210,6 +212,25 @@ public class DfMassOrderService {
 	
 	public Integer updateOrderProfitOfTotal(DfMassOrder dfMassOrder){
 		return dfMassOrderDao.updateOrderProfitOfTotal(dfMassOrder);
-	}	
+	}
 	
+	public ImsTbsdgds queryCostPriceBySigndateCode(Map<String, String> paraMap) {
+		return dfMassOrderDao.queryCostPriceBySigndateCode(paraMap);
+	}
+	
+	public Integer queryIsSaleCardEshop(String eshop_id) {
+		return dfMassOrderDao.queryIsSaleCardEshop(eshop_id);
+	}
+	
+	public Integer updateOrderCouponOfDaily(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updateOrderCouponOfDaily(dfMassOrder);
+	}
+	
+	public Integer updateOrderCouponOfMonthly(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updateOrderCouponOfMonthly(dfMassOrder);
+	}
+	
+	public Integer updateOrderCouponOfTotal(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updateOrderCouponOfTotal(dfMassOrder);
+	}	
 }
