@@ -1501,6 +1501,30 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }
+
+    @RequestMapping(value = "rest/imsTbCountTaskRun",method = RequestMethod.POST)
+    public RestResponse imsTbCountTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            imsScheduleTask.imsTbCountTask();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "rest/imsTblTaskRun",method = RequestMethod.POST)
+    public RestResponse imsTblTask(@RequestBody Map<String, String> paraMap) throws Exception {
+        try{
+            imsScheduleTask.imsTblTask();
+            return new RestResponse(EnumRespStatus.TASK_RUNOK);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
  
 //    @RequestMapping(value = "rest/updateOrderCouponTaskRun",method = RequestMethod.POST)
 //    public RestResponse updateOrderCouponTask(@RequestBody Map<String, String> paraMap) throws Exception {

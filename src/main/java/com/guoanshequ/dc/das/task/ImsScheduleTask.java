@@ -1,9 +1,7 @@
 package com.guoanshequ.dc.das.task;
 
-import com.guoanshequ.dc.das.model.ImsTbsdgds;
-import com.guoanshequ.dc.das.service.DfTbsgdsService;
-import com.guoanshequ.dc.das.service.DsCronTaskService;
-import com.guoanshequ.dc.das.service.TbsdGdsService;
+import com.guoanshequ.dc.das.model.*;
+import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
 
 import java.util.Date;
@@ -23,6 +21,10 @@ public class ImsScheduleTask {
 	TbsdGdsService tbsdGdsService;
 	@Autowired
 	DfTbsgdsService dfTbsgdsService;
+	@Autowired
+	ImsService imsService;
+	@Autowired
+	DfImsService dfImsService;
 	@Autowired
 	DsCronTaskService dsCronTaskService;
 
@@ -79,4 +81,121 @@ public class ImsScheduleTask {
 			}
 		}.start();
 	}
+
+	/**
+	 * 定时用于更新df_ims_tb_o_count/countg/store表
+	 * 调度规则：每天凌晨4点
+	 */
+//	@Scheduled(cron ="0 01 4 * * ?")
+	public void imsTbCountTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********df_ims_o_count任务调度开始**********");
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(16);
+					String isrun = taskMap.get("isrun");
+					if("ON".equals(isrun)){
+						String runtype = taskMap.get("runtype");
+						String begintime = null;
+						String endtime = null;
+						//获取上次调度时的最大审核时间开始时间与结束时间
+						if("MANUAL".equals(runtype)){
+							begintime = taskMap.get("begintime");
+							endtime = taskMap.get("endtime");
+						}else{
+							begintime = imsService.queryMaxAuDtTime()==null?DateUtils.getPreDate(new Date()):imsService.queryMaxAuDtTime();
+							endtime = DateUtils.getCurDateTime(new Date());
+						}
+
+						//给后台接口构建参数
+						Map<String, String> paraMap=new HashMap<String, String>();
+						paraMap.put("begintime", begintime);
+						paraMap.put("endtime", endtime);
+
+						List<ImsTbOCount> list =imsService.queryImsTbOCountByDate(paraMap);
+						for (ImsTbOCount count : list) {
+							String c_id=count.getC_id();
+							String c_store_id=count.getC_store_id();
+							ImsTbOCount isExist = dfImsService.queryImsTbOCountIsExist(c_id);
+							if(isExist!=null){
+								dfImsService.deleteDfImsTbOCount(c_id);
+								dfImsService.deleteDfImsTbOCountg(c_id);
+							}
+							ImsTbStore isExistStore = dfImsService.queryImsTbStoreIsExist(c_store_id);
+							if(isExistStore!=null){
+								dfImsService.deleteDfImsTbStore(c_store_id);
+							}
+							ImsTbStore store = imsService.queryImsTbStoreByStoreId(c_store_id);
+							dfImsService.addDfImsTbStore(store);
+							dfImsService.addDfImsTbOCount(count);
+							List<ImsTbOCountg> countgList =imsService.queryImsTbOCountgByCId(c_id);
+							dfImsService.addDfImsTbOCountg(countgList);
+
+						}
+					}
+					logger.info("**********df_ims_o_count任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("df_ims_o_count任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+
+	/**
+	 * 定时用于更新df_ims_tb_o_l/store表
+	 * 调度规则：每天凌晨4点
+	 */
+//	@Scheduled(cron ="0 01 4 * * ?")
+	public void imsTblTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********df_ims_o_l任务调度开始**********");
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(17);
+					String isrun = taskMap.get("isrun");
+					if("ON".equals(isrun)){
+						String runtype = taskMap.get("runtype");
+						String begintime = null;
+						String endtime = null;
+						//获取上次调度时的最大审核时间开始时间与结束时间
+						if("MANUAL".equals(runtype)){
+							begintime = taskMap.get("begintime");
+							endtime = taskMap.get("endtime");
+						}else{
+							begintime = DateUtils.getPreDate(new Date());
+							endtime = DateUtils.getCurDateTime(new Date());
+						}
+
+						//给后台接口构建参数
+						Map<String, String> paraMap=new HashMap<String, String>();
+						paraMap.put("begintime", begintime);
+						paraMap.put("endtime", endtime);
+
+						List<ImsTbOl> list =imsService.queryImsTbOlByDate(paraMap);
+						for (ImsTbOl tbOl : list) {
+							String c_id=tbOl.getC_id();
+							ImsTbOl isExist = dfImsService.queryImsTbOlIsExist(c_id);
+							if(isExist!=null){
+								dfImsService.deleteDfImsTbOl(c_id);
+							}
+							String c_store_id=tbOl.getC_store_id();
+							ImsTbStore isExistStore = dfImsService.queryImsTbStoreIsExist(c_store_id);
+							if(isExistStore!=null){
+								dfImsService.deleteDfImsTbStore(c_store_id);
+							}
+							ImsTbStore store = imsService.queryImsTbStoreByStoreId(c_store_id);
+							dfImsService.addDfImsTbStore(store);
+							dfImsService.addDfImsTbOl(tbOl);
+						}
+					}
+					logger.info("**********df_ims_o_l任务调度结束**********");
+				} catch (Exception e) {
+					logger.info("df_ims_o_l任务调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+
 }
