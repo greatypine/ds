@@ -797,12 +797,17 @@ public class MassOrderScheduleTask {
 										if(imsTbsGds!=null) {
 											BigDecimal ims_cost_price = imsTbsGds.getCost_price().multiply(new BigDecimal(orderItem.getQuantity()));
 											sum_cost_price = sum_cost_price.add(ims_cost_price);
+										}else {
+											sum_cost_price =null;
+											break;
 										}
 									}
 								}
-								dfMassOrder.setCost_price(sum_cost_price);
-								order_profit = calProfitByPriceOfIms(dfMassOrder);
-								dfMassOrder.setOrder_profit(order_profit);
+								if(sum_cost_price!=null) {
+									dfMassOrder.setCost_price(sum_cost_price);
+									order_profit = calProfitByPriceOfIms(dfMassOrder);
+									dfMassOrder.setOrder_profit(order_profit);
+								}
 								
 							}else {//不在进销存系统，计算在国安平台中的总成本
 								//2、根据订单号查询对应的总成本价
