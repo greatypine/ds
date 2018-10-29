@@ -22,5 +22,9 @@
         <typeAlias alias="ImsTbsdgdsEntity" type="com.guoanshequ.dc.das.model.ImsTbsdgds"/>
         <typeAlias alias="OrderItemEntity" type="com.guoanshequ.dc.das.model.OrderItem"/>
         <typeAlias alias="ContractEntity" type="com.guoanshequ.dc.das.model.Contract"/>
+        <typeAlias alias="ImsTbOCountEntity" type="com.guoanshequ.dc.das.model.ImsTbOCount"/>
+        <typeAlias alias="ImsTbOCountgEntity" type="com.guoanshequ.dc.das.model.ImsTbOCountg"/>
+        <typeAlias alias="ImsTbOlEntity" type="com.guoanshequ.dc.das.model.ImsTbOl"/>
+        <typeAlias alias="ImsTbStoreEntity" type="com.guoanshequ.dc.das.model.ImsTbStore"/>
     </typeAliases>
 </configuration>

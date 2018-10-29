@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.DfImsMapper">
+
+	<resultMap type="ImsTbOCountEntity" id="countResultMap">
+		<id property="c_id" column="C_ID" />
+		<result property="c_adno" column="C_ADNO" />
+		<result property="c_mk_dt" column="C_MK_DT" />
+		<result property="c_mk_userno" column="C_MK_USERNO" />
+		<result property="c_count_dt" column="C_COUNT_DT" />
+		<result property="c_count_userno" column="C_COUNT_USERNO" />
+		<result property="c_input_dt" column="C_INPUT_DT" />
+		<result property="c_input_userno" column="C_INPUT_USERNO" />
+		<result property="c_au_dt" column="C_AU_DT" />
+		<result property="c_au_userno" column="C_AU_USERNO" />
+		<result property="c_charge_userno" column="C_CHARGE_USERNO" />
+		<result property="c_status" column="C_STATUS" />
+		<result property="c_print_status" column="C_PRINT_STATUS" />
+		<result property="c_note" column="C_NOTE" />
+		<result property="c_site" column="C_SITE" />
+		<result property="c_approve_status" column="C_APPROVE_STATUS" />
+		<result property="c_approve_dt" column="C_APPROVE_DT" />
+		<result property="c_store_id" column="C_STORE_ID" />
+		<result property="c_mk_store_id" column="C_MK_STORE_ID" />
+		<result property="c_source_id" column="C_SOURCE_ID" />
+		<result property="c_update_dt" column="C_UPDATE_DT" />
+		<result property="c_gds_type" column="C_GDS_TYPE" />
+		<result property="c_opt_type" column="C_OPT_TYPE" />
+		<result property="c_count_type" column="C_COUNT_TYPE" />
+	</resultMap>
+
+
+	<resultMap type="ImsTbOCountgEntity" id="countgResultMap">
+		<id property="c_id" column="C_ID" />
+		<result property="c_gcode" column="C_GCODE" />
+		<result property="c_subcode" column="C_SUBCODE" />
+		<result property="c_unit" column="C_UNIT" />
+		<result property="c_pt_cost" column="C_PT_COST" />
+		<result property="c_price" column="C_PRICE" />
+		<result property="c_tax_rate" column="C_TAX_RATE" />
+		<result property="c_orig_number" column="C_ORIG_NUMBER" />
+		<result property="c_number" column="C_NUMBER" />
+		<result property="c_adno" column="C_ADNO" />
+		<result property="c_countg_note" column="C_COUNTG_NOTE" />
+		<result property="c_orig_at_cost" column="C_ORIG_AT_COST" />
+	</resultMap>
+
+	<resultMap type="ImsTbOlEntity" id="tbolResultMap">
+		<id property="c_id" column="C_ID" />
+		<result property="c_source_id" column="C_SOURCE_ID" />
+		<result property="c_store_id" column="C_STORE_ID" />
+		<result property="c_adno" column="C_ADNO" />
+		<result property="c_lost_site" column="C_LOST_SITE" />
+		<result property="c_type" column="C_TYPE" />
+		<result property="c_mk_dt" column="C_MK_DT" />
+		<result property="c_mk_userno" column="C_MK_USERNO" />
+		<result property="c_au_dt" column="C_AU_DT" />
+		<result property="c_au_userno" column="C_AU_USERNO" />
+		<result property="c_apply_userno" column="C_APPLY_USERNO" />
+		<result property="c_charge_userno" column="C_CHARGE_USERNO" />
+		<result property="c_status" column="C_STATUS" />
+		<result property="c_print_status" column="C_PRINT_STATUS" />
+		<result property="c_note" column="C_NOTE" />
+		<result property="c_approve_status" column="C_APPROVE_STATUS" />
+		<result property="c_approve_dt" column="C_APPROVE_DT" />
+		<result property="c_at_amount_l" column="C_AT_AMOUNT_L" />
+		<result property="c_approve_detail" column="C_APPROVE_DETAIL" />
+	</resultMap>
+
+	<resultMap type="ImsTbStoreEntity" id="storeResultMap">
+		<id property="c_id" column="C_ID" />
+		<result property="c_pycode" column="C_PYCODE" />
+		<result property="c_type" column="c_type" />
+		<result property="c_ownership_type" column="c_ownership_type" />
+		<result property="c_template_store" column="c_template_store" />
+		<result property="c_status" column="c_status" />
+		<result property="c_name" column="c_name" />
+		<result property="c_sname" column="c_sname" />
+		<result property="c_city" column="c_city" />
+		<result property="c_address" column="c_address" />
+		<result property="c_postcode" column="c_postcode" />
+		<result property="c_tele" column="c_tele" />
+		<result property="c_fax" column="c_fax" />
+		<result property="c_region" column="c_region" />
+		<result property="c_ip" column="c_ip" />
+		<result property="c_server_name" column="c_server_name" />
+		<result property="c_net" column="c_net" />
+		<result property="c_level" column="c_level" />
+		<result property="c_price_level" column="c_price_level" />
+		<result property="c_area" column="c_area" />
+		<result property="c_employee_number" column="c_employee_number" />
+		<result property="c_stock_enlarge" column="c_stock_enlarge" />
+		<result property="c_sale_enlarge" column="c_sale_enlarge" />
+		<result property="c_open_date" column="c_open_date" />
+		<result property="c_intro" column="c_intro" />
+		<result property="c_web_page" column="c_web_page" />
+		<result property="c_manager_userno" column="c_manager_userno" />
+		<result property="c_manager_mobile" column="c_manager_mobile" />
+		<result property="c_modified_dt" column="c_modified_dt" />
+		<result property="c_modified_userno" column="c_modified_userno" />
+		<result property="c_reg_code" column="c_reg_code" />
+		<result property="c_settle_region" column="c_settle_region" />
+		<result property="c_charger_post" column="c_charger_post" />
+		<result property="c_booking_order_limit" column="c_booking_order_limit" />
+		<result property="c_tax_regno" column="c_tax_regno" />
+		<result property="c_account_bank" column="c_account_bank" />
+		<result property="c_account_name" column="c_account_name" />
+		<result property="c_account_no" column="c_account_no" />
+		<result property="c_class" column="c_class" />
+		<result property="c_reg_code2" column="c_reg_code2" />
+		<result property="c_run_store_id" column="c_run_store_id" />
+		<result property="c_mprice_type" column="c_mprice_type" />
+		<result property="c_store_guid" column="c_store_guid" />
+		<result property="c_booking_user" column="c_booking_user" />
+		<result property="c_booking_tele" column="c_booking_tele" />
+		<result property="c_mother_store_id" column="c_mother_store_id" />
+		<result property="c_map_store_id" column="c_map_store_id" />
+		<result property="c_owner" column="c_owner" />
+		<result property="c_store_level" column="c_store_level" />
+		<result property="c_counter_len" column="c_counter_len" />
+		<result property="c_id_level" column="c_id_level" />
+		<result property="c_reg_code_mobile" column="c_reg_code_mobile" />
+		<result property="c_owner_name" column="c_owner_name" />
+		<result property="c_prefix_Code" column="c_prefix_Code" />
+		<result property="c_email" column="c_email" />
+		<result property="c_close_dt" column="c_close_dt" />
+		<result property="c_property" column="c_property" />
+		<result property="c_cost_center_no" column="c_cost_center_no" />
+		<result property="c_organize_no" column="c_organize_no" />
+		<result property="c_reg_code_pda" column="c_reg_code_pda" />
+		<result property="c_store_extend" column="c_store_extend" />
+		<result property="c_reg_datacatch" column="c_reg_datacatch" />
+		<result property="c_store_route_no" column="c_store_route_no" />
+		<result property="c_extend_filed" column="c_extend_filed" />
+		<result property="c_tree_guid" column="c_tree_guid" />
+		<result property="c_par_guid" column="c_par_guid" />
+		<result property="c_province" column="c_province" />
+	</resultMap>
+
+	<!-- 根据c_id查询是否存在 -->
+	<select id="queryImsTbOCountIsExist" parameterType="java.util.Map" resultMap="countResultMap">
+		<![CDATA[
+		 	select * from df_ims_tb_o_count dmod where c_id = #{c_id}
+		]]>
+	</select>
+
+    <!-- 操作df_ims_tb_o_count -->
+	<insert id="addDfImsTbOCount" parameterType="ImsTbOCountEntity" >
+        insert ignore into df_ims_tb_o_count(c_id ,c_adno ,c_mk_dt ,c_mk_userno ,c_count_dt ,c_count_userno ,c_input_dt ,c_input_userno ,c_au_dt ,c_au_userno ,c_charge_userno ,
+        c_status ,c_print_status ,c_note ,c_site ,c_approve_status ,c_approve_dt ,c_store_id ,c_mk_store_id ,c_source_id ,c_update_dt ,c_gds_type ,c_opt_type ,c_count_type) values
+				(#{c_id } , #{c_adno } , #{c_mk_dt } , #{c_mk_userno } , #{c_count_dt } , #{c_count_userno } , #{c_input_dt } , #{c_input_userno } , #{c_au_dt } , #{c_au_userno } ,
+				#{c_charge_userno } , #{c_status } , #{c_print_status } , #{c_note } , #{c_site } , #{c_approve_status } , #{c_approve_dt } , #{c_store_id } , #{c_mk_store_id } ,
+				#{c_source_id } , #{c_update_dt } , #{c_gds_type } , #{c_opt_type } , #{c_count_type})
+	</insert>
+
+	<!-- 删除df_ims_tb_o_count信息 -->
+	<update id="deleteDfImsTbOCount" parameterType="java.util.Map">
+		<![CDATA[
+			delete from df_ims_tb_o_count where c_id = #{c_id}
+		]]>
+	</update>
+
+	<!-- 操作df_ims_tb_o_countg -->
+	<insert id="addDfImsTbOCountg" parameterType="java.util.List" >
+		insert ignore into df_ims_tb_o_countg (c_id ,c_gcode ,c_subcode ,c_unit ,c_pt_cost ,c_price ,c_tax_rate ,c_orig_number ,c_number ,c_adno ,c_countg_note ,c_orig_at_cost ) values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.c_id ,jdbcType=VARCHAR}, #{item.c_gcode ,jdbcType=VARCHAR}, #{item.c_subcode ,jdbcType=VARCHAR}, #{item.c_unit ,jdbcType=VARCHAR},
+			#{item.c_pt_cost ,jdbcType=VARCHAR}, #{item.c_price ,jdbcType=VARCHAR}, #{item.c_tax_rate ,jdbcType=VARCHAR}, #{item.c_orig_number ,jdbcType=VARCHAR},
+			#{item.c_number ,jdbcType=VARCHAR}, #{item.c_adno ,jdbcType=VARCHAR}, #{item.c_countg_note ,jdbcType=VARCHAR}, #{item.c_orig_at_cost,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<!-- 删除df_ims_tb_o_countg信息 -->
+	<update id="deleteDfImsTbOCountg" parameterType="java.util.Map">
+		<![CDATA[
+			delete from df_ims_tb_o_countg where c_id = #{c_id}
+		]]>
+	</update>
+
+	<!-- 根据c_id查询df_ims_tb_o_l是否存在 -->
+	<select id="queryImsTbOlIsExist" parameterType="java.util.Map" resultMap="tbolResultMap">
+		<![CDATA[
+		 	select * from df_ims_tb_o_l dmod where c_id = #{c_id}
+		]]>
+	</select>
+
+	<!-- 操作df_ims_tb_o_l -->
+	<insert id="addDfImsTbOl" parameterType="ImsTbOlEntity" >
+        insert ignore into df_ims_tb_o_l(c_id ,c_source_id ,c_store_id ,c_adno ,c_lost_site ,c_type ,c_mk_dt ,c_mk_userno ,c_au_dt ,c_au_userno ,c_apply_userno ,c_charge_userno ,
+        c_status ,c_print_status ,c_note ,c_approve_status ,c_approve_dt ,c_at_amount_l ,c_approve_detail) values
+				(#{c_id } , #{c_source_id } , #{c_store_id } , #{c_adno } , #{c_lost_site } , #{c_type } , #{c_mk_dt } , #{c_mk_userno } , #{c_au_dt } , #{c_au_userno } ,
+				#{c_apply_userno } , #{c_charge_userno } , #{c_status } , #{c_print_status } , #{c_note } , #{c_approve_status } , #{c_approve_dt } , #{c_at_amount_l } , #{c_approve_detail})
+	</insert>
+
+	<!-- 删除df_ims_tb_o_l信息 -->
+	<update id="deleteDfImsTbOl" parameterType="java.util.Map">
+		<![CDATA[
+			delete from df_ims_tb_o_l where c_id = #{c_id}
+		]]>
+	</update>
+
+	<!-- 根据c_store_id查询是否存在 -->
+	<select id="queryImsTbStoreIsExist" parameterType="java.util.Map" resultMap="storeResultMap">
+		<![CDATA[
+		 	select * from df_ims_tb_store dmod where c_id = #{c_store_id}
+		]]>
+	</select>
+
+	<!-- 删除df_ims_tb_store信息 -->
+	<update id="deleteDfImsTbStore" parameterType="java.util.Map">
+		<![CDATA[
+			delete from df_ims_tb_store where c_id = #{c_store_id}
+		]]>
+	</update>
+
+	<!-- 操作df_ims_tb_store -->
+	<insert id="addDfImsTbStore" parameterType="ImsTbStoreEntity" >
+        insert ignore into df_ims_tb_store(c_id ,c_pycode ,c_type ,c_ownership_type ,c_template_store ,c_status ,c_name ,c_sname ,c_city ,c_address ,c_postcode ,c_tele ,c_fax ,c_region ,c_ip ,
+        c_server_name ,c_net ,c_level ,c_price_level ,c_area ,c_employee_number ,c_stock_enlarge ,c_sale_enlarge ,c_open_date ,c_intro ,c_web_page ,c_manager_userno ,c_manager_mobile ,c_modified_dt ,
+        c_modified_userno ,c_reg_code ,c_settle_region ,c_charger_post ,c_booking_order_limit ,c_tax_regno ,c_account_bank ,c_account_name ,c_account_no ,c_class ,c_reg_code2 ,c_run_store_id ,c_mprice_type ,
+        c_store_guid ,c_booking_user ,c_booking_tele ,c_mother_store_id ,c_map_store_id ,c_owner ,c_store_level ,c_counter_len ,c_id_level ,c_reg_code_mobile ,c_owner_name ,c_prefix_Code ,c_email ,c_close_dt ,
+        c_property ,c_cost_center_no ,c_organize_no ,c_reg_code_pda ,c_store_extend ,c_reg_datacatch ,c_store_route_no ,c_extend_filed ,c_tree_guid ,c_par_guid ,c_province) values
+				(  #{c_id } , #{c_pycode } , #{c_type } , #{c_ownership_type } , #{c_template_store } , #{c_status } , #{c_name } , #{c_sname } , #{c_city } , #{c_address } , #{c_postcode } ,
+				#{c_tele } , #{c_fax } , #{c_region } , #{c_ip } , #{c_server_name } , #{c_net } , #{c_level } , #{c_price_level } , #{c_area } , #{c_employee_number } , #{c_stock_enlarge } ,
+				#{c_sale_enlarge } , #{c_open_date } , #{c_intro } , #{c_web_page } , #{c_manager_userno } , #{c_manager_mobile } , #{c_modified_dt } , #{c_modified_userno } , #{c_reg_code } ,
+				#{c_settle_region } , #{c_charger_post } , #{c_booking_order_limit } , #{c_tax_regno } , #{c_account_bank } , #{c_account_name } , #{c_account_no } , #{c_class } , #{c_reg_code2 } ,
+				#{c_run_store_id } , #{c_mprice_type } , #{c_store_guid } , #{c_booking_user } , #{c_booking_tele } , #{c_mother_store_id } , #{c_map_store_id } , #{c_owner } , #{c_store_level } ,
+				#{c_counter_len } , #{c_id_level } , #{c_reg_code_mobile } , #{c_owner_name } , #{c_prefix_Code } , #{c_email } , #{c_close_dt } , #{c_property } , #{c_cost_center_no } , #{c_organize_no } ,
+				#{c_reg_code_pda } , #{c_store_extend } , #{c_reg_datacatch } , #{c_store_route_no } , #{c_extend_filed } , #{c_tree_guid } , #{c_par_guid } , #{c_province})
+	</insert>
+
+</mapper>
