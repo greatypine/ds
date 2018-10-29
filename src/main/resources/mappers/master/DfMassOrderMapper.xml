@@ -602,7 +602,7 @@
 		<![CDATA[
 			 select * from df_mass_order_monthly 
 			 where sign_time >= '2018-10-28 00:00:00' and sign_time <= '2018-10-29 00:00:00'
-			 and cost_price =0 and eshop_joint_ims ='yes';
+			 and cost_price is null and eshop_joint_ims ='yes';
 		]]>
   	</select>
   	
