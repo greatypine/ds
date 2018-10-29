@@ -17,4 +17,6 @@ public interface StoreNumberMapper {
 	List<String> queryStoreNoes();
 	
 	Integer queryStoreSum(Map<String, String> paraMap);
+	
+	Integer queryStoreNumberById(String store_id); 
 }

@@ -161,7 +161,10 @@
 		  taddr.name AS addr_name,
 		  taddr.mobilephone AS addr_mobilephone,
 		  taddr.address AS  addr_address,
-		  te.business_type AS business_type
+		  te.business_type AS business_type,
+		  te.joint_ims AS eshop_joint_ims,
+		  tcoutype.proration_platform AS cct_proration_platform,
+		  tcoutype.proration_seller AS cct_proration_seller
 		FROM
 			t_order tor
 		LEFT JOIN t_store ts ON  (tor.store_id = ts.id)
@@ -178,6 +181,8 @@
 		LEFT JOIN t_order_receipts trp ON (trp.eshop_id = te.id and trp.order_group_id = tor.group_id and trp.`status` =0 and trp.type='order' and trp.pay_status= 'payed' and trp.pay_platform ='prepay')
 		LEFT JOIN t_employee tepy ON (tepy.id = tor.employee_id)
 		LEFT JOIN t_order_address taddr ON (tor.order_address_id = taddr.id)
+		LEFT JOIN t_card_coupon tcou on (tog.card_coupon_id = tcou.id)
+		LEFT JOIN t_card_coupontype tcoutype on (tcou.type_id = tcoutype.id)		
 	]]>
 	<where>
 		<if test="maxSignedTime != null and '' != maxSignedTime">
@@ -296,6 +301,24 @@
   <select id="queryCooperativeEshop" resultType="java.util.Map">
   	<![CDATA[
   		select id as eshop_id,'E' as tag from t_eshop e where e.super_member = 'yes' 
+  	]]>
+  </select>
+  
+  <!-- 根据订单Id查询对应的订单明细 -->
+  <select id="queryOrderItemByOrderId" resultType="OrderItemEntity" parameterType="java.util.Map">
+  	<![CDATA[
+  		select 
+  			toi.id,
+	  		toi.order_id,
+	  		toi.eshop_pro_id,
+	  		toi.unit_price,
+	  		toi.quantity,
+	  		toi.cost_price,
+	  		tipro.code as product_code 
+  		from t_order_item toi
+		left join t_product tp on (toi.eshop_pro_id = tp.id)
+		left join t_ims_product tipro on (tp.ims_master_id = tipro.id)
+  		where order_id =#{order_id}
   	]]>
   </select>
   

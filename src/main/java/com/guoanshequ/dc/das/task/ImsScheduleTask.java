@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,7 +31,11 @@ public class ImsScheduleTask {
 
 	private static final Logger logger = LogManager.getLogger(ImsScheduleTask.class);
 
-	// @Scheduled(cron = "0/5 * * * * ? ")
+	/**
+	 * 同步进销存系统tbs_d_gds商品日结算表前一天数据
+	 * 调度规则：每天凌晨4点01分
+	 */	
+	@Scheduled(cron ="0 01 4 * * ?")
 	public void TbsdGdsTask() {
 		new Thread() {
 			public void run() {

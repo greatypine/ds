@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.guoanshequ.dc.das.dao.slave.OrderMapper;
+import com.guoanshequ.dc.das.model.Contract;
 
 import java.util.Map;
 
@@ -43,12 +44,12 @@ public class OrderService {
     	return orderDao.queryOrderRebateCouponById(paraMap);
     }
     
-    public Map<String, Object> queryOrderCostPriceById(Map<String, String> paraMap){
+    public String queryOrderCostPriceById(Map<String, String> paraMap){
     	
     	return orderDao.queryOrderCostPriceById(paraMap);
     }
     
-    public Map<String, Object> queryOrderContractInfoById(String order_id){
+    public Contract queryOrderContractInfoById(String order_id){
     	
     	return orderDao.queryOrderContractInfoById(order_id);
     }    

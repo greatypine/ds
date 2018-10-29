@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.guoanshequ.dc.das.datasource.DataSource;
+import com.guoanshequ.dc.das.model.Contract;
 
 @Repository
 @DataSource("slave")
@@ -18,7 +19,7 @@ public interface OrderMapper{
 	
 	Map<String, Object> queryOrderRebateCouponById(Map<String, String> paraMap);
 	
-	Map<String, Object> queryOrderCostPriceById(Map<String, String> paraMap);
+	String queryOrderCostPriceById(Map<String, String> paraMap);
 	
-	Map<String, Object> queryOrderContractInfoById(String order_id);
+	Contract queryOrderContractInfoById(String order_id);
 }

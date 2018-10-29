@@ -40,10 +40,9 @@
   </select>
   
   <!--查询指定订单对应的总成本价 -->
-  <select id="queryOrderCostPriceById" parameterType="java.util.Map" resultType="java.util.Map">
+  <select id="queryOrderCostPriceById" parameterType="java.util.Map" resultType="java.lang.String">
   	<![CDATA[
 		select 
-			tor.id,
 			ifnull(sum(toi.quantity * toi.cost_price),0) as cost_price
 		from t_order tor 
 		join t_order_item toi on (tor.id = toi.order_id)
@@ -53,7 +52,7 @@
   </select>
   
   <!--根据指定订单所在E店，且订单签收日期在E店对应合同start_date,end_date期间的合同Id,及合同 -->
-   <select id="queryOrderContractInfoById" parameterType="String" resultType="java.util.Map">
+   <select id="queryOrderContractInfoById" parameterType="String" resultType="ContractEntity">
   	<![CDATA[
 		select 
 			tor.id as order_id,

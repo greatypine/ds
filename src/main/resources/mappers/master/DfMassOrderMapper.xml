@@ -95,14 +95,14 @@
         		status, version, create_user, create_time, update_user,	 update_time, create_user_id, update_user_id, order_sn_reserve, store_remark,  score,  groupon_instance_id, 
         		normal_store_id, third_part, sign_time, info_village_code,area_code,info_employee_a_no,pubseas_label,loan_label,store_name,store_code,store_city_code,store_white,store_province_code,store_status,
         		customer_name,customer_mobile_phone,order_quantity,eshop_name,eshop_white,department_id, bussiness_group_id,area_company_id, channel_id,store_city_name, company_name,channel_name,
-        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type ) values
+        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type,eshop_joint_ims,cct_proration_platform,cct_proration_seller ) values
 				(#{id}, #{order_sn}, #{group_id}, #{order_type}, #{business_model_id}, #{customer_id}, #{order_address_id}, #{store_id}, #{eshop_id}, #{order_status}, 
 				#{order_source} , #{invoice_status} , #{buyer_remark} , #{seller_remark} ,#{employee_remark}, #{abnormal_type}, #{abnormal_remark},  #{delivery_type}, #{trading_price}, #{payable_price}, 
 				#{is_split}, #{employee_id} , #{employee_phone}, #{employee_name}, #{appointment_start_time},  #{appointment_end_time} , #{eshop_combo_pro_id} , #{expiry_date}, #{combo_price} , #{total_quantity} ,  
 				#{status}, #{version} , #{create_user}, #{create_time}, #{update_user}, #{update_time}, #{create_user_id}, #{update_user_id}, #{order_sn_reserve}, #{store_remark},  #{score},  #{groupon_instance_id}, 
 				#{normal_store_id}, #{third_part} , #{sign_time}, #{info_village_code},#{area_code},#{info_employee_a_no},#{pubseas_label},#{loan_label}, #{store_name}, #{store_code}, #{store_city_code},#{store_white},#{store_province_code},#{store_status},
 				#{customer_name}, #{customer_mobile_phone}, #{order_quantity}, #{eshop_name}, #{eshop_white}, #{department_id}, #{bussiness_group_id},#{area_company_id} , #{channel_id}, #{store_city_name}, #{company_name}, #{channel_name},
-				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type})
+				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type},#{eshop_joint_ims},#{cct_proration_platform},#{cct_proration_seller})
 	</insert> 
 	
 	<!-- 操作Monthly -->
@@ -113,14 +113,14 @@
         		status, version, create_user, create_time, update_user,	 update_time, create_user_id, update_user_id, order_sn_reserve, store_remark,  score,  groupon_instance_id, 
         		normal_store_id, third_part, sign_time, info_village_code,area_code,info_employee_a_no,pubseas_label,loan_label,store_name,store_code,store_city_code,store_white,store_province_code,store_status,
         		customer_name,customer_mobile_phone,order_quantity,eshop_name,eshop_white,department_id, bussiness_group_id,area_company_id, channel_id,store_city_name, company_name,channel_name,
-        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type ) values
+        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type,eshop_joint_ims,cct_proration_platform,cct_proration_seller ) values
 		       (#{id}, #{order_sn}, #{group_id}, #{order_type}, #{business_model_id}, #{customer_id}, #{order_address_id}, #{store_id}, #{eshop_id}, #{order_status}, 
 				#{order_source} , #{invoice_status} , #{buyer_remark} , #{seller_remark} ,#{employee_remark}, #{abnormal_type}, #{abnormal_remark},  #{delivery_type}, #{trading_price}, #{payable_price}, 
 				#{is_split}, #{employee_id} , #{employee_phone}, #{employee_name}, #{appointment_start_time},  #{appointment_end_time} , #{eshop_combo_pro_id} , #{expiry_date}, #{combo_price} , #{total_quantity} ,  
 				#{status}, #{version} , #{create_user}, #{create_time}, #{update_user}, #{update_time}, #{create_user_id}, #{update_user_id}, #{order_sn_reserve}, #{store_remark},  #{score},  #{groupon_instance_id}, 
 				#{normal_store_id}, #{third_part} , #{sign_time}, #{info_village_code},#{area_code},#{info_employee_a_no},#{pubseas_label},#{loan_label}, #{store_name}, #{store_code}, #{store_city_code},#{store_white},#{store_province_code},#{store_status},
 				#{customer_name}, #{customer_mobile_phone}, #{order_quantity}, #{eshop_name}, #{eshop_white}, #{department_id}, #{bussiness_group_id},#{area_company_id} , #{channel_id}, #{store_city_name}, #{company_name}, #{channel_name},
-				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type})
+				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type},#{eshop_joint_ims},#{cct_proration_platform},#{cct_proration_seller})
 	</insert>
 	
 	<!-- 操作Total -->
@@ -131,14 +131,14 @@
         		status, version, create_user, create_time, update_user,	 update_time, create_user_id, update_user_id, order_sn_reserve, store_remark,  score,  groupon_instance_id, 
         		normal_store_id, third_part, sign_time, info_village_code,area_code,info_employee_a_no,pubseas_label,loan_label,store_name,store_code,store_city_code,store_white,store_province_code,store_status,
         		customer_name,customer_mobile_phone,order_quantity,eshop_name,eshop_white,department_id, bussiness_group_id,area_company_id, channel_id,store_city_name, company_name,channel_name,
-        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type ) values
+        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type,eshop_joint_ims,cct_proration_platform,cct_proration_seller ) values
 		       (#{id}, #{order_sn}, #{group_id}, #{order_type}, #{business_model_id}, #{customer_id}, #{order_address_id}, #{store_id}, #{eshop_id}, #{order_status}, 
 				#{order_source} , #{invoice_status} , #{buyer_remark} , #{seller_remark} ,#{employee_remark}, #{abnormal_type}, #{abnormal_remark},  #{delivery_type}, #{trading_price}, #{payable_price}, 
 				#{is_split}, #{employee_id} , #{employee_phone}, #{employee_name}, #{appointment_start_time},  #{appointment_end_time} , #{eshop_combo_pro_id} , #{expiry_date}, #{combo_price} , #{total_quantity} ,  
 				#{status}, #{version} , #{create_user}, #{create_time}, #{update_user}, #{update_time}, #{create_user_id}, #{update_user_id}, #{order_sn_reserve}, #{store_remark},  #{score},  #{groupon_instance_id}, 
 				#{normal_store_id}, #{third_part} , #{sign_time}, #{info_village_code},#{area_code},#{info_employee_a_no}, #{pubseas_label},#{loan_label},#{store_name}, #{store_code}, #{store_city_code},#{store_white},#{store_province_code},#{store_status},
 				#{customer_name}, #{customer_mobile_phone}, #{order_quantity}, #{eshop_name}, #{eshop_white}, #{department_id}, #{bussiness_group_id},#{area_company_id} , #{channel_id}, #{store_city_name}, #{company_name}, #{channel_name},
-				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type})
+				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type},#{eshop_joint_ims},#{cct_proration_platform},#{cct_proration_seller})
 	</insert>  
 	
 	<!-- 更新Daily中需要计算的字段信息 -->
@@ -597,43 +597,81 @@
   	</update>
   	 
 
-	<!-- 查询MassOrder订单列表 -->
+	<!-- 查询指定日期内需要计算利润的订单，积分订单不计算 -->
 	<select id="queryMassOrderListByDate" parameterType="java.util.Map" resultType="MassOrderEntity">
 		<![CDATA[
-			 select id,order_sn,trading_price,total_quantity,gmv_price from df_mass_order_monthly 
-			 where sign_time >= #{begintime} and sign_time <= #{endtime} and trading_price is not null ;
+			 select * from df_mass_order_monthly 
+			 where sign_time >= '2018-10-28 00:00:00' and sign_time <= '2018-10-29 00:00:00'
+			 and cost_price is null and eshop_joint_ims ='yes';
 		]]>
   	</select>
   	
-  	<!-- 更新order_daily表中优惠券、返利、成本、利润、合同 -->
+  	<!-- 更新order_daily表中成本、利润、合同 -->
   	<update id="updateOrderProfitOfDaily" parameterType="MassOrderEntity">
   		<![CDATA[
 			update df_mass_order_daily
-			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon},
-				cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
-				contract_method=#{contract_method}
+			set cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
+				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price}
 			where id =#{id} 
 		]]>
   	</update>
-  	<!-- 更新order_daily表中优惠券、返利、成本、利润、合同 -->
+  	<!-- 更新order_monthly表中成本、利润、合同 -->
   	<update id="updateOrderProfitOfMonthly" parameterType="MassOrderEntity">
   		<![CDATA[
 			update df_mass_order_monthly
-			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon},
-				cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
-				contract_method=#{contract_method}
+			set cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
+				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price}
 			where id =#{id} 
 		]]>
   	</update>
-  	<!-- 更新order_daily表中优惠券、返利、成本、利润、合同 -->
+  	<!-- 更新order_total表中成本、利润、合同 -->
   	<update id="updateOrderProfitOfTotal" parameterType="MassOrderEntity">
   		<![CDATA[
 			update df_mass_order_total 
-			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon},
-				cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
-				contract_method=#{contract_method}
+			set cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
+				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price}
 			where id =#{id}
 		]]>
   	</update>
+  	
+	<!-- 根据商品编码code和当天日期,查询同步过来的商品日销售表中商品成本价 -->
+	<select id="queryCostPriceBySigndateCode" parameterType="java.util.Map" resultType="ImsTbsdgdsEntity">
+		<![CDATA[
+			 select * from df_ims_tbs_d_gds_daily where c_gcode =#{product_code} and date(c_dt) =#{sign_date} and c_map_store_id =#{store_number} 
+			  limit 1 ;
+		]]>
+  	</select>
+  	
+  	<!-- 是否1、2、3组中售卡E店 -->
+	<select id="queryIsSaleCardEshop" parameterType="java.lang.String" resultType="java.lang.Integer">
+		<![CDATA[
+			 select count(1) from df_card_eshop_profit where eshop_group in ('1','2','3') and card_type = '1' and eshop_id= #{eshop_id} ;
+		]]>
+  	</select>
+
+  	<!-- 更新order_daily表中优惠券、返利 -->
+  	<update id="updateOrderCouponOfDaily" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_daily
+			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon}
+			where id =#{id} 
+		]]>
+  	</update>
+  	<!-- 更新order_monthly表中优惠券、返利 -->
+  	<update id="updateOrderCouponOfMonthly" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_monthly
+			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon}
+			where id =#{id} 
+		]]>
+  	</update>
+  	<!-- 更新order_total表中优惠券、返利 -->
+  	<update id="updateOrderCouponOfTotal" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_total 
+			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon}
+			where id =#{id}
+		]]>
+  	</update>  	
   
 </mapper>

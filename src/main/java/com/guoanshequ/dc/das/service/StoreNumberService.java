@@ -47,5 +47,10 @@ public class StoreNumberService {
     public Integer queryStoreSum(Map<String, String> paraMap){
     	return storeNumberDao.queryStoreSum(paraMap);
     }
-    
+    /**
+     * 通过id查询平台对应的number
+     */
+    public Integer queryStoreNumberById(String store_id) {
+    	return storeNumberDao.queryStoreNumberById(store_id);
+    }
 }

@@ -2,6 +2,8 @@ package com.guoanshequ.dc.das.dao.slave;
 
 import com.guoanshequ.dc.das.datasource.DataSource;
 import com.guoanshequ.dc.das.model.DfMassOrder;
+import com.guoanshequ.dc.das.model.OrderItem;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +28,6 @@ public interface MassOrderMapper {
 	List<Map<String, String>> queryKSeshopByName();
 	
 	List<Map<String, String>> queryCooperativeEshop();
+	
+	List<OrderItem> queryOrderItemByOrderId(Map<String, String> paraMap);
 }
