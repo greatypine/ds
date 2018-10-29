@@ -740,13 +740,15 @@ public class MassOrderScheduleTask {
 				try{
 					logger.info("**********计算每个订单所对应的成本、利润信息任务调度开始**********");
 					Integer updatenum =0;
+					Integer preUpdatenum =0;
 					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(12);
 					String isrun = taskMap.get("isrun");
 					String begintime = null;
 					String endtime = null;
+					String pre_begintime = null;
+					String pre_endtime = null;
 					if("ON".equals(isrun)){
 					String runtype = taskMap.get("runtype");
-					//获取上次调度时的最大签收时间开始时间与结束时间
 					if("MANUAL".equals(runtype)){
 						begintime = taskMap.get("begintime");
 						endtime = taskMap.get("endtime");
@@ -754,11 +756,69 @@ public class MassOrderScheduleTask {
 						begintime = DateUtils.getPreDateTime(new Date());
 						endtime = DateUtils.getCurDateTime(new Date());
 					}	
+					pre_begintime = DateUtils.getPreNDateTimeByAssign(DateUtils.StringToDateTime(begintime),1);
+					pre_endtime = DateUtils.getPreNDateTimeByAssign(DateUtils.StringToDateTime(endtime),1);
+					
+					//给后台接口构建参数
+					Map<String, String> preParaMap=new HashMap<String, String>();
+					preParaMap.put("pre_begintime", pre_begintime);
+					preParaMap.put("pre_endtime", pre_endtime);
+					//处理前二天
+					List<DfMassOrder> massOrderIsnullList = dfMassOrderService.queryMassOrderIsnullListByPreDate(preParaMap);
+					if(!massOrderIsnullList.isEmpty()) {
+						for (DfMassOrder preDfMassOrder : massOrderIsnullList) {
+							String order_id = preDfMassOrder.getId();
+							Date sign_time = preDfMassOrder.getSign_time();
+							String sign_date = DateUtils.getStrDate(sign_time);
+							String store_id = preDfMassOrder.getStore_id();
+							
+							preParaMap.put("order_id", order_id);
+							preParaMap.put("sign_date", sign_date);
+							
+							//1、关联进销存，计算订单在进销存中的总成本,自营商品无论是否有合同，一律从价
+							BigDecimal sum_cost_price =new BigDecimal("0.00");
+							BigDecimal order_profit = new BigDecimal("0.00");
+							//获取订单明细
+							Integer store_number = storeNumberService.queryStoreNumberById(store_id);
+							List<OrderItem> orderItemList = massOrderService.queryOrderItemByOrderId(preParaMap);
+							for (OrderItem orderItem : orderItemList) {
+								ImsTbsdgds imsTbsGds ;
+								String product_code = orderItem.getProduct_code();
+								 
+								//存在商品码，则根据商品码和签收日期，去查找商品销售表中计算相应的总成本价=成本价*数量
+								if(product_code!=null) {
+									preParaMap.put("product_code",product_code);
+									preParaMap.put("store_number",store_number.toString());
+									//根据商品code去进销存日销售表中查找对应的成本
+									imsTbsGds = dfMassOrderService.queryCostPriceBySigndateCode(preParaMap);
+									if(imsTbsGds!=null) {
+										BigDecimal ims_cost_price = imsTbsGds.getCost_price().multiply(new BigDecimal(orderItem.getQuantity()));
+										sum_cost_price = sum_cost_price.add(ims_cost_price);
+									}else {
+										sum_cost_price =null;
+										break;
+									}
+								}
+							}
+							if(sum_cost_price!=null) {
+								preDfMassOrder.setCost_price(sum_cost_price);
+								order_profit = calProfitByPriceOfIms(preDfMassOrder);
+								preDfMassOrder.setOrder_profit(order_profit);
+								preDfMassOrder.setOrder_tag3("1");
+							}else {
+								preDfMassOrder.setOrder_tag3("0");
+							}
+							dfMassOrderService.updateOrderProfitOfDaily(preDfMassOrder);
+							preUpdatenum += dfMassOrderService.updateOrderProfitOfMonthly(preDfMassOrder);
+							dfMassOrderService.updateOrderProfitOfTotal(preDfMassOrder);
+						}
+					}
+					
 					//给后台接口构建参数
 					Map<String, String> paraMap=new HashMap<String, String>();
 					paraMap.put("begintime", begintime);
 					paraMap.put("endtime", endtime);
-					
+					//处理前一天利润数据
 					List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByDate(paraMap);
 					if(!massOrderList.isEmpty()) {
 			    		Map<String, String> runMap = new HashMap<String,String>();
@@ -860,7 +920,7 @@ public class MassOrderScheduleTask {
 		    		doneMap.put("task_status", "DONE");
 		    		dsCronTaskService.updateTaskStatusById(doneMap);
 				}
-				logger.info("**********计算每个订单所对应的成本、利润信息数据任务调度结束,开始时间："+begintime+",结束时间："+endtime+",共更新记录数："+updatenum+"**********");
+				logger.info("**********计算每个订单所对应的成本、利润信息数据任务调度结束,开始时间："+begintime+",结束时间："+endtime+",共更新记录数："+updatenum+"**********,前两天更新数："+preUpdatenum);
 				} catch (Exception e) {
 					logger.info("计算每个订单所对应的成本、利润信息数据任务调度异常：",e.toString());
 					e.printStackTrace();

@@ -354,7 +354,7 @@ public class DateUtils {
     
     /** 
      * @param m 
-     * @return 返回指定时间的前n天的时间
+     * @return 返回指定时间的前n小时的时间
      * 功能说明：
      * 当前日期2018-01-02，前1天：2018-01-01
      */ 
@@ -366,11 +366,27 @@ public class DateUtils {
     	date=calendar.getTime(); //这个时间就是日期往后推一天的结果
         String pre_hour_begin = df.format(date);
         return pre_hour_begin;
-    }    
+    } 
+    
+    /** 
+     * @param m 
+     * @return 返回指定时间的前n天的日期
+     * 功能说明：
+     * 当前日期2018-01-02，前1天：2018-01-01
+     */ 
+    public static String getPreNDateTimeByAssign(Date date,int m) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = new GregorianCalendar();
+    	calendar.setTime(date);
+    	calendar.add(calendar.DATE,-m);//把日期往后增加一天.整数往后推,负数往前移动
+    	date=calendar.getTime(); //这个时间就是日期往后推一天的结果
+        String pre_hour_begin = df.format(date);
+        return pre_hour_begin;
+    }     
     
     public static void main(String[] args) {
     	try {
-           System.out.println(getStrDate(StringToDate("2018-09-10")));
+           System.out.println(getPreNDateTimeByAssign(StringToDateTime(getPreDateTime(new Date())),1));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

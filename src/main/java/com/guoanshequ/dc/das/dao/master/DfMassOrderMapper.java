@@ -87,6 +87,8 @@ public interface DfMassOrderMapper {
 
 	List<DfMassOrder> queryMassOrderListByDate(Map<String, String> paraMap);
 	
+	List<DfMassOrder> queryMassOrderIsnullListByPreDate(Map<String, String> paraMap);
+	
 	Integer updateOrderProfitOfDaily(DfMassOrder dfMassOrder);
 	
 	Integer updateOrderProfitOfMonthly(DfMassOrder dfMassOrder);

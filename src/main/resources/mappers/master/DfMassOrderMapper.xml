@@ -605,6 +605,15 @@
 		]]>
   	</select>
   	
+  	<!-- 查询指定日期内需要计算利润的订单，积分订单不计算 -->
+	<select id="queryMassOrderIsnullListByPreDate" parameterType="java.util.Map" resultType="MassOrderEntity">
+		<![CDATA[
+			 select * from df_mass_order_monthly 
+			 where sign_time >= #{pre_begintime} and sign_time <= #{pre_endtime} and trading_price is not null 
+			 and order_tag3='0' and eshop_joint_ims ='yes';
+		]]>
+  	</select>
+  	
   	<!-- 更新order_daily表中成本、利润、合同 -->
   	<update id="updateOrderProfitOfDaily" parameterType="MassOrderEntity">
   		<![CDATA[

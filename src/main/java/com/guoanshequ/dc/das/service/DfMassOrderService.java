@@ -202,6 +202,10 @@ public class DfMassOrderService {
 		return dfMassOrderDao.queryMassOrderListByDate(paraMap);
 	}
 	
+	public List<DfMassOrder> queryMassOrderIsnullListByPreDate(Map<String, String> paraMap) {
+		return dfMassOrderDao.queryMassOrderIsnullListByPreDate(paraMap);
+	}
+	
 	public Integer updateOrderProfitOfDaily(DfMassOrder dfMassOrder){
 		return dfMassOrderDao.updateOrderProfitOfDaily(dfMassOrder);
 	}
