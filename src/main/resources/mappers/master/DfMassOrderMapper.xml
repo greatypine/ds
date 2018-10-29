@@ -601,8 +601,7 @@
 	<select id="queryMassOrderListByDate" parameterType="java.util.Map" resultType="MassOrderEntity">
 		<![CDATA[
 			 select * from df_mass_order_monthly 
-			 where sign_time >= '2018-10-28 00:00:00' and sign_time <= '2018-10-29 00:00:00'
-			 and cost_price is null and eshop_joint_ims ='yes';
+			 where sign_time >= #{begintime} and sign_time <= #{endtime} and trading_price is not null and eshop_joint_ims ='yes' ;
 		]]>
   	</select>
   	
@@ -611,7 +610,8 @@
   		<![CDATA[
 			update df_mass_order_daily
 			set cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
-				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price}
+				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price},
+				order_tag3 =#{order_tag3}
 			where id =#{id} 
 		]]>
   	</update>
@@ -620,7 +620,8 @@
   		<![CDATA[
 			update df_mass_order_monthly
 			set cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
-				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price}
+				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price},
+				order_tag3 =#{order_tag3}
 			where id =#{id} 
 		]]>
   	</update>
@@ -629,7 +630,8 @@
   		<![CDATA[
 			update df_mass_order_total 
 			set cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
-				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price}
+				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price},
+				order_tag3 =#{order_tag3}
 			where id =#{id}
 		]]>
   	</update>

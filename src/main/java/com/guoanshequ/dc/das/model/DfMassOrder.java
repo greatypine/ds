@@ -100,6 +100,7 @@ public class DfMassOrder {
 	private Integer cct_proration_seller;
 	private BigDecimal contract_percent;
 	private BigDecimal contract_price;
+	private String order_tag3;
 	
 	
 	public enum PubseasLabel{
