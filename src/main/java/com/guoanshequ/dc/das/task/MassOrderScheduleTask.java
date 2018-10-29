@@ -769,7 +769,7 @@ public class MassOrderScheduleTask {
 						for (DfMassOrder preDfMassOrder : massOrderIsnullList) {
 							String order_id = preDfMassOrder.getId();
 							Date sign_time = preDfMassOrder.getSign_time();
-							String sign_date = DateUtils.getStrDate(sign_time);
+							String sign_date =DateUtils.getNextNDateTimeByAssign(sign_time,1);
 							String store_id = preDfMassOrder.getStore_id();
 							
 							preParaMap.put("order_id", order_id);
