@@ -778,7 +778,7 @@ public class MassOrderScheduleTask {
 							paraMap.put("sign_date", sign_date);
 							
 							//1、关联进销存，计算订单在进销存中的总成本,自营商品无论是否有合同，一律从价
-							BigDecimal sum_cost_price = new BigDecimal("0.00");
+							BigDecimal sum_cost_price =new BigDecimal("0.00");
 							BigDecimal order_profit = new BigDecimal("0.00");
 							if("yes".equals(eshop_joint_ims)) {
 								//获取订单明细
@@ -792,6 +792,7 @@ public class MassOrderScheduleTask {
 									if(product_code!=null) {
 										paraMap.put("product_code",product_code);
 										paraMap.put("store_number",store_number.toString());
+										//根据商品code去进销存日销售表中查找对应的成本
 										imsTbsGds = dfMassOrderService.queryCostPriceBySigndateCode(paraMap);
 										if(imsTbsGds!=null) {
 											BigDecimal ims_cost_price = imsTbsGds.getCost_price().multiply(new BigDecimal(orderItem.getQuantity()));
@@ -800,7 +801,7 @@ public class MassOrderScheduleTask {
 									}
 								}
 								dfMassOrder.setCost_price(sum_cost_price);
-								order_profit = calProfitByPrice(dfMassOrder);
+								order_profit = calProfitByPriceOfIms(dfMassOrder);
 								dfMassOrder.setOrder_profit(order_profit);
 								
 							}else {//不在进销存系统，计算在国安平台中的总成本
@@ -939,6 +940,14 @@ public class MassOrderScheduleTask {
 		return order_profit;
 	}	
 	
+	/**
+	 * 订单从价计算方法:进销存自营商品，从价计算
+	 */
+	public BigDecimal calProfitByPriceOfIms(DfMassOrder dfMassOrder) {
+		BigDecimal order_profit ;
+		order_profit = dfMassOrder.getGmv_price().subtract(dfMassOrder.getCost_price());
+		return order_profit;
+	}	
 	
 	/** 
 	 * 计算每个订单所对应的优惠券、返利

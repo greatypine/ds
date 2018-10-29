@@ -601,7 +601,8 @@
 	<select id="queryMassOrderListByDate" parameterType="java.util.Map" resultType="MassOrderEntity">
 		<![CDATA[
 			 select * from df_mass_order_monthly 
-			 where sign_time >= #{begintime} and sign_time <= #{endtime} and trading_price is not null ;
+			 where sign_time >= '2018-10-28 00:00:00' and sign_time <= '2018-10-29 00:00:00'
+			 and order_profit =0 and cost_price =0 and eshop_joint_ims ='yes';
 		]]>
   	</select>
   	
@@ -637,7 +638,7 @@
 	<select id="queryCostPriceBySigndateCode" parameterType="java.util.Map" resultType="ImsTbsdgdsEntity">
 		<![CDATA[
 			 select * from df_ims_tbs_d_gds_daily where c_gcode =#{product_code} and date(c_dt) =#{sign_date} and c_map_store_id =#{store_number} 
-			 and cost_price >0 limit 1 ;
+			  limit 1 ;
 		]]>
   	</select>
   	
