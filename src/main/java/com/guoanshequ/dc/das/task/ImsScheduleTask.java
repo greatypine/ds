@@ -108,7 +108,7 @@ public class ImsScheduleTask {
 							begintime = taskMap.get("begintime");
 							endtime = taskMap.get("endtime");
 						}else{
-							begintime = imsService.queryMaxAuDtTime()==null?DateUtils.getPreDate(new Date()):imsService.queryMaxAuDtTime();
+							begintime = DateUtils.getPreDateTime(new Date());
 							endtime = DateUtils.getCurDateTime(new Date());
 						}
 
