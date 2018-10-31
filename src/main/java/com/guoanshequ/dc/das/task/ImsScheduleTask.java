@@ -89,9 +89,9 @@ public class ImsScheduleTask {
 
 	/**
 	 * 定时用于更新df_ims_tb_o_count/countg/store表
-	 * 调度规则：每天凌晨4点
+	 * 调度规则：每天凌晨4点10分
 	 */
-//	@Scheduled(cron ="0 01 4 * * ?")
+	@Scheduled(cron ="0 10 4 * * ?")
 	public void imsTbCountTask(){
 		new Thread(){
 			public void run() {
@@ -149,9 +149,9 @@ public class ImsScheduleTask {
 
 	/**
 	 * 定时用于更新df_ims_tb_o_l/store表
-	 * 调度规则：每天凌晨4点
+	 * 调度规则：每天凌晨4点10分
 	 */
-//	@Scheduled(cron ="0 01 4 * * ?")
+	@Scheduled(cron ="0 10 4 * * ?")
 	public void imsTblTask(){
 		new Thread(){
 			public void run() {
