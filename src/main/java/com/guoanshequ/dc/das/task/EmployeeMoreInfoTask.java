@@ -134,57 +134,57 @@ public class EmployeeMoreInfoTask {
                     clearEMI.setUpdate_time(new Date());
                     employeeMoreInfoService.updateEmployeeOneDayMoveDistanceZero(clearEMI);//先清空所有员工一天的运行里程
 
-                    List<EmployeePosition> list = new ArrayList<EmployeePosition>();
+                    List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
                     List<Map<String,Object>> employeeList = new ArrayList<Map<String,Object>>();
 
-                        list = mongoService.queryEmployeePosition();
-                        for(int i=0;i<list.size();i++){
-                            EmployeePosition ep = list.get(i);
-                            employeeList = employeeService.queryEmployeeById(ep.get_id());
-                            if(employeeList!=null&&employeeList.size()>0){
-                                String employeeNo = employeeList.get(0).get("employeeNo").toString();
-                                List positions = ep.getLocations();
+                    list = mongoService.queryEmployeePosition();
+                    for(int i=0;i<list.size();i++){
+                        Map<String,Object> ep = list.get(i);
+                        employeeList = employeeService.queryEmployeeById(ep.get("id").toString());
+                        if(employeeList!=null&&employeeList.size()>0){
+                            String employeeNo = employeeList.get(0).get("employeeNo").toString();
+                            List positions = (List)ep.get("locations");
 
-                                float moveDistance = 0;
-                                if(positions.size() > 0){
-                                    double distance_sum = 0;
-                                    for(int j = 0; j <positions.size(); j++){
-                                        if(j != positions.size()-1){
-                                            List object2 = (List)positions.get(j);
-                                            List object3 = (List)positions.get(j+1);
-                                            double distance = Distance(Double.parseDouble(object2.get(0).toString()),Double.parseDouble(object2.get(1).toString()), Double.parseDouble(object3.get(0).toString()),Double.parseDouble(object3.get(1).toString()));
-                                            distance_sum = distance_sum+distance;
-                                        }
-                                    }
-                                    moveDistance= distance_sum == 0 ? 0 :Float.parseFloat(distance_sum+"");
-                                }
-
-
-                                if(moveDistance > 0){
-                                    EmployeeMoreInfo employeeMoreInfo = new EmployeeMoreInfo();
-                                    employeeMoreInfo.setMoveDistance(moveDistance);
-                                    List<Map<String,Object>> emiList = employeeMoreInfoService.queryEmployeeMoreInfoByEmployeeNo(employeeNo);
-                                    if(emiList != null && emiList.size() > 0){
-                                        for(int m = 0; m < emiList.size(); m++){
-                                            float distance = Float.parseFloat(emiList.get(m).get("moveDistamce")==null?"0":String.valueOf(emiList.get(m).get("moveDistamce")));
-                                            employeeMoreInfo.setEmployeeNo(employeeNo);
-                                            employeeMoreInfo.setMoveDistance(moveDistance+distance);
-                                            employeeMoreInfo.setUpdate_time(new Date());
-                                            employeeMoreInfo.setOneDyMoveDistance(moveDistance);
-                                            employeeMoreInfoService.updateEmployeeMoveDistance(employeeMoreInfo);
-                                        }
-                                    }else{
-                                        employeeMoreInfo.setEmployeeNo(employeeNo);
-                                        employeeMoreInfo.setMoveDistance(moveDistance);
-                                        employeeMoreInfo.setUpdate_time(new Date());
-                                        employeeMoreInfo.setCreate_time(new Date());
-                                        employeeMoreInfo.setOneDyMoveDistance(moveDistance);
-                                        employeeMoreInfoService.saveEmployeeMoveDistance(employeeMoreInfo);
+                            float moveDistance = 0;
+                            if(positions.size() > 0){
+                                double distance_sum = 0;
+                                for(int j = 0; j <positions.size(); j++){
+                                    if(j != positions.size()-1){
+                                        List object2 = (List)positions.get(j);
+                                        List object3 = (List)positions.get(j+1);
+                                        double distance = Distance(Double.parseDouble(object2.get(0).toString()),Double.parseDouble(object2.get(1).toString()), Double.parseDouble(object3.get(0).toString()),Double.parseDouble(object3.get(1).toString()));
+                                        distance_sum = distance_sum+distance;
                                     }
                                 }
+                                moveDistance= distance_sum == 0 ? 0 :Float.parseFloat(distance_sum+"");
                             }
 
+
+                            if(moveDistance > 0){
+                                EmployeeMoreInfo employeeMoreInfo = new EmployeeMoreInfo();
+                                employeeMoreInfo.setMoveDistance(moveDistance);
+                                List<Map<String,Object>> emiList = employeeMoreInfoService.queryEmployeeMoreInfoByEmployeeNo(employeeNo);
+                                if(emiList != null && emiList.size() > 0){
+                                    for(int m = 0; m < emiList.size(); m++){
+                                        float distance = Float.parseFloat(emiList.get(m).get("moveDistamce")==null?"0":String.valueOf(emiList.get(m).get("moveDistamce")));
+                                        employeeMoreInfo.setEmployeeNo(employeeNo);
+                                        employeeMoreInfo.setMoveDistance(moveDistance+distance);
+                                        employeeMoreInfo.setUpdate_time(new Date());
+                                        employeeMoreInfo.setOneDyMoveDistance(moveDistance);
+                                        employeeMoreInfoService.updateEmployeeMoveDistance(employeeMoreInfo);
+                                    }
+                                }else{
+                                    employeeMoreInfo.setEmployeeNo(employeeNo);
+                                    employeeMoreInfo.setMoveDistance(moveDistance);
+                                    employeeMoreInfo.setUpdate_time(new Date());
+                                    employeeMoreInfo.setCreate_time(new Date());
+                                    employeeMoreInfo.setOneDyMoveDistance(moveDistance);
+                                    employeeMoreInfoService.saveEmployeeMoveDistance(employeeMoreInfo);
+                                }
+                            }
                         }
+
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();

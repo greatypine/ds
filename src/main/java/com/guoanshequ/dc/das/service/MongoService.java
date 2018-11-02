@@ -4,6 +4,8 @@ import com.guoanshequ.dc.das.model.CustomerInfoRecord;
 import com.guoanshequ.dc.das.model.EmployeePosition;
 import com.guoanshequ.dc.das.utils.DateUtils;
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCursor;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,10 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service("MongoService")
 public class MongoService {
@@ -104,24 +103,42 @@ public class MongoService {
     }
 
 
-    public List<EmployeePosition> queryEmployeePosition(){
+    public List<Map<String,Object>> queryEmployeePosition(){
 
         Calendar calendar = Calendar.getInstance(); // 得到日历
         calendar.add(Calendar.DATE, -1); // 设置为前一天
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         String curDate = sdf.format(calendar.getTime());
 
-        Aggregation agg =Aggregation.newAggregation(
 
-                Aggregation.project("locations").and("employeeId").as("_id"),
-                Aggregation.unwind("locations"),
-                Aggregation.match(Criteria.where("locations.createTime").gte(new Date(curDate+" 00:00:00")).lte(new Date(curDate+" 23:59:59"))),
-                Aggregation.group("_id").push("locations.location").as("locations")
-        ).withOptions(AggregationOptions.builder().allowDiskUse(true).build());
 
-        AggregationResults<EmployeePosition> results = mongoTemplate.aggregate(agg, "employee_position", EmployeePosition.class);
-        List<EmployeePosition> list = results.getMappedResults();
-        return list;
+        List<Object> listcoor = new ArrayList<Object>();
+        listcoor.add("$longitude");
+        listcoor.add("$latitude");
+        Document queryObject=new Document("$match", new BasicDBObject("createdAt",new Document("$gte",new Date(curDate+" 00:00:00")).append("$lte",new Date(curDate+" 23:59:59"))));
+        Document queryObject1=new Document("$project", new BasicDBObject("_id","$employeeId").append("location",listcoor));
+        Document queryObject2=new Document("$group", new BasicDBObject("_id","$_id").append("locations",new Document("$push","$location")));
+        List<Document> pipeline = new ArrayList<Document>();
+        pipeline.add(queryObject);
+        pipeline.add(queryObject1);
+        pipeline.add(queryObject2);
+
+
+        AggregateIterable<Document> position_record = mongoTemplate.getCollection("position_record").aggregate(pipeline);
+        MongoCursor<Document> iterator = position_record.iterator();
+        List<EmployeePosition> list = null;
+        List<Map<String,Object>> listempInfo = new ArrayList<Map<String,Object>>();
+        Map<String,Object> jObject = null;
+
+        while (iterator.hasNext()) {
+            Document next = iterator.next();
+            EmployeePosition employeePosition = new EmployeePosition();
+            jObject =new HashMap<String, Object>();
+            jObject.put("locations", next.get("locations"));
+            jObject.put("id", next.get("_id"));
+            listempInfo.add(jObject);
+        }
+        return listempInfo;
     }
 
 }
