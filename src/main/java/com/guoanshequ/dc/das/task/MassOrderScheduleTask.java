@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -1091,8 +1092,8 @@ public class MassOrderScheduleTask {
 						List<DfMassOrder> groupCouponOrderList = dfMassOrderService.queryGroupCouponOrderByDate(paraMap);
 						if(!groupCouponOrderList.isEmpty()) {
 							for (DfMassOrder groupCouponOrder : groupCouponOrderList) {
-								logger.info("******order_sn:"+groupCouponOrder.getOrder_sn()+",coupon:"+groupCouponOrder.getApportion_coupon()+",quantity:"+groupCouponOrder.getOrder_quantity()+",======="+groupCouponOrder.getApportion_coupon().divide(new BigDecimal(groupCouponOrder.getOrder_quantity().toString())));
-								groupCouponOrder.setApportion_coupon(groupCouponOrder.getApportion_coupon().divide(new BigDecimal(groupCouponOrder.getOrder_quantity().toString())));
+								logger.info("******order_sn:"+groupCouponOrder.getOrder_sn()+",coupon:"+groupCouponOrder.getApportion_coupon()+",quantity:"+groupCouponOrder.getOrder_quantity()+",======="+groupCouponOrder.getApportion_coupon().divide(new BigDecimal(groupCouponOrder.getOrder_quantity().toString()),BigDecimal.ROUND_HALF_UP));
+								groupCouponOrder.setApportion_coupon(groupCouponOrder.getApportion_coupon().divide(new BigDecimal(groupCouponOrder.getOrder_quantity().toString()),BigDecimal.ROUND_HALF_UP));
 								if(groupCouponOrder.getApportion_coupon()!=null &&groupCouponOrder.getCct_proration_platform()!=null&&groupCouponOrder.getCct_proration_seller()!=null) {
 									groupCouponOrder.setPlatform_price(groupCouponOrder.getApportion_coupon().multiply(new BigDecimal(groupCouponOrder.getCct_proration_platform().toString())).divide(new BigDecimal("100")));
 									groupCouponOrder.setSeller_price(groupCouponOrder.getApportion_coupon().multiply(new BigDecimal(groupCouponOrder.getCct_proration_seller().toString())).divide(new BigDecimal("100")));
