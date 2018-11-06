@@ -1079,22 +1079,22 @@ public class MassOrderScheduleTask {
 								dfMassOrder.setApportion_rebate(orderItemExtra.getApportion_rebate());
 								dfMassOrder.setApportion_coupon(orderItemExtra.getApportion_coupon());
 								if(orderItemExtra.getApportion_coupon()!=null && dfMassOrder.getCct_proration_platform()!=null &&dfMassOrder.getCct_proration_seller()!=null) {
-									dfMassOrder.setPlatform_price(orderItemExtra.getApportion_coupon().multiply(new BigDecimal(dfMassOrder.getCct_proration_platform())));
-									dfMassOrder.setSeller_price(orderItemExtra.getApportion_coupon().multiply(new BigDecimal(dfMassOrder.getCct_proration_seller())));
+									dfMassOrder.setPlatform_price(orderItemExtra.getApportion_coupon().multiply(new BigDecimal(dfMassOrder.getCct_proration_platform())).divide(new BigDecimal("100")));
+									dfMassOrder.setSeller_price(orderItemExtra.getApportion_coupon().multiply(new BigDecimal(dfMassOrder.getCct_proration_seller())).divide(new BigDecimal("100")));
 								}
 							}
 							dfMassOrderService.updateOrderCouponOfDaily(dfMassOrder);
 							updatenum += dfMassOrderService.updateOrderCouponOfMonthly(dfMassOrder);
 							dfMassOrderService.updateOrderCouponOfTotal(dfMassOrder);
 						}
-						
+						logger.info("**********计算组合优惠券订单逻辑开始***************");
 						List<DfMassOrder> groupCouponOrderList = dfMassOrderService.queryGroupCouponOrderByDate(paraMap);
 						if(!groupCouponOrderList.isEmpty()) {
 							for (DfMassOrder groupCouponOrder : groupCouponOrderList) {
 								groupCouponOrder.setApportion_coupon(groupCouponOrder.getApportion_coupon().divide(new BigDecimal(groupCouponOrder.getOrder_quantity())));
 								if(groupCouponOrder.getApportion_coupon()!=null &&groupCouponOrder.getCct_proration_platform()!=null&&groupCouponOrder.getCct_proration_seller()!=null) {
-									groupCouponOrder.setPlatform_price(groupCouponOrder.getApportion_coupon().multiply(new BigDecimal(groupCouponOrder.getCct_proration_platform())));
-									groupCouponOrder.setSeller_price(groupCouponOrder.getApportion_coupon().multiply(new BigDecimal(groupCouponOrder.getCct_proration_seller())));
+									groupCouponOrder.setPlatform_price(groupCouponOrder.getApportion_coupon().multiply(new BigDecimal(groupCouponOrder.getCct_proration_platform())).divide(new BigDecimal("100")));
+									groupCouponOrder.setSeller_price(groupCouponOrder.getApportion_coupon().multiply(new BigDecimal(groupCouponOrder.getCct_proration_seller())).divide(new BigDecimal("100")));
 								}
 								dfMassOrderService.updateOrderCouponOfDaily(groupCouponOrder);
 								groupCounum += dfMassOrderService.updateOrderCouponOfMonthly(groupCouponOrder);
