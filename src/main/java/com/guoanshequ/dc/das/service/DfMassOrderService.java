@@ -236,5 +236,9 @@ public class DfMassOrderService {
 	
 	public Integer updateOrderCouponOfTotal(DfMassOrder dfMassOrder){
 		return dfMassOrderDao.updateOrderCouponOfTotal(dfMassOrder);
-	}	
+	}
+	
+	public List<DfMassOrder> queryGroupCouponOrderByDate(Map<String, String> paraMap){
+		return dfMassOrderDao.queryGroupCouponOrderByDate(paraMap);
+	}
 }

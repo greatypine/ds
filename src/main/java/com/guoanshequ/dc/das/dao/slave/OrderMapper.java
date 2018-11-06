@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.guoanshequ.dc.das.datasource.DataSource;
 import com.guoanshequ.dc.das.model.Contract;
+import com.guoanshequ.dc.das.model.OrderItemExtra;
 
 @Repository
 @DataSource("slave")
@@ -17,7 +18,7 @@ public interface OrderMapper{
 	
 	String queryMaxSigntime(Map<String, String> paraMap);
 	
-	Map<String, Object> queryOrderRebateCouponById(Map<String, String> paraMap);
+	OrderItemExtra queryOrderRebateCouponById(Map<String, String> paraMap);
 	
 	String queryOrderCostPriceById(Map<String, String> paraMap);
 	

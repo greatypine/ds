@@ -123,4 +123,6 @@ public interface DfMassOrderMapper {
 	
 	Integer updateOrderCouponOfTotal(DfMassOrder dfMassOrder);
 	
+	List<DfMassOrder> queryGroupCouponOrderByDate(Map<String, String> paraMap);
+	
 }

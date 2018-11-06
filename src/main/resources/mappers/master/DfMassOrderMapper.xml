@@ -605,7 +605,7 @@
 		]]>
   	</select>
   	
-  	<!-- 查询指定日期内需要计算利润的订单，积分订单不计算 -->
+  	<!-- 针对未在进销存系统中查找到的订单，第二天再次进行查找计算，补充计算 -->
 	<select id="queryMassOrderIsnullListByPreDate" parameterType="java.util.Map" resultType="MassOrderEntity">
 		<![CDATA[
 			 select * from df_mass_order_monthly 
@@ -613,6 +613,15 @@
 			 and order_tag3='0' and eshop_joint_ims ='yes';
 		]]>
   	</select>
+  	
+	<!-- 在计算完订单优惠券后，针对组合订单进行除法计算，条件为：订单优惠券字段为总优惠金额时除以组合订单数量 -->
+	<select id="queryGroupCouponOrderByDate" parameterType="java.util.Map" resultType="MassOrderEntity">
+		<![CDATA[
+		 	select * from df_mass_order_monthly tor
+			where tor.is_split ='yes' and tor.apportion_coupon >0 and (tor.trading_price - tor.payable_price)=tor.apportion_coupon  
+		 	and tor.sign_time >= #{begintime} and tor.sign_time <= #{endtime} and tor.trading_price is not null ;
+		]]>
+  	</select>  	
   	
   	<!-- 更新order_daily表中成本、利润、合同 -->
   	<update id="updateOrderProfitOfDaily" parameterType="MassOrderEntity">
@@ -664,7 +673,7 @@
   	<update id="updateOrderCouponOfDaily" parameterType="MassOrderEntity">
   		<![CDATA[
 			update df_mass_order_daily
-			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon}
+			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon},platform_price=#{platform_price},seller_price=#{seller_price}
 			where id =#{id} 
 		]]>
   	</update>
@@ -672,7 +681,7 @@
   	<update id="updateOrderCouponOfMonthly" parameterType="MassOrderEntity">
   		<![CDATA[
 			update df_mass_order_monthly
-			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon}
+			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon},platform_price=#{platform_price},seller_price=#{seller_price}
 			where id =#{id} 
 		]]>
   	</update>
@@ -680,9 +689,9 @@
   	<update id="updateOrderCouponOfTotal" parameterType="MassOrderEntity">
   		<![CDATA[
 			update df_mass_order_total 
-			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon}
+			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon},platform_price=#{platform_price},seller_price=#{seller_price}
 			where id =#{id}
 		]]>
   	</update>  	
-  
+  	
 </mapper>

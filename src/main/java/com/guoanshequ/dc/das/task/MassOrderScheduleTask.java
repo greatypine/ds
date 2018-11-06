@@ -4,6 +4,7 @@ import com.guoanshequ.dc.das.model.Contract;
 import com.guoanshequ.dc.das.model.DfMassOrder;
 import com.guoanshequ.dc.das.model.ImsTbsdgds;
 import com.guoanshequ.dc.das.model.OrderItem;
+import com.guoanshequ.dc.das.model.OrderItemExtra;
 import com.guoanshequ.dc.das.model.TinyDispatch;
 import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
@@ -1031,15 +1032,16 @@ public class MassOrderScheduleTask {
 	
 	/** 
 	 * 计算每个订单所对应的优惠券、返利
-	 * 调度规则：每天凌晨3点30分
+	 * 调度规则：每天凌晨5点05分
 	 */
-	@Scheduled(cron ="0 30 5 * * ?")
+	@Scheduled(cron ="0 05 5 * * ?")
 	public void updateOrderCouponTask(){
 		new Thread(){
 			public void run() {
 				try{
 					logger.info("**********计算每个订单所对应的优惠券、返利信息任务调度开始**********");
 					Integer updatenum =0;
+					Integer groupCounum =0;
 					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(15);
 					String isrun = taskMap.get("isrun");
 					String begintime = null;
@@ -1065,22 +1067,41 @@ public class MassOrderScheduleTask {
 			    		runMap.put("id", "15");
 			    		runMap.put("task_status", "RUNNING");
 			    		dsCronTaskService.updateTaskStatusById(runMap);
-						Map<String,Object> cuponMap ;
+						OrderItemExtra orderItemExtra;
 						
 						for (DfMassOrder dfMassOrder : massOrderList) {
 							String order_id = dfMassOrder.getId();
 							
 							paraMap.put("order_id", order_id);
 							//1、根据订单号查询对应的优惠券、返利信息
-							cuponMap = orderService.queryOrderRebateCouponById(paraMap);
-							if(cuponMap!=null) {
-								dfMassOrder.setApportion_rebate((BigDecimal)cuponMap.get("apportion_rebate"));
-								dfMassOrder.setApportion_coupon((BigDecimal)cuponMap.get("apportion_coupon"));
+							orderItemExtra = orderService.queryOrderRebateCouponById(paraMap);
+							if(orderItemExtra!=null) {
+								dfMassOrder.setApportion_rebate(orderItemExtra.getApportion_rebate());
+								dfMassOrder.setApportion_coupon(orderItemExtra.getApportion_coupon());
+								if(orderItemExtra.getApportion_coupon()!=null && dfMassOrder.getCct_proration_platform()!=null &&dfMassOrder.getCct_proration_seller()!=null) {
+									dfMassOrder.setPlatform_price(orderItemExtra.getApportion_coupon().multiply(new BigDecimal(dfMassOrder.getCct_proration_platform())));
+									dfMassOrder.setSeller_price(orderItemExtra.getApportion_coupon().multiply(new BigDecimal(dfMassOrder.getCct_proration_seller())));
+								}
 							}
 							dfMassOrderService.updateOrderCouponOfDaily(dfMassOrder);
 							updatenum += dfMassOrderService.updateOrderCouponOfMonthly(dfMassOrder);
 							dfMassOrderService.updateOrderCouponOfTotal(dfMassOrder);
 						}
+						
+						List<DfMassOrder> groupCouponOrderList = dfMassOrderService.queryGroupCouponOrderByDate(paraMap);
+						if(!groupCouponOrderList.isEmpty()) {
+							for (DfMassOrder groupCouponOrder : groupCouponOrderList) {
+								groupCouponOrder.setApportion_coupon(groupCouponOrder.getApportion_coupon().divide(new BigDecimal(groupCouponOrder.getOrder_quantity())));
+								if(groupCouponOrder.getApportion_coupon()!=null &&groupCouponOrder.getCct_proration_platform()!=null&&groupCouponOrder.getCct_proration_seller()!=null) {
+									groupCouponOrder.setPlatform_price(groupCouponOrder.getApportion_coupon().multiply(new BigDecimal(groupCouponOrder.getCct_proration_platform())));
+									groupCouponOrder.setSeller_price(groupCouponOrder.getApportion_coupon().multiply(new BigDecimal(groupCouponOrder.getCct_proration_seller())));
+								}
+								dfMassOrderService.updateOrderCouponOfDaily(groupCouponOrder);
+								groupCounum += dfMassOrderService.updateOrderCouponOfMonthly(groupCouponOrder);
+								dfMassOrderService.updateOrderCouponOfTotal(groupCouponOrder);
+							}
+						}
+						
 					}
 		    		//设置任务为完成状态
 		    		Map<String, String> doneMap = new HashMap<String,String>();
@@ -1088,7 +1109,7 @@ public class MassOrderScheduleTask {
 		    		doneMap.put("task_status", "DONE");
 		    		dsCronTaskService.updateTaskStatusById(doneMap);
 				}
-				logger.info("**********计算每个订单所对应的优惠券、返利信息数据任务调度结束,开始时间："+begintime+",结束时间："+endtime+",共更新记录数："+updatenum+"**********");
+				logger.info("**********计算每个订单所对应的优惠券、返利信息数据任务调度结束,开始时间："+begintime+",结束时间："+endtime+",共更新记录数："+updatenum+"**********,组合优惠券更新记录数："+groupCounum);
 				} catch (Exception e) {
 					logger.info("计算每个订单所对应的优惠券、返利信息数据任务调度异常：",e.toString());
 					e.printStackTrace();

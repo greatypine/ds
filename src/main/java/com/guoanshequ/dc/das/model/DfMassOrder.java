@@ -101,6 +101,9 @@ public class DfMassOrder {
 	private BigDecimal contract_percent;
 	private BigDecimal contract_price;
 	private String order_tag3;
+	private String order_tag4;
+	private BigDecimal platform_price;
+	private BigDecimal seller_price;
 	
 	
 	public enum PubseasLabel{

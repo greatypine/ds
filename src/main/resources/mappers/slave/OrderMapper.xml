@@ -25,10 +25,10 @@
    </select>
    
     <!--查询指定订单对应的优惠券和返利 -->
-  <select id="queryOrderRebateCouponById" parameterType="java.util.Map" resultType="java.util.Map">
+  <select id="queryOrderRebateCouponById" parameterType="java.util.Map" resultType="OrderItemExtraEntity">
   	<![CDATA[
   		select 
-			tor.id,
+			tor.id as order_id,
 			ifnull(sum(toie.apportion_rebate),0) as apportion_rebate,
 			ifnull(sum(toie.apportion_coupon),0) as apportion_coupon
 		from t_order tor 

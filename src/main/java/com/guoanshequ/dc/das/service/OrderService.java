@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.guoanshequ.dc.das.dao.slave.OrderMapper;
 import com.guoanshequ.dc.das.model.Contract;
+import com.guoanshequ.dc.das.model.OrderItemExtra;
 
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class OrderService {
     	return orderDao.queryMaxSigntime(paraMap);
     }
     
-    public Map<String, Object> queryOrderRebateCouponById(Map<String, String> paraMap){
+    public OrderItemExtra queryOrderRebateCouponById(Map<String, String> paraMap){
     	
     	return orderDao.queryOrderRebateCouponById(paraMap);
     }
