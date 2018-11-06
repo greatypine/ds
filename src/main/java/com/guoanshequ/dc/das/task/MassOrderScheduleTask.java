@@ -1069,24 +1069,24 @@ public class MassOrderScheduleTask {
 			    		dsCronTaskService.updateTaskStatusById(runMap);
 						OrderItemExtra orderItemExtra;
 						
-						for (DfMassOrder dfMassOrder : massOrderList) {
-							String order_id = dfMassOrder.getId();
-							
-							paraMap.put("order_id", order_id);
-							//1、根据订单号查询对应的优惠券、返利信息
-							orderItemExtra = orderService.queryOrderRebateCouponById(paraMap);
-							if(orderItemExtra!=null) {
-								dfMassOrder.setApportion_rebate(orderItemExtra.getApportion_rebate());
-								dfMassOrder.setApportion_coupon(orderItemExtra.getApportion_coupon());
-								if(orderItemExtra.getApportion_coupon()!=null && dfMassOrder.getCct_proration_platform()!=null &&dfMassOrder.getCct_proration_seller()!=null) {
-									dfMassOrder.setPlatform_price(orderItemExtra.getApportion_coupon().multiply(new BigDecimal(dfMassOrder.getCct_proration_platform())).divide(new BigDecimal("100")));
-									dfMassOrder.setSeller_price(orderItemExtra.getApportion_coupon().multiply(new BigDecimal(dfMassOrder.getCct_proration_seller())).divide(new BigDecimal("100")));
-								}
-							}
-							dfMassOrderService.updateOrderCouponOfDaily(dfMassOrder);
-							updatenum += dfMassOrderService.updateOrderCouponOfMonthly(dfMassOrder);
-							dfMassOrderService.updateOrderCouponOfTotal(dfMassOrder);
-						}
+//						for (DfMassOrder dfMassOrder : massOrderList) {
+//							String order_id = dfMassOrder.getId();
+//							
+//							paraMap.put("order_id", order_id);
+//							//1、根据订单号查询对应的优惠券、返利信息
+//							orderItemExtra = orderService.queryOrderRebateCouponById(paraMap);
+//							if(orderItemExtra!=null) {
+//								dfMassOrder.setApportion_rebate(orderItemExtra.getApportion_rebate());
+//								dfMassOrder.setApportion_coupon(orderItemExtra.getApportion_coupon());
+//								if(orderItemExtra.getApportion_coupon()!=null && dfMassOrder.getCct_proration_platform()!=null &&dfMassOrder.getCct_proration_seller()!=null) {
+//									dfMassOrder.setPlatform_price(orderItemExtra.getApportion_coupon().multiply(new BigDecimal(dfMassOrder.getCct_proration_platform())).divide(new BigDecimal("100")));
+//									dfMassOrder.setSeller_price(orderItemExtra.getApportion_coupon().multiply(new BigDecimal(dfMassOrder.getCct_proration_seller())).divide(new BigDecimal("100")));
+//								}
+//							}
+//							dfMassOrderService.updateOrderCouponOfDaily(dfMassOrder);
+//							updatenum += dfMassOrderService.updateOrderCouponOfMonthly(dfMassOrder);
+//							dfMassOrderService.updateOrderCouponOfTotal(dfMassOrder);
+//						}
 						logger.info("**********计算组合优惠券订单逻辑开始***************");
 						List<DfMassOrder> groupCouponOrderList = dfMassOrderService.queryGroupCouponOrderByDate(paraMap);
 						if(!groupCouponOrderList.isEmpty()) {
