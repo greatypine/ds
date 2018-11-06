@@ -1091,11 +1091,13 @@ public class MassOrderScheduleTask {
 						List<DfMassOrder> groupCouponOrderList = dfMassOrderService.queryGroupCouponOrderByDate(paraMap);
 						if(!groupCouponOrderList.isEmpty()) {
 							for (DfMassOrder groupCouponOrder : groupCouponOrderList) {
+								logger.info("******order_sn:"+groupCouponOrder.getOrder_sn()+",coupon:"+groupCouponOrder.getApportion_coupon()+",quantity:"+groupCouponOrder.getOrder_quantity());
 								groupCouponOrder.setApportion_coupon(groupCouponOrder.getApportion_coupon().divide(new BigDecimal(groupCouponOrder.getOrder_quantity())));
 								if(groupCouponOrder.getApportion_coupon()!=null &&groupCouponOrder.getCct_proration_platform()!=null&&groupCouponOrder.getCct_proration_seller()!=null) {
 									groupCouponOrder.setPlatform_price(groupCouponOrder.getApportion_coupon().multiply(new BigDecimal(groupCouponOrder.getCct_proration_platform())).divide(new BigDecimal("100")));
 									groupCouponOrder.setSeller_price(groupCouponOrder.getApportion_coupon().multiply(new BigDecimal(groupCouponOrder.getCct_proration_seller())).divide(new BigDecimal("100")));
 								}
+								logger.info("******order_id:"+groupCouponOrder.getId());
 								dfMassOrderService.updateOrderCouponOfDaily(groupCouponOrder);
 								groupCounum += dfMassOrderService.updateOrderCouponOfMonthly(groupCouponOrder);
 								dfMassOrderService.updateOrderCouponOfTotal(groupCouponOrder);
