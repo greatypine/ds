@@ -10,9 +10,9 @@
 			ts.`name` as storename,
 			sum(trading_price) as order_amount,
 			count(1) as order_count
-			from df_order_signed_daily tor 
+			from t_order tor 
 			left join t_store ts on (tor.store_id = ts.id)
-			where tor.df_signed_time >= #{begindate} and tor.df_signed_time <= #{enddate}
+			where tor.sign_time >= #{begindate} and tor.sign_time <= #{enddate}
 			group by tor.store_id 
 		]]>
 	</select>

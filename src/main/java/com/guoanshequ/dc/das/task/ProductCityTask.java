@@ -83,7 +83,7 @@ public class ProductCityTask {
     * @throws
      */
 //    @Scheduled(cron ="0 * * 15-18 5 ?")
-    @Scheduled(cron ="0 */1 * * * ?")
+//    @Scheduled(cron ="0 */1 * * * ?")
     public void productCityDayTask() {
 //    	new Thread(){
 //    		public void run() {
