@@ -57,9 +57,9 @@
                 <jdbc.url>jdbc:mysql://10.10.10.37:4006/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</jdbc.url>
                 <jdbc.username>daquser2</jdbc.username>
                 <jdbc.password>Rc7h0ijt95Amswipe10$G!X7gOrYI^*r</jdbc.password>
-                <slave.jdbc.url>jdbc:mysql://10.10.10.37:4006/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
-                <slave.jdbc.username>geminiuser2</slave.jdbc.username>
-                <slave.jdbc.password>^I*ibDTC#%4ha6xEuJ7Y!@sJzCGJzv^g</slave.jdbc.password>
+                <slave.jdbc.url>jdbc:mysql://10.10.10.6:3306/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
+                <slave.jdbc.username>DataStatistics</slave.jdbc.username>
+                <slave.jdbc.password>DctyasertyNbsd28z</slave.jdbc.password>
                 <ylc.jdbc.url>jdbc:mysql://10.10.10.37:4006/guoanyanglaocan?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</ylc.jdbc.url>
                 <ylc.jdbc.username>ylcuser1</ylc.jdbc.username>
                 <ylc.jdbc.password>@w9ZV3QOC1Fm46XH5eDCQ&amp;4hCEqqM@SO</ylc.jdbc.password>
