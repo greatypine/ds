@@ -258,11 +258,34 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.7</version>
         </dependency>
+        <!-- sqlserverJDBC -->
 		<dependency>
 		    <groupId>com.microsoft.sqlserver</groupId>
 		    <artifactId>sqljdbc4</artifactId>
 		    <version>4.0</version>
 		</dependency>
+        <!-- impalaJDBC -->
+ 	   	<dependency>
+			<groupId>com</groupId>
+	        <artifactId>impalajdbc</artifactId>
+	        <version>1</version>
+		</dependency> 
+		<!-- Hikari -->
+	    <dependency>
+	        <groupId>com.zaxxer</groupId>
+	        <artifactId>HikariCP</artifactId>
+	        <version>2.6.2</version>
+    	</dependency>
+    	<dependency>
+		    <groupId>org.apache.hive</groupId>
+		    <artifactId>hive-jdbc</artifactId>
+		    <version>1.1.0</version>
+		</dependency>		
+		<dependency>
+	      <groupId>org.apache.hadoop</groupId>
+	      <artifactId>hadoop-client</artifactId>
+	      <version>2.6.0</version>
+	    </dependency>
         
     </dependencies>
 

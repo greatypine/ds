@@ -3,6 +3,7 @@ package com.guoanshequ.dc.das.task;
 import com.guoanshequ.dc.das.model.TinyDispatch;
 import com.guoanshequ.dc.das.service.TinyDispatchService;
 import com.guoanshequ.dc.das.utils.DateUtils;
+import com.guoanshequ.dc.das.utils.ImpalaUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,4 +53,15 @@ public class TestTask {
 			e.printStackTrace();
 		}
     }
+    
+    public void testImpala() {
+    	try {
+    		String sql = "SELECT order_sn FROM gemini.t_order limit 10 ";
+    		List<Map<String,Object>> resultList = ImpalaUtil.execute(sql);
+    		System.out.println(resultList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+
 }
