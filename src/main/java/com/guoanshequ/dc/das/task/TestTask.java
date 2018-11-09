@@ -58,7 +58,7 @@ public class TestTask {
     	try {
     		String sql = "SELECT order_sn FROM gemini.t_order limit 10 ";
     		List<Map<String,Object>> resultList = ImpalaUtil.execute(sql);
-    		System.out.println(resultList);
+    		logger.info("sql:"+sql+"=================="+resultList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
