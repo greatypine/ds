@@ -1170,7 +1170,7 @@ public class MassOrderScheduleTask {
 			    			postingOrder.setId(post_id);
 							dfMassOrderService.updatePostingOrderProfitOfDaily(postingOrder);
 							postingnum += dfMassOrderService.updatePostingOrderProfitOfMonthly(postingOrder);
-							dfMassOrderService.updateOrderCouponOfTotal(postingOrder);
+							dfMassOrderService.updatePostingOrderProfitOfTotal(postingOrder);
 						}
 						logger.info("**********过账支付订单利润计算结束***************");
 		    		}
@@ -1225,6 +1225,7 @@ public class MassOrderScheduleTask {
 					Integer a1Updatenum =0;
 					Integer a2Updatenum =0;
 					Integer a3Updatenum =0;
+					Integer sumnum =0;
 					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(19);
 					String isrun = taskMap.get("isrun");
 					String begintime = null;
@@ -1311,14 +1312,14 @@ public class MassOrderScheduleTask {
 						}
 						logger.info("**********A类营销费用，A3标签结束,共更新记录条数："+a3Updatenum+"***************");		    			
 		    		}		    		
-		    		
+		    		sumnum = a1Updatenum+a2Updatenum+a3Updatenum;
 		    		//设置任务为完成状态
 		    		Map<String, String> doneMap = new HashMap<String,String>();
 		    		doneMap.put("id", "19");
 		    		doneMap.put("task_status", "DONE");
 		    		dsCronTaskService.updateTaskStatusById(doneMap);
 				}
-				logger.info("**********order_tag4营销类打标签任务调度结束,开始时间："+begintime+",结束时间："+endtime+"**********");
+				logger.info("**********order_tag4营销类打标签任务调度结束,开始时间："+begintime+",结束时间："+endtime+"**********,共更新记录条数："+sumnum);
 				} catch (Exception e) {
 					logger.info("order_tag4营销类打标签任务调度：",e.toString());
 					e.printStackTrace();
