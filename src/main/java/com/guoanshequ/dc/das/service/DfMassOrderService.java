@@ -241,4 +241,41 @@ public class DfMassOrderService {
 	public List<DfMassOrder> queryGroupCouponOrderByDate(Map<String, String> paraMap){
 		return dfMassOrderDao.queryGroupCouponOrderByDate(paraMap);
 	}
+	
+	public Integer updatePostingOrderProfitOfDaily(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updatePostingOrderProfitOfDaily(dfMassOrder);
+	}
+
+	public Integer updatePostingOrderProfitOfMonthly(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updatePostingOrderProfitOfMonthly(dfMassOrder);
+	}
+	
+	public Integer updatePostingOrderProfitOfTotal(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updatePostingOrderProfitOfTotal(dfMassOrder);
+	}
+	
+	public Integer updatePercentSellProfitOfDaily(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updatePercentSellProfitOfDaily(dfMassOrder);
+	}
+
+	public Integer updatePercentSellProfitOfMonthly(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updatePercentSellProfitOfMonthly(dfMassOrder);
+	}
+	
+	public Integer updatePercentSellProfitOfTotal(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updatePercentSellProfitOfTotal(dfMassOrder);
+	}	
+	
+	public Integer updateMarktingTagOfDaily(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updateMarktingTagOfDaily(dfMassOrder);
+	}
+
+	public Integer updateMarktingTagOfMonthly(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updateMarktingTagOfMonthly(dfMassOrder);
+	}
+	
+	public Integer updateMarktingTagOfTotal(DfMassOrder dfMassOrder){
+		return dfMassOrderDao.updateMarktingTagOfTotal(dfMassOrder);
+	}	
+	
 }

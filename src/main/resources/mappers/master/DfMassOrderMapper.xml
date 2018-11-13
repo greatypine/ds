@@ -662,10 +662,10 @@
 		]]>
   	</select>
   	
-  	<!-- 是否1、2、3组中售卡E店 -->
+  	<!-- 是否1、2、3组中售卡E店(eshop_group in ('1','2','3') and card_type = '1')则豁免 -->
 	<select id="queryIsSaleCardEshop" parameterType="java.lang.String" resultType="java.lang.Integer">
 		<![CDATA[
-			 select count(1) from df_card_eshop_profit where eshop_group in ('1','2','3') and card_type = '1' and eshop_id= #{eshop_id} ;
+			 select count(1) from df_card_eshop_profit where isexempt = 1 and eshop_id= #{eshop_id} ;
 		]]>
   	</select>
 
@@ -692,6 +692,68 @@
 			set apportion_rebate = #{apportion_rebate}, apportion_coupon = #{apportion_coupon},platform_price=#{platform_price},seller_price=#{seller_price}
 			where id =#{id}
 		]]>
-  	</update>  	
+  	</update>
+  	
+  	<!-- 更新order_daily表中过账支付利润为0，且订单标签order_tag3为2 -->
+  	<update id="updatePostingOrderProfitOfDaily" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_daily set order_profit = '0', order_tag3 = '2'	where id =#{id} 
+		]]>
+  	</update> 
+
+  	<!-- 更新order_daily表中过账支付利润为0，且订单标签order_tag3为2 -->
+  	<update id="updatePostingOrderProfitOfMonthly" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_monthly set order_profit = '0', order_tag3 = '2'	where id =#{id} 
+		]]>
+  	</update> 
+  	
+  	<!-- 更新order_daily表中过账支付利润为0，且订单标签order_tag3为2 -->
+  	<update id="updatePostingOrderProfitOfTotal" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_total set order_profit = '0', order_tag3 = '2'	where id =#{id} 
+		]]>
+  	</update>   	  	
+ 
+  	<!-- 更新order_daily表中商家优惠占比的从率订单，利润=(gmvprice-sellerprice)*percent -->
+  	<update id="updatePercentSellProfitOfDaily" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_daily set order_profit = (gmv_price-seller_price)*contract_percent where id =#{id} 
+		]]>
+  	</update> 
+  	
+   	<!-- 更新order_daily表中商家优惠占比的从率订单，利润=(gmvprice-sellerprice)*percent -->
+  	<update id="updatePercentSellProfitOfMonthly" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_monthly set order_profit = (gmv_price-seller_price)*contract_percent where id =#{id} 
+		]]>
+  	</update>
+  	
+  	<!-- 更新order_daily表中商家优惠占比的从率订单，利润=(gmvprice-sellerprice)*percent -->
+  	<update id="updatePercentSellProfitOfTotal" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_total set order_profit = (gmv_price-seller_price)*contract_percent where id =#{id} 
+		]]>
+  	</update> 	
+  	
+   	<!-- 更新营销费用分类标签order_tag4，A1优品试用A2生日券A3开卡礼 -->
+  	<update id="updateMarktingTagOfDaily" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_daily set order_tag4 =#{order_tag4}  where id =#{id} 
+		]]>
+  	</update> 
+   	<!-- 更新营销费用分类标签order_tag4，A1优品试用A2生日券A3开卡礼 -->
+  	<update id="updateMarktingTagOfMonthly" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_monthly set order_tag4 =#{order_tag4}  where id =#{id} 
+		]]>
+  	</update> 
+   	<!-- 更新营销费用分类标签order_tag4，A1优品试用A2生日券A3开卡礼 -->
+  	<update id="updateMarktingTagOfTotal" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_total set order_tag4 =#{order_tag4}  where id =#{id} 
+		]]>
+  	</update>   	  		  	 	
+  	  	
   	
 </mapper>

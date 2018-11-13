@@ -1549,4 +1549,28 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }    
+    
+    @RequestMapping(value = "rest/updateSpecialOrderProfitTaskRun",method = RequestMethod.POST)
+    public RestResponse updateSpecialOrderProfitTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.updateSpecialOrderProfitTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }   
+    
+    @RequestMapping(value = "rest/updateMarktingTagTaskkRun",method = RequestMethod.POST)
+    public RestResponse updateMarktingTagTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.updateMarktingTagTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }    
 }

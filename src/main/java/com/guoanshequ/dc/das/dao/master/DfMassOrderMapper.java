@@ -125,4 +125,21 @@ public interface DfMassOrderMapper {
 	
 	List<DfMassOrder> queryGroupCouponOrderByDate(Map<String, String> paraMap);
 	
+	Integer updatePostingOrderProfitOfDaily(DfMassOrder dfMassOrder);
+	
+	Integer updatePostingOrderProfitOfMonthly(DfMassOrder dfMassOrder);
+	
+	Integer updatePostingOrderProfitOfTotal(DfMassOrder dfMassOrder);
+	
+	Integer updatePercentSellProfitOfDaily(DfMassOrder dfMassOrder);
+	
+	Integer updatePercentSellProfitOfMonthly(DfMassOrder dfMassOrder);
+	
+	Integer updatePercentSellProfitOfTotal(DfMassOrder dfMassOrder);	
+	
+	Integer updateMarktingTagOfDaily(DfMassOrder dfMassOrder);
+	
+	Integer updateMarktingTagOfMonthly(DfMassOrder dfMassOrder);
+	
+	Integer updateMarktingTagOfTotal(DfMassOrder dfMassOrder);	
 }

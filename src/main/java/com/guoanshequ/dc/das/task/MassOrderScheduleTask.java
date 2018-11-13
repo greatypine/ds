@@ -8,6 +8,8 @@ import com.guoanshequ.dc.das.model.OrderItemExtra;
 import com.guoanshequ.dc.das.model.TinyDispatch;
 import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
+import com.guoanshequ.dc.das.utils.ImpalaUtil;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -1118,4 +1120,212 @@ public class MassOrderScheduleTask {
 			}
 		}.start();
 	}	
+	
+	/** 
+	 * 当天利润完成后，对特殊订单进行利润重新计算
+	 * 1、对过账支付订单进行利润清零
+	 * 2、对使用优惠券且合同类型为从率且卖家有占比的订单利润，重新计算
+	 * 调度规则：每天凌晨5点40分
+	 */
+	@Scheduled(cron ="0 40 5 * * ?")
+	public void updateSpecialOrderProfitTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********当天利润完成后，对特殊订单进行利润重新计算调度开始**********");
+					Integer postingnum =0;
+					Integer percentSellnum =0;
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(18);
+					String isrun = taskMap.get("isrun");
+					String begintime = null;
+					String endtime = null;
+					if("ON".equals(isrun)){
+					String runtype = taskMap.get("runtype");
+					//获取上次调度时的最大签收时间开始时间与结束时间
+					if("MANUAL".equals(runtype)){
+						begintime = taskMap.get("begintime");
+						endtime = taskMap.get("endtime");
+					}else{
+						begintime = DateUtils.getPreDateTime(new Date());
+						endtime = DateUtils.getCurDateTime(new Date());
+					}	
+		    		Map<String, String> runMap = new HashMap<String,String>();
+		    		runMap.put("id", "18");
+		    		runMap.put("task_status", "RUNNING");
+		    		dsCronTaskService.updateTaskStatusById(runMap);
+		    		
+		    		//过账支付订单利润清0，对应标签设置2 
+		    		String postingSql = "select distinct tor.id from daqweb.df_mass_order_monthly tor " + 
+		    				"join gemini.t_order_receipts trec on (tor.group_id = trec.order_group_id) " + 
+		    				"where trec.pay_platform ='posting'  and trec.pay_status='payed' " + 
+		    				"and tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";
+		    		
+		    		List<Map<String,Object>> postingOrderList = ImpalaUtil.execute(postingSql);
+		    		if(!postingOrderList.isEmpty()) {
+		    			logger.info("**********过账支付订单利润计算开始***************");
+			    		String post_id =null;
+			    		for (Map<String, Object> postingOrderMap : postingOrderList) {
+			    			DfMassOrder postingOrder = new DfMassOrder(); 
+			    			post_id = postingOrderMap.get("id").toString();
+			    			postingOrder.setId(post_id);
+							dfMassOrderService.updatePostingOrderProfitOfDaily(postingOrder);
+							postingnum += dfMassOrderService.updatePostingOrderProfitOfMonthly(postingOrder);
+							dfMassOrderService.updateOrderCouponOfTotal(postingOrder);
+						}
+						logger.info("**********过账支付订单利润计算结束***************");
+		    		}
+		    		
+		    		//当优惠券，优惠除法，优惠占比完成后，从率卖家优惠占比的利润重新计算
+		    		String percentSellSql = "select tor.id from daqweb.df_mass_order_monthly tor " + 
+		    				"where tor.seller_price>0 and tor.contract_method ='percent' " + 
+		    				"and tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";		    		
+		    		
+		    		List<Map<String,Object>> percentSellOrderList = ImpalaUtil.execute(percentSellSql);
+		    		if(!percentSellOrderList.isEmpty()) {
+		    			logger.info("**********优惠券商家有占比的从率订单利润计算开始***************");
+		    			String percentSell_id =null;
+		    			for (Map<String, Object> percentSellMap : percentSellOrderList) {
+		    				DfMassOrder percentSellOrder = new DfMassOrder();
+		    				percentSell_id = percentSellMap.get("id").toString();
+		    				percentSellOrder.setId(percentSell_id);
+							dfMassOrderService.updatePercentSellProfitOfDaily(percentSellOrder);
+							percentSellnum += dfMassOrderService.updatePercentSellProfitOfMonthly(percentSellOrder);
+							dfMassOrderService.updatePercentSellProfitOfTotal(percentSellOrder);		    				
+						}
+		    			
+		    			logger.info("**********优惠券商家有占比的从率订单利润计算结束***************");
+		    		}
+					
+		    		//设置任务为完成状态
+		    		Map<String, String> doneMap = new HashMap<String,String>();
+		    		doneMap.put("id", "18");
+		    		doneMap.put("task_status", "DONE");
+		    		dsCronTaskService.updateTaskStatusById(doneMap);
+				}
+				logger.info("**********当天利润完成后，对特殊订单进行利润重新计算调度结束,开始时间："+begintime+",结束时间："+endtime+",过账支付订单共更新记录数："+postingnum+"**********,商家占比的从率订单共更新记录数："+percentSellnum);
+				} catch (Exception e) {
+					logger.info("当天利润完成后，对特殊订单进行利润重新计算调度异常：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}	
+	
+	/** 
+	 * 对营销类订单打标签order_tag4
+	 * 1、营销费用分类标签：A1优品试用A2生日券A3开卡礼
+	 * 调度规则：每天凌晨6点20分
+	 */
+	@Scheduled(cron ="0 25 6 * * ?")
+	public void updateMarktingTagTask(){
+		new Thread(){
+			public void run() {
+				try{
+					logger.info("**********order_tag4营销类打标签任务调度开始**********");
+					Integer a1Updatenum =0;
+					Integer a2Updatenum =0;
+					Integer a3Updatenum =0;
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(19);
+					String isrun = taskMap.get("isrun");
+					String begintime = null;
+					String endtime = null;
+					if("ON".equals(isrun)){
+					String runtype = taskMap.get("runtype");
+					//获取上次调度时的最大签收时间开始时间与结束时间
+					if("MANUAL".equals(runtype)){
+						begintime = taskMap.get("begintime");
+						endtime = taskMap.get("endtime");
+					}else{
+						begintime = DateUtils.getPreDateTime(new Date());
+						endtime = DateUtils.getCurDateTime(new Date());
+					}	
+		    		Map<String, String> runMap = new HashMap<String,String>();
+		    		runMap.put("id", "19");
+		    		runMap.put("task_status", "RUNNING");
+		    		dsCronTaskService.updateTaskStatusById(runMap);
+		    		
+		    		//A类营销：A1优品试用每月25的券
+		    		String a1Sql = "select tor.id from daqweb.df_mass_order_monthly tor " + 
+		    				"join gemini.t_order_group tog on (tor.group_id = tog.id) " + 
+		    				"join gemini.t_card_coupon tcou on (tog.card_coupon_id = tcou.id and tcou.content_price=25 and tcou.emall_id ='c3edf6c77d483c6b67659f52e1f24990')  " + 
+		    				"where tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";
+		    		
+		    		//A2生日券
+		    		String a2Sql = "select tor.id from daqweb.df_mass_order_monthly tor " + 
+		    				"join gemini.t_order_group tog on (tor.group_id = tog.id) " + 
+		    				"join gemini.t_card_coupon tcou on (tog.card_coupon_id = tcou.id and tcou.emall_id ='1908fa85f681b7212c9b6deef8803d63')   " + 
+		    				"where tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";
+		    		
+		    		
+		    		//A3开卡礼199 金额199减199
+		    		String a3Sql = "select tor.id from daqweb.df_mass_order_monthly tor " + 
+		    				"join gemini.t_order_group tog on (tor.group_id = tog.id) " + 
+		    				"join gemini.t_card_coupon tcou on (tog.card_coupon_id = tcou.id and tcou.emall_id ='edea35c2f1fb334184d53f4ca215f7a1')   " + 
+		    				"where tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";
+		    		
+		    		List<Map<String,Object>> a1OrderList = ImpalaUtil.execute(a1Sql);
+		    		List<Map<String,Object>> a2OrderList = ImpalaUtil.execute(a2Sql);
+		    		List<Map<String,Object>> a3OrderList = ImpalaUtil.execute(a3Sql);
+		    		
+		    		if(!a1OrderList.isEmpty()) {
+		    			logger.info("**********A类营销费用，A1标签开始***************");
+			    		String a1_id =null;
+			    		for (Map<String, Object> a1OrderMap : a1OrderList) {
+			    			DfMassOrder a1Order = new DfMassOrder(); 
+			    			a1_id = a1OrderMap.get("id").toString();
+			    			a1Order.setId(a1_id);
+			    			a1Order.setOrder_tag4("A1");
+							dfMassOrderService.updateMarktingTagOfDaily(a1Order);
+							a1Updatenum += dfMassOrderService.updateMarktingTagOfMonthly(a1Order);
+							dfMassOrderService.updateMarktingTagOfTotal(a1Order);
+						}
+						logger.info("**********A类营销费用，A1标签结束,共更新记录条数："+a1Updatenum+"***************");
+		    		}
+		    		
+		    		if(!a2OrderList.isEmpty()) {
+		    			logger.info("**********A类营销费用，A2标签开始***************");
+			    		String a2_id =null;
+			    		for (Map<String, Object> a2OrderMap : a2OrderList) {
+			    			DfMassOrder a2Order = new DfMassOrder(); 
+			    			a2_id = a2OrderMap.get("id").toString();
+			    			a2Order.setId(a2_id);
+			    			a2Order.setOrder_tag4("A2");
+							dfMassOrderService.updateMarktingTagOfDaily(a2Order);
+							a2Updatenum += dfMassOrderService.updateMarktingTagOfMonthly(a2Order);
+							dfMassOrderService.updateMarktingTagOfTotal(a2Order);
+						}
+						logger.info("**********A类营销费用，A2标签结束,共更新记录条数："+a2Updatenum+"***************");		    			
+		    		}
+
+		    		if(!a3OrderList.isEmpty()) {
+		    			logger.info("**********A类营销费用，A3标签开始***************");
+			    		String a3_id =null;
+			    		for (Map<String, Object> a3OrderMap : a3OrderList) {
+			    			DfMassOrder a3Order = new DfMassOrder(); 
+			    			a3_id = a3OrderMap.get("id").toString();
+			    			a3Order.setId(a3_id);
+			    			a3Order.setOrder_tag4("A3");
+							dfMassOrderService.updateMarktingTagOfDaily(a3Order);
+							a3Updatenum += dfMassOrderService.updateMarktingTagOfMonthly(a3Order);
+							dfMassOrderService.updateMarktingTagOfTotal(a3Order);
+						}
+						logger.info("**********A类营销费用，A3标签结束,共更新记录条数："+a3Updatenum+"***************");		    			
+		    		}		    		
+		    		
+		    		//设置任务为完成状态
+		    		Map<String, String> doneMap = new HashMap<String,String>();
+		    		doneMap.put("id", "19");
+		    		doneMap.put("task_status", "DONE");
+		    		dsCronTaskService.updateTaskStatusById(doneMap);
+				}
+				logger.info("**********order_tag4营销类打标签任务调度结束,开始时间："+begintime+",结束时间："+endtime+"**********");
+				} catch (Exception e) {
+					logger.info("order_tag4营销类打标签任务调度：",e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}		
+	
+	
 }

@@ -24,12 +24,12 @@ public class ImpalaUtil {
         try {
 
             con = HikariInner.getConnection();
-            System.out.println("\n== Begin Guoan Query Results ======================");
+            System.out.println("\n== impala获取connection，初始化链接，获取sql开始执行======================");
             stat = con.createStatement();
             rs = stat.executeQuery(sql);
             list = convertList(rs);
 
-            System.out.println("== End Guoan Query Results =======================\n\n");
+            System.out.println("== impala执行sql结束，返回数据结果 =======================\n\n");
 
         } catch (SQLException e) {
             e.printStackTrace();
