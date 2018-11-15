@@ -77,7 +77,7 @@
 	
 	<select id="queryYlcCustomer" parameterType="java.util.Map" resultType="java.lang.String">
 		<![CDATA[
-			select max(regist_time) from df_user_profile where system_flag ='ylc'
+			select max(regist_time) from df_user_profile where system_flag ='SYS002'
 		]]>
 	</select>
 				
