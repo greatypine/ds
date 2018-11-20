@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.PermissionServiceMapper">
+
+    <select id="findByAppKeyAndURI" parameterType="java.util.Map"  resultType="PermissionServiceEntity">
+        <![CDATA[
+			SELECT * FROM t_permission_service  WHERE status=1 AND app_key = #{appkey} AND reqURI = #{uri}
+		]]>
+    </select>
+
+</mapper>

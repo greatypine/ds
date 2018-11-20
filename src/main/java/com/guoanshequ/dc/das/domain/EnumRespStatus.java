@@ -1,5 +1,7 @@
 package com.guoanshequ.dc.das.domain;
 
+import org.apache.commons.compress.archivers.dump.DumpArchiveEntry;
+
 /**
  * Created by shuhuadai on 2017/2/21.
  */
@@ -76,7 +78,8 @@ public enum EnumRespStatus {
     
     DATA_NODATETIME("9000099", "请求参数必须包含datetime且不为空"),
    	DATA_ERRORDATETIMEFORMAT("9000098", "请求参数格式不正确"),
-   	DATA_ERRORINDATEFORMAT("9000097", "请求参数时间段无效");
+   	DATA_ERRORINDATEFORMAT("9000097", "请求参数时间段无效"),
+    PERMISSIONSERVICE_ERROR("1000002","请求接口未授权");
 
     private String code;
     private String message;

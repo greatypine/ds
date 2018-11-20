@@ -3,8 +3,10 @@ package com.guoanshequ.dc.das.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guoanshequ.dc.das.dao.master.AuthMapper;
+import com.guoanshequ.dc.das.dao.master.PermissionServiceMapper;
 import com.guoanshequ.dc.das.domain.EnumRespStatus;
 import com.guoanshequ.dc.das.model.Auth;
+import com.guoanshequ.dc.das.model.PermissionService;
 import com.guoanshequ.dc.das.utils.EncryptUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service("AuthService")
@@ -23,6 +26,9 @@ public class AuthService {
     AuthMapper authDao;
     @Autowired
 	RedisService redisService;
+    @Autowired
+    PermissionServiceMapper permissionServiceDao;
+
 
     private static final Logger logger = LogManager.getLogger(AuthService.class);
 
@@ -75,6 +81,40 @@ public class AuthService {
                 }
             }
             
+        } catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return EnumRespStatus.SYSTEM_ERROR;
+        }
+        logger.info(EnumRespStatus.AUTH_OK.getMessage());
+        return EnumRespStatus.AUTH_OK;
+    }
+
+    /**
+     * @Description 验证用户的请求接口是否授权
+     * @author gbl
+     * @date 2018/11/15 15:48
+     **/
+
+    public EnumRespStatus verifyPermissionServices(String requestInfo, String requestSign,String requestURI) {
+        try {
+            //验证用户有效性
+            EnumRespStatus verifyResult = this.verifyAuth(requestInfo, requestSign);
+            if (EnumRespStatus.AUTH_OK.equals(verifyResult)) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, Object> requestMap = objectMapper.readValue(requestInfo, new TypeReference<Map<String,Object>>(){});
+                String appKey = requestMap.get("app_key") != null ? requestMap.get("app_key").toString() : null;
+                HashMap<String,Object> param = new HashMap<String,Object>();
+                param.put("appkey",appKey);
+                param.put("uri",requestURI);
+                PermissionService ps = permissionServiceDao.findByAppKeyAndURI(param);
+                if (ps == null) {
+                    return EnumRespStatus.PERMISSIONSERVICE_ERROR;
+                }
+            }else{
+                return verifyResult;
+            }
+
         } catch (Exception e) {
             logger.error(e.toString());
             e.printStackTrace();

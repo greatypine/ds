@@ -26,5 +26,6 @@
         <typeAlias alias="ImsTbOCountgEntity" type="com.guoanshequ.dc.das.model.ImsTbOCountg"/>
         <typeAlias alias="ImsTbOlEntity" type="com.guoanshequ.dc.das.model.ImsTbOl"/>
         <typeAlias alias="ImsTbStoreEntity" type="com.guoanshequ.dc.das.model.ImsTbStore"/>
+        <typeAlias alias="PermissionServiceEntity" type="com.guoanshequ.dc.das.model.PermissionService"/>
     </typeAliases>
 </configuration>
