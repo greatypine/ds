@@ -153,7 +153,7 @@
     
     <select id="queryHumanresourcesList" parameterType="java.util.Map" resultType="java.util.Map">
     	<![CDATA[
-    	    SELECT (select code from tb_bizbase_user where employeeId=t.employee_no limit 1) as Username,t.name as Full_name,t.employee_no as Emplid,(select storeno from t_store where t_store.store_id=t.store_id) as Groupcode,t.humanstatus as Hr_status,DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%S') as update_time FROM t_humanresources t WHERE t.humanstatus in(1,2) and t.update_time >= #{datetime}  
+    	    SELECT (select code from tb_bizbase_user where employeeId=t.employee_no limit 1) as Username,t.name as Full_name,t.employee_no as Emplid,(select storeno from t_store where t_store.store_id=t.store_id) as Groupcode,t.humanstatus as Hr_status,t.zw as Post,DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%S') as update_time FROM t_humanresources t WHERE t.humanstatus in(1,2) and t.update_time >= #{datetime}  
 		]]>
     </select>
     
@@ -171,7 +171,7 @@
     
     <select id="queryStoreList" resultType="java.util.Map">
     	<![CDATA[
-    		SELECT s.name as Name,s.name as Shortname,s.storeno as Code,s.storeno as Deptid FROM t_store s WHERE s.estate NOT LIKE '%闭店%' 
+    		SELECT s.name as Name,s.name as Shortname,s.storeno as Code,s.storeno as Deptid,s.estate as status FROM t_store s where s.name not like '%测试%' 
 		]]>
     </select>
     
