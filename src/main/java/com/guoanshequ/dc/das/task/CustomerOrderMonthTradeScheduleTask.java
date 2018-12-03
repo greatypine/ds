@@ -265,8 +265,15 @@ public class CustomerOrderMonthTradeScheduleTask {
     	new Thread(){
     		public void run() {
     			try{
+    				Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(99);
+    				String runtype = taskMap.get("runtype");
     				logger.info("**********massorder打 拉新标签 任务调度开始**********");
-    	        	String preDate = DateUtils.getPreDate(new Date());
+    				String preDate = null;
+    				if("MANUAL".equals(runtype)) {
+    					preDate = taskMap.get("begintime");
+    				}else {
+    					preDate = DateUtils.getPreDate(new Date());
+    				}
     	        	String year = preDate.substring(0,4);
     	        	String month = preDate.substring(5,7);
     	        	String order_ym = year+month;

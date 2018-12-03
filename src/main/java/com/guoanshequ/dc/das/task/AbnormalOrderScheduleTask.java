@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.guoanshequ.dc.das.service.AbnormalOrderService;
 import com.guoanshequ.dc.das.service.DfEshopPurchaseService;
+import com.guoanshequ.dc.das.service.DsCronTaskService;
 import com.guoanshequ.dc.das.service.EmployeeKeeperInfoService;
 import com.guoanshequ.dc.das.service.StoreNumberService;
 import com.guoanshequ.dc.das.service.TAbnormalOrderService;
@@ -38,6 +39,8 @@ public class AbnormalOrderScheduleTask {
     DfEshopPurchaseService dfEshopPurchaseService;
     @Autowired
     EmployeeKeeperInfoService employeeKeeperInfoService;
+	@Autowired
+	DsCronTaskService dsCronTaskService;
     
     private static final Logger logger = LogManager.getLogger(AbnormalOrderScheduleTask.class);
     
@@ -51,11 +54,20 @@ public class AbnormalOrderScheduleTask {
     	new Thread(){
     		public void run() {
     	    	try {
+    				Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(99);
+    				String runtype = taskMap.get("runtype");
     	        	logger.info("**********自动异常订单任务调度开始**********");
-    	        	//前一天日期所在月份的1号
-    	        	String begindate = DateUtils.getPreDateFirstOfMonth(new Date());
-    	        	//前一天日期
-    	        	String enddate = DateUtils.getPreDate(new Date());
+    	        	String begindate = null;
+    	        	String enddate = null;
+    	        	if("MANUAL".equals(runtype)) {
+    	        		begindate = taskMap.get("begintime");
+    	        		enddate = taskMap.get("endtime");
+    	        	}else {
+        	        	//前一天日期所在月份的1号
+        	        	begindate = DateUtils.getPreDateFirstOfMonth(new Date());
+        	        	//前一天日期
+        	        	enddate = DateUtils.getPreDate(new Date());
+    	        	}
     	    		//取得年份
     	    		String year = begindate.substring(0, 4);
     	    		//取得月份
