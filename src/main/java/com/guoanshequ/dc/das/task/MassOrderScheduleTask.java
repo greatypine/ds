@@ -233,9 +233,16 @@ public class MassOrderScheduleTask {
 		new Thread(){
 			public void run() {
 				try{
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(99);
+					String runtype = taskMap.get("runtype");
 					logger.info("**********massorder打退货标签任务调度开始 **********");
-					//获取上次调度时的最大退货时间
-					String maxReturnTime = dfMassOrderService.queryMaxReturnTime()==null?DateUtils.getPreDate(new Date()):dfMassOrderService.queryMaxReturnTime();
+					String maxReturnTime = null;
+					if("MANUAL".equals(runtype)) { 
+						maxReturnTime = taskMap.get("begintime");
+					}else {
+						//获取上次调度时的最大退货时间
+						maxReturnTime = dfMassOrderService.queryMaxReturnTime()==null?DateUtils.getPreDate(new Date()):dfMassOrderService.queryMaxReturnTime();
+					}
 					//给后台接口构建参数
 					Map<String, String> paraMap=new HashMap<String, String>();
 					paraMap.put("maxReturnTime", maxReturnTime);
@@ -269,8 +276,16 @@ public class MassOrderScheduleTask {
     	new Thread(){
     		public void run() {
     			try{
+    				Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(99);
+    				String runtype = taskMap.get("runtype");
     				logger.info("**********massorder打异常订单标签任务调度开始**********");
-	    			String queryTime = DateUtils.getPreDate(new Date());
+	    			String queryTime = null ;
+	    			if("MANUAL".equals(runtype)) {
+	    				queryTime = taskMap.get("begintime");
+	    			}else {
+	    				queryTime = DateUtils.getPreDate(new Date());
+	    			}
+	    					
 	    			Map<String, String> paraMap=new HashMap<String, String>();
 		        	paraMap.put("queryTime", queryTime);
 		        	paraMap.put("abnormalLabel", DfMassOrder.AbnormalLabel.ABNORMAL.code);
@@ -389,14 +404,23 @@ public class MassOrderScheduleTask {
 		new Thread(){
 			public void run() {
 				try{
+    				Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(99);
+    				String runtype = taskMap.get("runtype");
 					logger.info("**********massorder打小B端订单标签任务调度开始**********");
-					
+					String begintime =null;
+					String endtime = null;
+					if("MANUAL".equals(runtype)) {
+						begintime = taskMap.get("begintime");
+						endtime = taskMap.get("endtime");
+					}else {
+						//开始时间
+						begintime = DateUtils.getPreDateTime(new Date());
+						//结束时间
+						endtime = DateUtils.getCurDateTime(new Date());
+					}
 					//给后台接口构建参数
 					Map<String, String> paraMap=new HashMap<String, String>();
-					//开始时间
-					String begintime = DateUtils.getPreDateTime(new Date());
-					//结束时间
-					String endtime = DateUtils.getCurDateTime(new Date());
+
 					paraMap.put("begintime", begintime);
 					paraMap.put("endtime", endtime);
 					
@@ -424,14 +448,23 @@ public class MassOrderScheduleTask {
 		new Thread(){
 			public void run() {
 				try{
+    				Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(99);
+    				String runtype = taskMap.get("runtype");
 					logger.info("**********df_userprofile_tag打小B端订单标签任务调度开始**********");
-					
+					String begintime = null;
+					String endtime = null;
+					if("MANUAL".equals(runtype)) {
+						begintime = taskMap.get("begintime");
+						endtime = taskMap.get("endtime");
+					}else {
+						//开始时间
+						begintime = DateUtils.getPreDateTime(new Date());
+						//结束时间
+						endtime = DateUtils.getCurDateTime(new Date());
+					}
 					//给后台接口构建参数
 					Map<String, String> paraMap=new HashMap<String, String>();
-					//开始时间
-					String begintime = DateUtils.getPreDateTime(new Date());
-					//结束时间
-					String endtime = DateUtils.getCurDateTime(new Date());
+
 					paraMap.put("begintime", begintime);
 					paraMap.put("endtime", endtime);
 					
@@ -578,14 +611,23 @@ public class MassOrderScheduleTask {
 		new Thread(){
 			public void run() {
 				try{
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(99);
+					String runtype = taskMap.get("runtype");
 					logger.info("**********df_userprofile_tag打合作社社员标签任务调度开始**********");
-					
+					String begintime = null;
+					String endtime = null;
+					if("MANUAL".equals(runtype)) {
+						begintime = taskMap.get("begintime");
+						endtime = taskMap.get("endtime");
+					}else {
+						//开始时间
+						begintime = DateUtils.getPreDateTime(new Date());
+						//结束时间
+						endtime = DateUtils.getCurDateTime(new Date());
+					}
 					//给后台接口构建参数
 					Map<String, String> paraMap=new HashMap<String, String>();
-					//开始时间
-					String begintime = DateUtils.getPreDateTime(new Date());
-					//结束时间
-					String endtime = DateUtils.getCurDateTime(new Date());
+
 					paraMap.put("begintime", begintime);
 					paraMap.put("endtime", endtime);
 					
@@ -611,14 +653,23 @@ public class MassOrderScheduleTask {
 		new Thread(){
 			public void run() {
 				try{
+    				Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(99);
+    				String runtype = taskMap.get("runtype");
 					logger.info("**********mass_order表中order_tag会员订单标签任务调度开始**********");
-					
+					String begintime = null;
+					String endtime = null;
+					if("MANUAL".equals(runtype)) {
+						begintime = taskMap.get("begintime");
+						endtime = taskMap.get("endtime");
+					}else {
+						//开始时间
+						begintime = DateUtils.getPreDateTime(new Date());
+						//结束时间
+						endtime = DateUtils.getCurDateTime(new Date());
+					}
 					//给后台接口构建参数
 					Map<String, String> paraMap=new HashMap<String, String>();
-					//开始时间
-					String begintime = DateUtils.getPreDateTime(new Date());
-					//结束时间
-					String endtime = DateUtils.getCurDateTime(new Date());
+
 					paraMap.put("begintime", begintime);
 					paraMap.put("endtime", endtime);
 					
@@ -953,14 +1004,24 @@ public class MassOrderScheduleTask {
 		new Thread(){
 			public void run() {
 				try{
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(99);
+					String runtype = taskMap.get("runtype");
 					logger.info("**********221订单标签order2_tag：商品类、服务类、团购类订单打标签任务调度开始**********");
 					
 					//给后台接口构建参数
 					Map<String, String> paraMap=new HashMap<String, String>();
-					//开始时间
-					String begintime = DateUtils.getPreDateTime(new Date());
-					//结束时间
-					String endtime = DateUtils.getCurDateTime(new Date());
+					String begintime = null;
+					String endtime = null;
+					if("MANUAL".equals(runtype)) {
+						begintime = taskMap.get("begintime");
+						endtime = taskMap.get("endtime");
+					}else {
+						//开始时间
+						begintime = DateUtils.getPreDateTime(new Date());
+						//结束时间
+						endtime = DateUtils.getCurDateTime(new Date());
+					}
+
 					//打标签统计
 					int productNum =0;
 					int sericeNum =0;
