@@ -141,5 +141,11 @@ public interface DfMassOrderMapper {
 	
 	Integer updateMarktingTagOfMonthly(DfMassOrder dfMassOrder);
 	
-	Integer updateMarktingTagOfTotal(DfMassOrder dfMassOrder);	
+	Integer updateMarktingTagOfTotal(DfMassOrder dfMassOrder);
+	
+	List<Map<String, Object>> queryNewOder(Map<String, String> paraMap);
+	
+
 }
+
+

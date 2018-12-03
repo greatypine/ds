@@ -668,6 +668,13 @@
 			 select count(1) from df_card_eshop_profit where isexempt = 1 and eshop_id= #{eshop_id} ;
 		]]>
   	</select>
+  	
+  	<!-- 查询两天之内新增单子-->
+  	<select id="queryNewOder" parameterType="java.util.Map" resultType="java.util.Map">
+	SELECT info_village_code,COUNT(DISTINCT customer_id) as store_customer_coun FROM df_mass_order_total WHERE info_village_code is not NULL and sign_time <![CDATA[ >= ]]> DATE_ADD(
+				#{date}, INTERVAL -2 day) AND sign_time <![CDATA[ <= ]]> #{date}
+				 GROUP BY info_village_code
+	</select>
 
   	<!-- 更新order_daily表中优惠券、返利 -->
   	<update id="updateOrderCouponOfDaily" parameterType="MassOrderEntity">

@@ -1,5 +1,6 @@
 package com.guoanshequ.dc.das.service;
 
+import com.guoanshequ.dc.das.dao.master.DfMassOrderMapper;
 import com.guoanshequ.dc.das.dao.master.TinyVillageMapper;
 import com.guoanshequ.dc.das.dao.master.VillageMapper;
 import com.guoanshequ.dc.das.model.TinyVillage;
@@ -8,7 +9,9 @@ import com.guoanshequ.dc.das.model.Village;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +29,8 @@ public class TinyVillageService {
     TinyVillageMapper tinyVillageDao;
     @Autowired
     VillageMapper villageDao;
+    @Autowired
+    DfMassOrderMapper dfMassOrderMapper;
 
     public Map<String, Object> queryTinyidByCode(String code) throws Exception{
 
@@ -118,8 +123,40 @@ public class TinyVillageService {
             tinyVillageDao.insertTinyCode(tinycodeMap);
         }
     }
-
-
-
-
+    //更新consumer_number_2018字段 (2018年以后的已消费人数)
+    public void updateTinyVillageCode() throws SQLException{
+        Map<String,String> paraMap=new HashMap<>();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		String date2 = format.format(date);
+		paraMap.put("date", date2);
+		List<Map<String, Object>> lst_data = dfMassOrderMapper.queryNewOder(paraMap);
+		List<Map<String, Object>> tinyVillageCodeList=new ArrayList<Map<String, Object>>();
+		if (lst_data != null && lst_data.size() > 0) {
+			for (Map<String, Object> map : lst_data) {
+				String tiny_village_code = map.get("info_village_code") + "";
+				Integer findCustomerNumberBytinyvillageCode =tinyVillageDao.queryCustomerNumberBytinyvillageCode(tiny_village_code);
+				if (findCustomerNumberBytinyvillageCode != null) {
+					// 根据小区code查询小区
+					Map<String,Object> tinyVillageCode = tinyVillageDao.queryTinyVillageCodeByCode(tiny_village_code);
+					if (tinyVillageCode!=null) {
+						Map<String, Object> map2=new HashMap<String, Object>();
+						map2.put("code", tinyVillageCode.get("code"));
+						map2.put("update_time", new Date());
+						map2.put("consumer_number_2018",findCustomerNumberBytinyvillageCode);
+						tinyVillageCodeList.add(map2);
+					}
+				}
+			}
+		}
+		if (tinyVillageCodeList!=null&&tinyVillageCodeList.size()>0) {
+			try {
+				tinyVillageDao.updateTinyVillageCode(tinyVillageCodeList);	
+			} catch (Exception e) {
+				 throw new SQLException("更新消费用户总数失败！");
+			}
+			
+		}
+   
+    }
 }

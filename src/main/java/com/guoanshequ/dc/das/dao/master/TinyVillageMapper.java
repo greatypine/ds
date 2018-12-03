@@ -36,6 +36,11 @@ public interface TinyVillageMapper {
 	Map<String,Object> queryTinyCodeinfoBytinyId(Long tiny_village_id);
 
 	Integer findMaxTinyVillageCode(String gb_code);
-
+	
+	Integer queryCustomerNumberBytinyvillageCode(String code);
+	
+	Map<String, Object> queryTinyVillageCodeByCode (String code);
+	
+	void updateTinyVillageCode(List<Map<String, Object>> list);
 
 }

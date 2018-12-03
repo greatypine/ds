@@ -207,6 +207,26 @@
         WHERE  id=#{id}
     </update>
 
+
+
+	<update id="updateTinyVillageCode" parameterType="java.util.List">  
+	update tiny_village_code set  
+	 update_time=  
+	 <foreach collection="list" item="item" index="index" separator=" " open="case code" close="end">  
+	 when #{item.code} then #{item.update_time}  
+	  </foreach>  
+	 ,consumer_number_2018=  
+	 <foreach collection="list" item="item" index="index" separator=" " open="case code" close="end">  
+	when #{item.code} then #{item.consumer_number_2018}  
+	 </foreach>   
+	 where code in  
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">  
+	 #{item.code}  
+	</foreach>  
+	 </update>
+						
+
+
     <!-- 根据小区id查询小区code -->
     <select id="queryTinyCodeinfoBytinyId" parameterType="Long" resultType="java.util.Map">
         <![CDATA[
@@ -215,7 +235,15 @@
 			where tiny_village_id = #{tiny_village_id}
 		]]>
     </select>
-
+     <!-- 根据小区code查询小区 -->
+       <select id="queryTinyVillageCodeByCode" parameterType="String" resultType="java.util.Map">
+        select code ,tiny_village_name from tiny_village_code where code = #{code}
+    </select>
+ 	<!-- 根据小区code查询消费人数 -->
+   <select id="queryCustomerNumberBytinyvillageCode" parameterType="String" resultType="java.lang.Integer">
+        SELECT IFNULL(COUNT(DISTINCT customer_id),0) as store_customer_coun FROM df_mass_order_total 
+        WHERE info_village_code=#{code}
+    </select>
     <!-- 根据街道id查询街道 -->
     <select id="queryTownById" parameterType="Long" resultType="java.util.Map">
         <![CDATA[
@@ -322,6 +350,9 @@
           </if>
           <if test="version != null" >
               version = #{version}
+          </if>
+          <if test="consumer_number_2018 != null" >
+              consumer_number_2018 = #{consumer_number_2018}
           </if>
       </set>
         WHERE `code`=#{code}
