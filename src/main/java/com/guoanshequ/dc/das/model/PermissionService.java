@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
  * @Author: gbl
  * @CreateDate: 2018/11/14 11:30
  */
-@Repository
-@DataSource("master")
+
 public class PermissionService {
     private Long id;//主键
     private String app_key;//权限许可证编号

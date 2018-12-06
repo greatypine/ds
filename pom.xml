@@ -80,18 +80,18 @@
             <id>test</id>
             <properties>
                 <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url>jdbc:mysql://10.16.31.82:3306/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true</jdbc.url>
+                <jdbc.url>jdbc:mysql://10.16.21.59:3306/daqWeb?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true</jdbc.url>
                 <jdbc.username>root</jdbc.username>
                 <jdbc.password>~UrDz5cZmFdt</jdbc.password>
-                <slave.jdbc.url>jdbc:mysql://10.16.31.82:3306/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
+                <slave.jdbc.url>jdbc:mysql://10.16.21.59:3306/gemini?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</slave.jdbc.url>
                 <slave.jdbc.username>root</slave.jdbc.username>
                 <slave.jdbc.password>~UrDz5cZmFdt</slave.jdbc.password>
-                <ylc.jdbc.url>jdbc:mysql://10.16.31.82:3306/guoanyanglaocan?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</ylc.jdbc.url>
+                <ylc.jdbc.url>jdbc:mysql://10.16.21.59:3306/guoanyanglaocan?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT&amp;userSSL=false</ylc.jdbc.url>
                 <ylc.jdbc.username>root</ylc.jdbc.username>
                 <ylc.jdbc.password>~UrDz5cZmFdt</ylc.jdbc.password>
-                <redis.host>10.16.31.29:7000,10.16.31.29:7001,10.16.31.29:7002,10.16.31.29:7003,10.16.31.29:7004,10.16.31.29:7005</redis.host>
+                <redis.host>10.16.21.33:7000,10.16.21.33:7001,10.16.21.33:7002,10.16.21.33:7003,10.16.21.33:7004,10.16.21.33:7005</redis.host>
                 <redis.password>abcqwe123</redis.password>
-                <mongodb.hosts>10.16.31.216,10.16.31.216,10.16.31.216</mongodb.hosts>
+                <mongodb.hosts>10.16.21.77,10.16.21.77,10.16.21.77</mongodb.hosts>
                 <mongodb.ports>27017,27027,27037</mongodb.ports>
                 <mongodb.database>gemini</mongodb.database>
                 <mongodb.username>mongo</mongodb.username>
@@ -286,6 +286,29 @@
 	      <artifactId>hadoop-client</artifactId>
 	      <version>2.6.0</version>
 	    </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.51</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.5.6</version>
+        </dependency>
         
     </dependencies>
 

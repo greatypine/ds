@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.SMSSendRecordMapper">
+    <!--<resultMap type="SMSRecordEntity" id="smsRecordResultMap">-->
+        <!--<id property="id" column="id" />-->
+        <!--<result property="appKey" column="app_key" />-->
+        <!--<result property="channelId" column="channelid" />-->
+        <!--<result property="mobilePhone" column="mobilephone" />-->
+        <!--<result property="exeResult" column="exresult" />-->
+        <!--<result property="createTime" column="createtime" />-->
+    <!--</resultMap>-->
+    <select id="addSMSSendRecord" parameterType="SMSSendRecordEntity"  >
+        <![CDATA[
+		  insert  into  t_sms_send_record(app_key,channelid,mobilephone,exeresult,createtime) values (#{appKey},#{channelId},#{mobilePhone},#{exeResult},#{createTime});
+		]]>
+    </select>
+
+</mapper>

@@ -5,3 +5,6 @@ sql/
 target
 .settings
 /bin/
+ds.iml
+.gitignore
+.idea/
