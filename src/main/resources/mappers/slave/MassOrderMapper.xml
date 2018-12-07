@@ -71,6 +71,7 @@
 		<result property="channel_name" column="CHANNEL_NAME" />
 		<result property="department_name" column="DEPARTMENT_NAME" />
 		<result property="gmv_price" column="GMV_PRICE" />
+		<result property="tpl_supplier_code" column="TPL_SUPPLIER_CODE" />
 </resultMap>
 
 <select id="queryMassOrderByDate" parameterType="java.util.Map" resultMap="massOrderResultMap">
@@ -164,7 +165,8 @@
 		  te.business_type AS business_type,
 		  te.joint_ims AS eshop_joint_ims,
 		  tcoutype.proration_platform AS cct_proration_platform,
-		  tcoutype.proration_seller AS cct_proration_seller
+		  tcoutype.proration_seller AS cct_proration_seller,
+		  tpo.supplier_code as tpl_supplier_code
 		FROM
 			t_order tor
 		LEFT JOIN t_store ts ON  (tor.store_id = ts.id)
@@ -183,6 +185,7 @@
 		LEFT JOIN t_order_address taddr ON (tor.order_address_id = taddr.id)
 		LEFT JOIN t_card_coupon tcou on (tog.card_coupon_id = tcou.id)
 		LEFT JOIN t_card_coupontype tcoutype on (tcou.type_id = tcoutype.id)		
+		left join t_tpl_order as tpo on (tpo.id = tor.id)		
 	]]>
 	<where>
 		<if test="maxSignedTime != null and '' != maxSignedTime">
