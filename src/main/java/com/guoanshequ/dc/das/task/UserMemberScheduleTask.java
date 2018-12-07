@@ -62,7 +62,6 @@ public class UserMemberScheduleTask {
 						String runtype = taskMap.get("runtype");
 						String begintime = null;
 						String endtime = null;
-						if("DONE".equals(task_status)) {
 							// 获取上次调度时的最大签收时间开始时间与结束时间
 							if ("MANUAL".equals(runtype)) {
 								begintime = taskMap.get("begintime");
@@ -184,7 +183,6 @@ public class UserMemberScheduleTask {
 					    		dsCronTaskService.updateTaskStatusById(doneMap);
 					    		dsCronTaskService.updateFlagBeginTimeById(doneMap);
 							}
-						}
 						logger.info("社员信息任务执行结果为：开始时间：" + begintime + ",结束时间：" + endtime);
 						logger.info("************社员信息定时任务结束***********************");
 					}

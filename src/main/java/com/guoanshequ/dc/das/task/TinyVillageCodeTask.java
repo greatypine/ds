@@ -23,7 +23,7 @@ public class TinyVillageCodeTask {
 	 @Autowired
 	 TinyVillageService tinyVillageService;
 	  private static final Logger logger = LogManager.getLogger(TinyVillageCodeTask.class);
-	   @Scheduled(cron = "0 30 02 * * ?")
+//	   @Scheduled(cron = "0 30 02 * * ?")
 	    public void syncTinyVillageCode(){
 		   
 		   new Thread(){
