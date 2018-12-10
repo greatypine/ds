@@ -72,6 +72,7 @@
 		<result property="department_name" column="DEPARTMENT_NAME" />
 		<result property="gmv_price" column="GMV_PRICE" />
 		<result property="tpl_supplier_code" column="TPL_SUPPLIER_CODE" />
+		<result property="real_store_id" column="REAL_STORE_ID" />
 </resultMap>
 
 <select id="queryMassOrderByDate" parameterType="java.util.Map" resultMap="massOrderResultMap">
@@ -166,7 +167,8 @@
 		  te.joint_ims AS eshop_joint_ims,
 		  tcoutype.proration_platform AS cct_proration_platform,
 		  tcoutype.proration_seller AS cct_proration_seller,
-		  tpo.supplier_code as tpl_supplier_code
+		  tpo.supplier_code as tpl_supplier_code,
+		  ifnull(tor.normal_store_id, tor.store_id) as real_store_id
 		FROM
 			t_order tor
 		LEFT JOIN t_store ts ON  (tor.store_id = ts.id)

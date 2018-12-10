@@ -72,6 +72,7 @@
 		<result property="department_name" column="DEPARTMENT_NAME" />
 		<result property="gmv_price" column="GMV_PRICE" />
 		<result property="tpl_supplier_code" column="TPL_SUPPLIER_CODE" />
+		<result property="real_store_id" column="REAL_STORE_ID" />
 </resultMap>
 
 	<!-- 获取最大签收时间 -->
@@ -96,14 +97,14 @@
         		status, version, create_user, create_time, update_user,	 update_time, create_user_id, update_user_id, order_sn_reserve, store_remark,  score,  groupon_instance_id, 
         		normal_store_id, third_part, sign_time, info_village_code,area_code,info_employee_a_no,pubseas_label,loan_label,store_name,store_code,store_city_code,store_white,store_province_code,store_status,
         		customer_name,customer_mobile_phone,order_quantity,eshop_name,eshop_white,department_id, bussiness_group_id,area_company_id, channel_id,store_city_name, company_name,channel_name,
-        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type,eshop_joint_ims,cct_proration_platform,cct_proration_seller, tpl_supplier_code) values
+        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type,eshop_joint_ims,cct_proration_platform,cct_proration_seller, tpl_supplier_code, real_store_id) values
 				(#{id}, #{order_sn}, #{group_id}, #{order_type}, #{business_model_id}, #{customer_id}, #{order_address_id}, #{store_id}, #{eshop_id}, #{order_status}, 
 				#{order_source} , #{invoice_status} , #{buyer_remark} , #{seller_remark} ,#{employee_remark}, #{abnormal_type}, #{abnormal_remark},  #{delivery_type}, #{trading_price}, #{payable_price}, 
 				#{is_split}, #{employee_id} , #{employee_phone}, #{employee_name}, #{appointment_start_time},  #{appointment_end_time} , #{eshop_combo_pro_id} , #{expiry_date}, #{combo_price} , #{total_quantity} ,  
 				#{status}, #{version} , #{create_user}, #{create_time}, #{update_user}, #{update_time}, #{create_user_id}, #{update_user_id}, #{order_sn_reserve}, #{store_remark},  #{score},  #{groupon_instance_id}, 
 				#{normal_store_id}, #{third_part} , #{sign_time}, #{info_village_code},#{area_code},#{info_employee_a_no},#{pubseas_label},#{loan_label}, #{store_name}, #{store_code}, #{store_city_code},#{store_white},#{store_province_code},#{store_status},
 				#{customer_name}, #{customer_mobile_phone}, #{order_quantity}, #{eshop_name}, #{eshop_white}, #{department_id}, #{bussiness_group_id},#{area_company_id} , #{channel_id}, #{store_city_name}, #{company_name}, #{channel_name},
-				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type},#{eshop_joint_ims},#{cct_proration_platform},#{cct_proration_seller},#{tpl_supplier_code})
+				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type},#{eshop_joint_ims},#{cct_proration_platform},#{cct_proration_seller},#{tpl_supplier_code},#{real_store_id})
 	</insert> 
 	
 	<!-- 操作Monthly -->
@@ -114,14 +115,14 @@
         		status, version, create_user, create_time, update_user,	 update_time, create_user_id, update_user_id, order_sn_reserve, store_remark,  score,  groupon_instance_id, 
         		normal_store_id, third_part, sign_time, info_village_code,area_code,info_employee_a_no,pubseas_label,loan_label,store_name,store_code,store_city_code,store_white,store_province_code,store_status,
         		customer_name,customer_mobile_phone,order_quantity,eshop_name,eshop_white,department_id, bussiness_group_id,area_company_id, channel_id,store_city_name, company_name,channel_name,
-        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type,eshop_joint_ims,cct_proration_platform,cct_proration_seller, tpl_supplier_code) values
+        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type,eshop_joint_ims,cct_proration_platform,cct_proration_seller, tpl_supplier_code, real_store_id) values
 		       (#{id}, #{order_sn}, #{group_id}, #{order_type}, #{business_model_id}, #{customer_id}, #{order_address_id}, #{store_id}, #{eshop_id}, #{order_status}, 
 				#{order_source} , #{invoice_status} , #{buyer_remark} , #{seller_remark} ,#{employee_remark}, #{abnormal_type}, #{abnormal_remark},  #{delivery_type}, #{trading_price}, #{payable_price}, 
 				#{is_split}, #{employee_id} , #{employee_phone}, #{employee_name}, #{appointment_start_time},  #{appointment_end_time} , #{eshop_combo_pro_id} , #{expiry_date}, #{combo_price} , #{total_quantity} ,  
 				#{status}, #{version} , #{create_user}, #{create_time}, #{update_user}, #{update_time}, #{create_user_id}, #{update_user_id}, #{order_sn_reserve}, #{store_remark},  #{score},  #{groupon_instance_id}, 
 				#{normal_store_id}, #{third_part} , #{sign_time}, #{info_village_code},#{area_code},#{info_employee_a_no},#{pubseas_label},#{loan_label}, #{store_name}, #{store_code}, #{store_city_code},#{store_white},#{store_province_code},#{store_status},
 				#{customer_name}, #{customer_mobile_phone}, #{order_quantity}, #{eshop_name}, #{eshop_white}, #{department_id}, #{bussiness_group_id},#{area_company_id} , #{channel_id}, #{store_city_name}, #{company_name}, #{channel_name},
-				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type},#{eshop_joint_ims},#{cct_proration_platform},#{cct_proration_seller},#{tpl_supplier_code})
+				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type},#{eshop_joint_ims},#{cct_proration_platform},#{cct_proration_seller},#{tpl_supplier_code},#{real_store_id})
 	</insert>
 	
 	<!-- 操作Total -->
@@ -132,14 +133,14 @@
         		status, version, create_user, create_time, update_user,	 update_time, create_user_id, update_user_id, order_sn_reserve, store_remark,  score,  groupon_instance_id, 
         		normal_store_id, third_part, sign_time, info_village_code,area_code,info_employee_a_no,pubseas_label,loan_label,store_name,store_code,store_city_code,store_white,store_province_code,store_status,
         		customer_name,customer_mobile_phone,order_quantity,eshop_name,eshop_white,department_id, bussiness_group_id,area_company_id, channel_id,store_city_name, company_name,channel_name,
-        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type,eshop_joint_ims,cct_proration_platform,cct_proration_seller, tpl_supplier_code) values
+        		department_name, gmv_price,employee_no,addr_name,addr_mobilephone,addr_address,business_type,eshop_joint_ims,cct_proration_platform,cct_proration_seller, tpl_supplier_code, real_store_id) values
 		       (#{id}, #{order_sn}, #{group_id}, #{order_type}, #{business_model_id}, #{customer_id}, #{order_address_id}, #{store_id}, #{eshop_id}, #{order_status}, 
 				#{order_source} , #{invoice_status} , #{buyer_remark} , #{seller_remark} ,#{employee_remark}, #{abnormal_type}, #{abnormal_remark},  #{delivery_type}, #{trading_price}, #{payable_price}, 
 				#{is_split}, #{employee_id} , #{employee_phone}, #{employee_name}, #{appointment_start_time},  #{appointment_end_time} , #{eshop_combo_pro_id} , #{expiry_date}, #{combo_price} , #{total_quantity} ,  
 				#{status}, #{version} , #{create_user}, #{create_time}, #{update_user}, #{update_time}, #{create_user_id}, #{update_user_id}, #{order_sn_reserve}, #{store_remark},  #{score},  #{groupon_instance_id}, 
 				#{normal_store_id}, #{third_part} , #{sign_time}, #{info_village_code},#{area_code},#{info_employee_a_no}, #{pubseas_label},#{loan_label},#{store_name}, #{store_code}, #{store_city_code},#{store_white},#{store_province_code},#{store_status},
 				#{customer_name}, #{customer_mobile_phone}, #{order_quantity}, #{eshop_name}, #{eshop_white}, #{department_id}, #{bussiness_group_id},#{area_company_id} , #{channel_id}, #{store_city_name}, #{company_name}, #{channel_name},
-				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type},#{eshop_joint_ims},#{cct_proration_platform},#{cct_proration_seller},#{tpl_supplier_code})
+				#{department_name}, #{gmv_price}, #{employee_no}, #{addr_name}, #{addr_mobilephone}, #{addr_address}, #{business_type},#{eshop_joint_ims},#{cct_proration_platform},#{cct_proration_seller},#{tpl_supplier_code},#{real_store_id})
 	</insert>  
 	
 	<!-- 更新Daily中需要计算的字段信息 -->

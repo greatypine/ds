@@ -105,6 +105,7 @@ public class DfMassOrder {
 	private BigDecimal platform_price;
 	private BigDecimal seller_price;
 	private String tpl_supplier_code;
+	private String real_store_id;
 	
 	
 	public enum PubseasLabel{
