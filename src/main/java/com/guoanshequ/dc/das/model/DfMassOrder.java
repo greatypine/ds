@@ -86,6 +86,8 @@ public class DfMassOrder {
 	private String addr_name;
 	private String addr_mobilephone;
 	private String addr_address;
+	private Double addr_latitude;
+	private Double addr_longitude;
 	private Date insert_time;
 	private String order_tag1;
 	private BigDecimal apportion_rebate;
@@ -98,6 +100,7 @@ public class DfMassOrder {
 	private String eshop_joint_ims;
 	private Integer cct_proration_platform;
 	private Integer cct_proration_seller;
+	private String content_batch;
 	private BigDecimal contract_percent;
 	private BigDecimal contract_price;
 	private String order_tag3;
