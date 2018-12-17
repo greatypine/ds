@@ -100,7 +100,7 @@ public class DfMassOrder {
 	private String eshop_joint_ims;
 	private Integer cct_proration_platform;
 	private Integer cct_proration_seller;
-	private String content_batch;
+	private String cct_content_batch;
 	private BigDecimal contract_percent;
 	private BigDecimal contract_price;
 	private String order_tag3;
