@@ -13,7 +13,7 @@ public class EncryptUtils {
                 '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(input.getBytes());
+            md.update(input.getBytes("UTF-8"));
             //The result should be one 128 integer
             byte temp[] = md.digest();
             char str[] = new char[16 * 2];

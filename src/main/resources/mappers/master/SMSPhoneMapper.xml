@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.SMSPhoneMapper">
+
+    <resultMap type="SMSPhoneEntity" id="SMSPhoneMap">
+        <id property="id" column="id" />
+        <result property="groupCode" column="group_code" />
+        <result property="groupName" column="group_name" />
+        <result property="mobilePhone" column="mobilephone" />
+        <result property="status" column="status" />
+        <result property="createTime" column="createtime" />
+    </resultMap>
+    <select id="querySMSPhone" parameterType="java.lang.String"  resultMap="SMSPhoneMap">
+        <![CDATA[
+		  select  * from  t_sms_phone where  status=1 and  group_code=#{groupCode}
+		]]>
+    </select>
+
+    <select id="selectSMSPhoneNoSend" parameterType="java.util.Map"  resultType="HashMap">
+        <![CDATA[
+		  select * from (select a.mobilephone,a.group_code,a.status,b.mobilephone as invalidphone from t_sms_phone a LEFT JOIN (select * from t_sms_result_record where  serial_no = #{serialNo} and group_code=#{groupCode}) b on a.group_code = b.group_code and a.mobilephone = b.mobilephone ) c where c.invalidphone is null and c.`status` =1;
+		]]>
+    </select>
+
+    <insert id="addSMSPhone" parameterType="java.util.Map"  >
+        <![CDATA[
+		  insert  into t_sms_phone(group_code,group_name,mobilephone,status,createtime) values (#{groupCode},#{groupName},#{mobilePhone},#{status},#{createtime})
+		]]>
+    </insert>
+
+</mapper>

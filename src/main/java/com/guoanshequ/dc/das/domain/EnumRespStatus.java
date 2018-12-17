@@ -17,6 +17,12 @@ public enum EnumRespStatus {
     DATA_NOYEARMONTH("2000005", "请求参数必须包含年份、月份"),
     DATA_NOPARA("2000006", "请提供查询所需参数"),
     DATA_WRNOCOND("2000010", "请求参数必须包含年月信息"),
+    DATA_MOBILEPHONE_NO_EXIST("2000011", "请求参数缺少手机号"),
+    DATA_CONTENT_NULL("2000011", "请求参数内容为空"),
+    DATA_MOBILEPHONE_ERROR("2000012", "短信手机号参数未以数组方式传递"),
+    DATA_MOBILEPHONE_LIMIT("2000013", "短信手机号多于100个"),
+    DATA_MOBILEPHONE_NULL("2000014", "请求参数手机号为空"),
+    DATA_PHONE_GROUPCODE__NO_EXIST("2000015", "请求参数缺少电话群组编号"),
     DATA_CSNOCOND("2000020", "请求参数必须包含年月、档数信息"),
     DATA_CSNOCOND1("2000021", "请求参数必须包含年月、门店名称、档数信息"),
     DATA_CSHUMANTYPE("2000023", "请求参数必须包含datatype信息"),
@@ -79,7 +85,12 @@ public enum EnumRespStatus {
     DATA_NODATETIME("9000099", "请求参数必须包含datetime且不为空"),
    	DATA_ERRORDATETIMEFORMAT("9000098", "请求参数格式不正确"),
    	DATA_ERRORINDATEFORMAT("9000097", "请求参数时间段无效"),
-    PERMISSIONSERVICE_ERROR("1000002","请求接口未授权");
+    PERMISSIONSERVICE_ERROR("1000002","请求接口未授权"),
+    SMSSERVICE_ERROR("1000003","短信服务不存在"),
+    SMS_SEND_OK("1000004","短信发送请求成功"),
+    SMS_SEND_LIMIT("1000005","当前发送短信任务太多，请稍后重新请求"),
+    SMS_SEND_ERROR("1000006","短信发送请求失败"),
+    SMS_GROUP_ERROR("1000007","没有有效的电话");
 
     private String code;
     private String message;

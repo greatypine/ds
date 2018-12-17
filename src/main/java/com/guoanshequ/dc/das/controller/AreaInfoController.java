@@ -24,7 +24,7 @@ public class AreaInfoController {
 
 	private static final Logger logger = LogManager.getLogger(AreaInfoService.class);
 
-	@RequestMapping(value = "rest/queryAreaNoByTinyNo", method = RequestMethod.POST)
+	@RequestMapping(value = "rest/queryAreaNoByTinyNo/", method = RequestMethod.POST)
 	public RestResponse queryAreaNoByTinyNo(@RequestBody Map<String, String> paraMap) throws Exception {
 		try {
 			String areano = areaInfoService.queryAreaNoByTinyNo("1201040060000000000018");

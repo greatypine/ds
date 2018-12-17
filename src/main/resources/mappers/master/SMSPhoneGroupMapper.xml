@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.SMSPhoneGroupMapper">
+
+    <resultMap type="SMSPhoneGroupEntity" id="SMSPhoneGroupMap">
+        <id property="id" column="id" />
+        <result property="code" column="code" />
+        <result property="name" column="name" />
+        <result property="remark" column="remark" />
+        <result property="status" column="status" />
+        <result property="createTime" column="createtime" />
+    </resultMap>
+    <select id="querySMSPhoneGroup" parameterType="java.lang.String"  resultMap="SMSPhoneGroupMap">
+        <![CDATA[
+		  select  * from  t_sms_phone_group where  status=1 and  group_code=#{groupCode}
+		]]>
+    </select>
+
+
+
+    <insert id="addSMSPhoneGroup" parameterType="SMSPhoneGroupEntity"  >
+        <![CDATA[
+		  insert  into t_sms_phone_group(code,name,status,remark,createtime) values (#{code},#{name},#{status},#{remark},#{createtime})
+		]]>
+    </insert>
+
+</mapper>
