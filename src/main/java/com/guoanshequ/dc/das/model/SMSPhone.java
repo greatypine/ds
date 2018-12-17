@@ -1,5 +1,7 @@
 package com.guoanshequ.dc.das.model;
 
+import java.util.Date;
+
 /**
  * @ProjectName: ds
  * @Package: com.guoanshequ.dc.das.model
@@ -14,6 +16,7 @@ public class SMSPhone {
     private String groupName;
     private String mobilePhone;
     private Integer status;//是否使用 0:否 1:是
+    private Date createTime;
 
     public Long getId() {
         return id;
@@ -53,5 +56,13 @@ public class SMSPhone {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

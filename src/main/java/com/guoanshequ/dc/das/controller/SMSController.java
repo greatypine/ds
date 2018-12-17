@@ -180,8 +180,8 @@ public class SMSController {
             result.put("result",smsResultJA);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("短信发送请求失败"+e.getMessage());
-            logger.info("短信发送请求失败"+e.getMessage());
+            System.out.println("短信发送请求失败"+param.toString()+">>>by:"+e.getMessage());
+            logger.info("短信发送请求失败"+param.toString()+">>>by:"+e.getMessage());
             result.put("status","fail");
             result.put("code",EnumRespStatus.SMS_SEND_ERROR.getCode());
             result.put("desc",EnumRespStatus.SMS_SEND_ERROR.getMessage());
@@ -293,7 +293,7 @@ public class SMSController {
             result.put("result",null);
         }catch(RejectedExecutionException e){
             e.printStackTrace();
-            logger.info("当前发送短信任务太多，请稍后重新请求"+param.toString());
+            logger.info("当前发送短信任务太多，请稍后重新请求"+param.toString()+">>>by:"+e.getMessage());
             result.put("status","fail");
             result.put("code",EnumRespStatus.SMS_SEND_LIMIT.getCode());
             result.put("desc",EnumRespStatus.SMS_SEND_LIMIT.getMessage());
@@ -301,7 +301,7 @@ public class SMSController {
             return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.info("发送短信失败"+param.toString());
+            logger.info("发送短信失败"+param.toString()+">>>by:"+e.getMessage());
             result.put("status","fail");
             result.put("code",EnumRespStatus.SMS_SEND_ERROR.getCode());
             result.put("desc",EnumRespStatus.SMS_SEND_ERROR.getMessage());
@@ -350,8 +350,8 @@ public class SMSController {
             result.put("result",code);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("创建电话群组失败"+e.getMessage());
-            logger.info("创建电话群组失败"+e.getMessage());
+            System.out.println("创建电话群组失败"+param.toString()+">>>by:"+e.getMessage());
+            logger.info("创建电话群组失败"+param.toString()+">>>by:"+e.getMessage());
             result.put("status","fail");
             result.put("code",EnumRespStatus.DATA_ERROR.getCode());
             result.put("desc",EnumRespStatus.DATA_ERROR.getMessage());

@@ -78,8 +78,8 @@ public class SMSSendTask implements Runnable{
 
         }catch (Exception e){
             e.printStackTrace();
-            logger.info(taskName+"--发送短信失败>>>"+param);
-            logger.info(this.getTaskName()+"--线程异常终止...");
+            logger.info(taskName+"--发送短信失败>>>"+param.toString()+">>>by:"+e.getMessage());
+            logger.info(this.getTaskName()+"--线程异常终止..."+">>>by:"+e.getMessage());
             System.out.println(this.getTaskName()+"线程异常终止...");
         }
 
