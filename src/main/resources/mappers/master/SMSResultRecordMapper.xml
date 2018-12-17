@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guoanshequ.dc.das.dao.master.SMSResultRecordMapper">
 
-    <select id="addSMSResultRecord" parameterType="SMSResultRecordEntity"  >
+    <insert id="addSMSResultRecord" parameterType="SMSResultRecordEntity"  >
         <![CDATA[
-		  insert  into  t_sms_result_record(app_key,channelid,mobilephone,exeresult,createtime) values (#{appKey},#{channelId},#{mobilePhone},#{exeResult},#{createTime});
+		  insert  into  t_sms_result_record(app_key,channelid,mobilephone,serial_no,sms_type,group_code,send_result_flag,send_result_desc,sendtime) values (#{appKey},#{channelId},#{mobilePhone},#{serialNo},#{smsType},#{groupCode},#{sendResultFlag},#{sendResultDesc},#{sendTime});
 		]]>
-    </select>
+    </insert>
 
 </mapper>

@@ -14,9 +14,12 @@ public class SMSSendRecord {
     private Long id;
     private String appKey;
     private String channelId;
-    private String mobilePhone;
-    private String exeResult;
+    private String mobilePhone;//暂时不用
+    private String serialNo;
     private Date createTime;
+    private String groupCode;
+    private Integer smsType; //1 带电话参数 0 电话群组参数
+    private String content;
 
     public Long getId() {
         return id;
@@ -50,12 +53,12 @@ public class SMSSendRecord {
         this.mobilePhone = mobilePhone;
     }
 
-    public String getExeResult() {
-        return exeResult;
+    public String getSerialNo() {
+        return serialNo;
     }
 
-    public void setExeResult(String exeResult) {
-        this.exeResult = exeResult;
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
     }
 
     public Date getCreateTime() {
@@ -64,5 +67,29 @@ public class SMSSendRecord {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getGroupCode() {
+        return groupCode;
+    }
+
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
+    }
+
+    public Integer getSmsType() {
+        return smsType;
+    }
+
+    public void setSmsType(Integer smsType) {
+        this.smsType = smsType;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

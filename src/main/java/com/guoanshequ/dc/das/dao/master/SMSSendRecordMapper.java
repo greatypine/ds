@@ -16,10 +16,10 @@ import org.springframework.stereotype.Repository;
 public interface SMSSendRecordMapper {
 
     /**
-     * @Description 保存短信发送记录
+     * @Description 保存短信发送请求记录
      * @author gbl
      * @date 2018/11/26 16:42
      **/
 
-    public void addSMSRecord(SMSSendRecord smsRecord);
+    public void addSMSSendRecord(SMSSendRecord smsRecord);
 }

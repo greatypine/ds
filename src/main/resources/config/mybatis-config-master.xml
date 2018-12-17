@@ -30,5 +30,7 @@
         <typeAlias alias="SMSServiceEntity" type="com.guoanshequ.dc.das.model.SMSService"/>
         <typeAlias alias="SMSSendRecordEntity" type="com.guoanshequ.dc.das.model.SMSSendRecord"/>
         <typeAlias alias="SMSResultRecordEntity" type="com.guoanshequ.dc.das.model.SMSResultRecord"/>
+        <typeAlias alias="SMSPhoneEntity" type="com.guoanshequ.dc.das.model.SMSPhone"/>
+        <typeAlias alias="SMSPhoneGroupEntity" type="com.guoanshequ.dc.das.model.SMSPhoneGroup"/>
     </typeAliases>
 </configuration>

@@ -9,12 +9,16 @@ package com.guoanshequ.dc.das.dto;
  */
 public class SMS {
 
+    private String url;
+    private String userName;
+    private String passWord;
     private String appKey;
-    private int channelId;
+    private String channelId;
     private String groupCode;
-    private int smsType;
+    private int smsType;//1- 带电话参数 0- 电话群组参数
     private String mobilePhone;
     private String content;
+    private String serialNo;
 
     public String getAppKey() {
         return appKey;
@@ -24,11 +28,11 @@ public class SMS {
         this.appKey = appKey;
     }
 
-    public int getChannelId() {
+    public String getChannelId() {
         return channelId;
     }
 
-    public void setChannelId(int channelId) {
+    public void setChannelId(String channelId) {
         this.channelId = channelId;
     }
 
@@ -62,5 +66,37 @@ public class SMS {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassWord() {
+        return passWord;
+    }
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
+    }
+
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
     }
 }
