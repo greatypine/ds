@@ -262,7 +262,7 @@ public class SMSController {
      * @date 2018/12/14 9:44
      **/
 
-    @RequestMapping(value = "/rest/saveSMSPhoneGroup")
+    @RequestMapping(value = "/rest/getSMSPhoneGroup")
     public RestResponse saveSMSPhoneGroup(@RequestBody Map<String, Object> param){
 
         JSONObject result = new JSONObject();
