@@ -8,4 +8,22 @@
 		]]>
     </insert>
 
+    <select id="querySMSResultRecord" parameterType="SMSResultRecordEntity"  resultType="java.util.Map">
+        <![CDATA[
+		  select mobilephone as mobilePhone,serial_no as serialNo,case when send_result_flag='00' then '发送成功' else '发送失败' end as sendResult,concat(sendtime,'') as sendTime   from  t_sms_result_record where  serial_no=#{serialNo}
+
+		]]>
+
+        <if test="null != beginDate">
+            <![CDATA[
+                 and sendtime >=#{beiginData}
+              ]]>
+        </if>
+        <if test="null != endDate">
+            <![CDATA[
+                 and endDate <=#{endDate}
+              ]]>
+        </if>
+    </select>
+
 </mapper>

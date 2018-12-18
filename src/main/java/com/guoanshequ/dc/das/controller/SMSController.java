@@ -6,15 +6,10 @@ import com.guoanshequ.dc.das.domain.EnumRespStatus;
 import com.guoanshequ.dc.das.domain.ExecutorProcessPool;
 
 import com.guoanshequ.dc.das.domain.SMSSendTask;
+import com.guoanshequ.dc.das.dto.RestResponse;
 import com.guoanshequ.dc.das.dto.SMS;
-import com.guoanshequ.dc.das.model.SMSPhone;
-import com.guoanshequ.dc.das.model.SMSPhoneGroup;
-import com.guoanshequ.dc.das.model.SMSSendRecord;
-import com.guoanshequ.dc.das.model.SMSService;
-import com.guoanshequ.dc.das.service.SMSPhoneGroupService;
-import com.guoanshequ.dc.das.service.SMSPhoneService;
-import com.guoanshequ.dc.das.service.SMSSendService;
-import com.guoanshequ.dc.das.service.SMSServiceService;
+import com.guoanshequ.dc.das.model.*;
+import com.guoanshequ.dc.das.service.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -23,10 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
 
 
@@ -57,6 +49,9 @@ public class SMSController {
     @Autowired
     SMSPhoneGroupService smsPhoneGroupService;
 
+    @Autowired
+    SMSResultRecordService smsResultRecordService;
+
 
 
 
@@ -69,7 +64,7 @@ public class SMSController {
      **/
 
     @RequestMapping(value = "/rest/sendSMSToPhone/{channel_spell}")
-    public String sendSMSToPhone(@PathVariable("channel_spell") String channel_spell, @RequestBody Map<String, Object> param) {
+    public RestResponse sendSMSToPhone(@PathVariable("channel_spell") String channel_spell, @RequestBody Map<String, Object> param) {
 
         JSONObject result = new JSONObject();
         JSONArray smsResultJA = new JSONArray();
@@ -81,21 +76,13 @@ public class SMSController {
 
                 logger.info("手机号参数不存在：" + param.toString());
                 System.out.println("手机号参数缺少：" + param.toString());
-                result.put("status","fail");
-                result.put("code",EnumRespStatus.DATA_MOBILEPHONE_NO_EXIST.getCode());
-                result.put("desc",EnumRespStatus.DATA_MOBILEPHONE_NO_EXIST.getMessage());
-                result.put("result",null);
-                return result.toString();
+                return new RestResponse(EnumRespStatus.DATA_MOBILEPHONE_NO_EXIST);
             }
 
             if (smsMobilePhone.getClass().isArray()) {
                 logger.info("手机号参数非数组格式：" + param.toString());
                 System.out.println("手机号参数非数组格式：" + param.toString());
-                result.put("status","fail");
-                result.put("code",EnumRespStatus.DATA_MOBILEPHONE_ERROR.getCode());
-                result.put("desc",EnumRespStatus.DATA_MOBILEPHONE_ERROR.getMessage());
-                result.put("result",null);
-                return result.toString();
+                return new RestResponse(EnumRespStatus.DATA_MOBILEPHONE_ERROR);
             }
 
 
@@ -103,32 +90,20 @@ public class SMSController {
             if (phoneja.size() > 100) {
                 logger.info("手机号多于100个：" + param.toString());
                 System.out.println("手机号参数多于100个：" + param.toString());
-                result.put("status","fail");
-                result.put("code",EnumRespStatus.DATA_MOBILEPHONE_LIMIT.getCode());
-                result.put("desc",EnumRespStatus.DATA_MOBILEPHONE_LIMIT.getMessage());
-                result.put("result",null);
-                return result.toString();
+                return new RestResponse(EnumRespStatus.DATA_MOBILEPHONE_LIMIT);
             }
 
             if (phoneja.size()==0) {
                 logger.info("手机号为空：" + param.toString());
                 System.out.println("手机号为空：" + param.toString());
-                result.put("status","fail");
-                result.put("code",EnumRespStatus.DATA_MOBILEPHONE_NULL.getCode());
-                result.put("desc",EnumRespStatus.DATA_MOBILEPHONE_NULL.getMessage());
-                result.put("result",null);
-                return result.toString();
+                return new RestResponse(EnumRespStatus.DATA_MOBILEPHONE_NULL);
             }
 
             Object smsContent = param.get("content");//短信内容
             if (smsContent == null||"".equals(smsContent)) {
                 logger.info("短信内容是空：" + param.toString());
                 System.out.println("短信内容是空：" + param.toString());
-                result.put("status","fail");
-                result.put("code",EnumRespStatus.DATA_CONTENT_NULL.getCode());
-                result.put("desc",EnumRespStatus.DATA_CONTENT_NULL.getMessage());
-                result.put("result",null);
-                return result.toString();
+                return new RestResponse(EnumRespStatus.DATA_CONTENT_NULL);
             }
 
 
@@ -137,11 +112,7 @@ public class SMSController {
             if (ss == null) {
                 logger.info("短信服务不存在：" + param.toString());
                 System.out.println("短信服务不存在：" + param.toString());
-                result.put("status","fail");
-                result.put("code",EnumRespStatus.SMSSERVICE_ERROR.getCode());
-                result.put("desc",EnumRespStatus.SMSSERVICE_ERROR.getMessage());
-                result.put("result",null);
-                return result.toString();
+                return new RestResponse(EnumRespStatus.SMSSERVICE_ERROR);
             }
 
             Object appKey = param.get("app_key");
@@ -173,23 +144,16 @@ public class SMSController {
                 smsResultJA.add(sendResult);
             }
 
-            result.put("status","success");
-            result.put("code",EnumRespStatus.SMS_SEND_OK.getCode());
-            result.put("desc",EnumRespStatus.SMS_SEND_OK.getMessage());
             result.put("serialNo",serialNo);
             result.put("result",smsResultJA);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("短信发送请求失败"+param.toString()+">>>by:"+e.getMessage());
             logger.info("短信发送请求失败"+param.toString()+">>>by:"+e.getMessage());
-            result.put("status","fail");
-            result.put("code",EnumRespStatus.SMS_SEND_ERROR.getCode());
-            result.put("desc",EnumRespStatus.SMS_SEND_ERROR.getMessage());
-            result.put("result",null);
-            return result.toString();
+            return new RestResponse(EnumRespStatus.SMS_SEND_ERROR);
         }
 
-        return result.toString();
+        return new RestResponse(EnumRespStatus.SMS_SEND_OK,result);
     }
 
 
@@ -200,7 +164,7 @@ public class SMSController {
      **/
 
     @RequestMapping(value = "/rest/sendSMSToGroup/{channel_spell}")
-    public String  sendSMSToGroup(@PathVariable("channel_spell") String channel_spell, @RequestBody Map<String, Object> param){
+    public RestResponse  sendSMSToGroup(@PathVariable("channel_spell") String channel_spell, @RequestBody Map<String, Object> param){
 
         JSONObject result = new JSONObject();
         try {
@@ -208,23 +172,15 @@ public class SMSController {
             if(groupCode==null){
                 logger.info("电话群组编号缺少：" + param.toString());
                 System.out.println("电话群组编号缺少：" + param.toString());
-                result.put("status","fail");
-                result.put("code",EnumRespStatus.DATA_PHONE_GROUPCODE__NO_EXIST.getCode());
-                result.put("desc",EnumRespStatus.DATA_PHONE_GROUPCODE__NO_EXIST.getMessage());
-                result.put("result",null);
-                return result.toString();
+                return new RestResponse(EnumRespStatus.DATA_PHONE_GROUPCODE__NO_EXIST);
             }
 
             List<SMSPhone> phoneList = smsPhoneMapper.querySMSPhone(String.valueOf(groupCode));
 
             if(phoneList==null||phoneList.size()==0){
                 logger.info("电话群组没有电话：" + param.toString());
-                System.out.println("电话群组没有编号：" + param.toString());
-                result.put("status","fail");
-                result.put("code",EnumRespStatus.SMS_GROUP_ERROR.getCode());
-                result.put("desc",EnumRespStatus.SMS_GROUP_ERROR.getMessage());
-                result.put("result",null);
-                return result.toString();
+                System.out.println("电话群组没有电话：" + param.toString());
+                return new RestResponse(EnumRespStatus.SMS_GROUP_ERROR);
             }
 
 
@@ -233,26 +189,14 @@ public class SMSController {
             if (ss == null) {
                 logger.info("短信服务不存在：" + param.toString());
                 System.out.println("短信服务不存在 ：" + param.toString());
-                result.put("status","fail");
-                result.put("code",EnumRespStatus.SMSSERVICE_ERROR.getCode());
-                result.put("desc",EnumRespStatus.SMSSERVICE_ERROR.getMessage());
-                result.put("result",null);
-                return result.toString();
+                return new RestResponse(EnumRespStatus.SMSSERVICE_ERROR);
             }
-
-
-
-
 
             Object smsContent = param.get("content");//短信内容
             if (smsContent == null||"".equals(smsContent)) {
                 logger.info("短信内容是空：" + param.toString());
                 System.out.println("短信内容是空 ：" + param.toString());
-                result.put("status","fail");
-                result.put("code",EnumRespStatus.DATA_CONTENT_NULL.getCode());
-                result.put("desc",EnumRespStatus.DATA_CONTENT_NULL.getMessage());
-                result.put("result",null);
-                return result.toString();
+                return new RestResponse(EnumRespStatus.DATA_CONTENT_NULL);
             }
 
             Object appKey = param.get("app_key");
@@ -286,29 +230,18 @@ public class SMSController {
             logger.info("线程池对象：" +executorProcessPool.hashCode());
             logger.info("短信正在发送：" + param.toString());
             System.out.println("短信正在发送 ：" + param.toString());
-            result.put("status","success");
-            result.put("code",EnumRespStatus.SMS_SEND_OK.getCode());
-            result.put("desc",EnumRespStatus.SMS_SEND_OK.getMessage());
             result.put("serialNo",serialNo);
             result.put("result",null);
         }catch(RejectedExecutionException e){
             e.printStackTrace();
             logger.info("当前发送短信任务太多，请稍后重新请求"+param.toString()+">>>by:"+e.getMessage());
-            result.put("status","fail");
-            result.put("code",EnumRespStatus.SMS_SEND_LIMIT.getCode());
-            result.put("desc",EnumRespStatus.SMS_SEND_LIMIT.getMessage());
-            result.put("result",null);
-            return result.toString();
+            return new RestResponse(EnumRespStatus.SMS_SEND_LIMIT);
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("发送短信失败"+param.toString()+">>>by:"+e.getMessage());
-            result.put("status","fail");
-            result.put("code",EnumRespStatus.SMS_SEND_ERROR.getCode());
-            result.put("desc",EnumRespStatus.SMS_SEND_ERROR.getMessage());
-            result.put("result",null);
-            return result.toString();
+            return new RestResponse(EnumRespStatus.SMS_SEND_ERROR);
         }
-        return result.toString();
+        return new RestResponse(EnumRespStatus.SMS_SEND_OK,result);
     }
 
     /**
@@ -330,7 +263,7 @@ public class SMSController {
      **/
 
     @RequestMapping(value = "/rest/saveSMSPhoneGroup")
-    public String saveSMSPhoneGroup(@RequestBody Map<String, Object> param){
+    public RestResponse saveSMSPhoneGroup(@RequestBody Map<String, Object> param){
 
         JSONObject result = new JSONObject();
         Object appkey = param.get("app_key");
@@ -344,23 +277,53 @@ public class SMSController {
             smsPhoneGroup.setStatus(1);
             smsPhoneGroup.setCreatetime(new Date());
             smsPhoneGroupService.addSMSPhoneGroup(smsPhoneGroup);
-            result.put("status","success");
-            result.put("code",EnumRespStatus.DATA_OK.getCode());
-            result.put("desc",EnumRespStatus.DATA_OK.getMessage());
-            result.put("result",code);
+            result.put("groupCode",code);
+            result.put("result",null);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("创建电话群组失败"+param.toString()+">>>by:"+e.getMessage());
             logger.info("创建电话群组失败"+param.toString()+">>>by:"+e.getMessage());
-            result.put("status","fail");
-            result.put("code",EnumRespStatus.DATA_ERROR.getCode());
-            result.put("desc",EnumRespStatus.DATA_ERROR.getMessage());
-            result.put("result",code);
-            return result.toString();
+            return new RestResponse(EnumRespStatus.DATA_ERROR);
         }
 
-        return  result.toString();
+        return  new RestResponse(EnumRespStatus.DATA_OK,result);
     }
 
+    @RequestMapping(value = "/rest/querySMSResultRecord")
+    public RestResponse querySMSResultRecord(@RequestBody Map<String, Object> param){
+        List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+        JSONObject result = new JSONObject();
+        SMSResultRecord resultRecord = new SMSResultRecord();
+        Object serialNo = param.get("serialNo");//流水号
+        if(serialNo==null){
 
+            logger.info("流水号不存在：" + param.toString());
+            System.out.println("流水号不存在：" + param.toString());
+            return new RestResponse(EnumRespStatus.DATA_NOPARA);
+        }
+        resultRecord.setSerialNo(String.valueOf(serialNo));
+
+        Object beginDate = param.get("beginDate");
+
+        if(beginDate!=null&&!"".equals(beginDate)){
+            resultRecord.setBeginDate(String.valueOf(beginDate));
+        }
+
+        Object endDate = param.get("endDate");
+
+        if(endDate!=null&&!"".equals(endDate)){
+            resultRecord.setEndDate(String.valueOf(endDate));
+        }
+
+        try {
+            list = smsResultRecordService.querySMSResultRecord(resultRecord);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("查询短信结果"+param.toString()+">>>by:"+e.getMessage());
+            System.out.println("查询短信结果"+param.toString()+">>>by:"+e.getMessage());
+            return new RestResponse(EnumRespStatus.DATA_ERROR);
+        }
+
+        return new RestResponse(EnumRespStatus.DATA_OK,list);
+    }
 }

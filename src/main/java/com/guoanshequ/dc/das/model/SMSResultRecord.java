@@ -21,6 +21,8 @@ public class SMSResultRecord {
     private String sendResultDesc;
     private String groupCode;
     private Integer smsType;
+    private String beginDate;
+    private String endDate;
     public Long getId() {
         return id;
     }
@@ -99,5 +101,21 @@ public class SMSResultRecord {
 
     public void setSmsType(Integer smsType) {
         this.smsType = smsType;
+    }
+
+    public String getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(String beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }
