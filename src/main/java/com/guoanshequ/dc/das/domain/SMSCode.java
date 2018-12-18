@@ -8,7 +8,7 @@ package com.guoanshequ.dc.das.domain;
  * @CreateDate: 2018/12/6 15:19
  */
 public enum SMSCode {
-    SMS_SUCCESS("00","提交成功"),
+    SMS_SUCCESS("00","发送成功"),
     SMS_PARAM_INCOMPLETE("1","参数不完整，请检查所带的参数名是否都正确"),
     SMS_UNAUTHORIZED("2","鉴权失败，一般是用户名密码不对"),
     SMS_PHONE_MORE_THAN_FIFTY("3","号码数量超出 50 条"),

@@ -79,24 +79,24 @@ public class SMSSendService {
             if(SMSCode.SMS_SUCCESS.getCode().equals(smsResult)){//短信发送成功
                 //请求返回值
                 jsonObject.put("status","success");
-                jsonObject.put("code",smsResult);
-                jsonObject.put("desc",SMSCode.SMS_SUCCESS.getMessage());
+//                jsonObject.put("code",smsResult);
+                jsonObject.put("sendResult",SMSCode.SMS_SUCCESS.getMessage());
                 jsonObject.put("mobilePhone",sms.getMobilePhone());
                 //返回值存数据库
                 srr.setSendResultFlag(smsResult);
                 srr.setSendResultDesc(SMSCode.SMS_SUCCESS.getMessage());
             }else if(smsResult.contains(SMSCode.SMS_IP_ERROR.getCode())){//请求发送成功（不是短信发送成功）
                 jsonObject.put("status","fail");
-                jsonObject.put("code",smsResult);
-                jsonObject.put("desc",SMSCode.SMS_IP_ERROR.getMessage());
+//                jsonObject.put("code",smsResult);
+                jsonObject.put("sendResult",SMSCode.SMS_IP_ERROR.getMessage());
                 jsonObject.put("mobilePhone",sms.getMobilePhone());
 
                 srr.setSendResultFlag(smsResult);
                 srr.setSendResultDesc(SMSCode.SMS_IP_ERROR.getMessage());
             }else{//请求发送成功（不是短信发送成功）
                 jsonObject.put("status","fail");
-                jsonObject.put("code",smsResult);
-                jsonObject.put("desc",SMSCode.getMessage(smsResult));
+//                jsonObject.put("code",smsResult);
+                jsonObject.put("sendResult",SMSCode.getMessage(smsResult));
                 jsonObject.put("mobilePhone",sms.getMobilePhone());
                 srr.setSendResultFlag(smsResult);
                 srr.setSendResultDesc(SMSCode.getMessage(smsResult));
@@ -107,8 +107,8 @@ public class SMSSendService {
             e.printStackTrace();
             logger.info("发送短信失败1"+e.getMessage());
             jsonObject.put("status","fail");//请求发送失败
-            jsonObject.put("code",SMSCode.SMS_REQUEST_FAIL.getCode());//请求发送失败
-            jsonObject.put("desc",SMSCode.SMS_REQUEST_FAIL.getMessage()+"-error1");
+//            jsonObject.put("code",SMSCode.SMS_REQUEST_FAIL.getCode());//请求发送失败
+            jsonObject.put("sendResult",SMSCode.SMS_REQUEST_FAIL.getMessage()+"-error1");
             jsonObject.put("mobilePhone",sms.getMobilePhone());
 
             srr.setSendResultFlag(SMSCode.SMS_REQUEST_FAIL.getCode());
@@ -118,8 +118,8 @@ public class SMSSendService {
             e.printStackTrace();
             logger.info("发送短信失败2"+e.getMessage());
             jsonObject.put("status","fail");//请求发送失败
-            jsonObject.put("code",SMSCode.SMS_REQUEST_FAIL.getCode());//请求发送失败
-            jsonObject.put("desc",SMSCode.SMS_REQUEST_FAIL.getMessage()+"-error2");
+//            jsonObject.put("code",SMSCode.SMS_REQUEST_FAIL.getCode());//请求发送失败
+            jsonObject.put("sendResult",SMSCode.SMS_REQUEST_FAIL.getMessage()+"-error2");
             jsonObject.put("mobilePhone",sms.getMobilePhone());
 
             srr.setSendResultFlag(SMSCode.SMS_REQUEST_FAIL.getCode());
