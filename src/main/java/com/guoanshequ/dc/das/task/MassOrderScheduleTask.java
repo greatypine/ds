@@ -1283,6 +1283,7 @@ public class MassOrderScheduleTask {
 			public void run() {
 				try{
 					logger.info("**********order_tag4营销类打标签任务调度开始**********");
+					Integer aUpdatenum =0;
 					Integer a1Updatenum =0;
 					Integer a2Updatenum =0;
 					Integer a3Updatenum =0;
@@ -1306,6 +1307,14 @@ public class MassOrderScheduleTask {
 		    		runMap.put("task_status", "RUNNING");
 		    		dsCronTaskService.updateTaskStatusById(runMap);
 		    		
+		    		//A类营销：运营管理中心有分摊占比产生的优惠券所使用的订单
+		    		String aSql ="select tor.id from daqWeb.df_mass_order_monthly tor " + 
+		    				"join gemini.t_order_group tog on (tor.group_id = tog.id) " + 
+		    				"join gemini.t_card_coupon tcou on (tog.card_coupon_id = tcou.id)  " + 
+		    				"join gemini.t_card_coupontype tcout on (tcout.id = tcou.type_id)  " + 
+		    				"join gemini.t_card_coupontype_proration tcoutp on (tcoutp.coupontype_id = tcout.id and tcoutp.department_id = '8ad8fa9465a82aa50165b286c97c2ee9') "+
+		    				"where tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";
+		    		
 		    		//A类营销：A1优品试用每月25的券
 		    		String a1Sql = "select tor.id from daqweb.df_mass_order_monthly tor " + 
 		    				"join gemini.t_order_group tog on (tor.group_id = tog.id) " + 
@@ -1325,9 +1334,26 @@ public class MassOrderScheduleTask {
 		    				"join gemini.t_card_coupon tcou on (tog.card_coupon_id = tcou.id and tcou.emall_id ='edea35c2f1fb334184d53f4ca215f7a1')   " + 
 		    				"where tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";
 		    		
+		    		List<Map<String,Object>> aOrderList = ImpalaUtil.execute(aSql);
 		    		List<Map<String,Object>> a1OrderList = ImpalaUtil.execute(a1Sql);
 		    		List<Map<String,Object>> a2OrderList = ImpalaUtil.execute(a2Sql);
 		    		List<Map<String,Object>> a3OrderList = ImpalaUtil.execute(a3Sql);
+		    		
+		    		if(!aOrderList.isEmpty()) {
+		    			logger.info("**********A类营销费用，总A标签开始***************");
+			    		String a_id =null;
+			    		for (Map<String, Object> aOrderMap : aOrderList) {
+			    			DfMassOrder aOrder = new DfMassOrder(); 
+			    			a_id = aOrderMap.get("id").toString();
+			    			aOrder.setId(a_id);
+			    			aOrder.setOrder_tag4("A");
+							dfMassOrderService.updateMarktingTagOfDaily(aOrder);
+							aUpdatenum += dfMassOrderService.updateMarktingTagOfMonthly(aOrder);
+							dfMassOrderService.updateMarktingTagOfTotal(aOrder);
+						}
+						logger.info("**********A类营销费用，总A标签结束,共更新记录条数："+aUpdatenum+"***************");
+		    		}
+		    		
 		    		
 		    		if(!a1OrderList.isEmpty()) {
 		    			logger.info("**********A类营销费用，A1标签开始***************");
