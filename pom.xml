@@ -23,6 +23,7 @@
                     <include>**/jdbc.properties</include>
                     <include>**/redis.properties</include>
                     <include>**/mongodb.properties</include>
+                    <include>**/net.properties</include>
                 </includes>
                 <filtering>true</filtering>
             </resource>
@@ -73,7 +74,10 @@
                 <ims.jdbc.driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</ims.jdbc.driverClassName>
                 <ims.jdbc.url>jdbc:sqlserver://39.107.69.242:1433;DatabaseName=Enjoy_Hq</ims.jdbc.url>
                 <ims.jdbc.username>test</ims.jdbc.username>
-                <ims.jdbc.password>gasq1qaz</ims.jdbc.password>                
+                <ims.jdbc.password>gasq1qaz</ims.jdbc.password>
+                <net.proxy.domain>proxy.guoanshequ.top</net.proxy.domain>
+                <net.proxy.port>3128</net.proxy.port>
+                <net.proxy.switch>on</net.proxy.switch>
             </properties>
         </profile>
         <profile>
@@ -99,7 +103,10 @@
                 <ims.jdbc.driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</ims.jdbc.driverClassName>
                 <ims.jdbc.url>jdbc:sqlserver://39.107.69.242:1433;DatabaseName=Enjoy_Hq</ims.jdbc.url>
                 <ims.jdbc.username>test</ims.jdbc.username>
-                <ims.jdbc.password>gasq1qaz</ims.jdbc.password>            
+                <ims.jdbc.password>gasq1qaz</ims.jdbc.password>
+                <net.proxy.domain>10.16.90.158</net.proxy.domain>
+                <net.proxy.port>3128</net.proxy.port>
+                <net.proxy.switch>off</net.proxy.switch>
             </properties>
         </profile>
         <profile>
@@ -126,7 +133,10 @@
                 <ims.jdbc.driverClassName>com.microsoft.sqlserver.jdbc.SQLServerDriver</ims.jdbc.driverClassName>
                 <ims.jdbc.url>jdbc:sqlserver://39.107.69.242:1433;DatabaseName=Enjoy_Hq</ims.jdbc.url>
                 <ims.jdbc.username>test</ims.jdbc.username>
-                <ims.jdbc.password>gasq1qaz</ims.jdbc.password>            
+                <ims.jdbc.password>gasq1qaz</ims.jdbc.password>
+                <net.proxy.domain>10.16.90.158</net.proxy.domain>
+                <net.proxy.port>3128</net.proxy.port>
+                <net.proxy.switch>off</net.proxy.switch>
             </properties>
         </profile>
     </profiles>

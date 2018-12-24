@@ -1,11 +1,14 @@
 package com.guoanshequ.dc.das.utils;
 
+import com.aliyun.oss.ClientConfiguration;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +21,30 @@ import java.util.UUID;
 /**
  * Created by sunning on 2018/9/10.
  */
+@Component
+@org.springframework.context.annotation.PropertySource("classpath:/config/net.properties")
 public class OSSUploadUtil {
+
+    private static String netProxyDomain;
+
+    private static  Integer netProxyPort;
+
+    private static String netProxySwitch;
+
+    @Value("${net.proxy.domain}")
+    public  void setNetProxyDomain(String netProxyDomain) {
+        OSSUploadUtil.netProxyDomain = netProxyDomain;
+    }
+
+    @Value("${net.proxy.port}")
+    public  void setNetProxyPort(Integer netProxyPort) {
+        OSSUploadUtil.netProxyPort = netProxyPort;
+    }
+
+    @Value("${net.proxy.switch}")
+    public  void setNetProxySwitch(String netProxySwitch) {
+        OSSUploadUtil.netProxySwitch = netProxySwitch;
+    }
     private static final Logger logger = LogManager.getLogger(OSSUploadUtil.class);
     private static OSSConfig config = null;
 
@@ -58,7 +84,17 @@ public class OSSUploadUtil {
         if(bucketName==null||fileName==null) return false;
         OSSClient ossClient = null;
         try {
-            ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+            if("off".equals(netProxySwitch)){
+                ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+            }else if("on".equals(netProxySwitch)){
+                // 创建ClientConfiguration实例
+                ClientConfiguration conf = new ClientConfiguration();
+
+                // 配置代理为本地8080端口
+                conf.setProxyHost(netProxyDomain);
+                conf.setProxyPort(netProxyPort);
+                ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret(),conf);
+            }
             GenericRequest request = new DeleteObjectsRequest(bucketName).withKey(fileName);
             ossClient.deleteObject(request);
         } catch (Exception oe) {
@@ -76,7 +112,17 @@ public class OSSUploadUtil {
         if(bucketName==null||fileNames.size()<=0) return 0;
         OSSClient ossClient = null;
         try {
-            ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+            if("off".equals(netProxySwitch)){
+                ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+            }else if("on".equals(netProxySwitch)){
+                // 创建ClientConfiguration实例
+                ClientConfiguration conf = new ClientConfiguration();
+
+                // 配置代理为本地8080端口
+                conf.setProxyHost(netProxyDomain);
+                conf.setProxyPort(netProxyPort);
+                ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret(),conf);
+            }
             DeleteObjectsRequest request = new DeleteObjectsRequest(bucketName).withKeys(fileNames);
             DeleteObjectsResult result = ossClient.deleteObjects(request);
             deleteCount = result.getDeletedObjects().size();
@@ -105,7 +151,18 @@ public class OSSUploadUtil {
         String url = null;
         OSSClient ossClient = null;
         try {
-            ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+
+            if("off".equals(netProxySwitch)){
+                ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+            }else if("on".equals(netProxySwitch)){
+                // 创建ClientConfiguration实例
+                ClientConfiguration conf = new ClientConfiguration();
+
+                // 配置代理为本地8080端口
+                conf.setProxyHost(netProxyDomain);
+                conf.setProxyPort(netProxyPort);
+                ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret(),conf);
+            }
             InputStream input = new FileInputStream(file);
             ObjectMetadata meta = new ObjectMetadata();
             meta.setContentType(OSSUploadUtil.contentType(fileType));
@@ -227,7 +284,18 @@ public class OSSUploadUtil {
             OSSClient ossClient =null;
             try {
                 logger.info("开始请求OSS服务");
-                ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+
+                if("off".equals(netProxySwitch)){
+                    ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+                }else if("on".equals(netProxySwitch)){
+                    // 创建ClientConfiguration实例
+                    ClientConfiguration conf = new ClientConfiguration();
+
+                    // 配置代理为本地8080端口
+                    conf.setProxyHost(netProxyDomain);
+                    conf.setProxyPort(netProxyPort);
+                    ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret(),conf);
+                }
                 logger.info("获取OSSClient成功");
                 // 构造ListObjectsRequest请求
             ListObjectsRequest listObjectsRequest = new ListObjectsRequest("guoanshuju");
@@ -275,7 +343,17 @@ public class OSSUploadUtil {
             OSSClient ossClient =null;
             try {
                 logger.info("开始请求OSS服务");
-                ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+                if("off".equals(netProxySwitch)){
+                    ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+                }else if("on".equals(netProxySwitch)){
+                    // 创建ClientConfiguration实例
+                    ClientConfiguration conf = new ClientConfiguration();
+
+                    // 配置代理为本地8080端口
+                    conf.setProxyHost(netProxyDomain);
+                    conf.setProxyPort(netProxyPort);
+                    ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret(),conf);
+                }
             // 删除Object
             if(url.indexOf(".")>-1) {
                 ossClient.deleteObject("guoanshuju", url);

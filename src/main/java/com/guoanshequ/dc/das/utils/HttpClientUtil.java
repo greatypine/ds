@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -21,8 +23,8 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -38,31 +40,33 @@ import java.util.Map;
  * @Author: gbl
  * @CreateDate: 2018/11/23 16:23
  */
+
 @Component
+@org.springframework.context.annotation.PropertySource("classpath:/config/net.properties")
 public class HttpClientUtil {
 
-      @Autowired
-      static HttpConectionPool httpConectionPool;
-//    private static  boolean httpProxySwitch;
-//
-//    private static String httpProxyServer;
-//
-//    private static  Integer httpProxyPort;
-//
-//    @Value("${http.proxy.switch}")
-//    public  void setHttpProxySwitch(boolean httpProxySwitch) {
-//        HttpClientUtil.httpProxySwitch = httpProxySwitch;
-//    }
-//
-//    @Value("${http.proxy.server}")
-//    public  void setHttpProxyServer(String httpProxyServer) {
-//        HttpClientUtil.httpProxyServer = httpProxyServer;
-//    }
-//
-//    @Value("${http.proxy.port}")
-//    public  void setHttpProxyPort(Integer httpProxyPort) {
-//        HttpClientUtil.httpProxyPort = httpProxyPort;
-//    }
+    private static String httpProxyDomain;
+
+    private static  Integer httpProxyPort;
+
+    private static String httpProxySwitch;
+
+
+
+    @Value("${net.proxy.domain}")
+    public  void setHttpProxyDomain(String httpProxyDomain) {
+        HttpClientUtil.httpProxyDomain = httpProxyDomain;
+    }
+
+    @Value("${net.proxy.port}")
+    public  void setHttpProxyPort(Integer httpProxyPort) {
+        HttpClientUtil.httpProxyPort = httpProxyPort;
+    }
+
+    @Value("${net.proxy.switch}")
+    public  void setHttpProxySwitch(String httpProxySwitch) {
+        HttpClientUtil.httpProxySwitch = httpProxySwitch;
+    }
 
     private static  final Logger log = LogManager.getLogger(HttpClientUtil.class);
     // 默认字符集
@@ -95,7 +99,20 @@ public class HttpClientUtil {
         CloseableHttpResponse response=null;
 
         try {
-            client = HttpClients.custom().build();
+            if("on".equals(httpProxySwitch)){
+                //设置代理IP、端口、协议（请分别替换）
+                HttpHost proxy = new HttpHost(httpProxyDomain, httpProxyPort, "http");
+
+                //把代理设置到请求配置
+                RequestConfig defaultRequestConfig = RequestConfig.custom() .setProxy(proxy).build();
+
+                //实例化CloseableHttpClient对象
+                client = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).build();
+
+            }else{
+                client = HttpClients.custom().build();
+            }
+
             // 设置请求头
             if (headers != null) {
                 Header[] allHeader = new BasicHeader[headers.size()];
@@ -107,7 +124,7 @@ public class HttpClientUtil {
                 httpPost.setHeaders(allHeader);
             }
             // 设置实体
-            httpPost.setEntity(new StringEntity(JSON.toJSONString(data)));
+                httpPost.setEntity(new StringEntity(JSON.toJSONString(data)));
             // 发送请求,返回响应对象
             response = client.execute(httpPost);
             // 获取响应状态
@@ -160,6 +177,8 @@ public class HttpClientUtil {
 
         return sendPost(url, headers, data, ENCODING);
     }
+
+
 
     /**
      * @Description: 发送post请求，请求数据默认使用json格式，默认使用UTF-8编码
@@ -232,7 +251,19 @@ public class HttpClientUtil {
         try {
             // 创建client
 //            client = httpConectionPool.getHttpClient();
-            client = HttpClients.custom().build();
+            if("on".equals(httpProxySwitch)){
+                //设置代理IP、端口、协议（请分别替换）
+                HttpHost proxy = new HttpHost(httpProxyDomain, httpProxyPort, "http");
+
+                //把代理设置到请求配置
+                RequestConfig defaultRequestConfig = RequestConfig.custom() .setProxy(proxy).build();
+
+                //实例化CloseableHttpClient对象
+                client = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).build();
+
+            }else{
+                client = HttpClients.custom().build();
+            }
             // 创建HttpGet
             httpGet = new HttpGet();
             // 创建uri
@@ -328,19 +359,20 @@ public class HttpClientUtil {
         log.info("开始上传文件："+fileNames);
         try {
 
-//            if(httpProxySwitch){
-//                //设置代理IP、端口、协议（请分别替换）
-//                HttpHost proxy = new HttpHost(httpProxyServer, httpProxyPort, "http");
-//
-//                //把代理设置到请求配置
-//                RequestConfig defaultRequestConfig = RequestConfig.custom().setProxy(proxy).build();
-//
-//                //实例化CloseableHttpClient对象
-//                httpClient = HttpClientBuilder.create().setDefaultRequestConfig(defaultRequestConfig).build();
-//
-//            }else{
+            if("on".equals(httpProxySwitch)){
+                //设置代理IP、端口、协议（请分别替换）
+                HttpHost proxy = new HttpHost(httpProxyDomain, httpProxyPort, "http");
+
+                //把代理设置到请求配置
+                RequestConfig defaultRequestConfig = RequestConfig.custom() .setProxy(proxy).build();
+
+                //实例化CloseableHttpClient对象
+                httpClient = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).build();
+
+            }else{
                 httpClient = HttpClients.custom().build();
-//            }
+            }
+
             httpPost = new HttpPost(url);
 
             MultipartEntityBuilder multipartEntityBuilder =  MultipartEntityBuilder.create();
@@ -414,19 +446,19 @@ public class HttpClientUtil {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
-//            if(httpProxySwitch){
-//                //设置代理IP、端口、协议
-//                HttpHost proxy = new HttpHost(httpProxyServer, httpProxyPort, "http");
-//
-//                //把代理设置到请求配置
-//                RequestConfig defaultRequestConfig = RequestConfig.custom().setProxy(proxy).build();
-//
-//                //实例化CloseableHttpClient对象
-//                httpClient = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).build();
-//
-//            }else{
+            if("on".equals(httpProxySwitch)){
+                //设置代理IP、端口、协议（请分别替换）
+                HttpHost proxy = new HttpHost(httpProxyDomain, httpProxyPort, "http");
+
+                //把代理设置到请求配置
+                RequestConfig defaultRequestConfig = RequestConfig.custom() .setProxy(proxy).build();
+
+                //实例化CloseableHttpClient对象
+                httpClient = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).build();
+
+            }else{
                 httpClient = HttpClientBuilder.create().build();
-//            }
+            }
 
             HttpPost httpPost = new HttpPost(URI.create(url));
             FileBody fileBody = new FileBody(file);
