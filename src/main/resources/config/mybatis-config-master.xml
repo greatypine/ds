@@ -32,5 +32,6 @@
         <typeAlias alias="SMSResultRecordEntity" type="com.guoanshequ.dc.das.model.SMSResultRecord"/>
         <typeAlias alias="SMSPhoneEntity" type="com.guoanshequ.dc.das.model.SMSPhone"/>
         <typeAlias alias="SMSPhoneGroupEntity" type="com.guoanshequ.dc.das.model.SMSPhoneGroup"/>
+        <typeAlias alias="ProvidentFundCityInfoEntity" type="com.guoanshequ.dc.das.model.ProvidentFundLoginInfo"/>
     </typeAliases>
 </configuration>

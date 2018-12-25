@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.ProvidentFundLoginInfoMapper">
+
+    <resultMap type="ProvidentFundCityInfoEntity" id="ProvidentFundLoginInfoMap">
+        <id property="id" column="id" />
+        <result property="provinceName" column="province_name" />
+        <result property="provinceId" column="province_id" />
+        <result property="cityName" column="city_name" />
+        <result property="cityId" column="city_id" />
+        <result property="loginName" column="login_name" />
+        <result property="loginNameDesc" column="login_name_desc" />
+        <result property="loginPasswod" column="login_passwod" />
+        <result property="loginPasswordDesc" column="login_password_desc" />
+        <result property="state" column="state" />
+    </resultMap>
+    <insert id="saveProvidentFundLoginInfo" parameterType="ProvidentFundCityInfoEntity"  >
+        <![CDATA[
+		  insert  into  t_provident_fund_login_info(province_name,province_id,city_name,city_id,login_name,login_name_desc,login_passwod,login_password_desc) values (#{provinceName},#{provinceId},#{cityName},#{cityId},#{loginName},#{loginNameDesc},#{loginPasswod},#{loginPasswordDesc});
+		]]>
+    </insert>
+
+    <select id="queryProvidentFundLoginInfo" parameterType="java.util.Map"  resultMap="ProvidentFundLoginInfoMap">
+        <![CDATA[
+		  select  * from  t_provident_fund_login_info where    state=1
+		]]>
+
+        <if test="null != provinceId">
+            <![CDATA[
+                 and province_id >=#{provinceId}
+              ]]>
+        </if>
+
+        <if test="null != cityId">
+            <![CDATA[
+                 and city_id >=#{cityId}
+              ]]>
+        </if>
+
+    </select>
+
+</mapper>
