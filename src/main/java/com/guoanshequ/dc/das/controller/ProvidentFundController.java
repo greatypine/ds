@@ -6,6 +6,7 @@ import com.guoanshequ.dc.das.utils.SignUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +23,7 @@ import java.util.Map;
  * @CreateDate: 2018/12/24 16:14
  */
 @RestController
+@org.springframework.context.annotation.PropertySource("classpath:/config/common.properties")
 public class ProvidentFundController {
 
     private static final Logger logger = LogManager.getLogger(ProvidentFundController.class);
