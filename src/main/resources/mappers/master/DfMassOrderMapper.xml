@@ -106,6 +106,9 @@
 		<result property = "seller_price" column = "SELLER_PRICE" />
 		<result property = "tpl_supplier_code" column = "TPL_SUPPLIER_CODE" />
 		<result property = "real_store_id" column = "REAL_STORE_ID" />
+		<result property = "sale_profit" column = "SALE_PROFIT" />
+		<result property = "gayy_subsidy" column = "GAYY_SUBSIDY" />
+		<result property = "success_time" column = "SUCCESS_TIME" />
 	</resultMap>
 
 	<!-- 获取最大签收时间 -->
@@ -646,6 +649,13 @@
 		]]>
   	</select>
   	
+ 	<!--  -->
+	<select id="queryMassOrderListBySuccessTime" parameterType="java.util.Map" resultType="MassOrderEntity">
+		<![CDATA[
+			 select * from df_mass_order_daily;
+		]]>
+  	</select>
+  	
   	<!-- 针对未在进销存系统中查找到的订单，第二天再次进行查找计算，补充计算 -->
 	<select id="queryMassOrderIsnullListByPreDate" parameterType="java.util.Map" resultType="MassOrderEntity">
 		<![CDATA[
@@ -801,7 +811,42 @@
   		<![CDATA[
 			update df_mass_order_total set order_tag4 =#{order_tag4}  where id =#{id} 
 		]]>
-  	</update>   	  		  	 	
-  	  	
-  	
+  	</update>
+
+	<update id="updateSaleProfitOfDaily" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_daily set sale_profit = #{sale_profit} ,gayy_subsidy =#{gayy_subsidy} where id = #{id}
+		]]>
+	</update>
+
+	<update id="updateSaleProfitOfMonthly" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_monthly set sale_profit = #{sale_profit} ,gayy_subsidy =#{gayy_subsidy} where id = #{id}
+		]]>
+	</update>
+
+	<update id="updateSaleProfitDailyOfTotal" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_total set sale_profit = #{sale_profit} ,gayy_subsidy =#{gayy_subsidy} where id = #{id}
+		]]>
+	</update>
+
+	<update id="updateUnSuccessOfDaily" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_daily set success_time = #{success_time} where id = #{id}
+		]]>
+	</update>
+
+	<update id="updateUnSuccessOfMonthly" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_monthly set success_time = #{success_time} where id = #{id}
+		]]>
+	</update>
+
+	<update id="updateUnSuccessOfTotal" parameterType="MassOrderEntity">
+  		<![CDATA[
+			update df_mass_order_total set success_time = #{success_time} where id = #{id}
+		]]>
+	</update>
+  
 </mapper>

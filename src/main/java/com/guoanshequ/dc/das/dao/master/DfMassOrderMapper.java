@@ -144,6 +144,20 @@ public interface DfMassOrderMapper {
 	Integer updateMarktingTagOfTotal(DfMassOrder dfMassOrder);
 	
 	List<Map<String, Object>> queryNewOder(Map<String, String> paraMap);
+
+	List<DfMassOrder> queryMassOrderListByAll(Map<String, String> paraMap);
+
+	Integer updateSaleProfitOfDaily(DfMassOrder dfMassOrder);
+
+	Integer updateSaleProfitOfMonthly(DfMassOrder dfMassOrder);
+
+	Integer updateSaleProfitDailyOfTotal(DfMassOrder dfMassOrder);
+
+	Integer updateUnSuccessOfDaily(DfMassOrder unSuccessOrder);
+
+	Integer updateUnSuccessOfMonthly(DfMassOrder unSuccessOrder);
+
+	Integer updateUnSuccessOfTotal(DfMassOrder unSuccessOrder);
 	
 
 }

@@ -276,6 +276,34 @@ public class DfMassOrderService {
 	
 	public Integer updateMarktingTagOfTotal(DfMassOrder dfMassOrder){
 		return dfMassOrderDao.updateMarktingTagOfTotal(dfMassOrder);
+	}
+
+	public List<DfMassOrder> queryMassOrderListByAll(Map<String, String> paraMap) {
+		return dfMassOrderDao.queryMassOrderListByAll(paraMap);
+	}
+
+	public Integer updateSaleProfitOfDaily(DfMassOrder dfMassOrder) {
+		return dfMassOrderDao.updateSaleProfitOfDaily(dfMassOrder);
+	}
+
+	public Integer updateSaleProfitOfMonthly(DfMassOrder dfMassOrder) {
+		return dfMassOrderDao.updateSaleProfitOfMonthly(dfMassOrder);
+	}
+
+	public Integer updateSaleProfitDailyOfTotal(DfMassOrder dfMassOrder) {
+		return dfMassOrderDao.updateSaleProfitDailyOfTotal(dfMassOrder);
+	}
+
+	public Integer updateUnSuccessOfDaily(DfMassOrder unSuccessOrder) {
+		return dfMassOrderDao.updateUnSuccessOfDaily(unSuccessOrder);
+	}
+
+	public Integer updateUnSuccessOfMonthly(DfMassOrder unSuccessOrder) {
+		return dfMassOrderDao.updateUnSuccessOfMonthly(unSuccessOrder);
+	}
+
+	public Integer updateUnSuccessOfTotal(DfMassOrder unSuccessOrder) {
+		return dfMassOrderDao.updateUnSuccessOfTotal(unSuccessOrder);
 	}	
 	
 }
