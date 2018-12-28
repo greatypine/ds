@@ -108,7 +108,17 @@
 		<result property = "real_store_id" column = "REAL_STORE_ID" />
 		<result property = "sale_profit" column = "SALE_PROFIT" />
 		<result property = "gayy_subsidy" column = "GAYY_SUBSIDY" />
+		<result property = "first_order_channel" column = "FIRST_ORDER_CHANNEL" />
+		<result property = "first_channel_profit" column = "FIRST_CHANNEL_PROFIT" />
+		<result property = "this_channel_profit" column = "THIS_CHANNEL_PROFIT" />
 		<result property = "success_time" column = "SUCCESS_TIME" />
+		<!-- <result property = "tpl_id" column = "TPL_ID" />
+		<result property = "tpl_dm_id" column = "TPL_DM_ID" />
+		<result property = "tpl_dm_name" column = "TPL_DM_NAME" />
+		<result property = "tpl_dm_mobile" column = "TPL_DM_MOBILE" />
+		<result property = "tpl_distance" column = "TPL_DISTANCE" />
+		<result property = "tpl_fee" column = "TPL_FEE" />
+		<result property = "tpl_cargo_weight" column = "TPL_CARGO_WEIGHT" /> -->
 	</resultMap>
 
 	<!-- 获取最大签收时间 -->
@@ -649,13 +659,6 @@
 		]]>
   	</select>
   	
- 	<!--  -->
-	<select id="queryMassOrderListBySuccessTime" parameterType="java.util.Map" resultType="MassOrderEntity">
-		<![CDATA[
-			 select * from df_mass_order_daily;
-		]]>
-  	</select>
-  	
   	<!-- 针对未在进销存系统中查找到的订单，第二天再次进行查找计算，补充计算 -->
 	<select id="queryMassOrderIsnullListByPreDate" parameterType="java.util.Map" resultType="MassOrderEntity">
 		<![CDATA[
@@ -813,21 +816,49 @@
 		]]>
   	</update>
 
+	<!-- 查询前一天订单 -->
+	<select id="queryMassOrderListByAll" parameterType="java.util.Map" resultType="MassOrderEntity">
+		<![CDATA[
+			select
+			id,
+			order_profit,
+			platform_price,
+			order_tag4,
+			bussiness_group_id,
+			case
+			when locate('A', order_tag4) > 0 then order_profit
+			else order_profit - ifnull(platform_price, 0) end
+			as sale_profit,
+			case
+			when locate('A', ifnull(order_tag4, '')) = 0 and bussiness_group_id = '8ac28b935fed0bc8015fed4c76f60018' then if(order_profit - ifnull(platform_price, 0) < 0, - (order_profit - ifnull(platform_price, 0)), null)
+			else null end
+			as gayy_subsidy
+			from df_mass_order_daily
+			-- where date(sign_time) = date_sub(date(now()), interval 1 day);
+			where sign_time >= #{begintime} and sign_time <= #{endtime}
+		]]>
+	</select>
+
+	<!-- 暂时去掉
+	, first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit} -->
 	<update id="updateSaleProfitOfDaily" parameterType="MassOrderEntity">
   		<![CDATA[
-			update df_mass_order_daily set sale_profit = #{sale_profit} ,gayy_subsidy =#{gayy_subsidy} where id = #{id}
+			update df_mass_order_daily set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}
+			where id = #{id}
 		]]>
 	</update>
 
 	<update id="updateSaleProfitOfMonthly" parameterType="MassOrderEntity">
   		<![CDATA[
-			update df_mass_order_monthly set sale_profit = #{sale_profit} ,gayy_subsidy =#{gayy_subsidy} where id = #{id}
+			update df_mass_order_monthly set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}
+			where id = #{id}
 		]]>
 	</update>
 
 	<update id="updateSaleProfitDailyOfTotal" parameterType="MassOrderEntity">
   		<![CDATA[
-			update df_mass_order_total set sale_profit = #{sale_profit} ,gayy_subsidy =#{gayy_subsidy} where id = #{id}
+			update df_mass_order_total set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}
+			where id = #{id}
 		]]>
 	</update>
 

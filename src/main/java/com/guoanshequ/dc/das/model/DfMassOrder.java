@@ -1,9 +1,9 @@
 package com.guoanshequ.dc.das.model;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.Date;
+
+import lombok.Data;
 
 @Data
 public class DfMassOrder {
@@ -112,81 +112,81 @@ public class DfMassOrder {
 	private BigDecimal sale_profit;
 	private BigDecimal gayy_subsidy;
 	private String success_time;
-	
-	
-	public enum PubseasLabel{
-		DEFAULT("0", "否"),
-		PUBSEAS("1", "公海"),
-    	;
-    	
-    	public String code;
-    	public String desc;
-    	
-    	PubseasLabel(String code, String desc){
-    		this.code = code;
-    		this.desc = desc;
-    	}
-    }
-	
-	public enum AbnormalLabel{
-		DEFAULT("0", "否"),
-		ABNORMAL("1", "异常"),
-    	;
-    	
-    	public String code;
-    	public String desc;
-    	
-    	AbnormalLabel(String code, String desc){
-    		this.code = code;
-    		this.desc = desc;
-    	}
-	}
-	
-	
-	public enum ReturnLabel{
-		DEFAULT("0", "否"),
-		RETURN("1", "退款"),
-    	;
-    	
-    	public String code;
-    	public String desc;
-    	
-    	ReturnLabel(String code, String desc){
-    		this.code = code;
-    		this.desc = desc;
-    	}
-    }
+	private String order_tag2;
+	private String first_order_channel;
+	private BigDecimal first_channel_profit;
+	private BigDecimal this_channel_profit;
+	private String tpl_id;
+	private String tpl_dm_id;
+	private String tpl_dm_name;
+	private String tpl_dm_mobile;
+	private Double tpl_distance;
+	private BigDecimal tpl_fee;
+	private Double tpl_cargo_weight;
 
-	public enum CustomerIsnewLabel{
-		DEFAULT("-1", "否"),
-		ZERO_CUSTOMER("0", "0元新客"),
-		TEN_CUSTOMER("10", "10元新客"),
-		TWENTY_CUSTOMER("20", "20元新客"),
-    	;
-    	
-    	public String code;
-    	public String desc;
-    	
-    	CustomerIsnewLabel(String code, String desc){
-    		this.code = code;
-    		this.desc = desc;
-    	}
+	public enum PubseasLabel {
+		DEFAULT("0", "否"), PUBSEAS("1", "公海"),;
+
+		public String code;
+		public String desc;
+
+		PubseasLabel(String code, String desc) {
+			this.code = code;
+			this.desc = desc;
+		}
 	}
-	
+
+	public enum AbnormalLabel {
+		DEFAULT("0", "否"), ABNORMAL("1", "异常"),;
+
+		public String code;
+		public String desc;
+
+		AbnormalLabel(String code, String desc) {
+			this.code = code;
+			this.desc = desc;
+		}
+	}
+
+	public enum ReturnLabel {
+		DEFAULT("0", "否"), RETURN("1", "退款"),;
+
+		public String code;
+		public String desc;
+
+		ReturnLabel(String code, String desc) {
+			this.code = code;
+			this.desc = desc;
+		}
+	}
+
+	public enum CustomerIsnewLabel {
+		DEFAULT("-1", "否"), ZERO_CUSTOMER("0", "0元新客"), TEN_CUSTOMER("10", "10元新客"), TWENTY_CUSTOMER("20", "20元新客"),;
+
+		public String code;
+		public String desc;
+
+		CustomerIsnewLabel(String code, String desc) {
+			this.code = code;
+			this.desc = desc;
+		}
+	}
+
 	/**
 	 * 判断新客标准
+	 * 
 	 * @param trading_price
 	 * @return
 	 */
-	public static String checkCustomerIsnew(String trading_price){
-		BigDecimal tradingPrice = trading_price==null?BigDecimal.ZERO:new BigDecimal(trading_price);
-		if(new BigDecimal(CustomerIsnewLabel.TEN_CUSTOMER.code).compareTo(tradingPrice)>=0){
+	public static String checkCustomerIsnew(String trading_price) {
+		BigDecimal tradingPrice = trading_price == null ? BigDecimal.ZERO : new BigDecimal(trading_price);
+		if (new BigDecimal(CustomerIsnewLabel.TEN_CUSTOMER.code).compareTo(tradingPrice) >= 0) {
 			return CustomerIsnewLabel.ZERO_CUSTOMER.code;
-		}else if(new BigDecimal(CustomerIsnewLabel.TWENTY_CUSTOMER.code).compareTo(tradingPrice)>=0){
+		} else if (new BigDecimal(CustomerIsnewLabel.TWENTY_CUSTOMER.code).compareTo(tradingPrice) >= 0) {
 			return CustomerIsnewLabel.TEN_CUSTOMER.code;
-		}else{
+		} else {
 			return CustomerIsnewLabel.TWENTY_CUSTOMER.code;
 		}
 	}
-	
+
 }
