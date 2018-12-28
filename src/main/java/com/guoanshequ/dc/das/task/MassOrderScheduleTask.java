@@ -1350,7 +1350,7 @@ public class MassOrderScheduleTask {
 			    		dsCronTaskService.updateTaskStatusById(doneMap);
 					}
 				} catch (Exception e) {
-					logger.info("当天利润完成后，对特殊订单进行利润重新计算调度异常：", e.toString());
+					logger.info("更新订单销售毛利、优易补贴(…)和成功时间：", e.toString());
 					e.printStackTrace();
 				}
 			}
