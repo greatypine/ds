@@ -1,14 +1,11 @@
 package com.guoanshequ.dc.das.task;
 
-import com.guoanshequ.dc.das.model.Contract;
-import com.guoanshequ.dc.das.model.DfMassOrder;
-import com.guoanshequ.dc.das.model.ImsTbsdgds;
-import com.guoanshequ.dc.das.model.OrderItem;
-import com.guoanshequ.dc.das.model.OrderItemExtra;
-import com.guoanshequ.dc.das.model.TinyDispatch;
-import com.guoanshequ.dc.das.service.*;
-import com.guoanshequ.dc.das.utils.DateUtils;
-import com.guoanshequ.dc.das.utils.ImpalaUtil;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -17,9 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
+import com.guoanshequ.dc.das.model.Contract;
+import com.guoanshequ.dc.das.model.DfMassOrder;
+import com.guoanshequ.dc.das.model.ImsTbsdgds;
+import com.guoanshequ.dc.das.model.OrderItem;
+import com.guoanshequ.dc.das.model.OrderItemExtra;
+import com.guoanshequ.dc.das.model.TinyDispatch;
+import com.guoanshequ.dc.das.service.AreaInfoService;
+import com.guoanshequ.dc.das.service.DfMassOrderService;
+import com.guoanshequ.dc.das.service.DfOrderReturnedService;
+import com.guoanshequ.dc.das.service.DsCronTaskService;
+import com.guoanshequ.dc.das.service.MassOrderService;
+import com.guoanshequ.dc.das.service.OrderService;
+import com.guoanshequ.dc.das.service.StoreNumberService;
+import com.guoanshequ.dc.das.service.TinyDispatchService;
+import com.guoanshequ.dc.das.utils.DateUtils;
+import com.guoanshequ.dc.das.utils.ImpalaUtil;
 
 /**
  * 
@@ -1276,7 +1286,7 @@ public class MassOrderScheduleTask {
 	 * 更新订单销售毛利、优易补贴(…)和成功时间
 	 * 调度规则：每天凌晨6点
 	 */
-	@Scheduled(cron = "0 22 15 * * ?")
+	@Scheduled(cron = "0 00 0 * * ?")
 	public void updateOrderSaleProfitAndSuccesstimeTask() {
 		new Thread() {
 			public void run() {
