@@ -1284,9 +1284,9 @@ public class MassOrderScheduleTask {
 	
 	/**
 	 * 更新订单销售毛利、优易补贴(…)和成功时间
-	 * 调度规则：每天凌晨6点
+	 * 调度规则：每天凌晨6点30
 	 */
-	@Scheduled(cron = "0 00 0 * * ?")
+	@Scheduled(cron = "0 30 6 * * ?")
 	public void updateOrderSaleProfitAndSuccesstimeTask() {
 		new Thread() {
 			public void run() {
@@ -1352,7 +1352,7 @@ public class MassOrderScheduleTask {
 							logger.info("**********订单成功时间更新计算结束***************");
 						}
 						logger.info("**********更新订单销售毛利、优易补贴(…)和成功时间,开始时间：" + begintime + ",结束时间：" + endtime + ",销售毛利订单共更新记录数：" + updatenum + ",成功订单共更新记录数：" + successnum);
-						
+
 			    		//设置任务为完成状态
 			    		Map<String, String> doneMap = new HashMap<String,String>();
 			    		doneMap.put("id", "20");
