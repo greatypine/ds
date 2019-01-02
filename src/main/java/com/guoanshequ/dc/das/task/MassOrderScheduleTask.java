@@ -1,14 +1,11 @@
 package com.guoanshequ.dc.das.task;
 
-import com.guoanshequ.dc.das.model.Contract;
-import com.guoanshequ.dc.das.model.DfMassOrder;
-import com.guoanshequ.dc.das.model.ImsTbsdgds;
-import com.guoanshequ.dc.das.model.OrderItem;
-import com.guoanshequ.dc.das.model.OrderItemExtra;
-import com.guoanshequ.dc.das.model.TinyDispatch;
-import com.guoanshequ.dc.das.service.*;
-import com.guoanshequ.dc.das.utils.DateUtils;
-import com.guoanshequ.dc.das.utils.ImpalaUtil;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -17,9 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
+import com.guoanshequ.dc.das.model.Contract;
+import com.guoanshequ.dc.das.model.DfMassOrder;
+import com.guoanshequ.dc.das.model.ImsTbsdgds;
+import com.guoanshequ.dc.das.model.OrderItem;
+import com.guoanshequ.dc.das.model.OrderItemExtra;
+import com.guoanshequ.dc.das.model.TinyDispatch;
+import com.guoanshequ.dc.das.service.AreaInfoService;
+import com.guoanshequ.dc.das.service.DfMassOrderService;
+import com.guoanshequ.dc.das.service.DfOrderReturnedService;
+import com.guoanshequ.dc.das.service.DsCronTaskService;
+import com.guoanshequ.dc.das.service.MassOrderService;
+import com.guoanshequ.dc.das.service.OrderService;
+import com.guoanshequ.dc.das.service.StoreNumberService;
+import com.guoanshequ.dc.das.service.TinyDispatchService;
+import com.guoanshequ.dc.das.utils.DateUtils;
+import com.guoanshequ.dc.das.utils.ImpalaUtil;
 
 /**
  * 
@@ -1274,60 +1284,83 @@ public class MassOrderScheduleTask {
 	
 	/**
 	 * 更新订单销售毛利、优易补贴(…)和成功时间
-	 * 调度规则：每天凌晨6点
+	 * 调度规则：每天凌晨6点30
 	 */
-	@Scheduled(cron = "0 00 6 * * ?")
+	@Scheduled(cron = "0 30 6 * * ?")
 	public void updateOrderSaleProfitAndSuccesstimeTask() {
 		new Thread() {
 			public void run() {
 				try {
+					System.out.println("开始");
 					Integer updatenum = 0;
 					Integer successnum = 0;
 					String begintime = null;
 					String endtime = null;
-					begintime = DateUtils.getPreDateTime(new Date());
-					endtime = DateUtils.getCurDateTime(new Date());
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(20);
+					String isrun = taskMap.get("isrun");
+					if("ON".equals(isrun)){
+						String runtype = taskMap.get("runtype");
+						//获取上次调度时的最大签收时间开始时间与结束时间
+						if("MANUAL".equals(runtype)){
+							begintime = taskMap.get("begintime");
+							endtime = taskMap.get("endtime");
+						}else{
+							begintime = DateUtils.getPreDateTime(new Date());
+							endtime = DateUtils.getCurDateTime(new Date());
+						}	
+			    		Map<String, String> runMap = new HashMap<String,String>();
+			    		runMap.put("id", "20");
+			    		runMap.put("task_status", "RUNNING");
+			    		dsCronTaskService.updateTaskStatusById(runMap);
 
-					BigDecimal sale_profit = new BigDecimal("0.00"); // 销售毛利=订单利润-平台营销费用
-					BigDecimal gayy_subsidy = new BigDecimal("0.00"); // 国安优易补贴
-					Map<String, String> paraMap = new HashMap<String, String>();
-					List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByAll(paraMap);
-					for (DfMassOrder dfMassOrder : massOrderList) {
-						sale_profit = dfMassOrder.getOrder_profit().subtract(dfMassOrder.getPlatform_price());
-						if (sale_profit.compareTo(BigDecimal.ZERO) == -1) {
-							gayy_subsidy = BigDecimal.ZERO.subtract(sale_profit);
+						Map<String, String> paraMap = new HashMap<String, String>();
+						paraMap.put("begintime", begintime);
+						paraMap.put("endtime", endtime);
+						List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByAll(paraMap);
+						for (DfMassOrder dfMassOrder : massOrderList) {
+//							首单、本单利润计算：TODO 正式版本暂时注释掉
+//							if(dfMassOrder.getFirst_order_channel() != null && !dfMassOrder.getFirst_order_channel().equals("")) {
+//								dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal("0.70")));
+//								dfMassOrder.setFirst_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal("0.3")));
+//							} else {
+//								dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit());
+//							}
+							updatenum += dfMassOrderService.updateSaleProfitOfDaily(dfMassOrder);
+							dfMassOrderService.updateSaleProfitOfMonthly(dfMassOrder);
+							dfMassOrderService.updateSaleProfitDailyOfTotal(dfMassOrder);
 						}
-						dfMassOrder.setSale_profit(sale_profit);
-						dfMassOrder.setGayy_subsidy(gayy_subsidy);
-						updatenum += dfMassOrderService.updateSaleProfitOfDaily(dfMassOrder);
-						dfMassOrderService.updateSaleProfitOfMonthly(dfMassOrder);
-						dfMassOrderService.updateSaleProfitDailyOfTotal(dfMassOrder);
-					}
-					// 成功时间为空的数据
-					String sql = "select mom.id, min(of.create_time) as success_time from daqweb.df_mass_order_monthly as mom"
-							+ " left join gemini.t_order_flow as of on mom.id = of.order_id and of.order_status = 'success'"
-							+ " where mom.success_time is null group by mom.id";
+						// 成功时间为空的数据
+						String sql = "select mom.id, min(of.create_time) as success_time from daqweb.df_mass_order_monthly as mom"
+								+ " left join gemini.t_order_flow as of on mom.id = of.order_id and of.order_status = 'success'"
+								+ " where mom.success_time is null group by mom.id";
 
-					List<Map<String, Object>> unSuccessList = ImpalaUtil.execute(sql);
-					if (!unSuccessList.isEmpty()) {
-						logger.info("**********过账支付订单利润计算开始***************");
-						String id = null;
-						String success_time = null;
-						for (Map<String, Object> unSuccessMap : unSuccessList) {
-							DfMassOrder unSuccessOrder = new DfMassOrder();
-							id = unSuccessMap.get("id").toString();
-							success_time = unSuccessMap.get("success_time").toString();
-							unSuccessOrder.setId(id);
-							unSuccessOrder.setSuccess_time(success_time);
-							dfMassOrderService.updateUnSuccessOfDaily(unSuccessOrder);
-							successnum += dfMassOrderService.updateUnSuccessOfMonthly(unSuccessOrder);
-							dfMassOrderService.updateUnSuccessOfTotal(unSuccessOrder);
+						List<Map<String, Object>> unSuccessList = ImpalaUtil.execute(sql);
+						if (!unSuccessList.isEmpty()) {
+							logger.info("**********订单成功时间更新计算开始***************");
+							String id = null;
+							String success_time = null;
+							for (Map<String, Object> unSuccessMap : unSuccessList) {
+								DfMassOrder unSuccessOrder = new DfMassOrder();
+								id = unSuccessMap.get("id").toString();
+								success_time = unSuccessMap.get("success_time").toString();
+								unSuccessOrder.setId(id);
+								unSuccessOrder.setSuccess_time(success_time);
+								dfMassOrderService.updateUnSuccessOfDaily(unSuccessOrder);
+								successnum += dfMassOrderService.updateUnSuccessOfMonthly(unSuccessOrder);
+								dfMassOrderService.updateUnSuccessOfTotal(unSuccessOrder);
+							}
+							logger.info("**********订单成功时间更新计算结束***************");
 						}
-						logger.info("**********过账支付订单利润计算结束***************");
+						logger.info("**********更新订单销售毛利、优易补贴(…)和成功时间,开始时间：" + begintime + ",结束时间：" + endtime + ",销售毛利订单共更新记录数：" + updatenum + ",成功订单共更新记录数：" + successnum);
+
+			    		//设置任务为完成状态
+			    		Map<String, String> doneMap = new HashMap<String,String>();
+			    		doneMap.put("id", "20");
+			    		doneMap.put("task_status", "DONE");
+			    		dsCronTaskService.updateTaskStatusById(doneMap);
 					}
-					logger.info("**********更新订单销售毛利、优易补贴(…)和成功时间,开始时间：" + begintime + ",结束时间：" + endtime + ",销售毛利订单共更新记录数：" + updatenum + ",成功订单共更新记录数：" + successnum);
 				} catch (Exception e) {
-					logger.info("当天利润完成后，对特殊订单进行利润重新计算调度异常：", e.toString());
+					logger.info("更新订单销售毛利、优易补贴(…)和成功时间：", e.toString());
 					e.printStackTrace();
 				}
 			}
@@ -1337,9 +1370,9 @@ public class MassOrderScheduleTask {
 	/** 
 	 * 对营销类订单打标签order_tag4
 	 * 1、营销费用分类标签：A1优品试用A2生日券A3开卡礼
-	 * 调度规则：每天凌晨6点20分
+	 * 调度规则：每天凌晨6点0分
 	 */
-	@Scheduled(cron ="0 25 6 * * ?")
+	@Scheduled(cron ="0 00 6 * * ?")
 	public void updateMarktingTagTask(){
 		new Thread(){
 			public void run() {
