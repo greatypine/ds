@@ -11,7 +11,7 @@ public class ImsTbsdgds {
     private String c_guid;
     private String c_store_id;
     private String c_gcode;
-    private Date c_dt;
+    private String c_dt;
     private String c_adno;
     private String c_ccode;
     private String c_trademark;
