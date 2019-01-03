@@ -445,4 +445,57 @@ public class UserMemberScheduleTask {
 				e.printStackTrace();
 			}
 	}
+	
+	
+	/**
+	 * 
+	 * @Title: syncOnlineMemberTask 
+	 * @Description:发送 预警消息的方法。(发频道负责人 )
+	 * @param 
+	 * @return void 返回类型
+	 * @throws
+	 * cron:  0 0 8 * * ? *
+	 */
+	@Scheduled(cron = "0 0 15 * * ? *")
+	public void sendCareerMessageTask() {
+		try {
+				logger.info(">>>>>>>>>>>>>>>>>开始发频道负责人---sendshortmessagestart......... ");
+			    //调用daqweb同步线上人员接口。
+				String URL=HttpInterfaceUtils.DAQWEB_URL;
+		    	String param=String.format(HttpInterfaceUtils.PARAM, "InterManager", "sendWarningMessage");
+				String ret = HttpInterfaceUtils.sendPost(URL,param);
+		    	logger.info(ret);
+				logger.info(">>>>>>>>>>>>>>>>>完成发频道负责人---sendshortmessageend......... ");
+			} catch (Exception e) {
+				logger.info("由于网络或其它原因，发送失败，请查看！");
+				logger.info(e.toString());
+				e.printStackTrace();
+			}
+	}
+	
+	/**
+	 * 
+	 * @Title: syncOnlineMemberTask 
+	 * @Description:发送 预警消息的方法。 (发店长 )
+	 * @param 
+	 * @return void 返回类型 暂时不开启 
+	 * @throws
+	 * cron:  0 0 8 * * ? *
+	 */
+	/*@Scheduled(cron = "0 0 12 * * ? *")
+	public void sendCareerMessageDzTask() {
+		try {
+				logger.info(">>>>>>>>>>>>>>>>>开始发店长 ");
+			    //调用daqweb同步线上人员接口。
+				String URL=HttpInterfaceUtils.DAQWEB_URL;
+		    	String param=String.format(HttpInterfaceUtils.PARAM, "InterManager", "sendWarningMessageDz");
+				String ret = HttpInterfaceUtils.sendPost(URL,param);
+		    	logger.info(ret);
+			} catch (Exception e) {
+				logger.info("由于网络或其它原因，发送失败，请查看！");
+				logger.info(e.toString());
+				e.printStackTrace();
+			}
+	}*/
+	
 }
