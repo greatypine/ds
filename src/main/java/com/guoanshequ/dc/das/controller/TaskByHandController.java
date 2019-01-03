@@ -1572,5 +1572,17 @@ public class TaskByHandController {
             e.printStackTrace();
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
-    }    
+    } 
+    
+    @RequestMapping(value = "rest/updateOrderSaleProfitAndSuccesstimeTaskRun",method = RequestMethod.POST)
+    public RestResponse updateOrderSaleProfitAndSuccesstimeTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		massOrderScheduleTask.updateOrderSaleProfitAndSuccesstimeTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }
 }
