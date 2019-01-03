@@ -833,7 +833,7 @@ public class MassOrderScheduleTask {
 						// List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByDate(paraMap);
 						// 处理前一天利润数据
 						String sql = "select mom.id, mom.order_sn, mom.gmv_price, mom.eshop_joint_ims, mom.sign_time, mom.store_id, mom.business_type"
-								+ ", ifnull(ufos.channel_id, '') as channel_id from daqweb.df_mass_order_monthly as mom"
+								+ ", ufos.channel_id from daqweb.df_mass_order_monthly as mom"
 								+ " left join gabase.b_user_first_order_store as ufos on mom.customer_id = ufos.customer_id and mom.store_id = ufos.store_id"
 								+ " where mom.sign_time >= '" + begintime + "' and mom.sign_time <= '" + endtime + "' and mom.trading_price is not null;";
 
@@ -849,12 +849,24 @@ public class MassOrderScheduleTask {
 								DfMassOrder dfMassOrder = new DfMassOrder();
 								dfMassOrder.setId(orderMap.get("id").toString());
 								dfMassOrder.setOrder_sn(orderMap.get("order_sn").toString());
-								dfMassOrder.setGmv_price(new BigDecimal(orderMap.get("gmv_price").toString()));
-								dfMassOrder.setEshop_joint_ims(orderMap.get("eshop_joint_ims").toString());
-								dfMassOrder.setSign_time(DateUtils.StringToDateTime(orderMap.get("sign_time").toString()));
-								dfMassOrder.setStore_id(orderMap.get("store_id").toString());
-								dfMassOrder.setBusiness_type(orderMap.get("business_type").toString());
-								dfMassOrder.setFirst_order_channel(orderMap.get("channel_id").toString());
+								if (orderMap.get("gmv_price") != null) {
+									dfMassOrder.setGmv_price(new BigDecimal(orderMap.get("gmv_price").toString()));
+								}
+								if (orderMap.get("eshop_joint_ims") != null) {
+									dfMassOrder.setEshop_joint_ims(orderMap.get("eshop_joint_ims").toString());
+								}
+								if (orderMap.get("sign_time") != null) {
+									dfMassOrder.setSign_time(DateUtils.StringToDateTime(orderMap.get("sign_time").toString()));
+								}
+								if (orderMap.get("store_id") != null) {
+									dfMassOrder.setStore_id(orderMap.get("store_id").toString());
+								}
+								if (orderMap.get("business_type") != null) {
+									dfMassOrder.setBusiness_type(orderMap.get("business_type").toString());
+								}
+								if (orderMap.get("channel_id") != null) {
+									dfMassOrder.setFirst_order_channel(orderMap.get("channel_id").toString());
+								}
 
 								String order_id = dfMassOrder.getId();
 								String eshop_joint_ims = dfMassOrder.getEshop_joint_ims();
