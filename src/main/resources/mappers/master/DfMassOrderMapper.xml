@@ -667,47 +667,48 @@
 			 and order_tag3='0' and eshop_joint_ims ='yes';
 		]]>
   	</select>
-  	
+
 	<!-- 在计算完订单优惠券后，针对组合订单进行除法计算，条件为：订单优惠券字段为总优惠金额时除以组合订单数量 -->
-	<select id="queryGroupCouponOrderByDate" parameterType="java.util.Map" resultType="MassOrderEntity">
+	<select id="queryGroupCouponOrderByDate" parameterType="java.util.Map"
+		resultType="MassOrderEntity">
 		<![CDATA[
 		 	select * from df_mass_order_monthly tor
 			where tor.is_split ='yes' and tor.apportion_coupon >0 and (tor.trading_price - tor.payable_price)=tor.apportion_coupon  
 		 	and tor.sign_time >= #{begintime} and tor.sign_time <= #{endtime} and tor.trading_price is not null ;
 		]]>
-  	</select>  	
-  	
-  	<!-- 更新order_daily表中成本、利润、合同 -->
-  	<update id="updateOrderProfitOfDaily" parameterType="MassOrderEntity">
-  		<![CDATA[
+	</select>
+
+	<!-- 更新order_daily表中成本、利润、合同 -->
+	<update id="updateOrderProfitOfDaily" parameterType="MassOrderEntity">
+		<![CDATA[
 			update df_mass_order_daily
-			set cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
-				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price},
-				order_tag3 =#{order_tag3}
-			where id =#{id} 
+				set cost_price = #{cost_price}, order_profit = #{order_profit}, contract_id = #{contract_id},
+				contract_method= #{contract_method}, contract_percent = #{contract_percent}, contract_price= #{contract_price},
+				order_tag3 = #{order_tag3}, first_order_channel= #{first_order_channel}
+			where id = #{id}
 		]]>
-  	</update>
-  	<!-- 更新order_monthly表中成本、利润、合同 -->
-  	<update id="updateOrderProfitOfMonthly" parameterType="MassOrderEntity">
-  		<![CDATA[
+	</update>
+	<!-- 更新order_monthly表中成本、利润、合同 -->
+	<update id="updateOrderProfitOfMonthly" parameterType="MassOrderEntity">
+		<![CDATA[
 			update df_mass_order_monthly
-			set cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
-				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price},
-				order_tag3 =#{order_tag3}
-			where id =#{id} 
+				set cost_price = #{cost_price}, order_profit = #{order_profit}, contract_id = #{contract_id},
+				contract_method= #{contract_method}, contract_percent = #{contract_percent}, contract_price= #{contract_price},
+				order_tag3 = #{order_tag3}, first_order_channel= #{first_order_channel}
+			where id = #{id}
 		]]>
-  	</update>
-  	<!-- 更新order_total表中成本、利润、合同 -->
-  	<update id="updateOrderProfitOfTotal" parameterType="MassOrderEntity">
-  		<![CDATA[
-			update df_mass_order_total 
-			set cost_price =#{cost_price},order_profit =#{order_profit},contract_id =#{contract_id},
-				contract_method=#{contract_method},contract_percent =#{contract_percent},contract_price=#{contract_price},
-				order_tag3 =#{order_tag3}
-			where id =#{id}
+	</update>
+	<!-- 更新order_total表中成本、利润、合同 -->
+	<update id="updateOrderProfitOfTotal" parameterType="MassOrderEntity">
+		<![CDATA[
+			update df_mass_order_total
+				set cost_price = #{cost_price}, order_profit = #{order_profit}, contract_id = #{contract_id},
+				contract_method= #{contract_method}, contract_percent = #{contract_percent}, contract_price= #{contract_price},
+				order_tag3 = #{order_tag3}, first_order_channel= #{first_order_channel}
+			where id = #{id}
 		]]>
-  	</update>
-  	
+	</update>
+
 	<!-- 根据商品编码code和当天日期,查询同步过来的商品日销售表中商品成本价 -->
 	<select id="queryCostPriceBySigndateCode" parameterType="java.util.Map" resultType="ImsTbsdgdsEntity">
 		<![CDATA[
@@ -839,11 +840,10 @@
 		]]>
 	</select>
 
-	<!-- 暂时去掉
-	, first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit} -->
 	<update id="updateSaleProfitOfDaily" parameterType="MassOrderEntity">
   		<![CDATA[
 			update df_mass_order_daily set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}
+			, first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit}
 			where id = #{id}
 		]]>
 	</update>
@@ -851,6 +851,7 @@
 	<update id="updateSaleProfitOfMonthly" parameterType="MassOrderEntity">
   		<![CDATA[
 			update df_mass_order_monthly set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}
+			, first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit}
 			where id = #{id}
 		]]>
 	</update>
@@ -858,6 +859,7 @@
 	<update id="updateSaleProfitDailyOfTotal" parameterType="MassOrderEntity">
   		<![CDATA[
 			update df_mass_order_total set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}
+			, first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit}
 			where id = #{id}
 		]]>
 	</update>

@@ -794,217 +794,226 @@ public class MassOrderScheduleTask {
 			}
 		}.start();
 	}
-	/** 
+
+	/**
 	 * 计算每个订单所对应的成本、利润信息
 	 * 调度规则：每天凌晨3点30分
 	 */
-	@Scheduled(cron ="0 30 4 * * ?")
-	public void updateOrderProfitTask(){
-		new Thread(){
+	@Scheduled(cron = "0 30 4 * * ?")
+	public void updateOrderProfitTask() {
+		new Thread() {
 			public void run() {
-				try{
+				try {
 					logger.info("**********计算每个订单所对应的成本、利润信息任务调度开始**********");
-					Integer updatenum =0;
-					Integer preUpdatenum =0;
+					Integer updatenum = 0;
+					Integer preUpdatenum = 0;
 					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(12);
 					String isrun = taskMap.get("isrun");
 					String begintime = null;
 					String endtime = null;
 					String pre_begintime = null;
 					String pre_endtime = null;
-					if("ON".equals(isrun)){
-					String runtype = taskMap.get("runtype");
-					if("MANUAL".equals(runtype)){
-						begintime = taskMap.get("begintime");
-						endtime = taskMap.get("endtime");
-					}else{
-						begintime = DateUtils.getPreDateTime(new Date());
-						endtime = DateUtils.getCurDateTime(new Date());
-					}	
-					pre_begintime = DateUtils.getPreNDateTimeByAssign(DateUtils.StringToDateTime(begintime),1);
-					pre_endtime = DateUtils.getPreNDateTimeByAssign(DateUtils.StringToDateTime(endtime),1);
+					if ("ON".equals(isrun)) {
+						String runtype = taskMap.get("runtype");
+						if ("MANUAL".equals(runtype)) {
+							begintime = taskMap.get("begintime");
+							endtime = taskMap.get("endtime");
+						} else {
+							begintime = DateUtils.getPreDateTime(new Date());
+							endtime = DateUtils.getCurDateTime(new Date());
+						}
+						pre_begintime = DateUtils.getPreNDateTimeByAssign(DateUtils.StringToDateTime(begintime), 1);
+						pre_endtime = DateUtils.getPreNDateTimeByAssign(DateUtils.StringToDateTime(endtime), 1);
 
-					
-					//给后台接口构建参数
-					Map<String, String> paraMap=new HashMap<String, String>();
-					paraMap.put("begintime", begintime);
-					paraMap.put("endtime", endtime);
-					//处理前一天利润数据
-					List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByDate(paraMap);
-					if(!massOrderList.isEmpty()) {
-			    		Map<String, String> runMap = new HashMap<String,String>();
-			    		runMap.put("id", "12");
-			    		runMap.put("task_status", "RUNNING");
-			    		dsCronTaskService.updateTaskStatusById(runMap);
-						
-						for (DfMassOrder dfMassOrder : massOrderList) {
-							String order_id = dfMassOrder.getId();
-							String eshop_joint_ims = dfMassOrder.getEshop_joint_ims();
-							Date sign_time = dfMassOrder.getSign_time();
-							String sign_date = DateUtils.getStrDate(sign_time);
-							String store_id = dfMassOrder.getStore_id();
-							String business_type = dfMassOrder.getBusiness_type();
-							
-							paraMap.put("order_id", order_id);
-							paraMap.put("sign_date", sign_date);
-							
-							//1、关联进销存，计算订单在进销存中的总成本,自营商品无论是否有合同，一律从价
-							BigDecimal sum_cost_price =new BigDecimal("0.00");
-							BigDecimal order_profit = new BigDecimal("0.00");
-							if("yes".equals(eshop_joint_ims)) {
-								//获取订单明细
+						// 给后台接口构建参数
+						Map<String, String> paraMap = new HashMap<String, String>();
+						paraMap.put("begintime", begintime);
+						paraMap.put("endtime", endtime);
+						// 处理前一天利润数据
+						// List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByDate(paraMap);
+						// 处理前一天利润数据
+						String sql = "select mom.id, mom.order_sn, mom.gmv_price, mom.eshop_joint_ims, mom.sign_time, mom.store_id, mom.business_type"
+								+ ", ifnull(ufos.channel_id, '') as channel_id from daqweb.df_mass_order_monthly as mom"
+								+ " left join gabase.b_user_first_order_store as ufos on mom.customer_id = ufos.customer_id and mom.store_id = ufos.store_id"
+								+ " where mom.sign_time >= '" + begintime + "' and mom.sign_time <= '" + endtime + "' and mom.trading_price is not null;";
+
+						List<Map<String, Object>> orderList = ImpalaUtil.execute(sql);
+
+						if (!orderList.isEmpty()) {
+							Map<String, String> runMap = new HashMap<String, String>();
+							runMap.put("id", "12");
+							runMap.put("task_status", "RUNNING");
+							dsCronTaskService.updateTaskStatusById(runMap);
+
+							for (Map<String, Object> orderMap : orderList) {
+								DfMassOrder dfMassOrder = new DfMassOrder();
+								dfMassOrder.setId(orderMap.get("id").toString());
+								dfMassOrder.setOrder_sn(orderMap.get("order_sn").toString());
+								dfMassOrder.setGmv_price(new BigDecimal(orderMap.get("gmv_price").toString()));
+								dfMassOrder.setEshop_joint_ims(orderMap.get("eshop_joint_ims").toString());
+								dfMassOrder.setSign_time(DateUtils.StringToDateTime(orderMap.get("sign_time").toString()));
+								dfMassOrder.setStore_id(orderMap.get("store_id").toString());
+								dfMassOrder.setBusiness_type(orderMap.get("business_type").toString());
+								dfMassOrder.setFirst_order_channel(orderMap.get("channel_id").toString());
+
+								String order_id = dfMassOrder.getId();
+								String eshop_joint_ims = dfMassOrder.getEshop_joint_ims();
+								Date sign_time = dfMassOrder.getSign_time();
+								String sign_date = DateUtils.getStrDate(sign_time);
+								String store_id = dfMassOrder.getStore_id();
+								String business_type = dfMassOrder.getBusiness_type();
+
+								paraMap.put("order_id", order_id);
+								paraMap.put("sign_date", sign_date);
+
+								// 1、关联进销存，计算订单在进销存中的总成本,自营商品无论是否有合同，一律从价
+								BigDecimal sum_cost_price = new BigDecimal("0.00");
+								BigDecimal order_profit = new BigDecimal("0.00");
+								if ("yes".equals(eshop_joint_ims)) {
+									// 获取订单明细
+									Integer store_number = storeNumberService.queryStoreNumberById(store_id);
+									List<OrderItem> orderItemList = massOrderService.queryOrderItemByOrderId(paraMap);
+									for (OrderItem orderItem : orderItemList) {
+										ImsTbsdgds imsTbsGds;
+										String product_code = orderItem.getProduct_code();
+
+										// 存在商品码，则根据商品码和签收日期，去查找商品销售表中计算相应的总成本价=成本价*数量
+										if (product_code != null) {
+											paraMap.put("product_code", product_code);
+											paraMap.put("store_number", store_number.toString());
+											// 根据商品code去进销存日销售表中查找对应的成本
+											imsTbsGds = dfMassOrderService.queryCostPriceBySigndateCode(paraMap);
+											if (imsTbsGds != null) {
+												BigDecimal ims_cost_price = imsTbsGds.getCost_price().multiply(new BigDecimal(orderItem.getQuantity()));
+												sum_cost_price = sum_cost_price.add(ims_cost_price);
+											} else {
+												sum_cost_price = null;
+												break;
+											}
+										}
+									}
+									if (sum_cost_price != null) {
+										dfMassOrder.setCost_price(sum_cost_price);
+										order_profit = calProfitByPriceOfIms(dfMassOrder);
+										dfMassOrder.setOrder_profit(order_profit);
+										dfMassOrder.setOrder_tag3("1");
+									} else {
+										dfMassOrder.setOrder_tag3("0");
+									}
+
+								} else {// 不在进销存系统，计算在国安平台中的总成本
+									// 2、根据订单号查询对应的总成本价
+									String cost_price = orderService.queryOrderCostPriceById(paraMap);
+									if (cost_price != null) {
+										sum_cost_price = new BigDecimal(cost_price);
+									}
+									dfMassOrder.setCost_price(sum_cost_price);
+
+									// 3、计算利润信息:通过订单号查询对应的e店合同，有合同则按合同计算方式，无合同则按自营方式（gmvprice-costprice）
+									Contract contractInfo = orderService.queryOrderContractInfoById(dfMassOrder.getId());
+									if (contractInfo != null) {// 有合同信息
+										dfMassOrder.setContract_id(contractInfo.getContract_id());
+										dfMassOrder.setContract_method(contractInfo.getContract_method());
+										dfMassOrder.setContract_percent(contractInfo.getContract_percent());
+										dfMassOrder.setContract_price(contractInfo.getContract_price());
+										// 获取合同结算方式
+										String contract_method = contractInfo.getContract_method();
+										if ("price".equals(contract_method)) {// 从价
+											order_profit = calProfitByPrice(dfMassOrder);
+										} else if ("volume".equals(contract_method)) {// 从量
+											order_profit = calProfitByVolume(dfMassOrder, contractInfo);
+										} else if ("percent".equals(contract_method)) {// 从率
+											order_profit = calProfitByPercent(dfMassOrder, contractInfo);
+										}
+									} else {// 无合同信息
+										// 无合同自营为从价
+										if ("self".equals(business_type)) {
+											order_profit = calProfitByPrice(dfMassOrder);
+										} else {// 无合同联营利润为0
+											order_profit = new BigDecimal("0.00");
+										}
+									}
+									dfMassOrder.setOrder_profit(order_profit);
+									dfMassOrder.setOrder_tag3("1");
+								}
+
+								System.out.println("dfMassOrdersn*****" + dfMassOrder.getOrder_sn() + "contract_method:" + dfMassOrder.getContract_method() + ",cost_price:" + dfMassOrder.getCost_price() + ",gmvprice:" + dfMassOrder.getGmv_price() + ",profit:" + dfMassOrder.getOrder_profit());
+								dfMassOrderService.updateOrderProfitOfDaily(dfMassOrder);
+								updatenum += dfMassOrderService.updateOrderProfitOfMonthly(dfMassOrder);
+								dfMassOrderService.updateOrderProfitOfTotal(dfMassOrder);
+							}
+						}
+
+						// 给后台接口构建参数
+						Map<String, String> preParaMap = new HashMap<String, String>();
+						preParaMap.put("pre_begintime", pre_begintime);
+						preParaMap.put("pre_endtime", pre_endtime);
+						// 处理前二天
+						List<DfMassOrder> massOrderIsnullList = dfMassOrderService.queryMassOrderIsnullListByPreDate(preParaMap);
+						if (!massOrderIsnullList.isEmpty()) {
+							for (DfMassOrder preDfMassOrder : massOrderIsnullList) {
+								String order_id = preDfMassOrder.getId();
+								Date sign_time = preDfMassOrder.getSign_time();
+								String sign_date = DateUtils.getNextNDateTimeByAssign(sign_time, 1);
+								String store_id = preDfMassOrder.getStore_id();
+
+								preParaMap.put("order_id", order_id);
+								preParaMap.put("sign_date", sign_date);
+
+								// 1、关联进销存，计算订单在进销存中的总成本,自营商品无论是否有合同，一律从价
+								BigDecimal sum_cost_price = new BigDecimal("0.00");
+								BigDecimal order_profit = new BigDecimal("0.00");
+								// 获取订单明细
 								Integer store_number = storeNumberService.queryStoreNumberById(store_id);
-								List<OrderItem> orderItemList = massOrderService.queryOrderItemByOrderId(paraMap);
+								List<OrderItem> orderItemList = massOrderService.queryOrderItemByOrderId(preParaMap);
 								for (OrderItem orderItem : orderItemList) {
-									ImsTbsdgds imsTbsGds ;
+									ImsTbsdgds imsTbsGds;
 									String product_code = orderItem.getProduct_code();
-									 
-									//存在商品码，则根据商品码和签收日期，去查找商品销售表中计算相应的总成本价=成本价*数量
-									if(product_code!=null) {
-										paraMap.put("product_code",product_code);
-										paraMap.put("store_number",store_number.toString());
-										//根据商品code去进销存日销售表中查找对应的成本
-										imsTbsGds = dfMassOrderService.queryCostPriceBySigndateCode(paraMap);
-										if(imsTbsGds!=null) {
+
+									// 存在商品码，则根据商品码和签收日期，去查找商品销售表中计算相应的总成本价=成本价*数量
+									if (product_code != null) {
+										preParaMap.put("product_code", product_code);
+										preParaMap.put("store_number", store_number.toString());
+										// 根据商品code去进销存日销售表中查找对应的成本
+										imsTbsGds = dfMassOrderService.queryCostPriceBySigndateCode(preParaMap);
+										if (imsTbsGds != null) {
 											BigDecimal ims_cost_price = imsTbsGds.getCost_price().multiply(new BigDecimal(orderItem.getQuantity()));
 											sum_cost_price = sum_cost_price.add(ims_cost_price);
-										}else {
-											sum_cost_price =null;
+										} else {
+											sum_cost_price = null;
 											break;
 										}
 									}
 								}
-								if(sum_cost_price!=null) {
-									dfMassOrder.setCost_price(sum_cost_price);
-									order_profit = calProfitByPriceOfIms(dfMassOrder);
-									dfMassOrder.setOrder_profit(order_profit);
-									dfMassOrder.setOrder_tag3("1");
-								}else {
-									dfMassOrder.setOrder_tag3("0");
+								if (sum_cost_price != null) {
+									preDfMassOrder.setCost_price(sum_cost_price);
+									order_profit = calProfitByPriceOfIms(preDfMassOrder);
+									preDfMassOrder.setOrder_profit(order_profit);
+									preDfMassOrder.setOrder_tag3("1");
+								} else {
+									preDfMassOrder.setOrder_tag3("0");
 								}
-								
-							}else {//不在进销存系统，计算在国安平台中的总成本
-								//2、根据订单号查询对应的总成本价
-								String cost_price = orderService.queryOrderCostPriceById(paraMap);
-								if(cost_price!=null) {
-									sum_cost_price = new BigDecimal(cost_price);
-								}
-								dfMassOrder.setCost_price(sum_cost_price);
-								
-								//3、计算利润信息:通过订单号查询对应的e店合同，有合同则按合同计算方式，无合同则按自营方式（gmvprice-costprice）
-								Contract contractInfo = orderService.queryOrderContractInfoById(dfMassOrder.getId());
-								if(contractInfo!=null) {//有合同信息
-									dfMassOrder.setContract_id(contractInfo.getContract_id());
-									dfMassOrder.setContract_method(contractInfo.getContract_method());
-									dfMassOrder.setContract_percent(contractInfo.getContract_percent());
-									dfMassOrder.setContract_price(contractInfo.getContract_price());
-									//获取合同结算方式
-									String contract_method = contractInfo.getContract_method();
-									if("price".equals(contract_method)) {//从价
-										order_profit = calProfitByPrice(dfMassOrder);
-									}else if("volume".equals(contract_method)) {//从量
-										order_profit = calProfitByVolume(dfMassOrder,contractInfo);
-									}else if("percent".equals(contract_method)) {//从率
-										order_profit = calProfitByPercent(dfMassOrder,contractInfo);
-									}
-								}else {//无合同信息
-									//无合同自营为从价
-									if("self".equals(business_type)) {
-										order_profit = calProfitByPrice(dfMassOrder);
-									}else {//无合同联营利润为0
-										order_profit = new BigDecimal("0.00");
-									}
-								}
-								dfMassOrder.setOrder_profit(order_profit);
-								dfMassOrder.setOrder_tag3("1");
+								dfMassOrderService.updateOrderProfitOfDaily(preDfMassOrder);
+								preUpdatenum += dfMassOrderService.updateOrderProfitOfMonthly(preDfMassOrder);
+								dfMassOrderService.updateOrderProfitOfTotal(preDfMassOrder);
 							}
+						}
 
-							System.out.println("dfMassOrdersn*****"+dfMassOrder.getOrder_sn()+"contract_method:"+dfMassOrder.getContract_method()+",cost_price:"+dfMassOrder.getCost_price()+",gmvprice:"+dfMassOrder.getGmv_price()+",profit:"+dfMassOrder.getOrder_profit());
-							dfMassOrderService.updateOrderProfitOfDaily(dfMassOrder);
-							updatenum += dfMassOrderService.updateOrderProfitOfMonthly(dfMassOrder);
-							dfMassOrderService.updateOrderProfitOfTotal(dfMassOrder);
-						}
+						// 设置任务为完成状态
+						Map<String, String> doneMap = new HashMap<String, String>();
+						doneMap.put("id", "12");
+						doneMap.put("task_status", "DONE");
+						dsCronTaskService.updateTaskStatusById(doneMap);
 					}
-					
-					
-					
-					//给后台接口构建参数
-					Map<String, String> preParaMap=new HashMap<String, String>();
-					preParaMap.put("pre_begintime", pre_begintime);
-					preParaMap.put("pre_endtime", pre_endtime);
-					//处理前二天
-					List<DfMassOrder> massOrderIsnullList = dfMassOrderService.queryMassOrderIsnullListByPreDate(preParaMap);
-					if(!massOrderIsnullList.isEmpty()) {
-						for (DfMassOrder preDfMassOrder : massOrderIsnullList) {
-							String order_id = preDfMassOrder.getId();
-							Date sign_time = preDfMassOrder.getSign_time();
-							String sign_date =DateUtils.getNextNDateTimeByAssign(sign_time,1);
-							String store_id = preDfMassOrder.getStore_id();
-							
-							preParaMap.put("order_id", order_id);
-							preParaMap.put("sign_date", sign_date);
-							
-							//1、关联进销存，计算订单在进销存中的总成本,自营商品无论是否有合同，一律从价
-							BigDecimal sum_cost_price =new BigDecimal("0.00");
-							BigDecimal order_profit = new BigDecimal("0.00");
-							//获取订单明细
-							Integer store_number = storeNumberService.queryStoreNumberById(store_id);
-							List<OrderItem> orderItemList = massOrderService.queryOrderItemByOrderId(preParaMap);
-							for (OrderItem orderItem : orderItemList) {
-								ImsTbsdgds imsTbsGds ;
-								String product_code = orderItem.getProduct_code();
-								 
-								//存在商品码，则根据商品码和签收日期，去查找商品销售表中计算相应的总成本价=成本价*数量
-								if(product_code!=null) {
-									preParaMap.put("product_code",product_code);
-									preParaMap.put("store_number",store_number.toString());
-									//根据商品code去进销存日销售表中查找对应的成本
-									imsTbsGds = dfMassOrderService.queryCostPriceBySigndateCode(preParaMap);
-									if(imsTbsGds!=null) {
-										BigDecimal ims_cost_price = imsTbsGds.getCost_price().multiply(new BigDecimal(orderItem.getQuantity()));
-										sum_cost_price = sum_cost_price.add(ims_cost_price);
-									}else {
-										sum_cost_price =null;
-										break;
-									}
-								}
-							}
-							if(sum_cost_price!=null) {
-								preDfMassOrder.setCost_price(sum_cost_price);
-								order_profit = calProfitByPriceOfIms(preDfMassOrder);
-								preDfMassOrder.setOrder_profit(order_profit);
-								preDfMassOrder.setOrder_tag3("1");
-							}else {
-								preDfMassOrder.setOrder_tag3("0");
-							}
-							dfMassOrderService.updateOrderProfitOfDaily(preDfMassOrder);
-							preUpdatenum += dfMassOrderService.updateOrderProfitOfMonthly(preDfMassOrder);
-							dfMassOrderService.updateOrderProfitOfTotal(preDfMassOrder);
-						}
-					}
-					
-					
-					
-					
-					
-					
-					
-					
-		    		//设置任务为完成状态
-		    		Map<String, String> doneMap = new HashMap<String,String>();
-		    		doneMap.put("id", "12");
-		    		doneMap.put("task_status", "DONE");
-		    		dsCronTaskService.updateTaskStatusById(doneMap);
-				}
-				logger.info("**********计算每个订单所对应的成本、利润信息数据任务调度结束,开始时间："+begintime+",结束时间："+endtime+",共更新记录数："+updatenum+"**********,前两天更新数："+preUpdatenum);
+					logger.info("**********计算每个订单所对应的成本、利润信息数据任务调度结束,开始时间：" + begintime + ",结束时间：" + endtime + ",共更新记录数：" + updatenum + "**********,前两天更新数：" + preUpdatenum);
 				} catch (Exception e) {
-					logger.info("计算每个订单所对应的成本、利润信息数据任务调度异常：",e.toString());
+					logger.info("计算每个订单所对应的成本、利润信息数据任务调度异常：", e.toString());
 					e.printStackTrace();
 				}
 			}
 		}.start();
 	}
-	
+
 	/**
 	 * 221订单标签order2_tag：商品类、服务类、团购类订单打标签
 	 * 调度规则：每天凌晨2点01分 
@@ -1284,9 +1293,9 @@ public class MassOrderScheduleTask {
 	
 	/**
 	 * 更新订单销售毛利、优易补贴(…)和成功时间
-	 * 调度规则：每天凌晨6点
+	 * 调度规则：每天凌晨6点30
 	 */
-	@Scheduled(cron = "0 00 0 * * ?")
+	@Scheduled(cron = "0 30 6 * * ?")
 	public void updateOrderSaleProfitAndSuccesstimeTask() {
 		new Thread() {
 			public void run() {
@@ -1318,13 +1327,12 @@ public class MassOrderScheduleTask {
 						paraMap.put("endtime", endtime);
 						List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByAll(paraMap);
 						for (DfMassOrder dfMassOrder : massOrderList) {
-//							首单、本单利润计算：TODO 正式版本暂时注释掉
-//							if(dfMassOrder.getFirst_order_channel() != null && !dfMassOrder.getFirst_order_channel().equals("")) {
-//								dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal("0.70")));
-//								dfMassOrder.setFirst_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal("0.3")));
-//							} else {
-//								dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit());
-//							}
+							if(dfMassOrder.getFirst_order_channel() != null && !dfMassOrder.getFirst_order_channel().equals("")) {
+								dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("this_channel_scale"))));
+								dfMassOrder.setFirst_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("first_channel_scale"))));
+							} else {
+								dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit());
+							}
 							updatenum += dfMassOrderService.updateSaleProfitOfDaily(dfMassOrder);
 							dfMassOrderService.updateSaleProfitOfMonthly(dfMassOrder);
 							dfMassOrderService.updateSaleProfitDailyOfTotal(dfMassOrder);
@@ -1352,7 +1360,7 @@ public class MassOrderScheduleTask {
 							logger.info("**********订单成功时间更新计算结束***************");
 						}
 						logger.info("**********更新订单销售毛利、优易补贴(…)和成功时间,开始时间：" + begintime + ",结束时间：" + endtime + ",销售毛利订单共更新记录数：" + updatenum + ",成功订单共更新记录数：" + successnum);
-						
+
 			    		//设置任务为完成状态
 			    		Map<String, String> doneMap = new HashMap<String,String>();
 			    		doneMap.put("id", "20");

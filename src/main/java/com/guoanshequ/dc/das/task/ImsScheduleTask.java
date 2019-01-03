@@ -4,11 +4,18 @@ import com.guoanshequ.dc.das.model.*;
 import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
 
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.guoanshequ.dc.das.utils.HttpClientUtil;
+import com.guoanshequ.dc.das.utils.HttpInterfaceUtils;
+import com.guoanshequ.dc.das.utils.TunnelConstUtil;
+import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
+import org.apache.commons.collections.bag.SynchronizedSortedBag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,10 +63,13 @@ public class ImsScheduleTask {
 							begintime = DateUtils.getPreDateTime(new Date());
 							endtime = DateUtils.getCurDateTime(new Date());
 						}
-						Map<String, String> paraMap = new HashMap<String, String>();
-						paraMap.put("begintime", begintime);
-						paraMap.put("endtime", endtime);						
-						List<ImsTbsdgds> imsTbsdgdsList = tbsdGdsService.queryTbsDGdsByTime(paraMap);
+
+						Map tunnelMap1 = new HashMap();
+						tunnelMap1.put("sql",TunnelConstUtil.TunnelTbsdGds(begintime,endtime));
+						String tunnelRet1 = HttpClientUtil.sendPost(TunnelConstUtil.SQLSERVER_URL,tunnelMap1);
+						JSONArray jsonArray1 = JSONArray.fromObject(tunnelRet1);
+						List<ImsTbsdgds> imsTbsdgdsList = JSONArray.toList(jsonArray1, new ImsTbsdgds(), new JsonConfig());
+
 						if (!imsTbsdgdsList.isEmpty()) {
 				    		Map<String, String> runMap = new HashMap<String,String>();
 				    		runMap.put("id", "14");
@@ -112,13 +122,14 @@ public class ImsScheduleTask {
 							endtime = DateUtils.getCurDateTime(new Date());
 						}
 
-						//给后台接口构建参数
-						Map<String, String> paraMap=new HashMap<String, String>();
-						paraMap.put("begintime", begintime);
-						paraMap.put("endtime", endtime);
+						Map tunnelMap1 = new HashMap();
+						String sql1 = URLEncoder.encode(TunnelConstUtil.TunnelTbOCount(begintime,endtime));
+						tunnelMap1.put("sql",sql1);
+						String tunnelRet1 = HttpClientUtil.sendPost(TunnelConstUtil.SQLSERVER_URL,tunnelMap1);
+						JSONArray jsonArray1 = JSONArray.fromObject(tunnelRet1);
+						List<ImsTbOCount> list1 = JSONArray.toList(jsonArray1, new ImsTbOCount(), new JsonConfig());
 
-						List<ImsTbOCount> list =imsService.queryImsTbOCountByDate(paraMap);
-						for (ImsTbOCount count : list) {
+						for (ImsTbOCount count : list1) {
 							String c_id=count.getC_id();
 							String c_store_id=count.getC_store_id();
 							ImsTbOCount isExist = dfImsService.queryImsTbOCountIsExist(c_id);
@@ -130,10 +141,23 @@ public class ImsScheduleTask {
 							if(isExistStore!=null){
 								dfImsService.deleteDfImsTbStore(c_store_id);
 							}
-							ImsTbStore store = imsService.queryImsTbStoreByStoreId(c_store_id);
+
+							Map tunnelMap2 = new HashMap();
+							tunnelMap2.put("sql",TunnelConstUtil.TunnelStore(c_store_id));
+							String tunnelRet2 = HttpClientUtil.sendPost(TunnelConstUtil.SQLSERVER_URL,tunnelMap2);
+							JSONArray jsonArray2 = JSONArray.fromObject(tunnelRet2);
+							List<ImsTbStore> list2 = JSONArray.toList(jsonArray2, new ImsTbStore(), new JsonConfig());
+							ImsTbStore store = list2.get(0);
+
 							dfImsService.addDfImsTbStore(store);
 							dfImsService.addDfImsTbOCount(count);
-							List<ImsTbOCountg> countgList =imsService.queryImsTbOCountgByCId(c_id);
+
+							Map tunnelMap3 = new HashMap();
+							tunnelMap3.put("sql",TunnelConstUtil.TunnelTbOCountg(c_id));
+							String tunnelRet3 = HttpClientUtil.sendPost(TunnelConstUtil.SQLSERVER_URL,tunnelMap3);
+							JSONArray jsonArray3 = JSONArray.fromObject(tunnelRet3);
+							List<ImsTbOCountg> countgList = JSONArray.toList(jsonArray3, new ImsTbOCountg(), new JsonConfig());
+
 							dfImsService.addDfImsTbOCountg(countgList);
 
 						}
@@ -172,12 +196,13 @@ public class ImsScheduleTask {
 							endtime = DateUtils.getCurDateTime(new Date());
 						}
 
-						//给后台接口构建参数
-						Map<String, String> paraMap=new HashMap<String, String>();
-						paraMap.put("begintime", begintime);
-						paraMap.put("endtime", endtime);
+						Map tunnelMap1 = new HashMap();
+						String sql1 = URLEncoder.encode(TunnelConstUtil.TunnelTbOl(begintime,endtime));
+						tunnelMap1.put("sql",sql1);
+						String tunnelRet1 = HttpClientUtil.sendPost(TunnelConstUtil.SQLSERVER_URL,tunnelMap1);
+						JSONArray jsonArray1 = JSONArray.fromObject(tunnelRet1);
+						List<ImsTbOl> list = JSONArray.toList(jsonArray1, new ImsTbOl(), new JsonConfig());
 
-						List<ImsTbOl> list =imsService.queryImsTbOlByDate(paraMap);
 						for (ImsTbOl tbOl : list) {
 							String c_id=tbOl.getC_id();
 							ImsTbOl isExist = dfImsService.queryImsTbOlIsExist(c_id);
@@ -189,7 +214,14 @@ public class ImsScheduleTask {
 							if(isExistStore!=null){
 								dfImsService.deleteDfImsTbStore(c_store_id);
 							}
-							ImsTbStore store = imsService.queryImsTbStoreByStoreId(c_store_id);
+
+							Map tunnelMap2 = new HashMap();
+							tunnelMap2.put("sql",TunnelConstUtil.TunnelStore(c_store_id));
+							String tunnelRet2 = HttpClientUtil.sendPost(TunnelConstUtil.SQLSERVER_URL,tunnelMap2);
+							JSONArray jsonArray2 = JSONArray.fromObject(tunnelRet2);
+							List<ImsTbStore> list2 = JSONArray.toList(jsonArray2, new ImsTbStore(), new JsonConfig());
+							ImsTbStore store = list2.get(0);
+
 							dfImsService.addDfImsTbStore(store);
 							dfImsService.addDfImsTbOl(tbOl);
 						}
