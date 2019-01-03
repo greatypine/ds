@@ -66,7 +66,7 @@
 				torp.pay_time 
 			from  t_order_receipts torp
 			where torp.customer_id= #{customer_id}
-			and torp.pay_status ='payed' and (torp.type = 'associator_start_2' OR torp.type = 'associator_up_2' OR torp.type='plus')
+			and torp.pay_status ='payed' and (torp.type = 'associator_start_2' OR torp.type = 'yearCard-19' OR torp.type='yearCard')
 			order by torp.create_time,torp.store_id desc 
 			limit 1 
 		]]>
