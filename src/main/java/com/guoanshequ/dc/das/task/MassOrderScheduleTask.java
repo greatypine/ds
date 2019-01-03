@@ -1362,7 +1362,9 @@ public class MassOrderScheduleTask {
 							for (Map<String, Object> unSuccessMap : unSuccessList) {
 								DfMassOrder unSuccessOrder = new DfMassOrder();
 								id = unSuccessMap.get("id").toString();
-								success_time = unSuccessMap.get("success_time").toString();
+								if(unSuccessMap.get("success_time") != null) {
+									success_time = unSuccessMap.get("success_time").toString();
+								}
 								unSuccessOrder.setId(id);
 								unSuccessOrder.setSuccess_time(success_time);
 								dfMassOrderService.updateUnSuccessOfDaily(unSuccessOrder);
