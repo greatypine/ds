@@ -9,7 +9,7 @@ import java.net.URLConnection;
 
 public class HttpInterfaceUtils {
 	
-	public static String DAQWEB_URL="https://www.guoanshuju.com/daqWeb/dispatcher.action";
+	public static String DAQWEB_URL="https://wwwjs.guoanshuju.com/daqWeb/dispatcher.action";
 	public static String PARAM="requestString={\"managerName\":\"%s\",\"methodName\":\"%s\",\"parameters\":null}";
 	
 	public static String sendPost(String url, String param) {

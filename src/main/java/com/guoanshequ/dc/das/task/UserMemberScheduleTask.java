@@ -458,7 +458,7 @@ public class UserMemberScheduleTask {
 	 * @throws
 	 * cron:  0 0 8 * * ? *
 	 */
-	@Scheduled(cron = "0 0 12 * * ?")
+	@Scheduled(cron = "0 30 14 * * ?")
 	public void sendCareerMessageTask() {
 		try {
 				logger.info(">>>>>>>>>>>>>>>>>开始发频道负责人---sendshortmessagestart......... ");
