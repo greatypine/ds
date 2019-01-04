@@ -437,6 +437,8 @@ public class UserMemberScheduleTask {
 			   //调用daqweb同步线上人员接口。
 				String URL=HttpInterfaceUtils.DAQWEB_URL;
 		    	String param=String.format(HttpInterfaceUtils.PARAM, "InterManager", "syncOnLineHuman");
+		    	logger.info("请求URL:"+URL);
+				logger.info("请求param:"+param);
 				String ret = HttpInterfaceUtils.sendPost(URL,param);
 		    	logger.info(">>>>>>>>>>>>>>>>>同步线上人员:"+ret);
 			} catch (Exception e) {
