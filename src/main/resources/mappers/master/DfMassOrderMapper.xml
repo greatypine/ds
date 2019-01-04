@@ -834,7 +834,7 @@
 			when locate('A', ifnull(order_tag4, '')) = 0 and bussiness_group_id = '8ac28b935fed0bc8015fed4c76f60018' then if(order_profit - ifnull(platform_price, 0) < 0, - (order_profit - ifnull(platform_price, 0)), null)
 			else null end
 			as gayy_subsidy
-			from df_mass_order_daily
+			from df_mass_order_monthly
 			-- where date(sign_time) = date_sub(date(now()), interval 1 day);
 			where sign_time >= #{begintime} and sign_time <= #{endtime}
 		]]>
