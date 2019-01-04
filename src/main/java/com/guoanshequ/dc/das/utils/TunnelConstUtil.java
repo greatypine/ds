@@ -9,13 +9,17 @@ public class TunnelConstUtil {
 //    public static final String SQLSERVER_URL="http://localhost:8090/queryData.action";
     public static final String SQLSERVER_URL="http://datatest.guoanshequ.top/eprj/queryData.action";
 
-    public static final String TbStore_SQL = "select * from tb_store ";
+    public static final String TbStore_SQL = "select *,CONVERT(varchar(100),c_modified_dt, 120) as c_modified_dt,CONVERT(varchar(100),c_open_date, 120) as c_open_date " +
+            "from tb_store ";
 
-    public static final  String TbOCount_SQL = "select * from tb_o_count where c_status='已审核' ";
+    public static final  String TbOCount_SQL = "select *,CONVERT(varchar(100),c_mk_dt, 120) as c_mk_dt,CONVERT(varchar(100),c_count_dt, 120) as c_count_dt ," +
+            "CONVERT(varchar(100),c_update_dt, 120) as c_update_dt,CONVERT(varchar(100),c_au_dt, 120) as c_au_dt,CONVERT(varchar(100),c_input_dt, 120) as c_input_dt " +
+            "from tb_o_count where c_status='已审核' ";
 
     public static final  String TbOCountg_SQL = "select * from tb_o_countg ";
 
-    public static final  String TbOl_SQL = "select * from tb_o_l where c_status='已审核'  ";
+    public static final  String TbOl_SQL = "select *,CONVERT(varchar(100),c_mk_dt, 120) as c_mk_dt,CONVERT(varchar(100),c_approve_dt, 120) as c_approve_dt," +
+            "CONVERT(varchar(100),c_au_dt, 120) as c_au_dt from tb_o_l where c_status='已审核'  ";
 
     public static final String TbsdGds_SQL="select tdg.c_guid,tdg.c_store_id,tdg.c_gcode,CONVERT(varchar(100),tdg.c_dt, 120) as c_dt,tdg.c_adno,"
             + "tdg.c_ccode,tdg.c_trademark,tdg.c_name,tdg.c_type,tdg.c_model,tdg.c_status,tdg.c_pro_status, tdg.c_sale_status,"
