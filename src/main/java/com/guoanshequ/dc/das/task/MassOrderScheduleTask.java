@@ -832,7 +832,7 @@ public class MassOrderScheduleTask {
 						// 处理前一天利润数据
 						// List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByDate(paraMap);
 						// 处理前一天利润数据
-						String sql = "select mom.id, mom.order_sn, mom.gmv_price, mom.eshop_joint_ims, mom.sign_time, mom.store_id, mom.business_type, mom.eshop_id, mom.total_quantity"
+						String sql = "select mom.id, mom.order_sn, mom.gmv_price, mom.eshop_joint_ims, mom.sign_time, mom.store_id, mom.business_type"
 								+ ", ufos.channel_id from daqweb.df_mass_order_monthly as mom"
 								+ " left join gabase.b_user_first_order_store as ufos on mom.customer_id = ufos.customer_id and mom.store_id = ufos.store_id"
 								+ " where mom.sign_time >= '" + begintime + "' and mom.sign_time <= '" + endtime + "' and mom.trading_price is not null;";
@@ -849,12 +849,6 @@ public class MassOrderScheduleTask {
 								DfMassOrder dfMassOrder = new DfMassOrder();
 								dfMassOrder.setId(orderMap.get("id").toString());
 								dfMassOrder.setOrder_sn(orderMap.get("order_sn").toString());
-								if (orderMap.get("total_quantity") != null) {
-									dfMassOrder.setTotal_quantity(Integer.valueOf(orderMap.get("total_quantity").toString()));
-								}
-								if (orderMap.get("eshop_id") != null) {
-									dfMassOrder.setEshop_id(orderMap.get("eshop_id").toString());
-								}
 								if (orderMap.get("gmv_price") != null) {
 									dfMassOrder.setGmv_price(new BigDecimal(orderMap.get("gmv_price").toString()));
 								}
@@ -1025,7 +1019,7 @@ public class MassOrderScheduleTask {
 					}
 					logger.info("**********计算每个订单所对应的成本、利润信息数据任务调度结束,开始时间：" + begintime + ",结束时间：" + endtime + ",共更新记录数：" + updatenum + "**********,前两天更新数：" + preUpdatenum);
 				} catch (Exception e) {
-					logger.info("计算每个订单所对应的成本、利润信息数据任务调度异常：", e.toString());
+					logger.error("计算每个订单所对应的成本、利润信息数据任务调度异常：", e.toString());
 					e.printStackTrace();
 				}
 			}
@@ -1345,7 +1339,7 @@ public class MassOrderScheduleTask {
 						paraMap.put("endtime", endtime);
 						List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByAll(paraMap);
 						for (DfMassOrder dfMassOrder : massOrderList) {
-							if(dfMassOrder.getFirst_order_channel() != null && !dfMassOrder.getFirst_order_channel().equals("")) {
+							if(dfMassOrder.getSale_profit() != null && dfMassOrder.getSale_profit().compareTo(BigDecimal.ZERO) > 0 && dfMassOrder.getFirst_order_channel() != null && !dfMassOrder.getFirst_order_channel().equals("")) {
 								dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("this_channel_scale"))));
 								dfMassOrder.setFirst_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("first_channel_scale"))));
 							} else {

@@ -826,6 +826,7 @@
 			platform_price,
 			order_tag4,
 			bussiness_group_id,
+			first_order_channel,
 			case
 			when locate('A', order_tag4) > 0 then order_profit
 			else order_profit - ifnull(platform_price, 0) end
