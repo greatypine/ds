@@ -832,7 +832,7 @@ public class MassOrderScheduleTask {
 						// 处理前一天利润数据
 						// List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByDate(paraMap);
 						// 处理前一天利润数据
-						String sql = "select mom.id, mom.order_sn, mom.gmv_price, mom.eshop_joint_ims, mom.sign_time, mom.store_id, mom.business_type"
+						String sql = "select mom.id, mom.order_sn, mom.gmv_price, mom.eshop_joint_ims, mom.sign_time, mom.store_id, mom.business_type, mom.eshop_id, mom.total_quantity"
 								+ ", ufos.channel_id from daqweb.df_mass_order_monthly as mom"
 								+ " left join gabase.b_user_first_order_store as ufos on mom.customer_id = ufos.customer_id and mom.store_id = ufos.store_id"
 								+ " where mom.sign_time >= '" + begintime + "' and mom.sign_time <= '" + endtime + "' and mom.trading_price is not null;";
@@ -866,6 +866,12 @@ public class MassOrderScheduleTask {
 								}
 								if (orderMap.get("channel_id") != null) {
 									dfMassOrder.setFirst_order_channel(orderMap.get("channel_id").toString());
+								}
+								if (orderMap.get("total_quantity") != null) {
+									dfMassOrder.setTotal_quantity(Integer.valueOf(orderMap.get("total_quantity").toString()));
+								}
+								if (orderMap.get("eshop_id") != null) {
+									dfMassOrder.setEshop_id(orderMap.get("eshop_id").toString());
 								}
 
 								String order_id = dfMassOrder.getId();
