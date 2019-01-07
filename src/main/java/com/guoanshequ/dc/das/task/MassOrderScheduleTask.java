@@ -1344,17 +1344,22 @@ public class MassOrderScheduleTask {
 						paraMap.put("begintime", begintime);
 						paraMap.put("endtime", endtime);
 						List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByAll(paraMap);
-						for (DfMassOrder dfMassOrder : massOrderList) {
-							if(dfMassOrder.getSale_profit() != null && dfMassOrder.getSale_profit().compareTo(BigDecimal.ZERO) > 0 && dfMassOrder.getFirst_order_channel() != null && !dfMassOrder.getFirst_order_channel().equals("")) {
-								dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("this_channel_scale"))));
-								dfMassOrder.setFirst_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("first_channel_scale"))));
-							} else {
-								dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit());
+						if(!massOrderList.isEmpty()) {
+							logger.info("**********更新订单销售毛利、优易补贴(…)和成功时间开始***************");
+							for (DfMassOrder dfMassOrder : massOrderList) {
+								if(dfMassOrder.getSale_profit() != null && dfMassOrder.getSale_profit().compareTo(BigDecimal.ZERO) > 0 && dfMassOrder.getFirst_order_channel() != null && !dfMassOrder.getFirst_order_channel().equals("")) {
+									dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("this_channel_scale"))));
+									dfMassOrder.setFirst_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("first_channel_scale"))));
+								} else {
+									dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit());
+								}
+								updatenum += dfMassOrderService.updateSaleProfitOfDaily(dfMassOrder);
+								dfMassOrderService.updateSaleProfitOfMonthly(dfMassOrder);
+								dfMassOrderService.updateSaleProfitDailyOfTotal(dfMassOrder);
 							}
-							updatenum += dfMassOrderService.updateSaleProfitOfDaily(dfMassOrder);
-							dfMassOrderService.updateSaleProfitOfMonthly(dfMassOrder);
-							dfMassOrderService.updateSaleProfitDailyOfTotal(dfMassOrder);
+							logger.info("**********更新订单销售毛利、优易补贴(…)和成功时间结束***************" + begintime + ",结束时间：" + endtime + ",销售毛利订单共更新记录数：" + updatenum);
 						}
+
 						// 成功时间为空的数据
 						String sql = "select mom.id, min(of.create_time) as success_time from daqweb.df_mass_order_monthly as mom"
 								+ " left join gemini.t_order_flow as of on mom.id = of.order_id and of.order_status = 'success'"
@@ -1377,9 +1382,8 @@ public class MassOrderScheduleTask {
 								successnum += dfMassOrderService.updateUnSuccessOfMonthly(unSuccessOrder);
 								dfMassOrderService.updateUnSuccessOfTotal(unSuccessOrder);
 							}
-							logger.info("**********订单成功时间更新计算结束***************");
+							logger.info("**********订单成功时间更新计算结束***************"+ begintime + ",结束时间：" + endtime + ",成功订单共更新记录数：" + successnum);
 						}
-						logger.info("**********更新订单销售毛利、优易补贴(…)和成功时间,开始时间：" + begintime + ",结束时间：" + endtime + ",销售毛利订单共更新记录数：" + updatenum + ",成功订单共更新记录数：" + successnum);
 
 			    		//设置任务为完成状态
 			    		Map<String, String> doneMap = new HashMap<String,String>();
