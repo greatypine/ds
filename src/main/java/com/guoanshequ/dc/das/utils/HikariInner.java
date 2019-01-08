@@ -22,8 +22,8 @@ public class  HikariInner {
     private static HikariConfig poolConfig = null;
     //定义 Hikari 连接池对象
     private static HikariDataSource dataSource = null;
-    private static final String IMPALAD_HOST = "10.10.40.9";
-    private static final String IMPALAD_JDBC_PORT = "21051";
+    private static final String IMPALAD_HOST = "10.10.40.12";
+    private static final String IMPALAD_JDBC_PORT = "21050";
     private static final String CONNECTION_URL = "jdbc:impala://" + IMPALAD_HOST + ':' + IMPALAD_JDBC_PORT + "/;auth=noSasl;";
     private static final String JDBC_DRIVER_NAME = "com.cloudera.impala.jdbc41.Driver";
 
