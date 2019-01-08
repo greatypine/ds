@@ -678,13 +678,13 @@
 		]]>
 	</select>
 
-	<!-- 更新order_daily表中成本、利润、合同 -->
+	<!-- 更新order_daily表中成本、利润、合同[删掉, first_order_channel= #{first_order_channel}] -->
 	<update id="updateOrderProfitOfDaily" parameterType="MassOrderEntity">
 		<![CDATA[
 			update df_mass_order_daily
 				set cost_price = #{cost_price}, order_profit = #{order_profit}, contract_id = #{contract_id},
 				contract_method= #{contract_method}, contract_percent = #{contract_percent}, contract_price= #{contract_price},
-				order_tag3 = #{order_tag3}, first_order_channel= #{first_order_channel}
+				order_tag3 = #{order_tag3}
 			where id = #{id}
 		]]>
 	</update>
@@ -694,7 +694,7 @@
 			update df_mass_order_monthly
 				set cost_price = #{cost_price}, order_profit = #{order_profit}, contract_id = #{contract_id},
 				contract_method= #{contract_method}, contract_percent = #{contract_percent}, contract_price= #{contract_price},
-				order_tag3 = #{order_tag3}, first_order_channel= #{first_order_channel}
+				order_tag3 = #{order_tag3}
 			where id = #{id}
 		]]>
 	</update>
@@ -704,7 +704,7 @@
 			update df_mass_order_total
 				set cost_price = #{cost_price}, order_profit = #{order_profit}, contract_id = #{contract_id},
 				contract_method= #{contract_method}, contract_percent = #{contract_percent}, contract_price= #{contract_price},
-				order_tag3 = #{order_tag3}, first_order_channel= #{first_order_channel}
+				order_tag3 = #{order_tag3}
 			where id = #{id}
 		]]>
 	</update>
@@ -842,24 +842,24 @@
 
 	<update id="updateSaleProfitOfDaily" parameterType="MassOrderEntity">
   		<![CDATA[
-			update df_mass_order_daily set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}
-			, first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit}
+			update df_mass_order_daily set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}, first_order_channel =#{first_order_channel},
+			first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit}
 			where id = #{id}
 		]]>
 	</update>
 
 	<update id="updateSaleProfitOfMonthly" parameterType="MassOrderEntity">
   		<![CDATA[
-			update df_mass_order_monthly set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}
-			, first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit}
+			update df_mass_order_monthly set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}, first_order_channel =#{first_order_channel},
+			first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit}
 			where id = #{id}
 		]]>
 	</update>
 
 	<update id="updateSaleProfitDailyOfTotal" parameterType="MassOrderEntity">
   		<![CDATA[
-			update df_mass_order_total set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}
-			, first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit}
+			update df_mass_order_total set sale_profit = #{sale_profit}, gayy_subsidy =#{gayy_subsidy}, first_order_channel =#{first_order_channel},
+			first_channel_profit =#{first_channel_profit}, this_channel_profit =#{this_channel_profit}
 			where id = #{id}
 		]]>
 	</update>

@@ -830,50 +830,15 @@ public class MassOrderScheduleTask {
 						paraMap.put("begintime", begintime);
 						paraMap.put("endtime", endtime);
 						// 处理前一天利润数据
-						// List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByDate(paraMap);
-						// 处理前一天利润数据
-						String sql = "select mom.id, mom.order_sn, mom.gmv_price, mom.eshop_joint_ims, mom.sign_time, mom.store_id, mom.business_type, mom.eshop_id, mom.total_quantity"
-								+ ", ufos.channel_id from daqweb.df_mass_order_monthly as mom"
-								+ " left join gabase.b_user_first_order_store as ufos on mom.customer_id = ufos.customer_id and mom.store_id = ufos.store_id"
-								+ " where mom.sign_time >= '" + begintime + "' and mom.sign_time <= '" + endtime + "' and mom.trading_price is not null;";
+						List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByDate(paraMap);
 
-						List<Map<String, Object>> orderList = ImpalaUtil.execute(sql);
-
-						if (!orderList.isEmpty()) {
+						if (!massOrderList.isEmpty()) {
 							Map<String, String> runMap = new HashMap<String, String>();
 							runMap.put("id", "12");
 							runMap.put("task_status", "RUNNING");
 							dsCronTaskService.updateTaskStatusById(runMap);
 
-							for (Map<String, Object> orderMap : orderList) {
-								DfMassOrder dfMassOrder = new DfMassOrder();
-								dfMassOrder.setId(orderMap.get("id").toString());
-								dfMassOrder.setOrder_sn(orderMap.get("order_sn").toString());
-								if (orderMap.get("gmv_price") != null) {
-									dfMassOrder.setGmv_price(new BigDecimal(orderMap.get("gmv_price").toString()));
-								}
-								if (orderMap.get("eshop_joint_ims") != null) {
-									dfMassOrder.setEshop_joint_ims(orderMap.get("eshop_joint_ims").toString());
-								}
-								if (orderMap.get("sign_time") != null) {
-									dfMassOrder.setSign_time(DateUtils.StringToDateTime(orderMap.get("sign_time").toString()));
-								}
-								if (orderMap.get("store_id") != null) {
-									dfMassOrder.setStore_id(orderMap.get("store_id").toString());
-								}
-								if (orderMap.get("business_type") != null) {
-									dfMassOrder.setBusiness_type(orderMap.get("business_type").toString());
-								}
-								if (orderMap.get("channel_id") != null) {
-									dfMassOrder.setFirst_order_channel(orderMap.get("channel_id").toString());
-								}
-								if (orderMap.get("total_quantity") != null) {
-									dfMassOrder.setTotal_quantity(Integer.valueOf(orderMap.get("total_quantity").toString()));
-								}
-								if (orderMap.get("eshop_id") != null) {
-									dfMassOrder.setEshop_id(orderMap.get("eshop_id").toString());
-								}
-
+							for (DfMassOrder dfMassOrder : massOrderList) {
 								String order_id = dfMassOrder.getId();
 								String eshop_joint_ims = dfMassOrder.getEshop_joint_ims();
 								Date sign_time = dfMassOrder.getSign_time();
@@ -1307,96 +1272,6 @@ public class MassOrderScheduleTask {
 				}
 			}
 		}.start();
-	}	
-	
-	/**
-	 * 更新订单销售毛利、优易补贴(…)和成功时间
-	 * 调度规则：每天凌晨6点30
-	 */
-	@Scheduled(cron = "0 30 6 * * ?")
-	public void updateOrderSaleProfitAndSuccesstimeTask() {
-		new Thread() {
-			public void run() {
-				try {
-					System.out.println("开始");
-					Integer updatenum = 0;
-					Integer successnum = 0;
-					String begintime = null;
-					String endtime = null;
-					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(20);
-					String isrun = taskMap.get("isrun");
-					if("ON".equals(isrun)){
-						String runtype = taskMap.get("runtype");
-						//获取上次调度时的最大签收时间开始时间与结束时间
-						if("MANUAL".equals(runtype)){
-							begintime = taskMap.get("begintime");
-							endtime = taskMap.get("endtime");
-						}else{
-							begintime = DateUtils.getPreDateTime(new Date());
-							endtime = DateUtils.getCurDateTime(new Date());
-						}	
-			    		Map<String, String> runMap = new HashMap<String,String>();
-			    		runMap.put("id", "20");
-			    		runMap.put("task_status", "RUNNING");
-			    		dsCronTaskService.updateTaskStatusById(runMap);
-
-						Map<String, String> paraMap = new HashMap<String, String>();
-						paraMap.put("begintime", begintime);
-						paraMap.put("endtime", endtime);
-						List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByAll(paraMap);
-						if(!massOrderList.isEmpty()) {
-							logger.info("**********更新订单销售毛利、优易补贴(…)和成功时间开始***************");
-							for (DfMassOrder dfMassOrder : massOrderList) {
-								if(dfMassOrder.getSale_profit() != null && dfMassOrder.getSale_profit().compareTo(BigDecimal.ZERO) > 0 && dfMassOrder.getFirst_order_channel() != null && !dfMassOrder.getFirst_order_channel().equals("")) {
-									dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("this_channel_scale"))));
-									dfMassOrder.setFirst_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("first_channel_scale"))));
-								} else {
-									dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit());
-								}
-								updatenum += dfMassOrderService.updateSaleProfitOfDaily(dfMassOrder);
-								dfMassOrderService.updateSaleProfitOfMonthly(dfMassOrder);
-								dfMassOrderService.updateSaleProfitDailyOfTotal(dfMassOrder);
-							}
-							logger.info("**********更新订单销售毛利、优易补贴(…)和成功时间结束***************" + begintime + ",结束时间：" + endtime + ",销售毛利订单共更新记录数：" + updatenum);
-						}
-
-						// 成功时间为空的数据
-						String sql = "select mom.id, min(of.create_time) as success_time from daqweb.df_mass_order_monthly as mom"
-								+ " left join gemini.t_order_flow as of on mom.id = of.order_id and of.order_status = 'success'"
-								+ " where mom.success_time is null group by mom.id";
-
-						List<Map<String, Object>> unSuccessList = ImpalaUtil.execute(sql);
-						if (!unSuccessList.isEmpty()) {
-							logger.info("**********订单成功时间更新计算开始***************");
-							String id = null;
-							String success_time = null;
-							for (Map<String, Object> unSuccessMap : unSuccessList) {
-								DfMassOrder unSuccessOrder = new DfMassOrder();
-								id = unSuccessMap.get("id").toString();
-								if(unSuccessMap.get("success_time") != null) {
-									success_time = unSuccessMap.get("success_time").toString();
-								}
-								unSuccessOrder.setId(id);
-								unSuccessOrder.setSuccess_time(success_time);
-								dfMassOrderService.updateUnSuccessOfDaily(unSuccessOrder);
-								successnum += dfMassOrderService.updateUnSuccessOfMonthly(unSuccessOrder);
-								dfMassOrderService.updateUnSuccessOfTotal(unSuccessOrder);
-							}
-							logger.info("**********订单成功时间更新计算结束***************"+ begintime + ",结束时间：" + endtime + ",成功订单共更新记录数：" + successnum);
-						}
-
-			    		//设置任务为完成状态
-			    		Map<String, String> doneMap = new HashMap<String,String>();
-			    		doneMap.put("id", "20");
-			    		doneMap.put("task_status", "DONE");
-			    		dsCronTaskService.updateTaskStatusById(doneMap);
-					}
-				} catch (Exception e) {
-					logger.info("更新订单销售毛利、优易补贴(…)和成功时间：", e.toString());
-					e.printStackTrace();
-				}
-			}
-		}.start();
 	}
 
 	/** 
@@ -1540,7 +1415,124 @@ public class MassOrderScheduleTask {
 				}
 			}
 		}.start();
-	}		
-	
-	
+	}
+
+	/**
+	 * 更新订单首单信息、销售毛利、交叉毛利、优易补贴(…)和成功时间
+	 * 调度规则：每天凌晨6点30
+	 */
+	@Scheduled(cron = "0 30 6 * * ?")
+	public void updateOrderSaleProfitAndSuccesstimeTask() {
+		new Thread() {
+			public void run() {
+				try {
+					System.out.println("开始");
+					Integer updatenum = 0;
+					Integer successnum = 0;
+					String begintime = null;
+					String endtime = null;
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(20);
+					String isrun = taskMap.get("isrun");
+					if("ON".equals(isrun)){
+						String runtype = taskMap.get("runtype");
+						//获取上次调度时的最大签收时间开始时间与结束时间
+						if("MANUAL".equals(runtype)){
+							begintime = taskMap.get("begintime");
+							endtime = taskMap.get("endtime");
+						}else{
+							begintime = DateUtils.getPreDateTime(new Date());
+							endtime = DateUtils.getCurDateTime(new Date());
+						}	
+			    		Map<String, String> runMap = new HashMap<String,String>();
+			    		runMap.put("id", "20");
+			    		runMap.put("task_status", "RUNNING");
+			    		dsCronTaskService.updateTaskStatusById(runMap);
+
+						Map<String, String> paraMap = new HashMap<String, String>();
+						paraMap.put("begintime", begintime);
+						paraMap.put("endtime", endtime);
+//						List<DfMassOrder> massOrderList = dfMassOrderService.queryMassOrderListByAll(paraMap);
+
+
+						String sql = "select mom.id, mom.order_profit, mom.platform_price, mom.order_tag4, mom.bussiness_group_id"
+								+ ", ufos.channel_id as first_order_channel"
+								+ ", case when locate('A', mom.order_tag4) > 0 then mom.order_profit else mom.order_profit - ifnull(mom.platform_price, 0) end as sale_profit"
+								+ ", case when locate('A', ifnull(mom.order_tag4, '')) = 0 and mom.bussiness_group_id = '8ac28b935fed0bc8015fed4c76f60018'"
+									+ " then if(mom.order_profit - ifnull(mom.platform_price, 0) < 0, - (mom.order_profit - ifnull(mom.platform_price, 0)), null)"
+									+ " else null end as gayy_subsidy"
+								+ " from daqweb.df_mass_order_monthly as mom"
+								+ " left join gabase.b_user_first_order_store as ufos on mom.customer_id = ufos.customer_id and mom.store_id = ufos.store_id"
+								+ " where (mom.sign_time >= '" + begintime + "' and mom.sign_time <= '" + endtime + "') or mom.order_tag3 ='0';";
+
+						List<Map<String, Object>> orderList = ImpalaUtil.execute(sql);
+
+//						dfMassOrder.setId(orderMap.get("id").toString());
+//						if(!massOrderList.isEmpty()) {
+						if (!orderList.isEmpty()) {
+							logger.info("**********更新订单首单信息、销售毛利、优易补贴(…)和成功时间开始***************");
+							for (Map<String, Object> orderMap : orderList) {
+//							for (DfMassOrder dfMassOrder : massOrderList) {
+								DfMassOrder dfMassOrder = new DfMassOrder();
+								dfMassOrder.setId(orderMap.get("id").toString());
+								if (orderMap.get("first_order_channel") != null) {
+									dfMassOrder.setFirst_order_channel(orderMap.get("first_order_channel").toString());
+								}
+								if (orderMap.get("sale_profit") != null) {
+									dfMassOrder.setSale_profit(new BigDecimal(orderMap.get("sale_profit").toString()));
+								}
+								if (orderMap.get("gayy_subsidy") != null) {
+									dfMassOrder.setGayy_subsidy(new BigDecimal(orderMap.get("gayy_subsidy").toString()));
+								}
+
+								if(dfMassOrder.getSale_profit() != null && dfMassOrder.getSale_profit().compareTo(BigDecimal.ZERO) > 0 && dfMassOrder.getFirst_order_channel() != null && !dfMassOrder.getFirst_order_channel().equals("")) {
+									dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("this_channel_scale"))));
+									dfMassOrder.setFirst_channel_profit(dfMassOrder.getSale_profit().multiply(new BigDecimal(taskMap.get("first_channel_scale"))));
+								} else {
+									dfMassOrder.setThis_channel_profit(dfMassOrder.getSale_profit());
+								}
+								updatenum += dfMassOrderService.updateSaleProfitOfDaily(dfMassOrder);
+								dfMassOrderService.updateSaleProfitOfMonthly(dfMassOrder);
+								dfMassOrderService.updateSaleProfitDailyOfTotal(dfMassOrder);
+							}
+							logger.info("**********更新订单销售毛利、优易补贴(…)和成功时间结束***************" + begintime + ",结束时间：" + endtime + ",销售毛利订单共更新记录数：" + updatenum);
+						}
+
+						// 成功时间为空的数据
+						sql = "select mom.id, min(of.create_time) as success_time from daqweb.df_mass_order_monthly as mom"
+								+ " left join gemini.t_order_flow as of on mom.id = of.order_id and of.order_status = 'success'"
+								+ " where mom.success_time is null group by mom.id";
+
+						List<Map<String, Object>> unSuccessList = ImpalaUtil.execute(sql);
+						if (!unSuccessList.isEmpty()) {
+							logger.info("**********订单成功时间更新计算开始***************");
+							String id = null;
+							String success_time = null;
+							for (Map<String, Object> unSuccessMap : unSuccessList) {
+								DfMassOrder unSuccessOrder = new DfMassOrder();
+								id = unSuccessMap.get("id").toString();
+								if(unSuccessMap.get("success_time") != null) {
+									success_time = unSuccessMap.get("success_time").toString();
+								}
+								unSuccessOrder.setId(id);
+								unSuccessOrder.setSuccess_time(success_time);
+								dfMassOrderService.updateUnSuccessOfDaily(unSuccessOrder);
+								successnum += dfMassOrderService.updateUnSuccessOfMonthly(unSuccessOrder);
+								dfMassOrderService.updateUnSuccessOfTotal(unSuccessOrder);
+							}
+							logger.info("**********订单成功时间更新计算结束***************"+ begintime + ",结束时间：" + endtime + ",成功订单共更新记录数：" + successnum);
+						}
+
+			    		//设置任务为完成状态
+			    		Map<String, String> doneMap = new HashMap<String,String>();
+			    		doneMap.put("id", "20");
+			    		doneMap.put("task_status", "DONE");
+			    		dsCronTaskService.updateTaskStatusById(doneMap);
+					}
+				} catch (Exception e) {
+					logger.info("更新订单首单信息、销售毛利、优易补贴(…)和成功时间：", e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
 }
