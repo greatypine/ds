@@ -713,7 +713,7 @@
 	<select id="queryCostPriceBySigndateCode" parameterType="java.util.Map" resultType="ImsTbsdgdsEntity">
 		<![CDATA[
 			 select * from df_ims_tbs_d_gds_daily where c_gcode =#{product_code} and date(c_dt) =#{sign_date} and c_map_store_id =#{store_number} 
-			  limit 1 ;
+			  order by cost_price desc limit 1 ;
 		]]>
   	</select>
   	
