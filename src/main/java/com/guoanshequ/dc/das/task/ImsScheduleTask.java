@@ -76,6 +76,7 @@ public class ImsScheduleTask {
 				    		runMap.put("task_status", "RUNNING");
 				    		dsCronTaskService.updateTaskStatusById(runMap);
 				    		
+				    		logger.info("************sqlserver中tbs_d_gds表此次共查询的数据条数：*************"+imsTbsdgdsList.size());
 							for (ImsTbsdgds imsTbsdgds : imsTbsdgdsList) {
 								addnums += dfTbsgdsService.addDfTbsdgdsDaily(imsTbsdgds);
 										   dfTbsgdsService.addDfTbsdgdsTotal(imsTbsdgds);

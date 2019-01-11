@@ -1310,7 +1310,7 @@ public class MassOrderScheduleTask {
 		    		dsCronTaskService.updateTaskStatusById(runMap);
 		    		
 		    		//A类营销：运营管理中心有分摊占比产生的优惠券所使用的订单
-		    		String aSql ="select tor.id from daqWeb.df_mass_order_monthly tor " + 
+		    		String aSql ="select tor.id from daqWeb.df_mass_order_total tor " + 
 		    				"join gemini.t_order_group tog on (tor.group_id = tog.id) " + 
 		    				"join gemini.t_card_coupon tcou on (tog.card_coupon_id = tcou.id)  " + 
 		    				"join gemini.t_card_coupontype tcout on (tcout.id = tcou.type_id)  " + 
@@ -1318,20 +1318,20 @@ public class MassOrderScheduleTask {
 		    				"where tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";
 		    		
 		    		//A类营销：A1优品试用每月25的券
-		    		String a1Sql = "select tor.id from daqweb.df_mass_order_monthly tor " + 
+		    		String a1Sql = "select tor.id from daqweb.df_mass_order_total tor " + 
 		    				"join gemini.t_order_group tog on (tor.group_id = tog.id) " + 
 		    				"join gemini.t_card_coupon tcou on (tog.card_coupon_id = tcou.id and tcou.content_price=25 and tcou.emall_id ='c3edf6c77d483c6b67659f52e1f24990')  " + 
 		    				"where tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";
 		    		
 		    		//A2生日券
-		    		String a2Sql = "select tor.id from daqweb.df_mass_order_monthly tor " + 
+		    		String a2Sql = "select tor.id from daqweb.df_mass_order_total tor " + 
 		    				"join gemini.t_order_group tog on (tor.group_id = tog.id) " + 
 		    				"join gemini.t_card_coupon tcou on (tog.card_coupon_id = tcou.id and tcou.emall_id ='1908fa85f681b7212c9b6deef8803d63')   " + 
 		    				"where tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";
 		    		
 		    		
 		    		//A3开卡礼199 金额199减199
-		    		String a3Sql = "select tor.id from daqweb.df_mass_order_monthly tor " + 
+		    		String a3Sql = "select tor.id from daqweb.df_mass_order_total tor " + 
 		    				"join gemini.t_order_group tog on (tor.group_id = tog.id) " + 
 		    				"join gemini.t_card_coupon tcou on (tog.card_coupon_id = tcou.id and tcou.emall_id ='edea35c2f1fb334184d53f4ca215f7a1')   " + 
 		    				"where tor.sign_time >'"+begintime+"' and tor.sign_time<'"+endtime+"' ";
