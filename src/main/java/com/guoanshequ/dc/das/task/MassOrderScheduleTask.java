@@ -1455,14 +1455,16 @@ public class MassOrderScheduleTask {
 
 
 						String sql = "select mom.id, mom.order_profit, mom.platform_price, mom.order_tag4, mom.bussiness_group_id"
-								+ ", ufos.channel_id as first_order_channel"
-								+ ", case when locate('A', mom.order_tag4) > 0 then mom.order_profit else mom.order_profit - ifnull(mom.platform_price, 0) end as sale_profit"
-								+ ", case when locate('A', ifnull(mom.order_tag4, '')) = 0 and mom.bussiness_group_id = '8ac28b935fed0bc8015fed4c76f60018'"
-									+ " then if(mom.order_profit - ifnull(mom.platform_price, 0) < 0, - (mom.order_profit - ifnull(mom.platform_price, 0)), null)"
-									+ " else null end as gayy_subsidy"
-								+ " from daqweb.df_mass_order_monthly as mom"
-								+ " left join gabase.b_user_first_order_store as ufos on mom.customer_id = ufos.customer_id and mom.store_id = ufos.store_id"
-								+ " where (mom.sign_time >= '" + begintime + "' and mom.sign_time <= '" + endtime + "') or mom.order_tag3 ='0';";
+							+ ", ufos.channel_id as first_order_channel"
+							+ ", case when locate('A', mom.order_tag4) > 0 then mom.order_profit else mom.order_profit - ifnull(mom.platform_price, 0) end"
+								+ " as sale_profit"
+							+ ", case when locate('A', ifnull(mom.order_tag4, '')) = 0 and mom.bussiness_group_id = '8ac28b935fed0bc8015fed4c76f60018'"
+								+ " then if(mom.order_profit - ifnull(mom.platform_price, 0) < 0, - (mom.order_profit - ifnull(mom.platform_price, 0)), null)"
+								+ " else null end as gayy_subsidy"
+							+ " from daqweb.df_mass_order_monthly as mom"
+							+ " left join gabase.b_user_first_order_store as ufos on mom.customer_id = ufos.customer_id and mom.store_id = ufos.store_id"
+							+ " where (mom.sign_time >= '" + begintime + "' and mom.sign_time <= '" + endtime + "')"
+							+ " or mom.order_tag3 = '0' or mom.first_order_channel is null;";
 
 						List<Map<String, Object>> orderList = ImpalaUtil.execute(sql);
 
