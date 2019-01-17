@@ -24,7 +24,7 @@
 	</select>
 	
 	
-	<!-- 根据创建时间和更新时间从customer表中获取社员信息，试用黄金社员 associator_level为-2的数据-->
+	<!-- 根据创建时间和更新时间从customer表中获取社员信息，黄金社员 associator_level为2的数据-->
 	<select id="queryUserMemberByLevelTime" parameterType="java.util.Map" resultType="java.util.Map">
         <![CDATA[
 			select 
@@ -33,7 +33,8 @@
 				tc.create_time as regist_time,
 				tc.associator_level as associator_level,
 				tc.associator_expiry_date as associator_expiry_date,
-				tc.customer_source as customer_source
+				tc.customer_source as customer_source,
+				tc.associator_mode as associator_mode
 			from t_customer tc
 			where ((tc.create_time >=#{begintime} and tc.create_time <=#{endtime} ) 
 			or ( tc.update_time >=#{begintime} and tc.update_time <=#{endtime} ))
