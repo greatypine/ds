@@ -66,6 +66,8 @@ public class TaskByHandController {
     @Autowired
     UserMemberScheduleTask userMemberScheduleTask;
     @Autowired
+    SendMessageScheduleTask sendMessageScheduleTask;
+    @Autowired
     BigScreenScheduleTask bigScreenScheduleTask;
     @Autowired
     ProductSalesTask productSalesTask;
@@ -1589,7 +1591,7 @@ public class TaskByHandController {
     @RequestMapping(value = "rest/sendCareerMessageTaskRun",method = RequestMethod.POST)
     public RestResponse sendCareerMessageTask(@RequestBody Map<String, String> paraMap) throws Exception {
     	try{
-    		userMemberScheduleTask.sendCareerMessageTask();
+    		sendMessageScheduleTask.sendCareerMessageTask();
     		return new RestResponse(EnumRespStatus.TASK_RUNOK);
     	}catch (Exception e) {
             logger.error(e.toString());
