@@ -82,6 +82,7 @@
                 <provident.fund.domain>https://t.51gjj.com</provident.fund.domain>
                 <provident.fund.appkey>D59343BEAA534E0EB60A492A3FAC9913</provident.fund.appkey>
                 <provident.fund.appsecret>2A902C20AA984150B20BE91395645E974B9A69FF</provident.fund.appsecret>
+                <daqweb.interface.url>https://wwwjs.guoanshuju.com/daqWeb/dispatcher.action</daqweb.interface.url>
             </properties>
         </profile>
         <profile>
@@ -114,6 +115,7 @@
                 <provident.fund.domain>https://t.51gjj.com</provident.fund.domain>
                 <provident.fund.appkey>D59343BEAA534E0EB60A492A3FAC9913</provident.fund.appkey>
                 <provident.fund.appsecret>2A902C20AA984150B20BE91395645E974B9A69FF</provident.fund.appsecret>
+                <daqweb.interface.url>test</daqweb.interface.url>
             </properties>
         </profile>
         <profile>
@@ -147,6 +149,7 @@
                 <provident.fund.domain>https://t.51gjj.com</provident.fund.domain>
                 <provident.fund.appkey>D59343BEAA534E0EB60A492A3FAC9913</provident.fund.appkey>
                 <provident.fund.appsecret>2A902C20AA984150B20BE91395645E974B9A69FF</provident.fund.appsecret>
+                <daqweb.interface.url>dev</daqweb.interface.url>
             </properties>
         </profile>
     </profiles>
