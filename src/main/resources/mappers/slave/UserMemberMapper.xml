@@ -145,5 +145,17 @@
 		]]>
 	</select>
 	
+	<!-- 每天将前一天从2降级社员统计出来，更新社员统计表中相关社员的社员等级、社员到期时间、社员状态三个字段-->
+	<select id="queryMemberToNormalByCreateTime" parameterType="java.util.Map" resultType="java.util.Map">
+        <![CDATA[
+			select tmor.customer_id,
+				tc.associator_level,
+				tc.associator_expiry_date,
+				0 as status 
+			from t_member_operation_record tmor 
+			join t_customer tc on (tmor.customer_id = tc.id)
+			where tmor.old_level =2 and tmor.level !=2 and tmor.create_time>=#{begintime} and tmor.create_time<=#{endtime}
+		]]>
+	</select>
 	
 </mapper>

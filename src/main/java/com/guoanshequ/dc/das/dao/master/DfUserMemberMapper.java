@@ -21,4 +21,6 @@ public interface DfUserMemberMapper {
 	
 	public Integer addDfTryUserMember(Map<String,Object> paraMap);
 	
+	public Integer updateMemberToNormalById(Map<String,String> paraMap);
+	
 }

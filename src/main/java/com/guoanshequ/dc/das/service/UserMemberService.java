@@ -69,4 +69,9 @@ public class UserMemberService {
     	
     	return userMemberDao.queryCreatetimeFromOpRecordByCusId(customer_id);
     }
+    
+    public List<Map<String, String>> queryMemberToNormalByCreateTime(Map<String, String> paraMap){
+    	
+    	return userMemberDao.queryMemberToNormalByCreateTime(paraMap);
+    }
 }

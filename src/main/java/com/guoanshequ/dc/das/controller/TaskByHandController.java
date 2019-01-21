@@ -1599,4 +1599,16 @@ public class TaskByHandController {
             return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
         }
     }    
+    
+    @RequestMapping(value = "rest/updateMemberToNormalTaskRun",method = RequestMethod.POST)
+    public RestResponse updateMemberToNormalTask(@RequestBody Map<String, String> paraMap) throws Exception {
+    	try{
+    		userMemberScheduleTask.updateMemberToNormalTask();
+    		return new RestResponse(EnumRespStatus.TASK_RUNOK);
+    	}catch (Exception e) {
+            logger.error(e.toString());
+            e.printStackTrace();
+            return new RestResponse(EnumRespStatus.SYSTEM_ERROR);
+        }
+    }    
 }

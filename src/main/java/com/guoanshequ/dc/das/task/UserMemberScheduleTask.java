@@ -5,7 +5,6 @@ import com.guoanshequ.dc.das.model.IdCard;
 import com.guoanshequ.dc.das.model.OrderReceipts;
 import com.guoanshequ.dc.das.service.*;
 import com.guoanshequ.dc.das.utils.DateUtils;
-import com.guoanshequ.dc.das.utils.HttpInterfaceUtils;
 import com.guoanshequ.dc.das.utils.IdCardUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -422,5 +421,56 @@ public class UserMemberScheduleTask {
 		}.start();
 	}
 	
+	/**
+	 * 
+	* @Title: memberToNormalTask
+	* @Description:每天将前一天从2降级社员统计出来，更新社员统计表中相关社员的社员等级、社员到期时间、社员状态三个字段
+	* @param     设定文件
+	* @return void    返回类型
+	* @throws
+	 */	
+	
+	@Scheduled(cron = "0 10 1 * * ?")
+	public void updateMemberToNormalTask() {
+		new Thread() {
+			public void run() {
+				try {
+					logger.info("************社员等级降级社员从2降到非2任务执行任务开始***********************");
+					Map<String, String> taskMap = dsCronTaskService.queryDsCronTaskById(21);
+					String isrun = taskMap.get("isrun");
+					// 判断任务是否开启
+					if ("ON".equals(isrun)) {
+						String runtype = taskMap.get("runtype");
+						String begintime = null;
+						String endtime = null;
+						int updateNum =0;
+						// 获取上次调度时的最大签收时间开始时间与结束时间
+						if ("MANUAL".equals(runtype)) {
+							begintime = taskMap.get("begintime");
+							endtime = taskMap.get("endtime");
+						} else {
+							begintime = DateUtils.getPreDateTime(new Date());
+							endtime = DateUtils.getCurDateTime(new Date());
+						}
+						Map<String, String> paraMap = new HashMap<String, String>();
+						paraMap.put("begintime", begintime);
+						paraMap.put("endtime", endtime);
+						// 1执行查询，从gemini中查询出时间段内的用户数据
+						List<Map<String, String>> userMemberList = userMemberService.queryMemberToNormalByCreateTime(paraMap);
+						if (!userMemberList.isEmpty()) {
+							for (Map<String, String> userMemberMap : userMemberList) {
+								updateNum+=dfUserMemberService.updateMemberToNormalById(userMemberMap);
+							}
+						}
+						logger.info("************社员等级降级社员从2降到非2任务结束,开始时间：" + begintime + ",结束时间：" + endtime+",共更新数据记录数："+updateNum);
+					}
+				} catch (Exception e) {
+					logger.info("************社员等级降级社员从2降到非2任务出现问题，任务执行失败，请查看！");
+					logger.info(e.toString());
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}		
 	
 }

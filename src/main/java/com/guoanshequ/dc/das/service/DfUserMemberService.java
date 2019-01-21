@@ -34,5 +34,9 @@ public class DfUserMemberService {
 	
 	public Integer addDfTryUserMember(Map<String, Object> paraMap) {
 		return dfUserMemberDao.addDfTryUserMember(paraMap);
-	}	
+	}
+	
+	public Integer updateMemberToNormalById (Map<String, String> paraMap) {
+		return dfUserMemberDao.updateMemberToNormalById(paraMap);
+	}
 }

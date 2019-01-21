@@ -65,5 +65,12 @@
         ]]>
 	</insert>
 	
+	<insert id="updateMemberToNormalById" parameterType="java.util.Map" >
+		<![CDATA[
+			update df_user_member dum 
+			set dum.associator_level =#{associator_level},dum.associator_expiry_date=#{associator_expiry_date},dum.status =#{status}
+			where dum.customer_id = #{customer_id}
+        ]]>
+	</insert>	
 
 </mapper>
