@@ -12,8 +12,8 @@
 
 	<insert id="addDsPesCustomer" parameterType="java.util.Map">
         <![CDATA[
-			INSERT INTO ds_pes_customer_store_month(storeno,storename,platformid,cityname,new_cusnum_ten,cusnum,cusnum_ten,year,month) 
-				SELECT ifnull(ts.storeno,'') as store_code,ts.name as store_name,c.store_id,ts.city_name,ifnull(c.new_10_count,0) as new_10_count,ifnull(c.total,0) as total,ifnull(d.total_ten,0) as total_ten,YEAR(date_sub(now(),interval 1 day)),MONTH(date_sub(now(),interval 1 day))
+			INSERT INTO ds_pes_customer_store_month(storeno,storename,platformid,cityname,new_cusnum_ten,cusnum,cusnum_ten,cusnum_thirty_nine,cusnum_three_hundred,year,month)
+				SELECT ifnull(ts.storeno,'') as store_code,ts.name as store_name,c.store_id,ts.city_name,ifnull(c.new_10_count,0) as new_10_count,ifnull(c.total,0) as total,ifnull(d.total_ten,0) as total_ten,ifnull(d.total_thirty_nine,0) as total_thirty_nine,ifnull(d.total_three_hundred,0) as total_three_hundred,YEAR(date_sub(now(),interval 1 day)),MONTH(date_sub(now(),interval 1 day))
 				    FROM
 					    (select sum(case when customer_isnew_flag >='10' and customer_isnew_flag !='-1' then 1 else 0 end) as new_10_count ,count(DISTINCT(customer_id)) as total,store_id
 						    from (select  tor.store_code,tor.store_id,tor.store_name,tor.store_city_name,customer_isnew_flag ,customer_id
@@ -28,7 +28,7 @@
 						    and tor.eshop_name NOT LIKE '%测试%' AND tor.eshop_white!='QA'
 						    and tor.store_name NOT LIKE '%测试%' and tor.store_white!='QA' AND tor.store_status =0 AND tor.normal_store_id is not null) aa GROUP BY aa.store_id ) c
 		            LEFT JOIN
-		                (select b.store_code,b.store_id,sum(case when b.monetary>10 then 1 else 0 end ) as total_ten from
+		                (select b.store_code,b.store_id,sum(case when b.monetary>10 then 1 else 0 end ) as total_ten,sum(case when b.monetary >= 39 then 1 else 0 end ) as total_thirty_nine,sum(case when b.monetary >= 300 then 1 else 0 end ) as total_three_hundred from
 							(select  a.store_code,a.store_id,sum(IFNULL(a.gmv_price,0)) as monetary from
 							(select  tor.store_code,tor.store_id,tor.gmv_price,customer_id
 								from df_mass_order_monthly tor where  tor.customer_id not like 'fakecustomer%'
