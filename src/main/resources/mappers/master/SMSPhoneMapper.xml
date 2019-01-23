@@ -18,7 +18,7 @@
 
     <select id="selectSMSPhoneNoSend" parameterType="java.util.Map"  resultType="HashMap">
         <![CDATA[
-		  select * from (select a.mobilephone,a.group_code,a.status,b.mobilephone as invalidphone from t_sms_phone a LEFT JOIN (select * from t_sms_result_record where  serial_no = #{serialNo} and group_code=#{groupCode}) b on a.group_code = b.group_code and a.mobilephone = b.mobilephone ) c where c.invalidphone is null and c.`status` =1;
+		  select * from (select a.mobilephone,a.group_code,a.status,b.mobilephone as invalidphone from (select * from t_sms_phone where group_code=#{groupCode})  a LEFT JOIN (select * from t_sms_result_record where  serial_no = #{serialNo} and group_code=#{groupCode}) b on a.group_code = b.group_code and a.mobilephone = b.mobilephone ) c where c.invalidphone is null and c.`status` =1;
 		]]>
     </select>
 
