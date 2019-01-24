@@ -1464,7 +1464,7 @@ public class MassOrderScheduleTask {
 							+ " from daqweb.df_mass_order_monthly as mom"
 							+ " left join gabase.b_user_first_order_store as ufos on mom.customer_id = ufos.customer_id and mom.real_store_id = ufos.store_id"
 							+ " where (mom.sign_time >= '" + begintime + "' and mom.sign_time <= '" + endtime + "')"
-							+ " or mom.order_tag3 = '0' or mom.first_order_channel is null;";
+							+ " or mom.first_order_channel is null or (mom.order_profit is not null and mom.sale_profit is null);";
 
 						List<Map<String, Object>> orderList = ImpalaUtil.execute(sql);
 
