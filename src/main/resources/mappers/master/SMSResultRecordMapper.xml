@@ -21,7 +21,7 @@
         </if>
         <if test="null != endDate">
             <![CDATA[
-                 and endDate <=#{endDate}
+                 and sendtime <=#{endDate}
               ]]>
         </if>
     </select>
