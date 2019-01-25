@@ -139,8 +139,8 @@
         <![CDATA[
 			select 
 				create_time as opencard_time
-			from t_member_operation_record where mode ='adminDefined' and level =2 
-			and customer_id =#{customer_id}
+			from t_member_operation_record where level =2 
+			and customer_id =#{customer_id} order by create_time asc 
 			limit 1;
 		]]>
 	</select>
