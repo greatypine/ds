@@ -16,6 +16,7 @@
 			on duplicate key update
 			associator_expiry_date = values(associator_expiry_date),
 			member_type = values(member_type),
+			status ='1',
 			update_time = now()
         ]]>
 	</insert>
