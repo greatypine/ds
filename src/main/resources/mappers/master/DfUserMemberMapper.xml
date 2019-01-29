@@ -14,9 +14,12 @@
 				#{inviteCode},#{customer_source},#{member_origin},#{associator_mode}
 			)
 			on duplicate key update
+			opencard_time = values(opencard_time),
 			associator_expiry_date = values(associator_expiry_date),
 			member_type = values(member_type),
+			associator_level = values(associator_level),
 			status ='1',
+			associator_mode = #{associator_mode},
 			update_time = now()
         ]]>
 	</insert>

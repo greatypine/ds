@@ -53,7 +53,7 @@
 			from  t_order_receipts torp
 			where torp.customer_id= #{customer_id}
 			and torp.pay_status ='payed' and torp.type = 'associator_start_-2'
-			order by torp.create_time,torp.store_id desc 
+			order by torp.create_time desc ,torp.store_id desc 
 			limit 1 
 		]]>
 	</select>
@@ -68,7 +68,7 @@
 			from  t_order_receipts torp
 			where torp.customer_id= #{customer_id}
 			and torp.pay_status ='payed' and (torp.type = 'associator_start_2' OR torp.type = 'yearCard-19' OR torp.type='yearCard')
-			order by torp.create_time,torp.store_id desc 
+			order by torp.create_time desc,torp.store_id desc 
 			limit 1 
 		]]>
 	</select>
@@ -140,7 +140,7 @@
 			select 
 				create_time as opencard_time
 			from t_member_operation_record where level =2 
-			and customer_id =#{customer_id} order by create_time asc 
+			and customer_id =#{customer_id} order by create_time desc 
 			limit 1;
 		]]>
 	</select>
