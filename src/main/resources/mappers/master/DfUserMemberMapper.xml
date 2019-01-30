@@ -18,6 +18,8 @@
 			associator_expiry_date = values(associator_expiry_date),
 			member_type = values(member_type),
 			associator_level = values(associator_level),
+			regist_storeid = values(regist_storeid),
+			regist_cityno = values(regist_cityno),
 			status ='1',
 			associator_mode = #{associator_mode},
 			update_time = now()
