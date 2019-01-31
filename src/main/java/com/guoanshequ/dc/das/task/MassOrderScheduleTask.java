@@ -1502,7 +1502,8 @@ public class MassOrderScheduleTask {
 						// 成功时间为空的数据
 						sql = "select mom.id, min(of.create_time) as success_time from daqweb.df_mass_order_monthly as mom"
 								+ " left join gemini.t_order_flow as of on mom.id = of.order_id and of.order_status = 'success'"
-								+ " where mom.success_time is null or unix_timestamp(mom.sign_time) > unix_timestamp(mom.success_time) group by mom.id";
+								+ " where (mom.success_time is null or unix_timestamp(mom.sign_time) > unix_timestamp(mom.success_time))"
+								+ " and of.create_time is not null group by mom.id";
 
 						List<Map<String, Object>> unSuccessList = ImpalaUtil.execute(sql);
 						if (!unSuccessList.isEmpty()) {
