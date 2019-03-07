@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.WesterLandProductMapper">
+
+
+    <insert id="addProduct" parameterType="java.util.Map">
+
+        <![CDATA[
+
+          insert  into t_wester_land_product(
+                        prdNo,
+                        prdName,
+                        mainRiskCode,
+                        riskCode,
+                        payEndYearFlag,
+                        payEndYear,
+                        insuYearFlag,
+                        insuYear,
+                        payIntv,
+                        prem,
+                        amnt,
+                        mult,
+                        payEndDate,
+                        cvaliDate,
+                        endDate,
+                        createDate
+                        )
+                        values (
+                            #{prdNo},
+                            #{prdName},
+                            #{mainRiskCode},
+                            #{riskCode},
+                            #{payEndYearFlag},
+                            #{payEndYear},
+                            #{insuYearFlag},
+                            #{insuYear},
+                            #{payIntv},
+                            #{prem},
+                            #{amnt},
+                            #{mult},
+                            #{payEndDate},
+                            #{cvaliDate},
+                            #{endDate},
+                            #{createDate}
+
+                        )
+        ]]>
+    </insert>
+
+    <delete id="deleteProduct" parameterType="java.util.Map">
+        delete  from t_wester_land_product where createDate = #{createDate}
+    </delete>
+
+    <select id="queryProduct" parameterType="java.util.Map" resultType="java.util.Map">
+
+        <![CDATA[
+              select * from t_wester_land_product
+		]]>
+        <if test="null != createDate and null != ''">
+            <![CDATA[
+              where  createDate =#{createDate}
+           ]]>
+        </if>
+
+    </select>
+
+
+</mapper>
