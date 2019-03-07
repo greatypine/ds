@@ -22,6 +22,38 @@ public class SendMessageScheduleTask {
     private String daqweburl;
 	
 	/**
+	 *
+	 * @Title: syncOnlineMemberTask 
+	 * @Description: 同步线上人员信息。调用daqweb接口，每1分钟跑一次，采用多线程 
+	 * @param 
+	 * @return void 返回类型 
+	 * @throws
+	 */
+	@Scheduled(cron = "0 */1 * * * ?")
+	public void syncOnlineMemberTask() {
+		try {
+			// 调用daqweb同步线上人员接口。
+			String URL = daqweburl;
+			String param = String.format(HttpInterfaceUtils.PARAM, "InterManager", "syncOnLineHuman");
+			logger.info("请求URL:" + URL);
+			logger.info("请求param:" + param);
+			if(daqweburl!=null&&daqweburl.length()>10) {
+				String ret = HttpInterfaceUtils.sendPost(URL, param);
+				logger.info(">>>>>>>>>>>>>>>>>同步线上人员:" + ret);
+			}else {
+				logger.info(">>>>>>>>>>>>>>>>>测试环境未同步线上人员！");
+			}
+		} catch (Exception e) {
+			logger.info("由于网络或其它原因，同步线上人员失败，请查看！");
+			logger.info(e.toString());
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	/**
 	 * 
 	 * @Title: syncOnlineMemberTask 
 	 * @Description:发送 预警消息的方法。(发频道负责人 )
