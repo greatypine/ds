@@ -83,6 +83,11 @@
                 <provident.fund.appkey>D59343BEAA534E0EB60A492A3FAC9913</provident.fund.appkey>
                 <provident.fund.appsecret>2A902C20AA984150B20BE91395645E974B9A69FF</provident.fund.appsecret>
                 <daqweb.interface.url>https://wwwjs.guoanshuju.com/daqWeb/dispatcher.action</daqweb.interface.url>
+                <wester.land.aeskey>N2IZpCs504dOjj2m663927xm1kgluy0n</wester.land.aeskey>
+                <wester.land.md5key>1yz8g9JXz892gdR93GN203182602l6lR</wester.land.md5key>
+                <wester.land.transaction>https://api.icp.51tsbx.com/dfddGetTransInfo</wester.land.transaction>
+                <wester.land.product>https://api.icp.51tsbx.com/dfddGetProductInfo</wester.land.product>
+                <wester.land.user>https://api.icp.51tsbx.com/dfddGetUserInfo</wester.land.user>
             </properties>
         </profile>
         <profile>
@@ -116,6 +121,11 @@
                 <provident.fund.appkey>D59343BEAA534E0EB60A492A3FAC9913</provident.fund.appkey>
                 <provident.fund.appsecret>2A902C20AA984150B20BE91395645E974B9A69FF</provident.fund.appsecret>
                 <daqweb.interface.url>test</daqweb.interface.url>
+                <wester.land.aeskey>N2IZpCs504dOjj2m663927xm1kgluy0n</wester.land.aeskey>
+                <wester.land.md5key>1yz8g9JXz892gdR93GN203182602l6lR</wester.land.md5key>
+                <wester.land.transaction>https://api.icp.51tsbx.com/dfddGetTransInfo</wester.land.transaction>
+                <wester.land.product>https://api.icp.51tsbx.com/dfddGetProductInfo</wester.land.product>
+                <wester.land.user>https://api.icp.51tsbx.com/dfddGetUserInfo</wester.land.user>
             </properties>
         </profile>
         <profile>
@@ -150,6 +160,11 @@
                 <provident.fund.appkey>D59343BEAA534E0EB60A492A3FAC9913</provident.fund.appkey>
                 <provident.fund.appsecret>2A902C20AA984150B20BE91395645E974B9A69FF</provident.fund.appsecret>
                 <daqweb.interface.url>dev</daqweb.interface.url>
+                <wester.land.aeskey>D21Uq65MzDF28PaEx7zO0dSM2WuG03z0</wester.land.aeskey>
+                <wester.land.md5key>12344404K53N5571lz91673701u04321</wester.land.md5key>
+                <wester.land.transaction>https://sit.icp.51tsbx.com/dfddGetTransInfo</wester.land.transaction>
+                <wester.land.product>https://sit.icp.51tsbx.com/dfddGetProductInfo</wester.land.product>
+                <wester.land.user>https://sit.icp.51tsbx.com/dfddGetUserInfo</wester.land.user>
             </properties>
         </profile>
     </profiles>

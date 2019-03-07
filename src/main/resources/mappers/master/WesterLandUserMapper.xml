@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.WesterLandUserMapper">
+
+
+    <insert id="addUser" parameterType="java.util.Map">
+
+        <![CDATA[
+
+          insert  into t_wester_land_user(
+                        name,
+                        sex,
+                        birthday,
+                        cardType,
+                        cardNo,
+                        cardValidity,
+                        cardStartDate,
+                        cardEndDate,
+                        height,
+                        weight,
+                        phone,
+                        email,
+                        address,
+                        createDate
+                        )
+                        values (
+                            #{name},
+                            #{sex},
+                            #{birthday},
+                            #{cardType},
+                            #{cardNo},
+                            #{cardValidity},
+                            #{cardStartDate},
+                            #{cardEndDate},
+                            #{height},
+                            #{weight},
+                            #{phone},
+                            #{email},
+                            #{address},
+                            #{createDate}
+
+                        )
+        ]]>
+    </insert>
+
+    <delete id="deleteUser" parameterType="java.util.Map">
+        delete  from t_wester_land_user where createDate = #{createDate}
+    </delete>
+
+    <select id="queryUser" parameterType="java.util.Map" resultType="java.util.Map">
+
+        <![CDATA[
+              select * from t_wester_land_user
+		]]>
+        <if test="null != createDate and null != ''">
+            <![CDATA[
+              where  createDate =#{createDate}
+           ]]>
+        </if>
+
+    </select>
+
+</mapper>

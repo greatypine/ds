@@ -124,7 +124,10 @@ public class HttpClientUtil {
                 httpPost.setHeaders(allHeader);
             }
             // 设置实体
+            if(data!=null){
                 httpPost.setEntity(new StringEntity(JSON.toJSONString(data)));
+            }
+
             // 发送请求,返回响应对象
             response = client.execute(httpPost);
             // 获取响应状态

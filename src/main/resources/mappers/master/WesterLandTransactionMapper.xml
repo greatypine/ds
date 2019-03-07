@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guoanshequ.dc.das.dao.master.WesterLandTransactionMapper">
+
+
+    <insert id="addTransaction" parameterType="java.util.Map">
+
+        <![CDATA[
+
+          insert  into t_wester_land_transaction(
+                        orderNo,
+                        propalsoNo,
+                        orderType,
+                        contNo,
+                        signDate,
+                        cvaliDate,
+                        totalPrem,
+                        totalAmnt,
+                        appntName,
+                        appntSex,
+                        appntBirthday,
+                        appntCardType,
+                        appntCardNo,
+                        appntPhone,
+                        appntAddress,
+                        appntEmail,
+                        insuredName,
+                        insuredSex,
+                        insuredBirthday,
+                        insuredCardType,
+                        insuredCardNo,
+                        insuredPhone,
+                        insuredAddress,
+                        insuredEmail,
+                        insuredRelation,
+                        bnfName,
+                        bnfSex,
+                        bnfBirthday,
+                        bnfCardType,
+                        bnfCardNo,
+                        bnfPhone,
+                        relationToInsured,
+                        isLegalBnf,
+                        createDate
+                        )
+                        values (
+                            #{orderNo},
+                            #{propalsoNo},
+                            #{orderType},
+                            #{contNo},
+                            #{signDate},
+                            #{cvaliDate},
+                            #{totalPrem},
+                            #{totalAmnt},
+                            #{appntName},
+                            #{appntSex},
+                            #{appntBirthday},
+                            #{appntCardType},
+                            #{appntCardNo},
+                            #{appntPhone},
+                            #{appntAddress},
+                            #{appntEmail},
+                            #{insuredName},
+                            #{insuredSex},
+                            #{insuredBirthday},
+                            #{insuredCardType},
+                            #{insuredCardNo},
+                            #{insuredPhone},
+                            #{insuredAddress},
+                            #{insuredEmail},
+                            #{insuredRelation},
+                            #{bnfName},
+                            #{bnfSex},
+                            #{bnfBirthday},
+                            #{bnfCardType},
+                            #{bnfCardNo},
+                            #{bnfPhone},
+                            #{relationToInsured},
+                            #{isLegalBnf},
+                            #{createDate}
+
+                        )
+        ]]>
+    </insert>
+
+    <delete id="deleteTransaction" parameterType="java.util.Map">
+        delete  from t_wester_land_transaction where createDate = #{createDate}
+    </delete>
+
+    <select id="queryTransaction" parameterType="java.util.Map" resultType="java.util.Map">
+
+        <![CDATA[
+              select * from t_wester_land_transaction
+		]]>
+        <if test="null != createDate and null != ''">
+            <![CDATA[
+              where  createDate =#{createDate}
+           ]]>
+        </if>
+
+    </select>
+
+</mapper>

@@ -59,7 +59,7 @@ public class AuthService {
                 // 验证签名
                 String verifySign = EncryptUtils.getMD5(requestInfo + auth.getApp_secret());
                 if (!requestSign.equals(verifySign)) {
-                    logger.debug("**************verifySign:" + verifySign + "**************");
+                    logger.info("**************verifySign:" + verifySign + "**************");
                     return EnumRespStatus.AUTH_ERROR;
                 }
 
