@@ -845,6 +845,7 @@ public class MassOrderScheduleTask {
 								String sign_date = DateUtils.getStrDate(sign_time);
 								String store_id = dfMassOrder.getStore_id();
 								String business_type = dfMassOrder.getBusiness_type();
+								String bussiness_group_id = dfMassOrder.getBussiness_group_id();
 
 								paraMap.put("order_id", order_id);
 								paraMap.put("sign_date", sign_date);
@@ -852,7 +853,7 @@ public class MassOrderScheduleTask {
 								// 1、关联进销存，计算订单在进销存中的总成本,自营商品无论是否有合同，一律从价
 								BigDecimal sum_cost_price = new BigDecimal("0.00");
 								BigDecimal order_profit = new BigDecimal("0.00");
-								if ("yes".equals(eshop_joint_ims)) {
+								if ("yes".equals(eshop_joint_ims) && "8ac28b935fed0bc8015fed4c76f60018".equals(bussiness_group_id)) {
 									// 获取订单明细
 									Integer store_number = storeNumberService.queryStoreNumberById(store_id);
 									List<OrderItem> orderItemList = massOrderService.queryOrderItemByOrderId(paraMap);
