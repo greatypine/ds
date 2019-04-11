@@ -102,7 +102,7 @@ public class ImsScheduleTask {
 	 * 同步进销存系统tbs_d_gds商品日结算表前一天数据
 	 * 调度规则：每天凌晨4点01分
 	 */	
-	@Scheduled(cron ="0 01 4 * * ?")
+	//@Scheduled(cron ="0 01 4 * * ?")
 	public void TbsdGdsSplitByRowTask() {
 		new Thread() {
 			public void run() {
@@ -130,8 +130,11 @@ public class ImsScheduleTask {
 						JSONArray jsonArray = JSONArray.fromObject(tunnelCount);
 						
 						int tnum = jsonArray.getJSONObject(0).getInt("tnum");
+
+						
 						if(tnum>0) {
-							int step =1;
+							logger.info("记录总条数为："+tnum);
+							int step =3000;
 							int startPoint = 0;
 							int endPoint = 0;
 							
