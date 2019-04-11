@@ -1495,7 +1495,7 @@ public class TaskByHandController {
     @RequestMapping(value = "rest/TbsdGdsTaskRun",method = RequestMethod.POST)
     public RestResponse TbsdGdsTask(@RequestBody Map<String, String> paraMap) throws Exception {
         try{
-        	imsScheduleTask.TbsdGdsTask();
+        	imsScheduleTask.TbsdGdsSplitByRowTask();
             return new RestResponse(EnumRespStatus.TASK_RUNOK);
         }catch (Exception e) {
             logger.error(e.toString());
