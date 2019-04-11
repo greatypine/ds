@@ -124,12 +124,12 @@ public class ImsScheduleTask {
 							endtime = DateUtils.getCurDateTime(new Date());
 						}
 
-						Map tunnelCountMap = new HashMap();
-						tunnelCountMap.put("sql",TunnelConstUtil.TunnelTbsdGds_Count(begintime,endtime));
-						String tunnelCount = HttpClientUtil.sendPost(TunnelConstUtil.SQLSERVER_URL,tunnelCountMap);
-						JSONArray jsonArray = JSONArray.fromObject(tunnelCount);
+//						Map tunnelCountMap = new HashMap();
+//						tunnelCountMap.put("sql",TunnelConstUtil.TunnelTbsdGds_Count(begintime,endtime));
+//						String tunnelCount = HttpClientUtil.sendPost(TunnelConstUtil.SQLSERVER_URL,tunnelCountMap);
+//						JSONArray jsonArray = JSONArray.fromObject(tunnelCount);
 						
-						int tnum = jsonArray.getJSONObject(0).getInt("tnum");
+						int tnum = 2267964;
 
 						
 						if(tnum>0) {
