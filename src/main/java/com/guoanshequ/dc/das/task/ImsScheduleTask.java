@@ -42,7 +42,7 @@ public class ImsScheduleTask {
 	 * 同步进销存系统tbs_d_gds商品日结算表前一天数据
 	 * 调度规则：每天凌晨4点01分
 	 */	
-	//@Scheduled(cron ="0 01 4 * * ?")
+	@Scheduled(cron ="0 01 4 * * ?")
 	public void TbsdGdsTask() {
 		new Thread() {
 			public void run() {
